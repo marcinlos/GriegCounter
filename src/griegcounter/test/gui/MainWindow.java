@@ -36,8 +36,8 @@ public class MainWindow extends JFrame {
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu presetMenu;
-    private WavePanel wavePanel = new WavePanel();
-    private PowerPanel powerPanel = new PowerPanel();
+    private WavePanel wavePanel;
+    private TwoChannelPannel powerPanel;
     private SpectrumPanel spectrumPanel;
     private Player player = new Player();
     
@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
     private static final String BIG = DIR +"Beethoven/Beethoven's 9th.mp3";
     private static final String RACH = DIR + "Rachmaninov/Op. 28 (PS no. 1 in D minor)/03 Piano Sonata No.1 in D minor Op.28 - III. Allegro molto.mp3";
     
-    private static final String[] EXTS = { "mp3", "wav", "m4a" };
+    private static final String[] EXTS = { "mp3", "wav" };
     
     public MainWindow(String label) {
         super(label);
@@ -68,7 +68,9 @@ public class MainWindow extends JFrame {
             }
         });
         
-        spectrumPanel = new SpectrumPanel(ps);
+        powerPanel = new PowerPanel(player);
+        wavePanel = new WavePanel(player);
+        spectrumPanel = new SpectrumPanel(player, ps);
         
         getContentPane().setBackground(Color.black);
         setupUI();

@@ -1,6 +1,9 @@
 package griegcounter.audio;
 
+import javax.sound.sampled.AudioFormat;
+
 import net.beadsproject.beads.analysis.FeatureExtractor;
+import net.beadsproject.beads.analysis.SegmentMaker;
 import net.beadsproject.beads.analysis.segmenters.ShortFrameSegmenter;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.data.Buffer;
@@ -24,6 +27,7 @@ public class Player {
     public Player() {
         gain = new Gain(ac, 2, gainValue);
         ac.out.addInput(gain);
+        System.out.println(ac.getAudioFormat().getFrameRate());
         sfs = new ShortFrameSegmenter(ac);
         sfs.setChunkSize(chunkSize);
         sfs.setHopSize(hopSize);
@@ -65,5 +69,12 @@ public class Player {
     public void addAnalysis(FeatureExtractor<?, float[]> analysis) {
         sfs.addListener(analysis);
     }
+    
+    public SegmentMaker getSegmenter() {
+        return sfs;
+    }
 
+    public AudioFormat getFormat() {
+        return ac.getAudioFormat();
+    }
 }

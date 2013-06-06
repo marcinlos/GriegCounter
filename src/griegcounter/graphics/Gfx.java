@@ -47,6 +47,7 @@ public class Gfx {
                 drawers[j].put(p);
             }
         }
+        popTransforms(channels);
     }
 
     public static void drawPower(Track track, Drawable[] channels, int count) {
@@ -71,8 +72,14 @@ public class Gfx {
                 float power = max(1 + (float) log10(sqrt(accum[j])) / 2, 0);
                 Point p = new Point(i, power);
                 channels[j].line(new Point(i, 0), p);
-                //drawers[j].put(p);
             }
+        }
+        popTransforms(channels);
+    }
+    
+    private static void popTransforms(Drawable[] channels) {
+        for (Drawable d: channels) {
+            d.pop();
         }
     }
 

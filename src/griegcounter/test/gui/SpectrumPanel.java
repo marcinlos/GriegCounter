@@ -2,6 +2,7 @@ package griegcounter.test.gui;
 
 import static griegcounter.util.Utils.clamp;
 import static griegcounter.util.Utils.db;
+import griegcounter.audio.Player;
 import griegcounter.graphics.Drawable;
 import griegcounter.graphics.Gfx;
 import griegcounter.graphics.Point;
@@ -20,6 +21,7 @@ import net.beadsproject.beads.core.TimeStamp;
 
 public class SpectrumPanel extends JPanel {
     
+    private Player player;
     private ImagePanel panel;
     private PowerSpectrum spectrum;
 
@@ -32,15 +34,16 @@ public class SpectrumPanel extends JPanel {
             //System.out.println("Size: " + data.length);
             //System.out.println(Arrays.toString(data));
             //System.out.println(data[1000]);
-            if (c % 10 == 0) {
+//            if (++c % 10 == 0) {
                 panel.refresh();
                 paintSpectrum(data);
                 repaint();
-            }
+//            }
         }
     }
     
-    public SpectrumPanel(PowerSpectrum spectrum) {
+    public SpectrumPanel(Player player, PowerSpectrum spectrum) {
+        this.player = player;
         this.spectrum = spectrum;
         setBackground(Color.black);
         spectrum.addListener(new PowerListener());
@@ -59,6 +62,16 @@ public class SpectrumPanel extends JPanel {
     
     private static final float MIN = -100;
     private static final float MAX = 60;
+
+    private static final float SCALE_WIDTH = 1000.0f;
+    
+    private float getBinSize() {
+        return player.getFormat().getSampleRate() / player.getChunkSize();
+    }
+    
+    private float getNyquist() {
+        return player.getFormat().getSampleRate() / 2;
+    }
     
     private void paintSpectrum(float[] data) {
         Drawable d = panel.getDrawable();
@@ -68,13 +81,12 @@ public class SpectrumPanel extends JPanel {
         Graphics2D g = ((DrawableGraphics2d) d).getGraphics();
         Color c = g.getColor();
         g.setColor(Color.gray);
-        float unit = 44100.0f / 2048;
-        for (int i = 1; i < 22; ++ i) {
-            float xx = i * 1000 / unit;
-            d.line(new Point(xx, MIN), new Point(xx, MAX));
+        float unit = getBinSize();
+        for (int i = 1; i < getNyquist() / SCALE_WIDTH; ++ i) {
+            float x = i * SCALE_WIDTH / unit;
+            d.line(new Point(x, MIN), new Point(x, MAX));
         }
         g.setColor(c);
-        
         
         for (int i = 1; i < N; ++ i) {
             float val = clamp(db(data[i] / N), MIN, MAX);
