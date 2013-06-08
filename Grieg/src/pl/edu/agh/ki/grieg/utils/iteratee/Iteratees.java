@@ -1,4 +1,6 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
+
+import java.util.Iterator;
 
 /**
  * Static helper class containing iteratee combinators and other convenience
@@ -22,6 +24,7 @@ public class Iteratees {
      * @param inner
      *            Inner {@code Enumeratee}, initial consumer
      * @return {@code Enumeratee} combining the {@code inner} and {@code outer}
+     * @see CompositeEnumeratee
      */
     public static <S, T, U> Enumeratee<S, U> compose(Enumeratee<T, U> outer,
             Enumeratee<S, T> inner) {
@@ -36,9 +39,34 @@ public class Iteratees {
      * @param transform
      *            Function used to transform stream chunks
      * @return {@code Enumeratee} transforming the input stream
+     * @see SimpleEnumeratee
      */
     public static <S, T> Enumeratee<S, T> mapper(Function<S, T> transform) {
         return new SimpleEnumeratee<S, T>(transform);
+    }
+
+    /**
+     * Creates an {@code Enumerator} using the stream produced by the {@code it}
+     * iterator.
+     * 
+     * @param it
+     *            Iterator producing a stream
+     * @return {@code Enumerator} forwarding the stream produced by {@code it}
+     */
+    public static <T> AutoEnumerator<T> enumerator(Iterator<? extends T> it) {
+        return new IteratorAdaptor<T>(it);
+    }
+
+    /**
+     * Creates an {@code Enumerator} using the stream extracted from the
+     * {@code it} iterable.
+     * 
+     * @param it
+     *            {@code Iterable} containing the stream
+     * @return {@code Enumerator} forwarding the stream produced by {@code it}
+     */
+    public static <T> AutoEnumerator<T> enumerator(Iterable<? extends T> it) {
+        return enumerator(it.iterator());
     }
 
 }

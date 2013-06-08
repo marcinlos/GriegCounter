@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 /**
  * {@code Enumeratee} implementation transforming the input stream with a
@@ -37,7 +37,7 @@ public class SimpleEnumeratee<S, T> extends AbstractEnumerator<T> implements
             pushChunk(value);
             return State.Cont;
         } catch (Throwable e) {
-            pushFailure(e);
+            failure(e);
             return State.Done;
         }
     }
@@ -46,8 +46,8 @@ public class SimpleEnumeratee<S, T> extends AbstractEnumerator<T> implements
      * {@inheritDoc}
      */
     @Override
-    public void failure(Throwable e) {
-        pushFailure(e);
+    public void failed(Throwable e) {
+        failure(e);
     }
 
     /**

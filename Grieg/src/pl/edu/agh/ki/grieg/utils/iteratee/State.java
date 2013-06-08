@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 /**
  * Iteratee's state, returned by the {@linkplain Iteratee#step} method.

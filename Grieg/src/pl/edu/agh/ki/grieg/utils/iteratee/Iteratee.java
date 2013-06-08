@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 /**
  * Iteratee consuming the stream of {@code T} items.
@@ -46,6 +46,6 @@ public interface Iteratee<T> {
      * @param e
      *            Exception that occured during production
      */
-    void failure(Throwable e);
+    void failed(Throwable e);
 
 }

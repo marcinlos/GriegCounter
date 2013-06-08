@@ -1,7 +1,8 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -60,13 +61,23 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
     }
 
     /**
+     * Gives access to the connected iteratees. Returned collection is
+     * unmodifiable.
+     * 
+     * @return Collection of iteratees consuming the enumerator's output
+     */
+    public Collection<Iteratee<? super T>> getIteratees() {
+        return Collections.unmodifiableCollection(outputs);
+    }
+
+    /**
      * Pushes the {@code value} to the connected iteratees. Removes iteratees if
      * {@linkplain Iteratee#step} returns {@link State#Done}.
      * 
      * @param value
      *            Next stream chunk to be consumed by the connected iteratees
      */
-    protected void pushChunk(T value) {
+    public void pushChunk(T value) {
         for (Iterator<Iteratee<? super T>> it = outputs.iterator(); it
                 .hasNext();) {
             Iteratee<? super T> iteratee = it.next();
@@ -82,9 +93,9 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * @param e
      *            {@code Throwable} that describes the error
      */
-    protected void pushFailure(Throwable e) {
+    public void failure(Throwable e) {
         for (Iteratee<?> it : outputs) {
-            it.failure(e);
+            it.failed(e);
         }
     }
 
@@ -93,7 +104,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * {@linkplain Iteratee#finished()} method for each connected
      * {@code Iteratee}.
      */
-    protected void endOfStream() {
+    public void endOfStream() {
         for (Iteratee<?> it : outputs) {
             it.finished();
         }

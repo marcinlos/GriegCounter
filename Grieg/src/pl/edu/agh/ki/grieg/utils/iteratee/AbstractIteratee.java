@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 /**
  * Abstract {@linkplain Iteratee} implementation.

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.utils.iteratee;
 
 /**
  * Implementation of sequential composition of two enumeratees. Input stream is
@@ -70,8 +70,8 @@ public class CompositeEnumeratee<S, T, U> implements Enumeratee<S, U> {
      * Passes the exception to the inner enumeratee.
      */
     @Override
-    public void failure(Throwable e) {
-        inner.failure(e);
+    public void failed(Throwable e) {
+        inner.failed(e);
     }
 
     /**
