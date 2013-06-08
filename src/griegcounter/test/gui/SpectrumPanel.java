@@ -81,6 +81,7 @@ public class SpectrumPanel extends JPanel {
         Graphics2D g = ((DrawableGraphics2d) d).getGraphics();
         Color c = g.getColor();
         g.setColor(Color.gray);
+
         float unit = getBinSize();
         for (int i = 1; i < getNyquist() / SCALE_WIDTH; ++ i) {
             float x = i * SCALE_WIDTH / unit;
