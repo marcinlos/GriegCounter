@@ -12,7 +12,7 @@ import java.util.Iterator;
  * <p>
  * {@code AbstractEnumerator} maintains a collection of {@code Iteratee}s
  * connected to the output stream. {@code Iteratee}s that return
- * {@code State#Done} are removed from this collection, so that general-purpose
+ * {@code State.Done} are removed from this collection, so that general-purpose
  * {@linkplain Enumerator}s deriving from {@code AbstractEnumerator} need not be
  * concerned with output management and just produce the values by calling
  * {@link #pushChunk}.

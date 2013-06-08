@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.data;
 
+import pl.edu.agh.ki.grieg.meta.TagSet;
+
 /**
  * 
  * 
@@ -13,6 +15,7 @@ public class SourceDetails {
     private float length;
     private long sampleCount;
     private Format format;
+    private TagSet tags;
 
     public SourceDetails() {
         this.name = "?";
@@ -22,43 +25,32 @@ public class SourceDetails {
     }
 
     public SourceDetails(String name, float length, long sampleCount,
-            Format format) {
+            Format format, TagSet tags) {
         this.name = name;
         this.length = length;
         this.sampleCount = sampleCount;
         this.format = format;
+        this.tags = tags;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public float getLength() {
         return length;
-    }
-
-    public void setLength(float length) {
-        this.length = length;
     }
 
     public long getSampleCount() {
         return sampleCount;
     }
 
-    public void setSampleCount(long sampleCount) {
-        this.sampleCount = sampleCount;
-    }
-
     public Format getFormat() {
         return format;
     }
 
-    public void setFormat(Format format) {
-        this.format = format;
+    public TagSet getTags() {
+        return tags;
     }
-
+    
 }

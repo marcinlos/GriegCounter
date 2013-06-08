@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.decoder;
 
+import java.io.IOException;
+
 import pl.edu.agh.ki.grieg.io.AudioStream;
 
 /**
@@ -19,6 +21,6 @@ public interface StreamDecoder extends AudioStream {
      * @throws DecodeException
      *             In case of an error during decoding
      */
-    void readSamples(float[][] buffer) throws DecodeException;
+    int readSamples(float[][] buffer) throws DecodeException, IOException;
 
 }

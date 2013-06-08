@@ -11,6 +11,7 @@ package pl.edu.agh.ki.grieg.utils.iteratee;
  * @author los
  * 
  * @param <T>
+ *            Type of consumed chunks
  */
 public abstract class AbstractIteratee<T> implements Iteratee<T> {
 
@@ -43,5 +44,27 @@ public abstract class AbstractIteratee<T> implements Iteratee<T> {
      */
     protected void done() {
         done = true;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Empty in this implementation.
+     */
+    @Override
+    public void finished() {
+        // empty
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Empty in this implementation.
+     */
+    @Override
+    public void failed(Throwable e) {
+        // empty
     }
 }
