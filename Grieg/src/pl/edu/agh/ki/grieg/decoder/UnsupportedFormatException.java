@@ -7,7 +7,7 @@ import pl.edu.agh.ki.grieg.decoder.spi.AudioFileParser;
  * {@linkplain AudioFileParser}.
  * 
  * <p>
- * Note: it's not really a {@linkplain FormatException}, since the input stream
+ * Note: it's not really a {@linkplain InvalidFormatException}, since the input stream
  * may still be perfectly valid, just not the right format.
  * 
  * @author los

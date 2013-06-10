@@ -18,7 +18,7 @@ import pl.edu.agh.ki.grieg.utils.FileUtils;
  * 
  * @author los
  */
-class DecoderManager {
+public class DecoderManager {
 
     /** mappipng: extension -> providers */
     private Map<String, List<AudioFileParser>> decoders;
