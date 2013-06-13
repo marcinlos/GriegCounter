@@ -1,6 +1,6 @@
 package com.grieg.listeners;
 
-public interface WaveListener {
+public interface PowerListener {
 	public static final int FIRST_CHANNEL = 1;
 	public static final int SECOND_CHANNEL = 2;
 	/**
@@ -10,6 +10,5 @@ public interface WaveListener {
 	 * @param min - lowest point, between -height/2 and height/2
 	 * @param channel - channel constant
 	 */
-	public void getPixelForWave(float min, float max, int channel);
-
+	public void getPixelForPower(float min, float max, int channel);
 }

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.grieg.gui.R;
 import com.grieg.interfaces.IAnalysisProvider;
+import com.grieg.listeners.PowerListener;
 import com.grieg.listeners.WaveListener;
 import com.grieg.views.DrawView;
 
@@ -16,7 +17,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
-public class SoundAnalyzer extends Activity implements WaveListener {
+public class SoundAnalyzer extends Activity implements WaveListener, PowerListener {
 	
 	public final static String EXTRA_MESSAGE = "sound.to.analyze";
 	public final static String ID = "Analyzer";
@@ -25,6 +26,8 @@ public class SoundAnalyzer extends Activity implements WaveListener {
 	private IAnalysisProvider anylser;
 	private DrawView firstChannelWave;
 	private DrawView secondChannelWave;
+	private DrawView firstChannelPower;
+	private DrawView secondChannelPower;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class SoundAnalyzer extends Activity implements WaveListener {
 		Log.e(ID,"I'm mostly started");
 		firstChannelWave = (DrawView) this.findViewById(R.id.myDrawView1);
 		secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView2);
+		firstChannelPower = (DrawView) this.findViewById(R.id.myDrawView3);
+		secondChannelPower = (DrawView) this.findViewById(R.id.myDrawView4);
 
 		//analyser = Grieg.createAnalizor(filepath); //to bêdzie coœ marcinowego co jest czymœ wiêcej ni¿ plik i do niego podpinam listenery czy coœ
 		//int n = c.getChannelNumber();
@@ -55,6 +60,8 @@ public class SoundAnalyzer extends Activity implements WaveListener {
 
 			Log.e(ID,"starting sending the pixels");
 			secondChannelWave.setBackgroundColor(Color.RED);
+			firstChannelPower.setBackgroundColor(Color.BLUE);
+			secondChannelPower.setBackgroundColor(Color.MAGENTA);
 			int w = firstChannelWave.getWidth();
 			Log.e(ID,"width: "+w);
 			int h = firstChannelWave.getHeight();
@@ -65,12 +72,16 @@ public class SoundAnalyzer extends Activity implements WaveListener {
 			//analyser.addWaveListener(this);
 			
 			Random r = new Random();
-			for(int i=0;i<w;i++)
+			for(int i=0;i<w;i++){
 				firstChannelWave.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
+				firstChannelPower.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
+			}
 			w = secondChannelWave.getWidth();
 			h= secondChannelWave.getHeight();
-			for(int i=0;i<w;i++)
+			for(int i=0;i<w;i++){
 				secondChannelWave.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
+				secondChannelPower.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
+			}
 			
 		}
 	}
@@ -93,14 +104,29 @@ public class SoundAnalyzer extends Activity implements WaveListener {
 	}
 
 	@Override
-	public void getPixel(float min, float max, int channel) {
-		DrawView firstChannelWave = (DrawView) this.findViewById(R.id.myDrawView1);
-		DrawView secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView2);
+	public void getPixelForWave(float min, float max, int channel) {
+		//DrawView firstChannelWave = (DrawView) this.findViewById(R.id.myDrawView1);
+		//DrawView secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView2);
 		switch(channel){
 		case 1: 
 			firstChannelWave.addNextPixel(min,max); break;
 		case 2: 
 			secondChannelWave.addNextPixel(min, max); break;
+		default: 
+			Log.e(ID,"Illegal channel number"); break;
+		}
+		
+	}
+
+	@Override
+	public void getPixelForPower(float min, float max, int channel) {
+		//DrawView firstChannelWave = (DrawView) this.findViewById(R.id.myDrawView3);
+		//DrawView secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView4);
+		switch(channel){
+		case 1: 
+			firstChannelPower.addNextPixel(min,max); break;
+		case 2: 
+			secondChannelPower.addNextPixel(min, max); break;
 		default: 
 			Log.e(ID,"Illegal channel number"); break;
 		}
