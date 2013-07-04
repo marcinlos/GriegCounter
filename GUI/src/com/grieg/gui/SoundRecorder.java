@@ -40,9 +40,9 @@ public class SoundRecorder extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e("dobrze?","zaczal sie create recordera");
+		Log.e(ID,"zaczal sie create recordera");
 		setContentView(R.layout.activity_sound_recorder);
-		Log.e("dobrze?","jest content view");
+		Log.e(ID,"jest content view");
 		// Show the Up button in the action bar.
 		//setupActionBar();
 
@@ -215,14 +215,14 @@ public class SoundRecorder extends Activity {
 				temp = time;
 				time = System.currentTimeMillis();
 				diff = time-temp;
-				Log.e("lol", "time: " + diff);
+				Log.e(ID, "time: " + diff);
 
 
 				read = recorder.read(data, 0, bufferSize);
 
 				if(AudioRecord.ERROR_INVALID_OPERATION != read){
 					try {
-						Log.e("lol2","rozmiar: " + read);
+						Log.e(ID,"rozmiar: " + read);
 						os.write(data);
 					} catch (IOException e) {
 						Log.e(ID,"exception",e);

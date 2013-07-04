@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,29 +8,86 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SoundAnalyzer" >
-    
-    <com.grieg.views.DrawView
-        android:id="@+id/myDrawView1"
+    <LinearLayout 
+        android:id="@+id/FirstPage"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+    	<TextView
+    	    android:text="Wykres fali"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_weight="0"/>
+    	<LinearLayout 
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+	    	android:orientation="vertical"
+	    	android:layout_weight="1">
+	    	<com.grieg.views.DrawView
+		        android:id="@+id/myDrawView1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"/>
+		    <com.grieg.views.DrawView
+		        android:id="@+id/myDrawView2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"/>
+	    </LinearLayout>
+	   
+    </LinearLayout>
+    <LinearLayout 
+        android:id="@+id/SecondPage"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+		<TextView
+    	    android:text="Wykres mocy"
+    	    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0"/>
+		<LinearLayout 
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+	    	android:orientation="vertical"
+	    	android:layout_weight="1">
+		    <com.grieg.views.DrawView
+		        android:id="@+id/myDrawView3"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"/>
+		    <com.grieg.views.DrawView
+		        android:id="@+id/myDrawView4"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"/>
+	    </LinearLayout>
+	    
+	</LinearLayout>
+	<LinearLayout 
+        android:id="@+id/ThirdPage"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+	    <TextView
+    	    android:text="Latające linie"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="wrap_content"/>
+	    <com.grieg.views.DrawView
+	        android:id="@+id/jumpingLines"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+	    
+	</LinearLayout>
+	<Button
+        android:id="@+id/switchView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <com.grieg.views.DrawView
-        android:id="@+id/myDrawView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <com.grieg.views.DrawView
-        android:id="@+id/myDrawView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <com.grieg.views.DrawView
-        android:id="@+id/myDrawView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:text="Switch"
+        android:onClick="switchView" />
     
 
 
-</LinearLayout>
+</FrameLayout>

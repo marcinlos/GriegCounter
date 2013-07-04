@@ -12,12 +12,12 @@ public class DrawView extends View {
 	Paint paint = new Paint();
 	int middle;
 	int width;
-	int pixelcounter;
+	int pixelcounter=0;
 	float[] pixels;
+	int batchesGot=0;
 	
-	int batchesGot;
 	private boolean shouldIDrawAlready;
-	private final static String ID="WaveDrawer";
+	private final static String ID="Drawer";
 	
 	
 	
@@ -45,6 +45,7 @@ public class DrawView extends View {
 	
 	public void addNextPixel(float min, float max){
 		int i = pixelcounter;
+		//Log.e(ID,"i:" + i + " batchesGot:" + batchesGot);
 		try{
 			pixels[batchesGot*4] = i; //StartX
 			pixels[batchesGot*4+1] = middle+min; //StartY
@@ -57,7 +58,7 @@ public class DrawView extends View {
 		}
 		
 		batchesGot++;
-		Log.e(ID,"got pixels: " + batchesGot);
+		Log.e(ID+this.getId(),"got pixels: " + batchesGot);
 		if(batchesGot == pixels.length/4){
 			Log.e(ID,"all batches here");
 			shouldIDrawAlready = true;
@@ -84,8 +85,17 @@ public class DrawView extends View {
 			//float[] f = {(float)0, (float)middle, (float)width,(float) middle*2,50,(float) middle, (float)width, (float)0};
 			//canvas.drawLines(f, paint);
     }
+	
+	private void rescaleH(float scale){
+		Log.e(ID,"I'm rescaling");
+		for(int i=1;i<pixels.length;i=i+2){
+			pixels[i] = pixels[i]*scale;
+		}
+	}
 	@Override
 	protected void onSizeChanged(int width,int height, int ow, int oh){
+		int oldH;
+		oldH = this.middle*2;
 		this.width = width;
 		this.middle = height/2;
 		Log.e(ID+this.getId(),"sizeChanged, height: "+height);
@@ -94,6 +104,11 @@ public class DrawView extends View {
 		if (pixels.length == 0){
 			Log.e(ID,"view has no width to draw");
 		}
+		if(oldH != 0){
+			rescaleH((float)height / (float)oldH);
+			this.postInvalidate();
+		}
+		
 		
 	}
 

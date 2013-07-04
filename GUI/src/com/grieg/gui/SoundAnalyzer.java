@@ -1,6 +1,9 @@
 package com.grieg.gui;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import com.grieg.gui.R;
@@ -16,6 +19,8 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 public class SoundAnalyzer extends Activity implements WaveListener, PowerListener {
 	
@@ -28,6 +33,9 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 	private DrawView secondChannelWave;
 	private DrawView firstChannelPower;
 	private DrawView secondChannelPower;
+	List<LinearLayout> layoutList = new ArrayList<LinearLayout>();
+	private int activeView=0;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +50,15 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView2);
 		firstChannelPower = (DrawView) this.findViewById(R.id.myDrawView3);
 		secondChannelPower = (DrawView) this.findViewById(R.id.myDrawView4);
+		
 
 		//analyser = Grieg.createAnalizor(filepath); //to bêdzie coœ marcinowego co jest czymœ wiêcej ni¿ plik i do niego podpinam listenery czy coœ
-		//int n = c.getChannelNumber();
+		//int n = analyser.getChannelNumber();
 		//if (n == 1){
 		//  DrawView b = (DrawView) this.findViewById(R.id.myDrawView2);
 		//	b.setVisibility(View.GONE);	
+		//  b = (DrawView) this.findViewById(R.id.myDrawView4);
+		//  b.setVisibility(View.GONE);	
 		//}
 	}
 	
@@ -57,7 +68,17 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		super.onWindowFocusChanged(hasFocus);
 		if(hasFocus && firstFocus){
 			firstFocus = false;
+			LinearLayout a = (LinearLayout) this.findViewById(R.id.FirstPage);
+			layoutList.add(a);
+			a = (LinearLayout) this.findViewById(R.id.SecondPage);
+			layoutList.add(a);
+			a.setVisibility(View.GONE);
+			a = (LinearLayout) this.findViewById(R.id.ThirdPage);
+			layoutList.add(a);
+			a.setVisibility(View.GONE);
 
+			
+			
 			Log.e(ID,"starting sending the pixels");
 			secondChannelWave.setBackgroundColor(Color.RED);
 			firstChannelPower.setBackgroundColor(Color.BLUE);
@@ -132,5 +153,17 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		}
 		
 	}
+	
+	public void switchView(View view){
+	
+		layoutList.get(activeView).setVisibility(View.GONE);
+		activeView++;
+		if(activeView > 2) //TODO remove the hardcoded page number
+			activeView = 0;
+		layoutList.get(activeView).setVisibility(View.VISIBLE);
+		
+	}
+		
+	
 
 }
