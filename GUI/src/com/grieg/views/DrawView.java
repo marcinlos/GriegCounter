@@ -46,6 +46,13 @@ public class DrawView extends View {
 	public void addNextPixel(float min, float max){
 		int i = pixelcounter;
 		//Log.e(ID,"i:" + i + " batchesGot:" + batchesGot);
+		if(i > width){
+			pixelcounter = 0;
+			i = pixelcounter;
+			batchesGot = 0;
+			shouldIDrawAlready = false;
+			Log.e(ID+this.getId(),"Pixel counter reset");
+		}
 		try{
 			pixels[batchesGot*4] = i; //StartX
 			pixels[batchesGot*4+1] = middle+min; //StartY

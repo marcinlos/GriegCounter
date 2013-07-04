@@ -9,6 +9,7 @@ import java.util.Random;
 import com.grieg.gui.R;
 import com.grieg.interfaces.IAnalysisProvider;
 import com.grieg.listeners.PowerListener;
+import com.grieg.listeners.SpectrumListener;
 import com.grieg.listeners.WaveListener;
 import com.grieg.views.DrawView;
 
@@ -22,7 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class SoundAnalyzer extends Activity implements WaveListener, PowerListener {
+public class SoundAnalyzer extends Activity implements WaveListener, PowerListener, SpectrumListener {
 	
 	public final static String EXTRA_MESSAGE = "sound.to.analyze";
 	public final static String ID = "Analyzer";
@@ -33,6 +34,7 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 	private DrawView secondChannelWave;
 	private DrawView firstChannelPower;
 	private DrawView secondChannelPower;
+	private DrawView spectrum;
 	List<LinearLayout> layoutList = new ArrayList<LinearLayout>();
 	private int activeView=0;
 	
@@ -50,6 +52,7 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		secondChannelWave = (DrawView) this.findViewById(R.id.myDrawView2);
 		firstChannelPower = (DrawView) this.findViewById(R.id.myDrawView3);
 		secondChannelPower = (DrawView) this.findViewById(R.id.myDrawView4);
+		spectrum = (DrawView) this.findViewById(R.id.jumpingLines);
 		
 
 		//analyser = Grieg.createAnalizor(filepath); //to bêdzie coœ marcinowego co jest czymœ wiêcej ni¿ plik i do niego podpinam listenery czy coœ
@@ -153,6 +156,11 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		}
 		
 	}
+	@Override
+	public void getPixelForSpectrum(float min, float max) {
+		spectrum.addNextPixel(min, max);
+		
+	}
 	
 	public void switchView(View view){
 	
@@ -163,6 +171,8 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 		layoutList.get(activeView).setVisibility(View.VISIBLE);
 		
 	}
+
+	
 		
 	
 
