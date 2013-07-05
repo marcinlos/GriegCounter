@@ -14,9 +14,9 @@ public class Format {
     public final int bitDepth;
     
     /** Sampling frequency */
-    public final float sampleRate;
+    public final int sampleRate;
     
-    public Format(int channels, int bitDepth, float sampleRate) {
+    public Format(int channels, int bitDepth, int sampleRate) {
         this.channels = channels;
         this.bitDepth = bitDepth;
         this.sampleRate = sampleRate;
