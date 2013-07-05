@@ -2,9 +2,9 @@ package com.grieg.gui;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
 
 import com.grieg.gui.R;
 import com.grieg.interfaces.IAnalysisProvider;
@@ -106,6 +106,12 @@ public class SoundAnalyzer extends Activity implements WaveListener, PowerListen
 				secondChannelWave.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
 				secondChannelPower.addNextPixel(r.nextFloat()*(h)-h/2,r.nextFloat()*(h)-h/2);
 			}
+			
+			w = spectrum.getWidth();
+			h = spectrum.getHeight();
+			Timer timer = new Timer();
+	        timer.schedule(new DebugSender(this,w,h), 5, 100);
+			
 			
 		}
 	}

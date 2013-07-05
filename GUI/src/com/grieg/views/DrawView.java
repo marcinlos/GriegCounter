@@ -46,11 +46,10 @@ public class DrawView extends View {
 	public void addNextPixel(float min, float max){
 		int i = pixelcounter;
 		//Log.e(ID,"i:" + i + " batchesGot:" + batchesGot);
-		if(i > width){
+		if(batchesGot > width){
 			pixelcounter = 0;
 			i = pixelcounter;
 			batchesGot = 0;
-			shouldIDrawAlready = false;
 			Log.e(ID+this.getId(),"Pixel counter reset");
 		}
 		try{
@@ -65,7 +64,7 @@ public class DrawView extends View {
 		}
 		
 		batchesGot++;
-		Log.e(ID+this.getId(),"got pixels: " + batchesGot);
+		//Log.e(ID+this.getId(),"got pixels: " + batchesGot);
 		if(batchesGot == pixels.length/4){
 			Log.e(ID,"all batches here");
 			shouldIDrawAlready = true;
