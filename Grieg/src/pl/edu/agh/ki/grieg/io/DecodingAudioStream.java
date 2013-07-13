@@ -1,19 +1,22 @@
 package pl.edu.agh.ki.grieg.io;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.data.Format;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
+import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
 
 public abstract class DecodingAudioStream implements AudioStream {
 
-    private DataInputStream stream;
+    private BinaryInputStream stream;
     private SourceDetails details;
 
-    public DecodingAudioStream(DataInputStream stream, SourceDetails details) {
+    private long remains;
+
+    public DecodingAudioStream(BinaryInputStream stream, SourceDetails details) {
         this.stream = stream;
         this.details = details;
+        this.remains = details.getSampleCount();
     }
 
     @Override
@@ -23,9 +26,11 @@ public abstract class DecodingAudioStream implements AudioStream {
 
     @Override
     public int readSamples(float[][] buffer) throws AudioException, IOException {
-        int count = buffer.length;
+        int count = buffer[0].length;
         int i;
-        for (i = 0; i < count && readSingleSample(buffer, i); ++ i);
+        for (i = 0; --remains >= 0 && i < count
+                && readSingleSample(buffer, i++);)
+            ;
         return i;
     }
 
@@ -36,8 +41,8 @@ public abstract class DecodingAudioStream implements AudioStream {
     public Format getFormat() {
         return details.getFormat();
     }
-    
-    protected DataInputStream stream() {
+
+    protected BinaryInputStream stream() {
         return stream;
     }
 

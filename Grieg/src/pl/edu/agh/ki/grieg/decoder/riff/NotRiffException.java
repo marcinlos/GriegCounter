@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.decoder.builtin.wav;
+package pl.edu.agh.ki.grieg.decoder.riff;
 
 import pl.edu.agh.ki.grieg.decoder.InvalidFormatException;
 

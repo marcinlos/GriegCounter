@@ -22,11 +22,7 @@ public interface AudioFileParser {
 
     /**
      * Extrcts information about the audio characteristics from the input
-     * stream. This usually entails reading some data from the stream, which may
-     * not be desirable for the implementation client. If that is the case, the
-     * parser shold mark the position of the stream (using
-     * {@linkplain InputStream#mark(int)}), read required amount of data and
-     * reseting the position ({@linkplain InputStream#reset()}) afterwards.
+     * stream. 
      * 
      * @param stream
      *            Input stream

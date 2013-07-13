@@ -37,20 +37,47 @@ public class SourceDetails {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public float getLength() {
         return length;
+    }
+
+    public void setLength(float length) {
+        this.length = length;
     }
 
     public long getSampleCount() {
         return sampleCount;
     }
 
+    public void setSampleCount(long sampleCount) {
+        this.sampleCount = sampleCount;
+    }
+
     public Format getFormat() {
         return format;
+    }
+
+    public void setFormat(Format format) {
+        this.format = format;
     }
 
     public TagSet getTags() {
         return tags;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String len = String.format("%.1fs", length);
+        sb.append(name == null ? "(-)" : name).append(" ").append(len)
+                .append(" (").append(sampleCount).append(") fmt: ")
+                .append(format);
+
+        return sb.toString();
+    }
+
 }
