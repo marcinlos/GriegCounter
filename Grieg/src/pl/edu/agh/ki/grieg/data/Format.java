@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.data;
 
-import java.util.Arrays;
+import com.google.common.base.Objects;
 
 /**
  * Format of the sound data.
@@ -69,7 +69,7 @@ public class Format {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] { pcmFormat, soundFormat });
+        return Objects.hashCode(pcmFormat, soundFormat);
     }
 
     public static Builder builder() {

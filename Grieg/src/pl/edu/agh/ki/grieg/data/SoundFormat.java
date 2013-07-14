@@ -2,6 +2,8 @@ package pl.edu.agh.ki.grieg.data;
 
 import java.util.Arrays;
 
+import com.google.common.base.Objects;
+
 /**
  * Intrinsic, high-level sample format-agnostic properties of PCM-encoding.
  * 
@@ -46,7 +48,7 @@ public class SoundFormat {
     
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[]{sampleRate, channels});
+        return Objects.hashCode(sampleRate, channels);
     }
 
 }

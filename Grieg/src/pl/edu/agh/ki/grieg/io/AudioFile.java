@@ -1,6 +1,11 @@
 package pl.edu.agh.ki.grieg.io;
 
-import pl.edu.agh.ki.grieg.data.SourceDetails;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 /**
  * Simple representation of an audio file. Contains information about the audio
@@ -10,21 +15,25 @@ import pl.edu.agh.ki.grieg.data.SourceDetails;
  */
 public class AudioFile {
 
-    private SourceDetails details;
-    private AudioStream stream;
+    private final File file;
+    private final AudioFormatParser parser;
     
-    
-    public AudioFile(SourceDetails details, AudioStream stream) {
-        this.details = details;
-        this.stream = stream;
+    public AudioFile(File file, AudioFormatParser parser) {
+        this.file = file;
+        this.parser = parser;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public AudioFormatParser getParser() {
+        return parser;
     }
     
-    public SourceDetails getDetails() {
-        return details;
+    public AudioStream openStream() throws IOException, DecodeException {
+        return parser.openStream(new FileInputStream(file));
     }
     
-    public AudioStream getStream() {
-        return stream;
-    }
 
 }

@@ -33,10 +33,8 @@ public class Example {
             LineUnavailableException {
         File file = new File(RACH);
         AudioFile audio = loader.loadFile(file);
-        AudioStream stream = audio.getStream();
-        SourceDetails details = audio.getDetails();
-        System.out.println(details);
-        SoundFormat format = details.getFormat();
+        AudioStream stream = audio.openStream();
+        SoundFormat format = stream.getFormat();
 
         final Player player = new Player(format);
         player.start();

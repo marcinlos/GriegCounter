@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.utils.FileUtils;
+
+import com.google.common.io.Files;
 
 /**
  * Class used to maintain collection of {@code AudioFormatParser}s and find
@@ -98,7 +99,7 @@ public class DecoderManager {
      * @see #getByExtension(String)
      */
     public Iterable<AudioFormatParser> getByExtension(File file) {
-        String ext = FileUtils.getExtension(file);
+        String ext = Files.getFileExtension(file.getName());
         return getByExtension(ext);
     }
 

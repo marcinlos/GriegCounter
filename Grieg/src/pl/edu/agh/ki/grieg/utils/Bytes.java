@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.utils;
 
+import com.google.common.base.Charsets;
+
 /**
  * Utility class containing methods for bit manipulations.
  * 
@@ -105,7 +107,7 @@ public final class Bytes {
     }
 
     public static int asciiToIntBE(String text) {
-        byte[] array = text.getBytes(Strings.UTF_8);
+        byte[] array = text.getBytes(Charsets.UTF_8);
         if (array.length != 4) {
             throw new IllegalArgumentException("Text should be exactly 4 bytes");
         }
@@ -114,6 +116,6 @@ public final class Bytes {
     
     public static String intToStringBE(int n) {
         byte[] array = toBigEndian(n);
-        return new String(array, Strings.UTF_8);
+        return new String(array, Charsets.UTF_8);
     }
 }

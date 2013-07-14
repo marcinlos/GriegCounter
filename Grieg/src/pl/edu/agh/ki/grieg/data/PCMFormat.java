@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.data;
 
-import java.util.Arrays;
+import com.google.common.base.Objects;
 
 /**
  * Low-level details of PCM data encoding.
@@ -71,8 +71,7 @@ public class PCMFormat {
 
     @Override
     public int hashCode() {
-        Object[] vals = { depth, encoding, endianess, signed };
-        return Arrays.hashCode(vals);
+        return Objects.hashCode(depth, encoding, endianess, signed);
     }
 
     public static Builder builder() {

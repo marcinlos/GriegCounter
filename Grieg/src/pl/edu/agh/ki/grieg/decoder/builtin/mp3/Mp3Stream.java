@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
+import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
@@ -23,6 +24,8 @@ public class Mp3Stream implements AudioStream {
     private Bitstream bitstream;
     private SourceDetails details;
 
+    private final Decoder decoder = new Decoder();
+
     public Mp3Stream(Bitstream stream) throws DecodeException, IOException {
         this.bitstream = stream;
         decodeNext();
@@ -38,8 +41,8 @@ public class Mp3Stream implements AudioStream {
             if (frame != null) {
                 System.out.println("framesize = " + frame.framesize);
                 System.out.println("slots = " + frame.nSlots);
-                SampleBuffer samples = (SampleBuffer) Mp3Parser.decoder
-                        .decodeFrame(frame, bitstream);
+                SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
+                        frame, bitstream);
                 if (details == null) {
                     details = extractDetails(samples);
                 }
@@ -60,7 +63,7 @@ public class Mp3Stream implements AudioStream {
     private SourceDetails extractDetails(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        //Format2 format = new Format2(channels, freq);
+        // Format2 format = new Format2(channels, freq);
         SimpleTagContainer tags = new SimpleTagContainer();
         SoundFormat format = new SoundFormat(freq, channels);
         return new SourceDetails(-1, -1, format, tags);

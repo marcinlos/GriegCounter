@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.decoder.spi.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 
-public class WavFileParser implements AudioFormatParser {
+public class WavFileParser extends AbstractAudioFormatParser {
 
     private static final Iterable<String> EXTS = Arrays.asList("wav");
 
@@ -22,31 +20,10 @@ public class WavFileParser implements AudioFormatParser {
         return EXTS;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public AudioFile open(InputStream stream) throws DecodeException,
-            IOException {
-        WavStream audioStream = new WavStream(stream);
-        SourceDetails details = audioStream.getDetails();
-        return new AudioFile(details, audioStream);
-    }
-
     @Override
     public AudioStream openStream(InputStream stream) throws DecodeException,
             IOException {
         return new WavStream(stream);
-    }
-
-    @Override
-    public boolean readable(InputStream stream) throws IOException {
-        try {
-            openStream(stream);
-            return true;
-        } catch (DecodeException e) {
-            return false;
-        }
     }
 
 }

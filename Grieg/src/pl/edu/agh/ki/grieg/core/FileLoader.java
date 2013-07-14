@@ -3,8 +3,6 @@ package pl.edu.agh.ki.grieg.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.ServiceLoader;
 
@@ -15,8 +13,9 @@ import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
 import pl.edu.agh.ki.grieg.decoder.builtin.wav.WavFileParser;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.utils.FileUtils;
-import pl.edu.agh.ki.grieg.utils.Streams;
+
+import com.google.common.io.Closeables;
+import com.google.common.io.Files;
 
 /**
  * 
@@ -64,19 +63,13 @@ public class FileLoader {
      *             If plain IO error occured
      */
     public AudioFile loadFile(File file) throws DecodeException, IOException {
-        for (AudioFormatParser parser : decoders.getByExtension(file)) {
-            try {
-                InputStream stream = new FileInputStream(file);
-                return parser.open(stream);
-            } catch (DecodeException e) {
-                // carry on
-                e.printStackTrace(System.err);
-            }
-        }
-        throw new NoSuitableDecoderException(FileUtils.getExtension(file));
+        AudioFormatParser parser = findParser(file);
+        return new AudioFile(file, parser);
     }
+    
 
-    public AudioFormatParser findParser(File file) throws IOException {
+    public AudioFormatParser findParser(File file) throws DecodeException,
+            IOException {
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(file);
@@ -89,10 +82,11 @@ public class FileLoader {
                     channel.position(0);
                 }
             }
-            return null;
-        } catch (IOException e) {
-            Streams.close(stream);
-            throw e;
+            String extension = Files.getFileExtension(file.getName());
+            throw new NoSuitableDecoderException(extension);
+        } finally {
+            Closeables.close(stream, true);
         }
     }
+
 }
