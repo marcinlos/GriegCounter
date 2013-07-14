@@ -1,7 +1,5 @@
 package pl.edu.agh.ki.grieg.data;
 
-import java.util.Arrays;
-
 import com.google.common.base.Objects;
 
 /**

@@ -17,7 +17,7 @@ public class PCM {
         return s / MAX_SHORT;
     }
     
-    public static final short toShort(float a) {
+    public static final short toSignedShort(float a) {
         return (short) (a * Short.MAX_VALUE);
     }
 

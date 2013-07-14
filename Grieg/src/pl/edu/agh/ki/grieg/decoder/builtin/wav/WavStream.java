@@ -50,7 +50,6 @@ class WavStream implements AudioStream {
 
     private DataInput input;
     private InputStream stream;
-    
 
     private PCMReader converter;
 
@@ -76,12 +75,7 @@ class WavStream implements AudioStream {
         long sampleCount = size / (channels * bitsPerSample / 8);
         int sampleRate = wav.getSampleRate();
         float length = sampleCount / (float) sampleRate;
-        /*Format format = Format.builder().depth(bitsPerSample)
-                .encoding(PCMEncoding.INTEGER).littleEndian().signed()
-                .rate(sampleRate).channels(channels).build();*/
-        
         SoundFormat format = new SoundFormat(sampleRate, channels);
-
         TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
         return new SourceDetails(length, sampleCount, format, tags);
@@ -140,8 +134,8 @@ class WavStream implements AudioStream {
     private WavHeader readWavHeader(InputStream stream) throws IOException,
             NotWavException {
         WavHeader header = new WavHeader();
-        LittleEndianDataInputStream input = new LittleEndianDataInputStream(stream);
-        //BinaryInputStream input = new BinaryInputStream(input);
+        @SuppressWarnings("resource")
+        DataInput input = new LittleEndianDataInputStream(stream);
         short audioFormat = input.readShort();
         if (audioFormat != FMT_PCM) {
             throw new NotWavException("Unsupported audio format: "
@@ -164,27 +158,18 @@ class WavStream implements AudioStream {
     @Override
     public int readSamples(float[][] buffer) throws AudioException, IOException {
         int count = buffer[0].length;
-        int i;
-        for (i = 0; --remains >= 0 && i < count
-                && readSingleSample(buffer, i++);)
-            ;
-        return i;
-    }
-
-    protected boolean readSingleSample(float[][] samples, int n)
-            throws AudioException, IOException {
+        int read = 0;
         try {
-            for (int i = 0; i < samples.length; ++i) {
-                samples[i][n] = converter.readSample(input);
+            while (--remains >= 0 && read < count) {
+                for (int j = 0; j < buffer.length; ++j) {
+                    buffer[j][read] = converter.readSample(input);
+                }
+                ++ read;
             }
-            return true;
         } catch (EOFException e) {
-            return false;
+            // ignore, it's ok
         }
-    }
-
-    SourceDetails getDetails() {
-        return details;
+        return read;
     }
 
     @Override

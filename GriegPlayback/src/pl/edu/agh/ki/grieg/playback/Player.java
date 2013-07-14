@@ -46,7 +46,7 @@ public class Player {
                 .order(ByteOrder.BIG_ENDIAN).asShortBuffer();
         for (int i = 0; i < length; ++i) {
             for (int j = 0; j < channels; ++j) {
-                shorts.put(PCM.toShort(data[j][start + i]));
+                shorts.put(PCM.toSignedShort(data[j][start + i]));
             }
         }
         line.write(buffer, 0, buffer.length);
