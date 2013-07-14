@@ -1,10 +1,10 @@
 package pl.edu.agh.ki.grieg.decoder;
 
-import pl.edu.agh.ki.grieg.decoder.spi.AudioFileParser;
+import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 /**
  * Thrown upon an attempt to parse file format not supported by the used
- * {@linkplain AudioFileParser}.
+ * {@linkplain AudioFormatParser}.
  * 
  * <p>
  * Note: it's not really a {@linkplain InvalidFormatException}, since the input stream

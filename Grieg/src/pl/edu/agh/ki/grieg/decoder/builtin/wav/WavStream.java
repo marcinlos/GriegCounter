@@ -1,10 +1,11 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
+import java.io.DataInput;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.riff.ChunkHeader;
@@ -16,18 +17,11 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
 import pl.edu.agh.ki.grieg.meta.TagSet;
-import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
 import pl.edu.agh.ki.grieg.utils.NotImplementedException;
 
-class WavStream implements AudioStream {
+import com.google.common.io.LittleEndianDataInputStream;
 
-    // WavStream(BinaryInputStream stream, SourceDetails details) {
-    /*
-     * Format fmt = getFormat(); if (fmt.bitDepth != 16) { throw new
-     * NotImplementedException("Sorry, cannot open " + fmt.bitDepth +
-     * "-bit file, only 16-bit sound is currently supported"); }
-     */
-    // }
+class WavStream implements AudioStream {
 
     private static final int ASCII_WAVE = 0x57415645;
     private static final int ASCII_FMT = 0x666d7420;
@@ -37,24 +31,25 @@ class WavStream implements AudioStream {
 
     private interface PCMReader {
 
-        float readSample(BinaryInputStream stream) throws IOException;
+        float readSample(DataInput stream) throws IOException;
     }
 
     private static final PCMReader PCM8 = new PCMReader() {
         @Override
-        public float readSample(BinaryInputStream stream) throws IOException {
-            return PCM.fromByte((byte) stream.read());
+        public float readSample(DataInput stream) throws IOException {
+            return PCM.fromUnsignedByte(stream.readUnsignedByte());
         }
     };
 
     private static final PCMReader PCM16 = new PCMReader() {
         @Override
-        public float readSample(BinaryInputStream stream) throws IOException {
-            return PCM.fromShort(stream.readShortLE());
+        public float readSample(DataInput stream) throws IOException {
+            return PCM.fromSignedShort(stream.readUnsignedShort());
         }
     };
 
-    private BinaryInputStream stream;
+    private DataInput input;
+    private InputStream stream;
 
     private PCMReader converter;
 
@@ -62,7 +57,8 @@ class WavStream implements AudioStream {
     private long remains;
 
     public WavStream(InputStream stream) throws DecodeException, IOException {
-        this.stream = new BinaryInputStream(stream);
+        this.input = new LittleEndianDataInputStream(stream);
+        this.stream = (InputStream) this.input;
         details = getDetails(stream);
         remains = details.getSampleCount();
     }
@@ -79,10 +75,10 @@ class WavStream implements AudioStream {
         long sampleCount = size / (channels * bitsPerSample / 8);
         int sampleRate = wav.getSampleRate();
         float length = sampleCount / (float) sampleRate;
-        Format format = new Format(channels, sampleRate);
+        SoundFormat format = new SoundFormat(sampleRate, channels);
         TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
-        return new SourceDetails(null, length, sampleCount, format, tags);
+        return new SourceDetails(length, sampleCount, format, tags);
     }
 
     private PCMReader chooseConverter(int depth) {
@@ -93,7 +89,8 @@ class WavStream implements AudioStream {
             return PCM16;
         default:
             throw new NotImplementedException("Sorry, cannot open " + depth
-                    + "-bit file, only 16-bit sound is currently supported");
+                    + "-bit file, only 8- and 16-bit sound is currently "
+                    + "supported");
         }
     }
 
@@ -137,18 +134,19 @@ class WavStream implements AudioStream {
     private WavHeader readWavHeader(InputStream stream) throws IOException,
             NotWavException {
         WavHeader header = new WavHeader();
-        BinaryInputStream input = new BinaryInputStream(stream);
-        short audioFormat = input.readShortLE();
+        @SuppressWarnings("resource")
+        DataInput input = new LittleEndianDataInputStream(stream);
+        short audioFormat = input.readShort();
         if (audioFormat != FMT_PCM) {
             throw new NotWavException("Unsupported audio format: "
                     + audioFormat);
         }
         header.setAudioFormat(audioFormat);
-        header.setChannels(input.readShortLE());
-        header.setSampleRate(input.readIntLE());
-        header.setByteRate(input.readIntLE());
-        header.setBlockAlign(input.readShortLE());
-        header.setDepth(input.readShortLE());
+        header.setChannels(input.readShort());
+        header.setSampleRate(input.readInt());
+        header.setByteRate(input.readInt());
+        header.setBlockAlign(input.readShort());
+        header.setDepth(input.readShort());
         return header;
     }
 
@@ -160,31 +158,22 @@ class WavStream implements AudioStream {
     @Override
     public int readSamples(float[][] buffer) throws AudioException, IOException {
         int count = buffer[0].length;
-        int i;
-        for (i = 0; --remains >= 0 && i < count
-                && readSingleSample(buffer, i++);)
-            ;
-        return i;
-    }
-
-    protected boolean readSingleSample(float[][] samples, int n)
-            throws AudioException, IOException {
+        int read = 0;
         try {
-            for (int i = 0; i < samples.length; ++i) {
-                samples[i][n] = converter.readSample(stream);
+            while (--remains >= 0 && read < count) {
+                for (int j = 0; j < buffer.length; ++j) {
+                    buffer[j][read] = converter.readSample(input);
+                }
+                ++ read;
             }
-            return true;
         } catch (EOFException e) {
-            return false;
+            // ignore, it's ok
         }
-    }
-
-    SourceDetails getDetails() {
-        return details;
+        return read;
     }
 
     @Override
-    public Format getFormat() {
+    public SoundFormat getFormat() {
         return details.getFormat();
     }
 

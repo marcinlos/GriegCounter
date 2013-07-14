@@ -4,16 +4,15 @@ import java.io.IOException;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
+import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
-import pl.edu.agh.ki.grieg.data.Format;
-import pl.edu.agh.ki.grieg.data.SourceDetails;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
 
 public class Mp3Stream implements AudioStream {
 
@@ -21,7 +20,9 @@ public class Mp3Stream implements AudioStream {
     private short sampleOffset;
 
     private Bitstream bitstream;
-    private SourceDetails details;
+    private SoundFormat format;
+
+    private final Decoder decoder = new Decoder();
 
     public Mp3Stream(Bitstream stream) throws DecodeException, IOException {
         this.bitstream = stream;
@@ -36,13 +37,16 @@ public class Mp3Stream implements AudioStream {
         try {
             Header frame = bitstream.readFrame();
             if (frame != null) {
-                SampleBuffer samples = (SampleBuffer) Mp3Parser.decoder
-                        .decodeFrame(frame, bitstream);
-                if (details == null) {
-                    details = extractDetails(samples);
+                System.out.println("framesize = " + frame.framesize);
+                System.out.println("slots = " + frame.nSlots);
+                SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
+                        frame, bitstream);
+                if (format == null) {
+                    format = extractFormat(samples);
                 }
                 sampleBuffer = samples.getBuffer();
                 sampleOffset = 0;
+                System.out.println("buffersize = " + sampleBuffer.length);
                 bitstream.closeFrame();
                 return true;
             }
@@ -54,12 +58,10 @@ public class Mp3Stream implements AudioStream {
         return false;
     }
 
-    private SourceDetails extractDetails(SampleBuffer samples) {
+    private SoundFormat extractFormat(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        Format format = new Format(channels, freq);
-        SimpleTagContainer tags = new SimpleTagContainer();
-        return new SourceDetails(null, -1, -1, format, tags);
+        return new SoundFormat(freq, channels);
     }
 
     @Override
@@ -92,19 +94,15 @@ public class Mp3Stream implements AudioStream {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < channels; ++j) {
                 buffer[j][offset + i] = PCM
-                        .fromShort(sampleBuffer[sampleOffset++]);
+                        .fromSignedShort(sampleBuffer[sampleOffset++]);
             }
         }
         return n;
     }
 
-    public SourceDetails getDetails() {
-        return details;
-    }
-
     @Override
-    public Format getFormat() {
-        return details.getFormat();
+    public SoundFormat getFormat() {
+        return format;
     }
 
 }
