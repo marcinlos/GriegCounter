@@ -20,10 +20,16 @@ public class SoundFormat {
         this.channels = channels;
     }
 
+    /**
+     * @return Amount of samples per second
+     */
     public int getSampleRate() {
         return sampleRate;
     }
 
+    /**
+     * @return Number of channels
+     */
     public int getChannels() {
         return channels;
     }
@@ -43,7 +49,7 @@ public class SoundFormat {
             return false;
         }
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(sampleRate, channels);

@@ -1,5 +1,12 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
+/**
+ * Header of a WAV file contained in the RIFF. Provides information about the
+ * audio data it contains.
+ * 
+ * @author los
+ * 
+ */
 public class WavHeader {
 
     private short audioFormat;

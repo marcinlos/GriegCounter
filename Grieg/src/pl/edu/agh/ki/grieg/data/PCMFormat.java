@@ -74,10 +74,16 @@ public class PCMFormat {
         return Objects.hashCode(depth, encoding, endianess, signed);
     }
 
+    /**
+     * @return Builder facilitating {@code PCMFormat} creation
+     */
     public static Builder builder() {
         return new Builder();
     }
-    
+
+    /**
+     * Auxilary class for building {@link PCMFormat} objects.
+     */
     public static class Builder {
 
         private Integer depth;
