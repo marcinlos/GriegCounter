@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
+import java.io.DataInput;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +17,9 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
 import pl.edu.agh.ki.grieg.meta.TagSet;
-import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
 import pl.edu.agh.ki.grieg.utils.NotImplementedException;
+
+import com.google.common.io.LittleEndianDataInputStream;
 
 class WavStream implements AudioStream {
 
@@ -29,24 +31,26 @@ class WavStream implements AudioStream {
 
     private interface PCMReader {
 
-        float readSample(BinaryInputStream stream) throws IOException;
+        float readSample(DataInput stream) throws IOException;
     }
 
     private static final PCMReader PCM8 = new PCMReader() {
         @Override
-        public float readSample(BinaryInputStream stream) throws IOException {
-            return PCM.fromByte((byte) stream.read());
+        public float readSample(DataInput stream) throws IOException {
+            return PCM.fromUnsignedByte(stream.readUnsignedByte());
         }
     };
 
     private static final PCMReader PCM16 = new PCMReader() {
         @Override
-        public float readSample(BinaryInputStream stream) throws IOException {
-            return PCM.fromShort(stream.readShortLE());
+        public float readSample(DataInput stream) throws IOException {
+            return PCM.fromSignedShort(stream.readUnsignedShort());
         }
     };
 
-    private BinaryInputStream stream;
+    private DataInput input;
+    private InputStream stream;
+    
 
     private PCMReader converter;
 
@@ -54,7 +58,8 @@ class WavStream implements AudioStream {
     private long remains;
 
     public WavStream(InputStream stream) throws DecodeException, IOException {
-        this.stream = new BinaryInputStream(stream);
+        this.input = new LittleEndianDataInputStream(stream);
+        this.stream = (InputStream) this.input;
         details = getDetails(stream);
         remains = details.getSampleCount();
     }
@@ -135,18 +140,19 @@ class WavStream implements AudioStream {
     private WavHeader readWavHeader(InputStream stream) throws IOException,
             NotWavException {
         WavHeader header = new WavHeader();
-        BinaryInputStream input = new BinaryInputStream(stream);
-        short audioFormat = input.readShortLE();
+        LittleEndianDataInputStream input = new LittleEndianDataInputStream(stream);
+        //BinaryInputStream input = new BinaryInputStream(input);
+        short audioFormat = input.readShort();
         if (audioFormat != FMT_PCM) {
             throw new NotWavException("Unsupported audio format: "
                     + audioFormat);
         }
         header.setAudioFormat(audioFormat);
-        header.setChannels(input.readShortLE());
-        header.setSampleRate(input.readIntLE());
-        header.setByteRate(input.readIntLE());
-        header.setBlockAlign(input.readShortLE());
-        header.setDepth(input.readShortLE());
+        header.setChannels(input.readShort());
+        header.setSampleRate(input.readInt());
+        header.setByteRate(input.readInt());
+        header.setBlockAlign(input.readShort());
+        header.setDepth(input.readShort());
         return header;
     }
 
@@ -169,7 +175,7 @@ class WavStream implements AudioStream {
             throws AudioException, IOException {
         try {
             for (int i = 0; i < samples.length; ++i) {
-                samples[i][n] = converter.readSample(stream);
+                samples[i][n] = converter.readSample(input);
             }
             return true;
         } catch (EOFException e) {

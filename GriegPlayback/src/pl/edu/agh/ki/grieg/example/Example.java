@@ -31,7 +31,7 @@ public class Example {
 
     public static void main(String[] args) throws IOException, AudioException,
             LineUnavailableException {
-        File file = new File(RACH);
+        File file = new File(WAV);
         AudioFile audio = loader.loadFile(file);
         AudioStream stream = audio.openStream();
         SoundFormat format = stream.getFormat();

@@ -9,12 +9,10 @@ import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
 
 public class Mp3Stream implements AudioStream {
 
@@ -22,7 +20,7 @@ public class Mp3Stream implements AudioStream {
     private short sampleOffset;
 
     private Bitstream bitstream;
-    private SourceDetails details;
+    private SoundFormat format;
 
     private final Decoder decoder = new Decoder();
 
@@ -43,8 +41,8 @@ public class Mp3Stream implements AudioStream {
                 System.out.println("slots = " + frame.nSlots);
                 SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
                         frame, bitstream);
-                if (details == null) {
-                    details = extractDetails(samples);
+                if (format == null) {
+                    format = extractFormat(samples);
                 }
                 sampleBuffer = samples.getBuffer();
                 sampleOffset = 0;
@@ -60,13 +58,10 @@ public class Mp3Stream implements AudioStream {
         return false;
     }
 
-    private SourceDetails extractDetails(SampleBuffer samples) {
+    private SoundFormat extractFormat(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        // Format2 format = new Format2(channels, freq);
-        SimpleTagContainer tags = new SimpleTagContainer();
-        SoundFormat format = new SoundFormat(freq, channels);
-        return new SourceDetails(-1, -1, format, tags);
+        return new SoundFormat(freq, channels);
     }
 
     @Override
@@ -99,19 +94,15 @@ public class Mp3Stream implements AudioStream {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < channels; ++j) {
                 buffer[j][offset + i] = PCM
-                        .fromShort(sampleBuffer[sampleOffset++]);
+                        .fromSignedShort(sampleBuffer[sampleOffset++]);
             }
         }
         return n;
     }
 
-    public SourceDetails getDetails() {
-        return details;
-    }
-
     @Override
     public SoundFormat getFormat() {
-        return details.getFormat();
+        return format;
     }
 
 }

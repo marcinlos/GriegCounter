@@ -9,13 +9,11 @@ public class PCM {
         // empty
     }
     
-    public static float fromByte(byte b) {
-        // 8-bit wav pcm is unsigned
+    public static float fromUnsignedByte(int b) {
         return (b + Byte.MIN_VALUE) / MAX_BYTE;
     }
     
-    public static float fromShort(short s) {
-        // 16-bit wav pcm is signed
+    public static float fromSignedShort(int s) {
         return s / MAX_SHORT;
     }
     
