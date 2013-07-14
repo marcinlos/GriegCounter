@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.decoder.spi;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -22,11 +22,7 @@ public interface AudioFileParser {
 
     /**
      * Extrcts information about the audio characteristics from the input
-     * stream. This usually entails reading some data from the stream, which may
-     * not be desirable for the implementation client. If that is the case, the
-     * parser shold mark the position of the stream (using
-     * {@linkplain InputStream#mark(int)}), read required amount of data and
-     * reseting the position ({@linkplain InputStream#reset()}) afterwards.
+     * stream. 
      * 
      * @param stream
      *            Input stream
@@ -37,7 +33,7 @@ public interface AudioFileParser {
      * @throws IOException
      *             If an IO error occured
      */
-    SourceDetails getDetails(InputStream stream) throws DecodeException,
+    SourceDetails getDetails(FileInputStream stream) throws DecodeException,
             IOException;
 
     /**
@@ -53,6 +49,6 @@ public interface AudioFileParser {
      * @throws IOException
      *             If an IO error occured
      */
-    AudioFile open(InputStream stream) throws DecodeException, IOException;
+    AudioFile open(FileInputStream stream) throws DecodeException, IOException;
 
 }

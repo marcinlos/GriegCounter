@@ -1,13 +1,18 @@
 package pl.edu.agh.ki.grieg.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ServiceLoader;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.DecoderManager;
+import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
+import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
+import pl.edu.agh.ki.grieg.decoder.builtin.wav.WavFileParser;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFileParser;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.utils.FileUtils;
 
 /**
  * 
@@ -15,42 +20,55 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
  * @author los
  */
 public class FileLoader {
-    
+
     private DecoderManager decoders = new DecoderManager();
-    
-    private FileLoader instance = new FileLoader();
-    
+
+    private static FileLoader instance = new FileLoader();
+
     private FileLoader() {
         registerBuiltins();
-        
+
         // gather all the implementations
-        for (AudioFileParser p: ServiceLoader.load(AudioFileParser.class)) {
+        for (AudioFileParser p : ServiceLoader.load(AudioFileParser.class)) {
             decoders.register(p);
         }
     }
-    
-    
+
     private void registerBuiltins() {
         // register builtin decoders here
+        decoders.register(new WavFileParser());
+        decoders.register(new Mp3Parser());
     }
-    
+
     /**
      * @return Instance of {@code FileLoader}
      */
-    public FileLoader getInstance() {
+    public static FileLoader getInstance() {
         return instance;
     }
-    
+
     /**
      * 
-     * @param file File containing audio data to load
+     * @param file
+     *            File containing audio data to load
      * @return {@code AudioFile}
-     * @throws NoSuitableDecoderException If no decoder capable of decoding this file has been found
-     * @throws DecodeException If some error occured during decoding
-     * @throws IOException If plain IO error occured
+     * @throws NoSuitableDecoderException
+     *             If no decoder capable of decoding this file has been found
+     * @throws DecodeException
+     *             If some error occured during decoding
+     * @throws IOException
+     *             If plain IO error occured
      */
     public AudioFile loadFile(File file) throws DecodeException, IOException {
-        return null;
+        for (AudioFileParser parser: decoders.getByExtension(file)) {
+            try {
+                FileInputStream stream = new FileInputStream(file);
+                return parser.open(stream);
+            } catch (DecodeException e) {
+                // carry on
+                e.printStackTrace(System.err);
+            }
+        }
+        throw new NoSuitableDecoderException(FileUtils.getExtension(file));
     }
-
 }

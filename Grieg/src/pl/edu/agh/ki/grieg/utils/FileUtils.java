@@ -14,7 +14,7 @@ public class FileUtils {
     }
 
     /**
-     * Extracts file extension, i.e. longest postfix of the path not without a
+     * Extracts file extension, i.e. longest postfix of the path without a
      * dot.
      * 
      * @param file
@@ -24,7 +24,7 @@ public class FileUtils {
     public static String getExtension(File file) {
         String name = file.getName();
         int idx = name.lastIndexOf('.');
-        return name.substring(idx + 1);
+        return idx == -1 ? "" : name.substring(idx + 1);
     }
 
 }
