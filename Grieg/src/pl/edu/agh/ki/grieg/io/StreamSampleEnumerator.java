@@ -1,7 +1,6 @@
 package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import pl.edu.agh.ki.grieg.data.Format;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
@@ -27,10 +26,8 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     }
 
     private void copyBuffer(float[][] src, float[][] dst, int length) {
-        for (int i = 0; i < length; ++i) {
-            for (int j = 0; j < getFormat().channels; ++j) {
-                dst[i][j] = src[i][j];
-            }
+        for (int j = 0; j < getFormat().channels; ++j) {
+            System.arraycopy(src[j], 0, dst[j], 0, length);
         }
     }
 
@@ -43,16 +40,16 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     public void start() throws AudioException, IOException {
         int read;
         while ((read = stream.readSamples(buffer)) > 0) {
-//            System.out.println(Arrays.deepToString(buffer));
-//            if (read < size) {
-//                float[][] newBuf = makeBuffer(read);
-//                copyBuffer(buffer, newBuf, read);
-//                pushChunk(newBuf);
-//            } else {
+            if (read < size) {
+                float[][] newBuf = makeBuffer(read);
+                copyBuffer(buffer, newBuf, read);
+                pushChunk(newBuf);
+            } else {
                 pushChunk(buffer);
-//            }
+            }
         }
         endOfStream();
+        stream.close();
     }
 
     @Override
