@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
 
 public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
@@ -32,7 +32,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     }
 
     @Override
-    public Format getFormat() {
+    public Format2 getFormat() {
         return stream.getFormat();
     }
 

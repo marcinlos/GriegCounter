@@ -4,7 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.riff.ChunkHeader;
@@ -23,7 +23,7 @@ class WavStream implements AudioStream {
 
     // WavStream(BinaryInputStream stream, SourceDetails details) {
     /*
-     * Format fmt = getFormat(); if (fmt.bitDepth != 16) { throw new
+     * Format2 fmt = getFormat(); if (fmt.bitDepth != 16) { throw new
      * NotImplementedException("Sorry, cannot open " + fmt.bitDepth +
      * "-bit file, only 16-bit sound is currently supported"); }
      */
@@ -79,7 +79,7 @@ class WavStream implements AudioStream {
         long sampleCount = size / (channels * bitsPerSample / 8);
         int sampleRate = wav.getSampleRate();
         float length = sampleCount / (float) sampleRate;
-        Format format = new Format(channels, sampleRate);
+        Format2 format = new Format2(channels, sampleRate);
         TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
         return new SourceDetails(null, length, sampleCount, format, tags);
@@ -184,7 +184,7 @@ class WavStream implements AudioStream {
     }
 
     @Override
-    public Format getFormat() {
+    public Format2 getFormat() {
         return details.getFormat();
     }
 

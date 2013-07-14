@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
@@ -35,7 +35,7 @@ public class Example {
         AudioStream stream = audio.getStream();
         SourceDetails details = audio.getDetails();
         System.out.println(details);
-        Format format = details.getFormat();
+        Format2 format = details.getFormat();
 
         final Player player = new Player(format);
         player.start();

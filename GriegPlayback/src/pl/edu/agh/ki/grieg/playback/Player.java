@@ -10,16 +10,16 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 
 public class Player {
 
     private SourceDataLine line;
 
-    private Format fmt;
+    private Format2 fmt;
 
-    public Player(Format fmt) throws LineUnavailableException {
+    public Player(Format2 fmt) throws LineUnavailableException {
         this.fmt = fmt;
         AudioFormat format = new AudioFormat(fmt.sampleRate, 16, fmt.channels,
                 true, true);

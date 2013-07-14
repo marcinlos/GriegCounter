@@ -7,7 +7,7 @@ import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
@@ -57,7 +57,7 @@ public class Mp3Stream implements AudioStream {
     private SourceDetails extractDetails(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        Format format = new Format(channels, freq);
+        Format2 format = new Format2(channels, freq);
         SimpleTagContainer tags = new SimpleTagContainer();
         return new SourceDetails(null, -1, -1, format, tags);
     }
@@ -103,7 +103,7 @@ public class Mp3Stream implements AudioStream {
     }
 
     @Override
-    public Format getFormat() {
+    public Format2 getFormat() {
         return details.getFormat();
     }
 

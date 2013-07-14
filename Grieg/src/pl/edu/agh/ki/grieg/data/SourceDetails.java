@@ -14,7 +14,7 @@ public class SourceDetails {
     private String name;
     private float length;
     private long sampleCount;
-    private Format format;
+    private Format2 format;
     private TagSet tags;
 
     public SourceDetails() {
@@ -25,7 +25,7 @@ public class SourceDetails {
     }
 
     public SourceDetails(String name, float length, long sampleCount,
-            Format format, TagSet tags) {
+            Format2 format, TagSet tags) {
         this.name = name;
         this.length = length;
         this.sampleCount = sampleCount;
@@ -57,11 +57,11 @@ public class SourceDetails {
         this.sampleCount = sampleCount;
     }
 
-    public Format getFormat() {
+    public Format2 getFormat() {
         return format;
     }
 
-    public void setFormat(Format format) {
+    public void setFormat(Format2 format) {
         this.format = format;
     }
 

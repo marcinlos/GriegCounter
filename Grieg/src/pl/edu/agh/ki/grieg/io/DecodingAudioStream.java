@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.data.Format;
+import pl.edu.agh.ki.grieg.data.Format2;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
 
@@ -38,7 +38,7 @@ public abstract class DecodingAudioStream implements AudioStream {
             throws AudioException, IOException;
 
     @Override
-    public Format getFormat() {
+    public Format2 getFormat() {
         return details.getFormat();
     }
 
