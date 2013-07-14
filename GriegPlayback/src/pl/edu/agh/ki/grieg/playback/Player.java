@@ -35,7 +35,7 @@ public class Player {
     }
 
     public void write(float[][] data) {
-        write(data, 0, data.length);
+        write(data, 0, data[0].length);
     }
 
     public void write(float[][] data, int start, int length) {

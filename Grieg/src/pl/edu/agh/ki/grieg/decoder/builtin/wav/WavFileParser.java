@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
 import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -18,7 +19,6 @@ import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
 import pl.edu.agh.ki.grieg.meta.TagSet;
 import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
-
 
 public class WavFileParser implements AudioFileParser {
 
@@ -42,8 +42,8 @@ public class WavFileParser implements AudioFileParser {
      * {@inheritDoc}
      */
     @Override
-    public SourceDetails getDetails(InputStream stream) throws DecodeException,
-            IOException {
+    public SourceDetails getDetails(FileInputStream stream)
+            throws DecodeException, IOException {
         RiffParser riff = readRiffHeader(stream);
         readFormatHeader(riff);
         WavHeader wav = readWavHeader(stream);
@@ -118,11 +118,11 @@ public class WavFileParser implements AudioFileParser {
      * {@inheritDoc}
      */
     @Override
-    public AudioFile open(InputStream stream) throws DecodeException,
+    public AudioFile open(FileInputStream stream) throws DecodeException,
             IOException {
         SourceDetails details = getDetails(stream);
-        AudioStream audioStream = new WavStream(new BinaryInputStream(stream),
-                details);
+        BinaryInputStream input = new BinaryInputStream(stream);
+        AudioStream audioStream = new WavStream(input, details);
         return new AudioFile(details, audioStream);
     }
 
