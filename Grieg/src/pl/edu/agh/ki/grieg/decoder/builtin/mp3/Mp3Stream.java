@@ -22,7 +22,7 @@ public class Mp3Stream implements AudioStream {
 
     private Bitstream bitstream;
     private SourceDetails details;
-    
+
     public Mp3Stream(Bitstream stream) throws DecodeException, IOException {
         this.bitstream = stream;
         decodeNext();
@@ -57,7 +57,7 @@ public class Mp3Stream implements AudioStream {
     private SourceDetails extractDetails(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        Format format = new Format(channels, 16, freq);
+        Format format = new Format(channels, freq);
         SimpleTagContainer tags = new SimpleTagContainer();
         return new SourceDetails(null, -1, -1, format, tags);
     }

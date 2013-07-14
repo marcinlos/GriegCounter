@@ -3,6 +3,7 @@ package pl.edu.agh.ki.grieg.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ServiceLoader;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -62,7 +63,7 @@ public class FileLoader {
     public AudioFile loadFile(File file) throws DecodeException, IOException {
         for (AudioFileParser parser: decoders.getByExtension(file)) {
             try {
-                FileInputStream stream = new FileInputStream(file);
+                InputStream stream = new FileInputStream(file);
                 return parser.open(stream);
             } catch (DecodeException e) {
                 // carry on

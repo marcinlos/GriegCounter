@@ -2,7 +2,6 @@ package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.sound.sampled.LineUnavailableException;
 

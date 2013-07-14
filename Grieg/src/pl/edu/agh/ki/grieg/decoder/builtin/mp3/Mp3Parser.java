@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.mp3;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import javazoom.jl.decoder.Bitstream;
@@ -23,8 +23,8 @@ public class Mp3Parser implements AudioFileParser {
     }
 
     @Override
-    public SourceDetails getDetails(FileInputStream stream)
-            throws DecodeException, IOException {
+    public SourceDetails getDetails(InputStream stream) throws DecodeException,
+            IOException {
         return getDetails(new Bitstream(stream));
     }
 
@@ -37,9 +37,8 @@ public class Mp3Parser implements AudioFileParser {
         }
     }
 
-
     @Override
-    public AudioFile open(FileInputStream stream) throws DecodeException,
+    public AudioFile open(InputStream stream) throws DecodeException,
             IOException {
         Bitstream input = new Bitstream(stream);
         SourceDetails details = getDetails(input);
