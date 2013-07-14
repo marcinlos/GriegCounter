@@ -1,7 +1,6 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
 import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 

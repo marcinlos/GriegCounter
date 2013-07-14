@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import pl.edu.agh.ki.grieg.data.SourceDetails;
@@ -25,7 +25,7 @@ public class WavFileParser implements AudioFileParser {
      * {@inheritDoc}
      */
     @Override
-    public AudioFile open(FileInputStream stream) throws DecodeException,
+    public AudioFile open(InputStream stream) throws DecodeException,
             IOException {
         WavStream audioStream = new WavStream(stream);
         SourceDetails details = audioStream.getDetails();
@@ -33,8 +33,8 @@ public class WavFileParser implements AudioFileParser {
     }
 
     @Override
-    public SourceDetails getDetails(FileInputStream stream)
-            throws DecodeException, IOException {
+    public SourceDetails getDetails(InputStream stream) throws DecodeException,
+            IOException {
         WavStream audioStream = null;
         try {
             audioStream = new WavStream(stream);
