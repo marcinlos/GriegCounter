@@ -3,50 +3,92 @@ package pl.edu.agh.ki.grieg.data;
 import com.google.common.base.Objects;
 
 /**
- * Format of the sound data.
+ * Immutable complete format of the sound data, consisting of both low-level
+ * encoding details and higher level sound properties.
  * 
  * @author los
  */
 public class Format {
 
-    /** PCM */
+    /** PCM encoding */
     private final PCMFormat pcmFormat;
 
+    /** Sound format */
     private final SoundFormat soundFormat;
 
+    /**
+     * Creates new {@code Format} object.
+     * 
+     * @param pcmFormat
+     *            PCM data encoding
+     * @param soundFormat
+     *            Sound properties
+     */
     public Format(PCMFormat pcmFormat, SoundFormat soundFormat) {
         this.pcmFormat = pcmFormat;
         this.soundFormat = soundFormat;
     }
 
+    /**
+     * @return PCM encoding format
+     * @see PCMFormat
+     */
     public PCMFormat getPCMFormat() {
         return pcmFormat;
     }
 
+    /**
+     * @return Sound properties
+     * @see SoundFormat
+     */
     public SoundFormat getSoundFormat() {
         return soundFormat;
     }
 
+    /**
+     * @return Amount of bits per sample
+     * @see PCMFormat#getDepth()
+     */
     public int getDepth() {
         return pcmFormat.getDepth();
     }
 
+    /**
+     * @return PCM encoding
+     * @see PCMFormat#getEncoding()
+     */
     public PCMEncoding getEncoding() {
         return pcmFormat.getEncoding();
     }
 
+    /**
+     * @return Endianess of PCM encoding
+     * @see PCMFormat#getEndianess()
+     */
     public Endianess getEndianess() {
         return pcmFormat.getEndianess();
     }
 
+    /**
+     * @return {@code true} if the PCM data is signed, {@code false} otherwise
+     * @see PCMFormat#isSigned()
+     */
     public boolean isSigned() {
         return pcmFormat.isSigned();
     }
 
+    /**
+     * @return Amount of samples per second
+     * @see SoundFormat#getSampleRate()
+     */
     public int getSampleRate() {
         return soundFormat.getSampleRate();
     }
 
+    /**
+     * @return Number of channels
+     * @see SoundFormat#getChannels()
+     */
     public int getChannels() {
         return soundFormat.getChannels();
     }
@@ -72,10 +114,17 @@ public class Format {
         return Objects.hashCode(pcmFormat, soundFormat);
     }
 
+    /**
+     * @return Builder object
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Auxilary class that can be used to incrementally build {@link Format}
+     * object.
+     */
     public static class Builder {
 
         private Integer depth;
@@ -131,17 +180,24 @@ public class Format {
         public Builder unsigned() {
             return signed(false);
         }
-        
+
         public Builder rate(int sampleRate) {
             this.sampleRate = sampleRate;
             return this;
         }
-        
+
         public Builder channels(int ch) {
             this.channels = ch;
             return this;
         }
 
+        /**
+         * Creates new {@linkplain Format} object, using previously set values.
+         * If some value is missing, {@linkplain IllegalStateException} is
+         * thrown.
+         * 
+         * @return New {@link Format} object
+         */
         public Format build() {
             assertNotNull(depth, "bit depth");
             assertNotNull(encoding, "encoding");

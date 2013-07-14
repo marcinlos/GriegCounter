@@ -18,23 +18,31 @@ public interface AudioFormatParser {
      * @return Sequence of extensions commonly used by the supported formats
      */
     Iterable<String> extensions();
-    
+
     /**
-     * Begins parsing of an input stream, extracting format information,
-     * metadata and constructing audio decoder, capable of producing samples.
+     * Opens a stream of audio data.
      * 
      * @param stream
-     *            Input stream
-     * @return {@code AudioFile} providing information about the file and an
-     *         {@code AudioStream} implementation
+     *            Input data
+     * @return {@code AudioStream} allowing to read raw PCM data
      * @throws DecodeException
      *             If decoding failed
      * @throws IOException
-     *             If an IO error occured
+     *             If an IO error occurs
      */
     AudioStream openStream(InputStream stream) throws DecodeException,
             IOException;
 
+    /**
+     * Checks whether the data in the stream is supported by this parser.
+     * 
+     * @param stream
+     *            Input data
+     * @return {@code true} if the parser supports format of the input,
+     *         {@code false} otherwise
+     * @throws IOException
+     *             If an IO error occurs
+     */
     boolean readable(InputStream stream) throws IOException;
 
 }
