@@ -4,7 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.riff.ChunkHeader;
@@ -20,14 +20,6 @@ import pl.edu.agh.ki.grieg.utils.BinaryInputStream;
 import pl.edu.agh.ki.grieg.utils.NotImplementedException;
 
 class WavStream implements AudioStream {
-
-    // WavStream(BinaryInputStream stream, SourceDetails details) {
-    /*
-     * Format2 fmt = getFormat(); if (fmt.bitDepth != 16) { throw new
-     * NotImplementedException("Sorry, cannot open " + fmt.bitDepth +
-     * "-bit file, only 16-bit sound is currently supported"); }
-     */
-    // }
 
     private static final int ASCII_WAVE = 0x57415645;
     private static final int ASCII_FMT = 0x666d7420;
@@ -79,10 +71,15 @@ class WavStream implements AudioStream {
         long sampleCount = size / (channels * bitsPerSample / 8);
         int sampleRate = wav.getSampleRate();
         float length = sampleCount / (float) sampleRate;
-        Format2 format = new Format2(channels, sampleRate);
+        /*Format format = Format.builder().depth(bitsPerSample)
+                .encoding(PCMEncoding.INTEGER).littleEndian().signed()
+                .rate(sampleRate).channels(channels).build();*/
+        
+        SoundFormat format = new SoundFormat(sampleRate, channels);
+
         TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
-        return new SourceDetails(null, length, sampleCount, format, tags);
+        return new SourceDetails(length, sampleCount, format, tags);
     }
 
     private PCMReader chooseConverter(int depth) {
@@ -93,7 +90,8 @@ class WavStream implements AudioStream {
             return PCM16;
         default:
             throw new NotImplementedException("Sorry, cannot open " + depth
-                    + "-bit file, only 16-bit sound is currently supported");
+                    + "-bit file, only 8- and 16-bit sound is currently "
+                    + "supported");
         }
     }
 
@@ -184,7 +182,7 @@ class WavStream implements AudioStream {
     }
 
     @Override
-    public Format2 getFormat() {
+    public SoundFormat getFormat() {
         return details.getFormat();
     }
 

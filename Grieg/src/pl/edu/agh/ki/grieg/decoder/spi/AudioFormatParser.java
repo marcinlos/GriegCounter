@@ -6,13 +6,14 @@ import java.io.InputStream;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.AudioStream;
 
 /**
  * Provider interface of audio file format(s) parser.
  * 
  * @author los
  */
-public interface AudioFileParser {
+public interface AudioFormatParser {
 
     /**
      * 
@@ -20,22 +21,11 @@ public interface AudioFileParser {
      */
     Iterable<String> extensions();
 
-    /**
-     * Extrcts information about the audio characteristics from the input
-     * stream. 
-     * 
-     * @param stream
-     *            Input stream
-     * @return {@code SourceDetails} containing information about the input
-     * 
-     * @throws DecodeException
-     *             If decoding failed
-     * @throws IOException
-     *             If an IO error occured
-     */
-    SourceDetails getDetails(InputStream stream) throws DecodeException,
+    AudioStream openStream(InputStream stream) throws DecodeException,
             IOException;
 
+    boolean readable(InputStream stream) throws IOException;
+    
     /**
      * Begins parsing of an input stream, extracting format information,
      * metadata and constructing audio decoder, capable of producing samples.

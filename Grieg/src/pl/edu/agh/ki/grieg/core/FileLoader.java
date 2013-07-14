@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.ServiceLoader;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -11,9 +13,10 @@ import pl.edu.agh.ki.grieg.decoder.DecoderManager;
 import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
 import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
 import pl.edu.agh.ki.grieg.decoder.builtin.wav.WavFileParser;
-import pl.edu.agh.ki.grieg.decoder.spi.AudioFileParser;
+import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.utils.FileUtils;
+import pl.edu.agh.ki.grieg.utils.Streams;
 
 /**
  * 
@@ -30,7 +33,7 @@ public class FileLoader {
         registerBuiltins();
 
         // gather all the implementations
-        for (AudioFileParser p : ServiceLoader.load(AudioFileParser.class)) {
+        for (AudioFormatParser p : ServiceLoader.load(AudioFormatParser.class)) {
             decoders.register(p);
         }
     }
@@ -61,7 +64,7 @@ public class FileLoader {
      *             If plain IO error occured
      */
     public AudioFile loadFile(File file) throws DecodeException, IOException {
-        for (AudioFileParser parser: decoders.getByExtension(file)) {
+        for (AudioFormatParser parser : decoders.getByExtension(file)) {
             try {
                 InputStream stream = new FileInputStream(file);
                 return parser.open(stream);
@@ -71,5 +74,25 @@ public class FileLoader {
             }
         }
         throw new NoSuitableDecoderException(FileUtils.getExtension(file));
+    }
+
+    public AudioFormatParser findParser(File file) throws IOException {
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+            final FileChannel channel = stream.getChannel();
+            for (AudioFormatParser parser : decoders.getByExtension(file)) {
+                if (parser.readable(stream)) {
+                    return parser;
+                } else {
+                    // rewind
+                    channel.position(0);
+                }
+            }
+            return null;
+        } catch (IOException e) {
+            Streams.close(stream);
+            throw e;
+        }
     }
 }

@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
 
 public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
@@ -21,18 +21,19 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     }
 
     private float[][] makeBuffer(int bufferSize) {
-        int channels = getFormat().channels;
+        final int channels = getFormat().getChannels();
         return new float[channels][bufferSize];
     }
 
     private void copyBuffer(float[][] src, float[][] dst, int length) {
-        for (int j = 0; j < getFormat().channels; ++j) {
+        final int channels = getFormat().getChannels();
+        for (int j = 0; j < channels; ++j) {
             System.arraycopy(src[j], 0, dst[j], 0, length);
         }
     }
 
     @Override
-    public Format2 getFormat() {
+    public SoundFormat getFormat() {
         return stream.getFormat();
     }
 

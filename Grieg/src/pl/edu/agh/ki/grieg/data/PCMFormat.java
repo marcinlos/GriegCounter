@@ -75,4 +75,71 @@ public class PCMFormat {
         return Arrays.hashCode(vals);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+    
+    public static class Builder {
+
+        private Integer depth;
+        private PCMEncoding encoding;
+        private Endianess endianess;
+        private Boolean signed;
+
+        private void assertNotNull(Object o, String what) {
+            if (o == null) {
+                throw new IllegalStateException("Builder: " + what + " is null");
+            }
+        }
+
+        private Builder() {
+            // empty
+        }
+
+        public Builder depth(int d) {
+            this.depth = d;
+            return this;
+        }
+
+        public Builder encoding(PCMEncoding e) {
+            this.encoding = e;
+            return this;
+        }
+
+        public Builder endianess(Endianess e) {
+            this.endianess = e;
+            return this;
+        }
+
+        public Builder bigEndian() {
+            return endianess(Endianess.BIG);
+        }
+
+        public Builder littleEndian() {
+            return endianess(Endianess.LITTLE);
+        }
+
+        public Builder signed(boolean s) {
+            this.signed = s;
+            return this;
+        }
+
+        public Builder signed() {
+            return signed(true);
+        }
+
+        public Builder unsigned() {
+            return signed(false);
+        }
+
+        public PCMFormat build() {
+            assertNotNull(depth, "bit depth");
+            assertNotNull(encoding, "encoding");
+            assertNotNull(endianess, "endianess");
+            assertNotNull(signed, "integer encoding");
+            return new PCMFormat(depth, encoding, endianess, signed);
+        }
+
+    }
+
 }

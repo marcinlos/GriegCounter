@@ -10,23 +10,24 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 
 public class Player {
 
     private SourceDataLine line;
 
-    private Format2 fmt;
+    private SoundFormat format;
 
-    public Player(Format2 fmt) throws LineUnavailableException {
-        this.fmt = fmt;
-        AudioFormat format = new AudioFormat(fmt.sampleRate, 16, fmt.channels,
-                true, true);
-        System.out.println(format);
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+    public Player(SoundFormat format) throws LineUnavailableException {
+        this.format = format;
+        int rate = format.getSampleRate();
+        int channels = format.getChannels();
+        AudioFormat audioFmt = new AudioFormat(rate, 16, channels, true, true);
+        System.out.println(audioFmt);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFmt);
         line = (SourceDataLine) AudioSystem.getLine(info);
-        line.open(format);
+        line.open(audioFmt);
     }
 
     public void start() {
@@ -39,11 +40,12 @@ public class Player {
     }
 
     public void write(float[][] data, int start, int length) {
-        byte[] buffer = new byte[length * fmt.channels * 2];
+        int channels = format.getChannels();
+        byte[] buffer = new byte[length * channels * 2];
         ShortBuffer shorts = ByteBuffer.wrap(buffer)
                 .order(ByteOrder.BIG_ENDIAN).asShortBuffer();
         for (int i = 0; i < length; ++i) {
-            for (int j = 0; j < fmt.channels; ++j) {
+            for (int j = 0; j < channels; ++j) {
                 shorts.put(PCM.toShort(data[j][start + i]));
             }
         }

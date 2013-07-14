@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
 
 /**
@@ -13,9 +13,9 @@ import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
 public interface SampleEnumerator extends Enumerator<float[][]> {
 
     /**
-     * @return Format2 of the pushed data
+     * @return Format of the pushed data
      */
-    Format2 getFormat();
+    SoundFormat getFormat();
 
     /**
      * Begins pushing data to attached iteratees.

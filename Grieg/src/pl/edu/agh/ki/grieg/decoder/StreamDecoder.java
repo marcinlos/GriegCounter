@@ -21,6 +21,7 @@ public interface StreamDecoder extends AudioStream {
      * @throws DecodeException
      *             In case of an error during decoding
      */
+    @Override
     int readSamples(float[][] buffer) throws DecodeException, IOException;
 
 }

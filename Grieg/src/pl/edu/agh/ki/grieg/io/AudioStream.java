@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.io;
 import java.io.Closeable;
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 
 /**
  * Stream of raw, decoded audio data.
@@ -39,8 +39,9 @@ public interface AudioStream extends Closeable {
     int readSamples(float[][] buffer) throws AudioException, IOException;
 
     /**
-     * @return {@link Format2} structure describing the audio parameters
+     * @return {@linkplain SoundFormat} structure describing the audio
+     *         parameters
      */
-    Format2 getFormat();
+    SoundFormat getFormat();
 
 }

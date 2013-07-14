@@ -7,7 +7,7 @@ import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
-import pl.edu.agh.ki.grieg.data.Format2;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
@@ -36,6 +36,8 @@ public class Mp3Stream implements AudioStream {
         try {
             Header frame = bitstream.readFrame();
             if (frame != null) {
+                System.out.println("framesize = " + frame.framesize);
+                System.out.println("slots = " + frame.nSlots);
                 SampleBuffer samples = (SampleBuffer) Mp3Parser.decoder
                         .decodeFrame(frame, bitstream);
                 if (details == null) {
@@ -43,6 +45,7 @@ public class Mp3Stream implements AudioStream {
                 }
                 sampleBuffer = samples.getBuffer();
                 sampleOffset = 0;
+                System.out.println("buffersize = " + sampleBuffer.length);
                 bitstream.closeFrame();
                 return true;
             }
@@ -57,9 +60,10 @@ public class Mp3Stream implements AudioStream {
     private SourceDetails extractDetails(SampleBuffer samples) {
         int freq = samples.getSampleFrequency();
         int channels = samples.getChannelCount();
-        Format2 format = new Format2(channels, freq);
+        //Format2 format = new Format2(channels, freq);
         SimpleTagContainer tags = new SimpleTagContainer();
-        return new SourceDetails(null, -1, -1, format, tags);
+        SoundFormat format = new SoundFormat(freq, channels);
+        return new SourceDetails(-1, -1, format, tags);
     }
 
     @Override
@@ -103,7 +107,7 @@ public class Mp3Stream implements AudioStream {
     }
 
     @Override
-    public Format2 getFormat() {
+    public SoundFormat getFormat() {
         return details.getFormat();
     }
 
