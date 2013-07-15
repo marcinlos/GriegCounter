@@ -1,6 +1,5 @@
 package pl.edu.agh.ki.grieg.io;
 
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;

@@ -1,16 +1,16 @@
 package pl.edu.agh.ki.grieg.decoder;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
 /**
@@ -31,8 +31,8 @@ public class DecoderManager {
      * Creates a new, empty decoder manager
      */
     public DecoderManager() {
-        decoders = new HashMap<String, List<AudioFormatParser>>();
-        decoderSet = new HashSet<AudioFormatParser>();
+        decoders = Maps.newHashMap();
+        decoderSet = Sets.newHashSet();
     }
 
     /**
@@ -48,7 +48,7 @@ public class DecoderManager {
     private void register(String ext, AudioFormatParser provider) {
         List<AudioFormatParser> forExt = decoders.get(ext);
         if (forExt == null) {
-            forExt = new ArrayList<AudioFormatParser>();
+            forExt = Lists.newArrayList();
             decoders.put(ext, forExt);
         }
         forExt.add(provider);
