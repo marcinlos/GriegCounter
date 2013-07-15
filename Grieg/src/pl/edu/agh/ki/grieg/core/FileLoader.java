@@ -24,8 +24,10 @@ import com.google.common.io.Files;
  */
 public class FileLoader {
 
+    /** Collection of audio parsers */
     private DecoderManager decoders = new DecoderManager();
 
+    /** Single instance of the file loader */
     private static FileLoader instance = new FileLoader();
 
     private FileLoader() {
@@ -51,6 +53,7 @@ public class FileLoader {
     }
 
     /**
+     * Creates an audio file object.
      * 
      * @param file
      *            File containing audio data to load
@@ -66,10 +69,20 @@ public class FileLoader {
         AudioFormatParser parser = findParser(file);
         return new AudioFile(file, parser);
     }
-    
 
-    public AudioFormatParser findParser(File file) throws DecodeException,
-            IOException {
+    /**
+     * Searches for a parser capable of reading audio data from the given file.
+     * 
+     * @param file
+     *            File to find parser fo
+     * @return Parser for the file
+     * @throws NoSuitableDecoderException
+     *             If there is no parser capable of reading the file
+     * @throws IOException
+     *             If an IO error occurs
+     */
+    public AudioFormatParser findParser(File file)
+            throws NoSuitableDecoderException, IOException {
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(file);
