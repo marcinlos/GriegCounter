@@ -2,14 +2,12 @@ package pl.edu.agh.ki.grieg.decoder;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
@@ -22,7 +20,7 @@ import com.google.common.io.Files;
 public class DecoderManager {
 
     /** mappipng: extension -> providers */
-    private Map<String, List<AudioFormatParser>> decoders;
+    private Multimap<String, AudioFormatParser> decoders2;
     
     /** set of all the decoders */
     private Set<AudioFormatParser> decoderSet;
@@ -31,7 +29,7 @@ public class DecoderManager {
      * Creates a new, empty decoder manager
      */
     public DecoderManager() {
-        decoders = Maps.newHashMap();
+        decoders2 = ArrayListMultimap.create();
         decoderSet = Sets.newHashSet();
     }
 
@@ -46,12 +44,7 @@ public class DecoderManager {
      *            {@code AudioFormatParser} provider
      */
     private void register(String ext, AudioFormatParser provider) {
-        List<AudioFormatParser> forExt = decoders.get(ext);
-        if (forExt == null) {
-            forExt = Lists.newArrayList();
-            decoders.put(ext, forExt);
-        }
-        forExt.add(provider);
+        decoders2.put(ext, provider);
         decoderSet.add(provider);
     }
 
@@ -86,7 +79,7 @@ public class DecoderManager {
      * @see #getByExtension(File)
      */
     public Iterable<AudioFormatParser> getByExtension(String ext) {
-        return Collections.unmodifiableCollection(decoders.get(ext));
+        return Collections.unmodifiableCollection(decoders2.get(ext));
     }
 
     /**

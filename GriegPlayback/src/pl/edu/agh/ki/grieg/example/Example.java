@@ -7,15 +7,12 @@ import javax.sound.sampled.LineUnavailableException;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
-import pl.edu.agh.ki.grieg.playback.Player;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.playback.AudioOutput;
 
 public class Example {
 
@@ -31,32 +28,15 @@ public class Example {
 
     public static void main(String[] args) throws IOException, AudioException,
             LineUnavailableException {
-        File file = new File(SCHUBERT);
+        File file = new File(RACH);
         AudioFile audio = loader.loadFile(file);
         AudioStream stream = audio.openStream();
         SoundFormat format = stream.getFormat();
 
-        final Player player = new Player(format);
+        final AudioOutput player = new AudioOutput(format);
         player.start();
         SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
-        enumerator.connect(new Iteratee<float[][]>() {
-            
-            @Override
-            public State step(float[][] item) {
-                player.write(item);
-                return State.Cont;
-            }
-
-            @Override
-            public void finished() {
-                System.out.println("Done!");
-            }
-
-            @Override
-            public void failed(Throwable e) {
-                e.printStackTrace(System.err);
-            }
-        });
+        enumerator.connect(player);
         enumerator.start();
         player.close();
     }
