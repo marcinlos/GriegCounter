@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ServiceLoader;
 
-import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.DecoderManager;
 import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
 import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
@@ -60,12 +59,13 @@ public class FileLoader {
      * @return {@code AudioFile}
      * @throws NoSuitableDecoderException
      *             If no decoder capable of decoding this file has been found
-     * @throws DecodeException
-     *             If some error occured during decoding
+     * @throws NoSuitableDecoderException
+     *             If there is no parser capable of reading the file
      * @throws IOException
      *             If plain IO error occured
      */
-    public AudioFile loadFile(File file) throws DecodeException, IOException {
+    public AudioFile loadFile(File file) throws NoSuitableDecoderException,
+            IOException {
         AudioFormatParser parser = findParser(file);
         return new AudioFile(file, parser);
     }
