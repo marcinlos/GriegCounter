@@ -127,17 +127,26 @@ public class AudioOutput implements Closeable, Iteratee<float[][]> {
         line.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public State step(float[][] item) {
         write(item);
         return State.Cont;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void finished() {
         close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void failed(Throwable e) {
         close();

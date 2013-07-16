@@ -2,6 +2,9 @@ package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.LineUnavailableException;
 
@@ -28,17 +31,33 @@ public class Example {
 
     public static void main(String[] args) throws IOException, AudioException,
             LineUnavailableException {
-        File file = new File(RACH);
+        File file = new File(WAV);
         AudioFile audio = loader.loadFile(file);
         AudioStream stream = audio.openStream();
         SoundFormat format = stream.getFormat();
 
         final AudioOutput player = new AudioOutput(format);
-        player.start();
-        SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
+        final SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
+
         enumerator.connect(player);
+        player.start();
+        
+        new Timer(true).schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    enumerator.pause();
+                    TimeUnit.SECONDS.sleep(3);
+                    enumerator.resume();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }, 3000);
+        
         enumerator.start();
-        player.close();
+        // enumerator causes the output to close
+        System.out.println("Done");
     }
 
 }
