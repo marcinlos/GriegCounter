@@ -2,20 +2,20 @@ package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.LineUnavailableException;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.data.SourceDetails;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
-import pl.edu.agh.ki.grieg.playback.Player;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.playback.AudioOutput;
 
 public class Example {
 
@@ -31,34 +31,33 @@ public class Example {
 
     public static void main(String[] args) throws IOException, AudioException,
             LineUnavailableException {
-        File file = new File(SCHUBERT);
+        File file = new File(WAV);
         AudioFile audio = loader.loadFile(file);
         AudioStream stream = audio.openStream();
         SoundFormat format = stream.getFormat();
 
-        final Player player = new Player(format);
+        final AudioOutput player = new AudioOutput(format);
+        final SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
+
+        enumerator.connect(player);
         player.start();
-        SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
-        enumerator.connect(new Iteratee<float[][]>() {
-            
+        
+        new Timer(true).schedule(new TimerTask() {
             @Override
-            public State step(float[][] item) {
-                player.write(item);
-                return State.Cont;
+            public void run() {
+                try {
+                    enumerator.pause();
+                    TimeUnit.SECONDS.sleep(3);
+                    enumerator.resume();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-
-            @Override
-            public void finished() {
-                System.out.println("Done!");
-            }
-
-            @Override
-            public void failed(Throwable e) {
-                e.printStackTrace(System.err);
-            }
-        });
+        }, 3000);
+        
         enumerator.start();
-        player.close();
+        // enumerator causes the output to close
+        System.out.println("Done");
     }
 
 }

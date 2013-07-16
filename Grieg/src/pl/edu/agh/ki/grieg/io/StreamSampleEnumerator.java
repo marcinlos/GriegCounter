@@ -1,6 +1,9 @@
 package pl.edu.agh.ki.grieg.io;
 
 import java.io.IOException;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
@@ -24,7 +27,19 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     /** Size of the buffer */
     private int size;
 
-    private volatile boolean pause = false;
+    /** States for FSM this class fundamentally is */
+    private enum PlaybackState {
+        RUNNING, PAUSED, STOPPED
+    }
+
+    /** Current state of playback */
+    private PlaybackState state = PlaybackState.RUNNING;
+
+    /** Lock protecting playback state */
+    private Lock lock = new ReentrantLock();
+
+    /** Signaled upon state changes */
+    private Condition stateChange = lock.newCondition();
 
     /**
      * Creates new {@link StreamSampleEnumerator} using {@code stream} as the
@@ -83,18 +98,96 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      */
     @Override
     public void start() throws AudioException, IOException {
-        int read;
-        while ((read = stream.readSamples(buffer)) > 0) {
+        try {
+            while (!isStopped()) {
+                playSome();
+            }
+            endOfStream();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (AudioException e) {
+            failure(e);
+            throw e;
+        } catch (IOException e) {
+            failure(e);
+            throw e;
+        } finally {
+            stream.close();
+        }
+    }
+
+    /**
+     * Process next chunk of data, possibly waiting for it if the playback is
+     * paused.
+     * 
+     * @throws AudioException
+     *             If there is an audio-related error
+     * @throws IOException
+     *             If an IO error occurs
+     * @throws InterruptedException
+     *             If the thread is interrupted
+     */
+    private void playSome() throws AudioException, IOException,
+            InterruptedException {
+        lock.lock();
+        try {
+            if (isRunning()) {
+                proceed();
+            } else if (isPaused()) {
+                // wait for either resume or stop event
+                while (isPaused()) {
+                    stateChange.await();
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Reads some audio data from the stream and pushes it to connected outputs.
+     * 
+     * @throws AudioException
+     *             If there is a problem related to audio processing
+     * @throws IOException
+     *             If an IO error occured
+     */
+    private void proceed() throws AudioException, IOException {
+        int read = stream.readSamples(buffer);
+        if (read > 0) {
+            float[][] data;
             if (read < size) {
                 float[][] newBuf = makeBuffer(read);
                 copyBuffer(buffer, newBuf, read);
-                pushChunk(newBuf);
+                data = newBuf;
             } else {
-                pushChunk(buffer);
+                data = buffer;
             }
+            pushChunk(data);
+        } else {
+            state = PlaybackState.STOPPED;
         }
-        endOfStream();
-        stream.close();
+    }
+
+    /**
+     * @return {@code true} if state is {@link PlaybackState#RUNNING}
+     */
+    private boolean isRunning() {
+        return state == PlaybackState.RUNNING;
+    }
+
+    /**
+     * @return {@code true} if state is {@link PlaybackState#STOPPED}
+     */
+    private boolean isStopped() {
+        return state == PlaybackState.STOPPED;
+    }
+
+    /**
+     * @return {@code true} if state is {@link PlaybackState#PAUSED}
+     */
+    private boolean isPaused() {
+        return state == PlaybackState.PAUSED;
     }
 
     /**
@@ -102,7 +195,9 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      */
     @Override
     public void pause() {
-        pause = true;
+        lock.lock();
+        state = PlaybackState.PAUSED;
+        lock.unlock();
     }
 
     /**
@@ -110,7 +205,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      */
     @Override
     public void resume() {
-        pause = false;
+        changeAndSignal(PlaybackState.RUNNING);
     }
 
     /**
@@ -118,7 +213,24 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      */
     @Override
     public void stop() {
-        pause();
+        changeAndSignal(PlaybackState.STOPPED);
+    }
+
+    /**
+     * Changes state to a specified value and signals the associated condition
+     * variable.
+     * 
+     * @param newState
+     *            New playback state
+     */
+    private void changeAndSignal(PlaybackState newState) {
+        lock.lock();
+        try {
+            state = newState;
+            stateChange.signal();
+        } finally {
+            lock.unlock();
+        }
     }
 
 }

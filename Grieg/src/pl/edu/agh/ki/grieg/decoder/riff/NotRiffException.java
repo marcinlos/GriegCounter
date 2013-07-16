@@ -6,7 +6,6 @@ import pl.edu.agh.ki.grieg.decoder.InvalidFormatException;
  * Thrown when a file which is not a valid RIFF file is encountered.
  * 
  * @author los
- *
  */
 public class NotRiffException extends InvalidFormatException {
 

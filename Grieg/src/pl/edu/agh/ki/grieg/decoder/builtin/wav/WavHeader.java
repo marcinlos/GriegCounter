@@ -5,7 +5,6 @@ package pl.edu.agh.ki.grieg.decoder.builtin.wav;
  * audio data it contains.
  * 
  * @author los
- * 
  */
 public class WavHeader {
 
