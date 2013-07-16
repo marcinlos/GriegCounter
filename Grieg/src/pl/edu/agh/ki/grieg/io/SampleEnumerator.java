@@ -1,7 +1,5 @@
 package pl.edu.agh.ki.grieg.io;
 
-import java.io.IOException;
-
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
 
@@ -10,34 +8,11 @@ import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
  * 
  * @author los
  */
-public interface SampleEnumerator extends Enumerator<float[][]> {
+public interface SampleEnumerator extends Enumerator<float[][]>, Controllable {
 
     /**
      * @return Format of the pushed data
      */
     SoundFormat getFormat();
-
-    /**
-     * Begins pushing data to attached iteratees.
-     * 
-     * @throws IOException
-     * @throws AudioException
-     */
-    void start() throws AudioException, IOException;
-
-    /**
-     * Pauses data processing with the possibiliity to resume it later.
-     */
-    void pause();
-
-    /**
-     * Resumes previously paused processing.
-     */
-    void resume();
-
-    /**
-     * Definitely stops processing, informs attached iteratees.
-     */
-    void stop();
 
 }
