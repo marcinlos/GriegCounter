@@ -35,15 +35,19 @@ public class AudioOutput implements Closeable, Iteratee<float[][]> {
      * 
      * @param format
      *            Format of the output
-     * @throws LineUnavailableException
+     * @throws PlaybackException
      *             If the output line could not be created
      */
-    public AudioOutput(SoundFormat format) throws LineUnavailableException {
-        this.format = format;
-        AudioFormat audioFmt = toJavaFormat(format);
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFmt);
-        line = (SourceDataLine) AudioSystem.getLine(info);
-        line.open(audioFmt);
+    public AudioOutput(SoundFormat format) throws PlaybackException {
+        try {
+            this.format = format;
+            AudioFormat fmt = toJavaFormat(format);
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt);
+            line = (SourceDataLine) AudioSystem.getLine(info);
+            line.open(fmt);
+        } catch (LineUnavailableException e) {
+            throw new PlaybackException(e);
+        }
     }
 
     /**

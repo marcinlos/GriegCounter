@@ -6,8 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import javax.sound.sampled.LineUnavailableException;
-
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioException;
@@ -29,19 +27,19 @@ public class Example {
     private static final String WAV = "/home/los/Downloads/guitarup_fuller.wav";
     private static final String SCHUBERT = "/home/los/Downloads/Schubert - Serenade.wav";
 
-    public static void main(String[] args) throws IOException, AudioException,
-            LineUnavailableException {
+    public static void main(String[] args) throws IOException, AudioException {
         File file = new File(WAV);
         AudioFile audio = loader.loadFile(file);
         AudioStream stream = audio.openStream();
         SoundFormat format = stream.getFormat();
 
         final AudioOutput player = new AudioOutput(format);
-        final SampleEnumerator enumerator = new StreamSampleEnumerator(stream, 100);
+        final SampleEnumerator enumerator = new StreamSampleEnumerator(stream,
+                100);
 
         enumerator.connect(player);
         player.start();
-        
+
         new Timer(true).schedule(new TimerTask() {
             @Override
             public void run() {
@@ -54,7 +52,7 @@ public class Example {
                 }
             }
         }, 3000);
-        
+
         enumerator.start();
         // enumerator causes the output to close
         System.out.println("Done");

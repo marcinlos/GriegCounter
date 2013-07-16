@@ -196,6 +196,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     @Override
     public void pause() {
         lock.lock();
+        ensureNotStopped();
         state = PlaybackState.PAUSED;
         lock.unlock();
     }
@@ -217,6 +218,16 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     }
 
     /**
+     * If the playback is in the stopped state, throws
+     * {@link IllegalStateException}.
+     */
+    private void ensureNotStopped() {
+        if (isStopped()) {
+            throw new IllegalStateException("Stopped");
+        }
+    }
+
+    /**
      * Changes state to a specified value and signals the associated condition
      * variable.
      * 
@@ -226,6 +237,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     private void changeAndSignal(PlaybackState newState) {
         lock.lock();
         try {
+            ensureNotStopped();
             state = newState;
             stateChange.signal();
         } finally {
