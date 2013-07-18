@@ -3,6 +3,9 @@ package pl.edu.agh.ki.grieg.playback;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
@@ -29,6 +32,9 @@ public class Player {
 
     /** Size of the audio data buffer (in samples) */
     private final int bufferSize;
+
+    /** Worker pool used to asynchronously play audio */
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * Creates new Player with specified configuration parameters.
@@ -100,6 +106,18 @@ public class Player {
     }
 
     /**
+     * Notifies all the listeners when an error occurs
+     * 
+     * @param e
+     *            Exception to inform listeners about
+     */
+    private synchronized void signalFailure(Exception e) {
+        for (PlaybackListener listener : listeners) {
+            listener.failed(e);
+        }
+    }
+
+    /**
      * @return Currently active playback object, or {@code null} if there is
      *         none
      */
@@ -137,6 +155,33 @@ public class Player {
         }
     }
 
+    /**
+     * Initiates player shutdown. Currently played track will be interrupted.
+     * Waits 5 seconds for player termination.
+     * 
+     * @throws InterruptedException
+     *             If interrupted while waiting
+     */
+    public void shutdown() throws InterruptedException {
+        stop();
+        executor.shutdown();
+        executor.awaitTermination(5, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Initiates player shutdown. Currently played track will be interrupted.
+     * Waits specified amount of time for player termination.
+     * 
+     * @throws InterruptedException
+     *             If interrupted while waiting
+     */
+    public void shutdown(long timeout, TimeUnit unit)
+            throws InterruptedException {
+        stop();
+        executor.shutdown();
+        executor.awaitTermination(timeout, unit);
+    }
+
     public void play(String path) throws IOException, AudioException {
         play(new File(path));
     }
@@ -157,7 +202,18 @@ public class Player {
         stop();
         AudioOutput output = outputFactory.boundTo(source);
         currentPlayback = new TrackPlayback(output, source);
-        currentPlayback.start();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    currentPlayback.start();
+                } catch (AudioException e) {
+                    signalFailure(e);
+                } catch (IOException e) {
+                    signalFailure(e);
+                }
+            }
+        }); 
         signalStart();
     }
 

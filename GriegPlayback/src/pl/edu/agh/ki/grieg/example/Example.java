@@ -42,6 +42,7 @@ public class Example {
         }, 3000);
 
         player.play(file);
+        System.out.println("Done");
     }
 
 }

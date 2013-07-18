@@ -27,4 +27,12 @@ public interface PlaybackListener {
      */
     void stopped();
 
+    /**
+     * Invoked when an error occures
+     * 
+     * @param e
+     *            Exception being the symptom of an error
+     */
+    void failed(Exception e);
+
 }

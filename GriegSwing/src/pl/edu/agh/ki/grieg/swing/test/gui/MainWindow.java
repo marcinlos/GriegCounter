@@ -13,11 +13,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.playback.Player;
+
 public class MainWindow extends JFrame {
     
+    private static final int BUFFER_SIZE = 2048;
+    
+    private FileLoader fileLoader = FileLoader.getInstance();
+    private Player player = new Player(fileLoader, BUFFER_SIZE);
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -62,8 +70,12 @@ public class MainWindow extends JFrame {
     }
 
     private void openFile(File file) {
-        /*System.out.println(file);
-        player.stop();
+        try {
+            player.play(file);
+        } catch (Exception e) {
+            displayErrorMessage(e);
+        }
+        /*player.stop();
         TrackLoader.loadAsync(file, new LoadCallback() {
 
             @Override 
@@ -79,6 +91,11 @@ public class MainWindow extends JFrame {
                 player.play(track);
             }
         });*/
+    }
+    
+    private void displayErrorMessage(Throwable e) {
+        JOptionPane.showMessageDialog(MainWindow.this, e, "Error", 
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private File chooseFile() {

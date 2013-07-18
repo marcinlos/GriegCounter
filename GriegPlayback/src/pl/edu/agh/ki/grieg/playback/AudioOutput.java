@@ -126,7 +126,7 @@ public class AudioOutput implements Closeable, Iteratee<float[][]> {
      * Closes the output, having flushed the buffer.
      */
     public void close() {
-        line.drain();
+        //line.drain();
         line.stop();
         line.close();
     }

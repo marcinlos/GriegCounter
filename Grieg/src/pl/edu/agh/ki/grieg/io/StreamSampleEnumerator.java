@@ -36,7 +36,9 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     private PlaybackState state = PlaybackState.RUNNING;
 
     /** Lock protecting playback state */
-    private Lock lock = new ReentrantLock();
+    // Caution: fairness is important, transitions between tracks can be delayed
+    // few seconds without it
+    private Lock lock = new ReentrantLock(true);
 
     /** Signaled upon state changes */
     private Condition stateChange = lock.newCondition();

@@ -37,8 +37,8 @@ public class Mp3Stream implements AudioStream {
         try {
             Header frame = bitstream.readFrame();
             if (frame != null) {
-                System.out.println("framesize = " + frame.framesize);
-                System.out.println("slots = " + frame.nSlots);
+//                System.out.println("framesize = " + frame.framesize);
+//                System.out.println("slots = " + frame.nSlots);
                 SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
                         frame, bitstream);
                 if (format == null) {
@@ -46,7 +46,7 @@ public class Mp3Stream implements AudioStream {
                 }
                 sampleBuffer = samples.getBuffer();
                 sampleOffset = 0;
-                System.out.println("buffersize = " + sampleBuffer.length);
+//                System.out.println("buffersize = " + sampleBuffer.length);
                 bitstream.closeFrame();
                 return true;
             }

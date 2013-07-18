@@ -73,6 +73,7 @@ class TrackPlayback implements Controllable {
     @Override
     public void stop() {
         source.stop();
-        output.close();
+        // this will do, output will be closed by the source
     }
+
 }
