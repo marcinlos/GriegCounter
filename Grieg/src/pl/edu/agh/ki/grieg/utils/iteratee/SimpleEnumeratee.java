@@ -37,7 +37,7 @@ public class SimpleEnumeratee<S, T> extends AbstractEnumerator<T> implements
             pushChunk(value);
             return State.Cont;
         } catch (Throwable e) {
-            failure(e);
+            signalFailure(e);
             return State.Done;
         }
     }
@@ -47,7 +47,7 @@ public class SimpleEnumeratee<S, T> extends AbstractEnumerator<T> implements
      */
     @Override
     public void failed(Throwable e) {
-        failure(e);
+        signalFailure(e);
     }
 
     /**
@@ -55,7 +55,7 @@ public class SimpleEnumeratee<S, T> extends AbstractEnumerator<T> implements
      */
     @Override
     public void finished() {
-        endOfStream();
+        signalEndOfStream();
     }
 
 }

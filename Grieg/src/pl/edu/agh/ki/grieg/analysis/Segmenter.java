@@ -127,7 +127,7 @@ public class Segmenter extends AbstractEnumerator<float[][]> implements
      */
     @Override
     public void finished() {
-        endOfStream();
+        signalEndOfStream();
     }
 
     /**
@@ -135,7 +135,7 @@ public class Segmenter extends AbstractEnumerator<float[][]> implements
      */
     @Override
     public void failed(Throwable e) {
-        failure(e);
+        signalFailure(e);
     }
 
 }

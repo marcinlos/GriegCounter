@@ -54,16 +54,16 @@ class WavStream implements AudioStream {
     private PCMReader converter;
 
     private AudioDetails details;
-    private long remains;
+    private long remainingSamples;
 
     public WavStream(InputStream stream) throws DecodeException, IOException {
         this.input = new LittleEndianDataInputStream(stream);
         this.stream = (InputStream) this.input;
-        details = getDetails();
-        remains = details.getSampleCount();
+        details = readDetails();
+        remainingSamples = details.getSampleCount();
     }
 
-    public AudioDetails getDetails() throws DecodeException, IOException {
+    private AudioDetails readDetails() throws DecodeException, IOException {
         RiffParser riff = readRiffHeader(stream);
         readFormatHeader(riff);
         WavHeader wav = readWavHeader(stream);
@@ -101,7 +101,6 @@ class WavStream implements AudioStream {
                 if (dataHeader.getId() == ASCII_DATA) {
                     return dataHeader;
                 } else {
-                    System.out.println("Omitting " + dataHeader.idAsString());
                     riff.getStream().skip(dataHeader.getSize());
                 }
             }
@@ -156,19 +155,20 @@ class WavStream implements AudioStream {
 
     @Override
     public int readSamples(float[][] buffer) throws AudioException, IOException {
-        int count = buffer[0].length;
+        int bufferSize = buffer[0].length;
         int read = 0;
-        try {
-            while (--remains >= 0 && read < count) {
-                for (int j = 0; j < buffer.length; ++j) {
-                    buffer[j][read] = converter.readSample(input);
-                }
-                ++read;
+        while (read < Math.min(bufferSize, remainingSamples)) {
+            for (int j = 0; j < buffer.length; ++j) {
+                buffer[j][read] = converter.readSample(input);
             }
-        } catch (EOFException e) {
-            // ignore, it's ok
+            --remainingSamples;
+            ++read;
         }
         return read;
+    }
+
+    AudioDetails getDetails() {
+        return details;
     }
 
     @Override

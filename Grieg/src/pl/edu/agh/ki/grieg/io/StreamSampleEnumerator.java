@@ -104,14 +104,14 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
             while (!isStopped()) {
                 playSome();
             }
-            endOfStream();
+            signalEndOfStream();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (AudioException e) {
-            failure(e);
+            signalFailure(e);
             throw e;
         } catch (IOException e) {
-            failure(e);
+            signalFailure(e);
             throw e;
         } finally {
             stream.close();

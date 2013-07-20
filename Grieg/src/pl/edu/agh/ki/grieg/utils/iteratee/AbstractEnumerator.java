@@ -93,7 +93,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * @param e
      *            {@code Throwable} that describes the error
      */
-    public void failure(Throwable e) {
+    public void signalFailure(Throwable e) {
         for (Iteratee<?> it : outputs) {
             it.failed(e);
         }
@@ -104,7 +104,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * {@linkplain Iteratee#finished()} method for each connected
      * {@code Iteratee}.
      */
-    public void endOfStream() {
+    public void signalEndOfStream() {
         for (Iteratee<?> it : outputs) {
             it.finished();
         }

@@ -30,13 +30,13 @@ public class Example {
         final FileLoader fileLoader = FileLoader.getInstance();
         final Player player = new Player(fileLoader, 2048);
 
-        File file = new File(RACH);
+        File file = new File(WAV);
 
         // player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
-        AudioStream stream = audioFile.openStream();
 
         {
+            AudioStream stream = audioFile.openStream();
             SampleEnumerator source = new StreamSampleEnumerator(stream, 2048);
 
             SampleCounter counter = new SampleCounter();

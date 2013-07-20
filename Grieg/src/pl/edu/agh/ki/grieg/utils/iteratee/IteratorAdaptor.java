@@ -42,9 +42,9 @@ public class IteratorAdaptor<T> extends AbstractEnumerator<T> implements
             while (iterator.hasNext()) {
                 pushChunk(iterator.next());
             }
-            endOfStream();
+            signalEndOfStream();
         } catch (Throwable e) {
-            failure(e);
+            signalFailure(e);
         }
     }
 
