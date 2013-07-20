@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.data.SourceDetails;
+import pl.edu.agh.ki.grieg.data.AudioDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.riff.ChunkHeader;
 import pl.edu.agh.ki.grieg.decoder.riff.NotRiffException;
@@ -53,7 +53,7 @@ class WavStream implements AudioStream {
 
     private PCMReader converter;
 
-    private SourceDetails details;
+    private AudioDetails details;
     private long remains;
 
     public WavStream(InputStream stream) throws DecodeException, IOException {
@@ -63,7 +63,7 @@ class WavStream implements AudioStream {
         remains = details.getSampleCount();
     }
 
-    public SourceDetails getDetails(InputStream stream) throws DecodeException,
+    public AudioDetails getDetails(InputStream stream) throws DecodeException,
             IOException {
         RiffParser riff = readRiffHeader(stream);
         readFormatHeader(riff);
@@ -78,7 +78,7 @@ class WavStream implements AudioStream {
         SoundFormat format = new SoundFormat(sampleRate, channels);
         TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
-        return new SourceDetails(length, sampleCount, format, tags);
+        return new AudioDetails(length, sampleCount, format, tags);
     }
 
     private PCMReader chooseConverter(int depth) {

@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
@@ -22,7 +23,7 @@ import pl.edu.agh.ki.grieg.playback.Player;
 
 public class MainWindow extends JFrame {
     
-    private static final int BUFFER_SIZE = 2048;
+    private static final int BUFFER_SIZE = 8192;
     
     private FileLoader fileLoader = FileLoader.getInstance();
     private Player player = new Player(fileLoader, BUFFER_SIZE);
@@ -100,8 +101,7 @@ public class MainWindow extends JFrame {
 
     private File chooseFile() {
         JFileChooser chooser = new JFileChooser(DIR);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", 
-                EXTS);
+        FileFilter filter = new FileNameExtensionFilter("Audio", EXTS);
         chooser.setFileFilter(filter);
         int ret = chooser.showOpenDialog(this);
         if (ret == JFileChooser.APPROVE_OPTION) {

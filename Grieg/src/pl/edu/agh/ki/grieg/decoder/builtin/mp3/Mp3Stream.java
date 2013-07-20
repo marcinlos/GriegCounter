@@ -7,6 +7,7 @@ import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
+import javazoom.jl.decoder.Obuffer;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -21,6 +22,8 @@ public class Mp3Stream implements AudioStream {
 
     private Bitstream bitstream;
     private SoundFormat format;
+    
+    private boolean done = false;
 
     private final Decoder decoder = new Decoder();
 
@@ -34,28 +37,44 @@ public class Mp3Stream implements AudioStream {
     }
 
     private boolean decodeNext() throws DecodeException, IOException {
-        try {
-            Header frame = bitstream.readFrame();
-            if (frame != null) {
-//                System.out.println("framesize = " + frame.framesize);
-//                System.out.println("slots = " + frame.nSlots);
-                SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
-                        frame, bitstream);
-                if (format == null) {
-                    format = extractFormat(samples);
-                }
-                sampleBuffer = samples.getBuffer();
-                sampleOffset = 0;
-//                System.out.println("buffersize = " + sampleBuffer.length);
-                bitstream.closeFrame();
-                return true;
+        if (! done) {
+            try {
+                return tryReadFrame();
+            } catch (DecoderException e) {
+                throw new DecodeException(e);
+            } catch (BitstreamException e) {
+                throw new IOException(e);
             }
-        } catch (DecoderException e) {
-            throw new DecodeException(e);
-        } catch (BitstreamException e) {
-            throw new IOException(e);
+        } else {
+            return false;
         }
-        return false;
+    }
+
+    private boolean tryReadFrame() throws BitstreamException, DecoderException {
+        Header frame = bitstream.readFrame();
+        // necessary to keep this state - attempt to read after the last call
+        // has return null results in arrayOutOfBoundsException somewhere in
+        // the huffman decoding deep in JLayer.
+        if (frame != null) {
+            SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
+                    frame, bitstream);
+            if (format == null) {
+                format = extractFormat(samples);
+            }
+            sampleBuffer = samples.getBuffer();
+            if (samples.getBufferLength() != Obuffer.OBUFFERSIZE) {
+                System.out.println("getBufferLength: " + samples.getBufferLength());
+                System.out.println("length: " + sampleBuffer.length);
+                System.out.println("channels: " + samples.getChannelCount());
+                System.out.println("layer: " + frame.layer());
+            }
+            sampleOffset = 0;
+            bitstream.closeFrame();
+            return true;
+        } else {
+            done = true;
+            return false;
+        }
     }
 
     private SoundFormat extractFormat(SampleBuffer samples) {
@@ -92,6 +111,8 @@ public class Mp3Stream implements AudioStream {
         int channels = getFormat().channels;
         int n = Math.min(buffered / channels, buffer[0].length - offset);
         for (int i = 0; i < n; ++i) {
+            if ((offset + i) % 2 == 0)
+                continue;
             for (int j = 0; j < channels; ++j) {
                 buffer[j][offset + i] = PCM
                         .fromSignedShort(sampleBuffer[sampleOffset++]);

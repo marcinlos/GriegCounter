@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Grieg"/>
-	<classpathentry kind="lib" path="lib/guava-14.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/guava-14.0.1.jar" sourcepath="/home/los/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

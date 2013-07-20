@@ -7,7 +7,7 @@ import pl.edu.agh.ki.grieg.meta.TagSet;
  * 
  * @author los
  */
-public class SourceDetails {
+public class AudioDetails {
 
     public final static int UNKNOWN = -1;
 
@@ -16,13 +16,13 @@ public class SourceDetails {
     private SoundFormat format;
     private TagSet tags;
 
-    public SourceDetails() {
+    public AudioDetails() {
         this.length = UNKNOWN;
         this.sampleCount = UNKNOWN;
         this.format = null;
     }
 
-    public SourceDetails(float length, long sampleCount, SoundFormat format,
+    public AudioDetails(float length, long sampleCount, SoundFormat format,
             TagSet tags) {
         this.length = length;
         this.sampleCount = sampleCount;
