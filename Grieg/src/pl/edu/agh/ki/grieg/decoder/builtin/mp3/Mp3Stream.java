@@ -111,8 +111,6 @@ class Mp3Stream implements AudioStream {
         int channels = getFormat().channels;
         int n = Math.min(buffered / channels, buffer[0].length - offset);
         for (int i = 0; i < n; ++i) {
-            if ((offset + i) % 2 == 0)
-                continue;
             for (int j = 0; j < channels; ++j) {
                 buffer[j][offset + i] = PCM
                         .fromSignedShort(sampleBuffer[sampleOffset++]);

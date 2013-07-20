@@ -3,15 +3,12 @@ package pl.edu.agh.ki.grieg.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
-
-import com.google.common.collect.Sets;
 
 /**
  * Audio file, consisting of a {@link File} object and a parser capable of
