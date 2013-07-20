@@ -59,12 +59,11 @@ class WavStream implements AudioStream {
     public WavStream(InputStream stream) throws DecodeException, IOException {
         this.input = new LittleEndianDataInputStream(stream);
         this.stream = (InputStream) this.input;
-        details = getDetails(stream);
+        details = getDetails();
         remains = details.getSampleCount();
     }
 
-    public AudioDetails getDetails(InputStream stream) throws DecodeException,
-            IOException {
+    public AudioDetails getDetails() throws DecodeException, IOException {
         RiffParser riff = readRiffHeader(stream);
         readFormatHeader(riff);
         WavHeader wav = readWavHeader(stream);
@@ -164,7 +163,7 @@ class WavStream implements AudioStream {
                 for (int j = 0; j < buffer.length; ++j) {
                     buffer[j][read] = converter.readSample(input);
                 }
-                ++ read;
+                ++read;
             }
         } catch (EOFException e) {
             // ignore, it's ok

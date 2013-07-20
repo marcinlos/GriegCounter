@@ -57,5 +57,10 @@ public class MetaInfo {
     public Object remove(String key) {
         return info.remove(key);
     }
+    
+    public MetaInfo addAll(MetaInfo other) {
+        info.putAll(other.info);
+        return this;
+    }
 
 }

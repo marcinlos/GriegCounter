@@ -32,7 +32,8 @@ public class Mp3Parser extends AbstractAudioFormatParser {
     @Override
     public MetaInfo getDetails(File file, Set<MetaKey<?>> desired)
             throws IOException, DecodeException {
-        return new MetaInfo();
+        MetaInfo info = new MetaInfo();
+        return info;
     }
 
 }
