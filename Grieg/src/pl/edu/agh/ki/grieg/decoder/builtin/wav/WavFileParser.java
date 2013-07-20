@@ -56,14 +56,12 @@ public class WavFileParser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public MetaInfo getDetails(File file, Set<MetaKey<?>> desired)
+    public void getDetails(File file, Set<MetaKey<?>> desired, MetaInfo info)
             throws IOException, DecodeException {
-        MetaInfo info = new MetaInfo();
         AudioDetails details = getDetails(file);
         info.put(Keys.SAMPLES, details.getSampleCount());
         info.put(Keys.DURATION, details.getLength());
         info.put(Keys.FORMAT, details.getFormat());
-        return info;
     }
 
 }

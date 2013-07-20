@@ -21,6 +21,7 @@ public class MetaInfo {
     }
     
     public <T> Object put(String name, T value) {
+        checkNotNull(name);
         checkNotNull(value, "Null values not supported");
         return info.put(name, value);
     }

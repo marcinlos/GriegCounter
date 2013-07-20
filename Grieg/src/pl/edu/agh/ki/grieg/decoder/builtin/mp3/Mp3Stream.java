@@ -15,7 +15,7 @@ import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 
-public class Mp3Stream implements AudioStream {
+class Mp3Stream implements AudioStream {
 
     private short[] sampleBuffer;
     private short sampleOffset;
@@ -95,7 +95,7 @@ public class Mp3Stream implements AudioStream {
     @Override
     public int readSamples(float[][] buffer) throws AudioException, IOException {
         int written = 0;
-        while (written < buffer[0].length - 1) {
+        while (written < buffer[0].length) {
             if (!hasSomeBuffered()) {
                 if (!decodeNext()) {
                     break;

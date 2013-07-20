@@ -18,6 +18,9 @@ public class SampleCounter extends AbstractIteratee<float[][]> {
      */
     @Override
     public State step(float[][] item) {
+        final int length = item[0].length;
+        if (length != 2048)
+        System.out.println(length);
         sampleCount += item[0].length;
         return State.Cont;
     }

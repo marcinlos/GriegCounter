@@ -3,9 +3,14 @@ package pl.edu.agh.ki.grieg.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
+import pl.edu.agh.ki.grieg.meta.MetaInfo;
+import pl.edu.agh.ki.grieg.meta.MetaKey;
 
 /**
  * Audio file, consisting of a {@link File} object and a parser capable of
@@ -14,6 +19,8 @@ import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
  * @author los
  */
 public class AudioFile {
+
+    private MetaInfo infoCache;
 
     private final File file;
     private final AudioFormatParser parser;
@@ -51,6 +58,28 @@ public class AudioFile {
      */
     public AudioStream openStream() throws IOException, DecodeException {
         return parser.openStream(new FileInputStream(file));
+    }
+
+    public MetaInfo getInfo() {
+        if (infoCache == null) {
+            infoCache = new MetaInfo();
+        }
+        return infoCache;
+    }
+
+    public <T> T getInfo(MetaKey<T> key) throws DecodeException, IOException {
+        // make sure it exists
+        getInfo();
+        if (infoCache.contains(key.name)) {
+            return infoCache.get(key);
+        } else {
+            parser.getDetails(file, singleton(key), infoCache);
+            return infoCache.get(key);
+        }
+    }
+
+    private static <T> Set<MetaKey<?>> singleton(MetaKey<T> key) {
+        return Sets.<MetaKey<?>>newHashSet(key);
     }
 
 }

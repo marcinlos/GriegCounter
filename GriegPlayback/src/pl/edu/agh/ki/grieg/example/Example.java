@@ -8,7 +8,9 @@ import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.AudioStream;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
+import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.playback.Player;
 
 import com.google.common.base.Stopwatch;
@@ -22,43 +24,39 @@ public class Example {
     private static final String RACH = DIR + "Rachmaninov/Op. 28 (PS no. 1 in D minor)/03 Piano Sonata No.1 in D minor Op.28 - III. Allegro molto.mp3";
     private static final String WAV = "/home/los/Downloads/guitarup_fuller.wav";
     private static final String SCHUBERT = "/home/los/Downloads/Schubert - Serenade.wav";
-    
 
     public static void main(String[] args) throws IOException, AudioException {
-        
+
         final FileLoader fileLoader = FileLoader.getInstance();
         final Player player = new Player(fileLoader, 2048);
-        
-        File file = new File(BEETH);
 
-//        new Timer(true).schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    player.pause();
-//                    TimeUnit.SECONDS.sleep(3);
-//                    player.resume();
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt();
-//                }
-//            }
-//        }, 3000);
+        File file = new File(RACH);
 
-//        player.play(file);
+        // player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
         AudioStream stream = audioFile.openStream();
-        StreamSampleEnumerator source = new StreamSampleEnumerator(stream, 2048);
-        
-        SampleCounter counter = new SampleCounter();
-        source.connect(counter);
-        
-        Stopwatch stopwatch = new Stopwatch().start();
-        source.start();
-        stopwatch.stop();
-        
-        System.out.println("Done in " + stopwatch);
-        System.out.println("Total frames: " + counter.getFrameCount());
-        
+
+        {
+            SampleEnumerator source = new StreamSampleEnumerator(stream, 2048);
+
+            SampleCounter counter = new SampleCounter();
+            source.connect(counter);
+
+            Stopwatch stopwatch = new Stopwatch().start();
+            source.start();
+            stopwatch.stop();
+
+            System.out.println("Done in " + stopwatch);
+            System.out.println("Total frames: " + counter.getFrameCount());
+        }
+        {
+            Stopwatch stopwatch = new Stopwatch().start();
+            Long count = audioFile.getInfo(Keys.SAMPLES);
+            stopwatch.stop();
+
+            System.out.println("Done in " + stopwatch);
+            System.out.println("Total frames: " + count);
+        }
     }
 
 }

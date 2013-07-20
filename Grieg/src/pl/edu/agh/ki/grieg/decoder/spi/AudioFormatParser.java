@@ -60,13 +60,15 @@ public interface AudioFormatParser {
      *            File to investigate
      * @param desired
      *            Set of metadata entries that are desired by the caller
+     * @param info
+     *            Container to insert data into
      * @return Details about the audio file
      * @throws IOException
      *             If an IO error occurs
      * @throws DecodeException
      *             If the file could not be properly decoded
      */
-    MetaInfo getDetails(File file, Set<MetaKey<?>> desired) throws IOException,
-            DecodeException;
+    void getDetails(File file, Set<MetaKey<?>> desired, MetaInfo info)
+            throws IOException, DecodeException;
 
 }
