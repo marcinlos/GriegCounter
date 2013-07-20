@@ -5,12 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
+import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
+
+import com.google.common.collect.Sets;
 
 /**
  * Audio file, consisting of a {@link File} object and a parser capable of
@@ -19,6 +20,8 @@ import pl.edu.agh.ki.grieg.meta.MetaKey;
  * @author los
  */
 public class AudioFile {
+
+    public static final int DEFAUL_BUFFER_SIZE = 2048;
 
     private MetaInfo infoCache;
 
@@ -60,6 +63,18 @@ public class AudioFile {
         return parser.openStream(new FileInputStream(file));
     }
 
+    public SampleEnumerator openSource(int bufferSize) throws IOException,
+            DecodeException {
+        return new StreamSampleEnumerator(openStream(), bufferSize);
+    }
+
+    public SampleEnumerator openSource() throws DecodeException, IOException {
+        return openSource(DEFAUL_BUFFER_SIZE);
+    }
+
+    /**
+     * @return Cached metainfo
+     */
     public MetaInfo getInfo() {
         if (infoCache == null) {
             infoCache = new MetaInfo();
@@ -67,19 +82,24 @@ public class AudioFile {
         return infoCache;
     }
 
+    /**
+     * Attempts to retrieve, if necessary, and returns, specified metainfo about
+     * the audio file represented by this object.
+     * 
+     * @param key
+     * @return
+     * @throws DecodeException
+     * @throws IOException
+     */
     public <T> T getInfo(MetaKey<T> key) throws DecodeException, IOException {
         // make sure it exists
         getInfo();
         if (infoCache.contains(key.name)) {
             return infoCache.get(key);
         } else {
-            parser.getDetails(file, singleton(key), infoCache);
+            parser.getDetails(file, Keys.set(key), infoCache);
             return infoCache.get(key);
         }
-    }
-
-    private static <T> Set<MetaKey<?>> singleton(MetaKey<T> key) {
-        return Sets.<MetaKey<?>>newHashSet(key);
     }
 
 }

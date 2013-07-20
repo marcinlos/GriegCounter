@@ -2,16 +2,18 @@ package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
-import pl.edu.agh.ki.grieg.analysis.SampleCounter;
+import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
-import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
 import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.playback.Player;
+import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.base.Stopwatch;
 
@@ -30,12 +32,12 @@ public class Example {
         final FileLoader fileLoader = FileLoader.getInstance();
         final Player player = new Player(fileLoader, 2048);
 
-        File file = new File(WAV);
+        File file = new File(SCHUBERT);
 
-        // player.play(file);
+        player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
 
-        {
+        /*{
             AudioStream stream = audioFile.openStream();
             SampleEnumerator source = new StreamSampleEnumerator(stream, 2048);
 
@@ -48,7 +50,7 @@ public class Example {
 
             System.out.println("Done in " + stopwatch);
             System.out.println("Total frames: " + counter.getFrameCount());
-        }
+        }*/
         {
             Stopwatch stopwatch = new Stopwatch().start();
             Long count = audioFile.getInfo(Keys.SAMPLES);
@@ -56,6 +58,20 @@ public class Example {
 
             System.out.println("Done in " + stopwatch);
             System.out.println("Total frames: " + count);
+            
+            int pieceSize = (int) (count / 20);
+            SampleEnumerator source = audioFile.openSource();
+            int channels = source.getFormat().channels;
+            WaveCompressor wave = new WaveCompressor(channels, pieceSize);
+            source.connect(wave);
+            wave.connect(new AbstractIteratee<Range[]>() {
+                @Override
+                public State step(Range[] item) {
+                    System.out.println(Arrays.toString(item));
+                    return State.Cont;
+                }
+            });
+            source.start();
         }
     }
 

@@ -44,7 +44,7 @@ class WavStream implements AudioStream {
     private static final PCMReader PCM16 = new PCMReader() {
         @Override
         public float readSample(DataInput stream) throws IOException {
-            return PCM.fromSignedShort(stream.readUnsignedShort());
+            return PCM.fromSignedShort(stream.readShort());
         }
     };
 

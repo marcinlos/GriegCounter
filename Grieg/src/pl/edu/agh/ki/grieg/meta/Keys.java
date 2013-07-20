@@ -1,5 +1,9 @@
 package pl.edu.agh.ki.grieg.meta;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 
 /**
@@ -29,7 +33,7 @@ public final class Keys {
 
     /** Author */
     public static final MetaKey<String> AUTHOR = make("author", String.class);
-    
+
     /** Size of the file */
     public static final MetaKey<Long> FILE_SIZE = make("file_size", Long.class);
 
@@ -44,6 +48,18 @@ public final class Keys {
      */
     public static <T> MetaKey<T> make(String name, Class<T> type) {
         return new MetaKey<T>(name, type);
+    }
+
+    /**
+     * Creates a set of keys of unspecified bound, as turns out to be a little
+     * bit awkward and uncomfortable.
+     * 
+     * @param keys
+     *            Keys to create set of
+     * @return Set consisting of all the specified keys
+     */
+    public static Set<MetaKey<?>> set(MetaKey<?>... keys) {
+        return Sets.<MetaKey<?>> newHashSet(keys);
     }
 
 }
