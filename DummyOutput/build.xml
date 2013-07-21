@@ -4,7 +4,7 @@
   <property name="output.dir" value="target" />
 
   <property name="pkg" value="pl.edu.agh.ki.grieg.playback" />
-  <property name="service" location="${pkg}.spi.OutputFactory" />
+  <property name="service" value="${pkg}.spi.OutputFactory" />
 
   <!-- These 2 are provider-specific -->
   <property name="impl" value="${pkg}.output.dummy.DummyOutputFactory" />
@@ -16,8 +16,7 @@
   </target>
 
   <target name="create-jar" depends="create-output-directory">
-    <jar jarfile="${output.dir}/${output.file}">
-      <fileset dir="bin" />
+    <jar jarfile="${output.dir}/${output.file}" basedir="bin" includes="**/*.class">
       <service type="${service}">
         <!-- Sequence of providers -->
         <provider classname="${impl}" />
