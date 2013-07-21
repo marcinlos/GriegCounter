@@ -13,10 +13,19 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
+import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Lists;
 
 public class Player {
+
+    /**
+     * How many times per second are {@code PlaybackListener}s notified about
+     * the progress by default
+     */
+    private static final int DEFAULT_NOTIFY_RATE = 25;
 
     /** Used to load audio files */
     private final FileLoader loader;
@@ -33,9 +42,27 @@ public class Player {
     /** Size of the audio data buffer (in samples) */
     private final int bufferSize;
 
+    /**
+     * How many times per second are {@code PlaybackListener}s notified about
+     * the progress
+     */
+    private final int notifyRate;
+
     /** Worker pool used to asynchronously play audio */
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
-    
+
+    /**
+     * Listens to notifications form {@link ProgressNotifier} and forwards to
+     * the {@link PlaybackListener}s
+     */
+    private final Iteratee<Timestamp> progressForwarder = new AbstractIteratee<Timestamp>() {
+        @Override
+        public State step(Timestamp time) {
+            signalProgress(time);
+            return State.Cont;
+        }
+    };
+
     /**
      * Creates new Player with specified configuration parameters.
      * 
@@ -43,10 +70,27 @@ public class Player {
      *            {@link FileLoader} used to load audio files
      * @param bufferSize
      *            Size of the audio output buffers
+     * @param notifyRate
+     *            How often are the {@code PlaybackListener}s notified about the
+     *            playback progress
      */
-    public Player(FileLoader loader, int bufferSize) {
+    public Player(FileLoader loader, int bufferSize, int notifyRate) {
         this.loader = loader;
         this.bufferSize = bufferSize;
+        this.notifyRate = notifyRate;
+    }
+
+    /**
+     * Creates new Player with specified configuration parameters and default
+     * progress notify rate.
+     * 
+     * @param loader
+     *            {@link FileLoader} used to load audio files
+     * @param bufferSize
+     *            Size of the audio output buffers
+     */
+    public Player(FileLoader loader, int bufferSize) {
+        this(loader, bufferSize, DEFAULT_NOTIFY_RATE);
     }
 
     /**
@@ -214,6 +258,10 @@ public class Player {
         stop();
         AudioOutput output = outputFactory.boundTo(source);
         currentPlayback = new TrackPlayback(output, source);
+        int sampleRate = source.getFormat().getSampleRate();
+        ProgressNotifier notifier = new ProgressNotifier(sampleRate, notifyRate);
+        notifier.connect(progressForwarder);
+        currentPlayback.connect(notifier);
         executor.execute(new Runnable() {
             @Override
             public void run() {

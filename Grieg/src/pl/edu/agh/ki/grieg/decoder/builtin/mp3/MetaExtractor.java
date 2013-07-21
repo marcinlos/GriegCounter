@@ -49,7 +49,9 @@ class MetaExtractor {
             FrameReader reader = new FrameReader(stream);
             for (Header header : reader) {
                 SampleBuffer samples = reader.readSamples(header);
-                count += samples.getBufferLength();
+                int bufferSize = samples.getBufferLength();
+                int channels = samples.getChannelCount();
+                count += bufferSize / channels;
                 reader.closeFrame();
             }
             info.put(Keys.SAMPLES, count);

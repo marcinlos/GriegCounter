@@ -3,17 +3,13 @@ package pl.edu.agh.ki.grieg.example;
 import java.io.File;
 import java.io.IOException;
 
-import pl.edu.agh.ki.grieg.analysis.SampleCounter;
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.meta.Keys;
+import pl.edu.agh.ki.grieg.playback.PlaybackAdapter;
 import pl.edu.agh.ki.grieg.playback.Player;
-import pl.edu.agh.ki.grieg.playback.ProgressNotifier;
 import pl.edu.agh.ki.grieg.playback.Timestamp;
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 public class Example {
 
@@ -25,12 +21,12 @@ public class Example {
     private static final String WAV = "/home/los/Downloads/guitarup_fuller.wav";
     private static final String SCHUBERT = "/home/los/Downloads/Schubert - Serenade.wav";
 
-    public static void main(String[] args) throws IOException, AudioException {
+    public static void main(String[] args) throws Exception {
 
         final FileLoader fileLoader = FileLoader.getInstance();
         final Player player = new Player(fileLoader, 2048);
 
-        File file = new File(RACH);
+        File file = new File(FILE);
 
         //player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
@@ -39,22 +35,14 @@ public class Example {
         {
             final long count = audioFile.getInfo(Keys.SAMPLES);
             System.out.println("Frames = " + count);
-            SampleEnumerator source = audioFile.openSource(2048);
-            SampleCounter counter = new SampleCounter();
-            source.connect(counter);
-            int sampleRate = source.getFormat().sampleRate;
-            ProgressNotifier notifier = new ProgressNotifier(sampleRate, 1);
-            notifier.connect(new AbstractIteratee<Timestamp>() {
+            player.addListener(new PlaybackAdapter() {
                 @Override
-                public State step(Timestamp item) {
-                    float percent = item.sample / (float) count;
-                    System.out.printf("%.1f - %s\n", percent * 100, item);
-                    return State.Cont;
+                public void moved(Timestamp time) {
+                    float percent = time.sample / (float) count;
+                    System.out.printf("%.1f - %s\n", percent * 100, time);
                 }
             });
-            source.connect(notifier);
-            player.play(source);
-            //source.start();
+            player.play(audioFile);
         }
         /*{
             Stopwatch stopwatch = new Stopwatch().start();

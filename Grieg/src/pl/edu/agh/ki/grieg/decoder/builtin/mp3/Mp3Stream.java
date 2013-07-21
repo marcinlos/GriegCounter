@@ -7,7 +7,6 @@ import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
-import javazoom.jl.decoder.Obuffer;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -62,12 +61,6 @@ class Mp3Stream implements AudioStream {
                 format = extractFormat(samples);
             }
             sampleBuffer = samples.getBuffer();
-            if (samples.getBufferLength() != Obuffer.OBUFFERSIZE) {
-                System.out.println("getBufferLength: " + samples.getBufferLength());
-                System.out.println("length: " + sampleBuffer.length);
-                System.out.println("channels: " + samples.getChannelCount());
-                System.out.println("layer: " + frame.layer());
-            }
             sampleOffset = 0;
             bitstream.closeFrame();
             return true;
