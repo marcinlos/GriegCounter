@@ -1,5 +1,11 @@
 package pl.edu.agh.ki.grieg.playback.output;
 
+import java.util.ServiceLoader;
+import java.util.Set;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.playback.PlaybackException;
@@ -12,6 +18,17 @@ import pl.edu.agh.ki.grieg.playback.spi.OutputFactory;
  */
 public final class Outputs {
 
+    /** Service loader */
+    private static final ServiceLoader<OutputFactory> loader;
+    
+    /** Available {@link OutputFactory} implementations */
+    private static Set<OutputFactory> factories = Sets.newHashSet(); 
+    
+    static {
+        loader = ServiceLoader.load(OutputFactory.class);
+        Iterables.addAll(factories, loader);
+    }
+
     private Outputs() {
         // non-instantiable
     }
@@ -20,7 +37,11 @@ public final class Outputs {
      * @return Default audio output factory
      */
     public static OutputFactory getFactory() {
-        return null;
+        if (! factories.isEmpty()) {
+            return Iterables.getFirst(factories, null);
+        } else {
+            throw new Error("No factory provider");
+        }
     }
 
     /**
