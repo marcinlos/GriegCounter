@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<project name="DummyOutput" default="create-jar">
+
+  <property name="output.dir" value="target" />
+
+  <property name="pkg" value="pl.edu.agh.ki.grieg.playback" />
+  <property name="service" location="${pkg}.spi.OutputFactory" />
+
+  <!-- These 2 are provider-specific -->
+  <property name="impl" value="${pkg}.output.dummy.DummyOutputFactory" />
+  <property name="output.file" value="dummy-output-provider.jar" />
+
+
+  <target name="create-output-directory">
+    <mkdir dir="${output.dir}" />
+  </target>
+
+  <target name="create-jar" depends="create-output-directory">
+    <jar jarfile="${output.dir}/${output.file}">
+      <fileset dir="bin" />
+      <service type="${service}">
+        <!-- Sequence of providers -->
+        <provider classname="${impl}" />
+      </service>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="${output.dir}" includes="*.jar" />
+    </delete>
+  </target>
+
+</project>
