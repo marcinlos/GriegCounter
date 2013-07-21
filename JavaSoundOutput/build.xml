@@ -7,8 +7,8 @@
   <property name="service" value="${pkg}.spi.OutputFactory" />
 
   <!-- These 2 are provider-specific -->
-  <property name="impl" value="${pkg}.dummy.DummyOutputFactory" />
-  <property name="output.file" value="dummy-output-provider.jar" />
+  <property name="impl" value="${pkg}.javasound.JavaSoundOutputFactory" />
+  <property name="output.file" value="javasound-output-provider.jar" />
 
 
   <target name="create-output-directory">

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.playback.spi;
+package pl.edu.agh.ki.grieg.output.spi;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.playback.PlaybackException;

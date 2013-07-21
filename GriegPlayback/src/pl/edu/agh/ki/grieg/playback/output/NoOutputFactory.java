@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.playback.output;
 
-import pl.edu.agh.ki.grieg.playback.spi.OutputFactory;
+import pl.edu.agh.ki.grieg.output.spi.OutputFactory;
 
 /**
  * Thrown when there are no {@link OutputFactory} found on the classpath

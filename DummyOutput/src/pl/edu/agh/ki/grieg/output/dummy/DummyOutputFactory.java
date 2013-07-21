@@ -1,10 +1,10 @@
-package pl.edu.agh.ki.grieg.playback.output.dummy;
+package pl.edu.agh.ki.grieg.output.dummy;
 
 import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
+import pl.edu.agh.ki.grieg.output.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
-import pl.edu.agh.ki.grieg.playback.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 /**

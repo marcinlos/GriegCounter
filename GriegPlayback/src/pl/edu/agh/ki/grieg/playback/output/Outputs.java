@@ -8,8 +8,8 @@ import com.google.common.collect.Sets;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
+import pl.edu.agh.ki.grieg.output.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.playback.PlaybackException;
-import pl.edu.agh.ki.grieg.playback.spi.OutputFactory;
 
 /**
  * Static methods for dealing with audio outputs and its factories.
