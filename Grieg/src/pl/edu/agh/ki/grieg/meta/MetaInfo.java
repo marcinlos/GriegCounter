@@ -12,10 +12,6 @@ public class MetaInfo {
     
     private final Map<String, Object> info = Maps.newHashMap();
 
-    public MetaInfo() {
-        // empty
-    }
-    
     public <T> Object put(MetaKey<T> key, T value) {
         return put(key.name, value);
     }
@@ -33,6 +29,10 @@ public class MetaInfo {
     public <T> T get(String name, Class<T> type) {
         Object o = info.get(name);
         return o == null ? null : type.cast(o);
+    }
+    
+    public Object get(String name) {
+        return info.get(name);
     }
     
     public Set<String> getKeys() {

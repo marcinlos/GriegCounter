@@ -1,10 +1,8 @@
 package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
-import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.playback.PlaybackAdapter;
@@ -30,16 +28,15 @@ public class Example {
 
         //player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
-        
 
         {
-            final long count = audioFile.getInfo(Keys.SAMPLES);
+            final long count = audioFile.get(Keys.SAMPLES);
             System.out.println("Frames = " + count);
             player.addListener(new PlaybackAdapter() {
                 @Override
                 public void moved(Timestamp time) {
                     float percent = time.sample / (float) count;
-                    System.out.printf("%.1f - %s\n", percent * 100, time);
+                    System.out.printf("%.1f%% - %s\n", percent * 100, time);
                 }
             });
             player.play(audioFile);

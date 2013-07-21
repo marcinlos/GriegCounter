@@ -25,7 +25,10 @@ public class Player {
      * How many times per second are {@code PlaybackListener}s notified about
      * the progress by default
      */
-    private static final int DEFAULT_NOTIFY_RATE = 25;
+    public static final int DEFAULT_NOTIFY_RATE = 25;
+
+    /** Default size of the audio buffer */
+    public static final int DEFAULT_BUFFER_SIZE = 2048;
 
     /** Used to load audio files */
     private final FileLoader loader;
@@ -91,6 +94,17 @@ public class Player {
      */
     public Player(FileLoader loader, int bufferSize) {
         this(loader, bufferSize, DEFAULT_NOTIFY_RATE);
+    }
+
+    /**
+     * Creates new Player with specified file loader and default progress notify
+     * rate and buffer size.
+     * 
+     * @param loader
+     *            {@link FileLoader} used to load audio files
+     */
+    public Player(FileLoader loader) {
+        this(loader, DEFAULT_BUFFER_SIZE);
     }
 
     /**

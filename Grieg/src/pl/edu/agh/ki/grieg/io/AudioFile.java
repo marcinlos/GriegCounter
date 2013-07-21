@@ -3,6 +3,7 @@ package pl.edu.agh.ki.grieg.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
@@ -18,12 +19,20 @@ import pl.edu.agh.ki.grieg.meta.MetaKey;
  */
 public class AudioFile {
 
+    /**
+     * Default buffer size for sources returned by parameterless
+     * {@link #openSource()} invocations
+     */
     public static final int DEFAUL_BUFFER_SIZE = 2048;
 
-    private MetaInfo infoCache;
-
+    /** File containing audio data */
     private final File file;
+
+    /** Parser suitable for dealing with the format of the file */
     private final AudioFormatParser parser;
+
+    /** Metadata retrieved so far */
+    private final MetaInfo infoCache;
 
     /**
      * Creates new {@code AudioFile} using given path and parser.
@@ -31,6 +40,7 @@ public class AudioFile {
     public AudioFile(File file, AudioFormatParser parser) {
         this.file = file;
         this.parser = parser;
+        this.infoCache = new MetaInfo();
     }
 
     /**
@@ -60,11 +70,32 @@ public class AudioFile {
         return parser.openStream(new FileInputStream(file));
     }
 
+    /**
+     * Creates a new audio source from contained file using specified buffer
+     * size
+     * 
+     * @param bufferSize
+     *            Size of the source buffer
+     * @return Audio source - {@link SampleEnumerator}
+     * @throws IOException
+     *             If an IO error occurs
+     * @throws DecodeException
+     *             If the data contained in the file cannot be properly decoded
+     */
     public SampleEnumerator openSource(int bufferSize) throws IOException,
             DecodeException {
         return new StreamSampleEnumerator(openStream(), bufferSize);
     }
 
+    /**
+     * Creates a new audio source from contained file using default buffer size
+     * 
+     * @return Audio source - {@link SampleEnumerator}
+     * @throws IOException
+     *             If an IO error occurs
+     * @throws DecodeException
+     *             If the data contained in the file cannot be properly decoded
+     */
     public SampleEnumerator openSource() throws DecodeException, IOException {
         return openSource(DEFAUL_BUFFER_SIZE);
     }
@@ -73,30 +104,54 @@ public class AudioFile {
      * @return Cached metainfo
      */
     public MetaInfo getInfo() {
-        if (infoCache == null) {
-            infoCache = new MetaInfo();
-        }
         return infoCache;
     }
 
     /**
-     * Attempts to retrieve, if necessary, and returns, specified metainfo about
-     * the audio file represented by this object.
+     * Retrieves data if it has been in the cache already. That is, this method
+     * does not try to extract required information from the audio file.
      * 
      * @param key
-     * @return
-     * @throws DecodeException
-     * @throws IOException
+     *            Information to load
+     * @return Requested information of {@code null} if it is not available
      */
-    public <T> T getInfo(MetaKey<T> key) throws DecodeException, IOException {
-        // make sure it exists
-        getInfo();
-        if (infoCache.contains(key.name)) {
-            return infoCache.get(key);
-        } else {
-            parser.getDetails(file, Keys.set(key), infoCache);
-            return infoCache.get(key);
-        }
+    public <T> T getIfCached(MetaKey<T> key) {
+        return infoCache.get(key);
+    }
+
+    /**
+     * Attempts to retrieve, if necessary, and returns, specified metainfo about
+     * the audio file represented by this object. Updates metainfo cache.
+     * 
+     * @param key
+     *            Information to retrieve
+     * @return Value associated with the {@code key}
+     * @throws DecodeException
+     *             If a decoding fails
+     * @throws IOException
+     *             If an IO error occurs
+     */
+    public <T> T get(MetaKey<T> key) throws DecodeException, IOException {
+        parser.getDetails(file, Keys.set(key), infoCache);
+        return infoCache.get(key);
+    }
+
+    /**
+     * Updates metainfo cache with all the informati on described by the
+     * {@code desired} (if it manages to retrieve it) and returns this cache.
+     * 
+     * @param desired
+     *            Set of needed pieces of information
+     * @return Metainfo cache
+     * @throws DecodeException
+     *             If a decoding fails
+     * @throws IOException
+     *             If an IO error occurs
+     */
+    public MetaInfo getAll(Set<MetaKey<?>> desired) throws DecodeException,
+            IOException {
+        parser.getDetails(file, desired, infoCache);
+        return infoCache;
     }
 
 }
