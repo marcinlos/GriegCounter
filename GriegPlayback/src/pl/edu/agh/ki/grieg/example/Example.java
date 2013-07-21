@@ -2,20 +2,18 @@ package pl.edu.agh.ki.grieg.example;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
-import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
+import pl.edu.agh.ki.grieg.analysis.SampleCounter;
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.meta.Keys;
 import pl.edu.agh.ki.grieg.playback.Player;
-import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.playback.ProgressNotifier;
+import pl.edu.agh.ki.grieg.playback.Timestamp;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
-
-import com.google.common.base.Stopwatch;
 
 public class Example {
 
@@ -32,26 +30,33 @@ public class Example {
         final FileLoader fileLoader = FileLoader.getInstance();
         final Player player = new Player(fileLoader, 2048);
 
-        File file = new File(SCHUBERT);
+        File file = new File(RACH);
 
-        player.play(file);
+        //player.play(file);
         AudioFile audioFile = fileLoader.loadFile(file);
+        
 
-        /*{
-            AudioStream stream = audioFile.openStream();
-            SampleEnumerator source = new StreamSampleEnumerator(stream, 2048);
-
+        {
+            final long count = audioFile.getInfo(Keys.SAMPLES);
+            System.out.println("Frames = " + count);
+            SampleEnumerator source = audioFile.openSource(2048);
             SampleCounter counter = new SampleCounter();
             source.connect(counter);
-
-            Stopwatch stopwatch = new Stopwatch().start();
-            source.start();
-            stopwatch.stop();
-
-            System.out.println("Done in " + stopwatch);
-            System.out.println("Total frames: " + counter.getFrameCount());
-        }*/
-        {
+            int sampleRate = source.getFormat().sampleRate;
+            ProgressNotifier notifier = new ProgressNotifier(sampleRate, 1);
+            notifier.connect(new AbstractIteratee<Timestamp>() {
+                @Override
+                public State step(Timestamp item) {
+                    float percent = item.sample / (float) count;
+                    System.out.printf("%.1f - %s\n", percent * 100, item);
+                    return State.Cont;
+                }
+            });
+            source.connect(notifier);
+            player.play(source);
+            //source.start();
+        }
+        /*{
             Stopwatch stopwatch = new Stopwatch().start();
             Long count = audioFile.getInfo(Keys.SAMPLES);
             stopwatch.stop();
@@ -72,7 +77,7 @@ public class Example {
                 }
             });
             source.start();
-        }
+        }*/
     }
 
 }

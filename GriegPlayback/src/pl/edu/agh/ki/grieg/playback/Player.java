@@ -35,7 +35,7 @@ public class Player {
 
     /** Worker pool used to asynchronously play audio */
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
-
+    
     /**
      * Creates new Player with specified configuration parameters.
      * 
@@ -114,6 +114,18 @@ public class Player {
     private synchronized void signalFailure(Exception e) {
         for (PlaybackListener listener : listeners) {
             listener.failed(e);
+        }
+    }
+
+    /**
+     * Notifies all the listeners about the playback progress
+     * 
+     * @param time
+     *            Current time offset of the playback
+     */
+    private synchronized void signalProgress(Timestamp time) {
+        for (PlaybackListener listener : listeners) {
+            listener.moved(time);
         }
     }
 
@@ -213,7 +225,7 @@ public class Player {
                     signalFailure(e);
                 }
             }
-        }); 
+        });
         signalStart();
     }
 

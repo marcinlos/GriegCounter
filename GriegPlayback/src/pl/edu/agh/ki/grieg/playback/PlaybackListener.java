@@ -28,6 +28,16 @@ public interface PlaybackListener {
     void stopped();
 
     /**
+     * Invoked when the point in time being played has changed. During regular
+     * playback it should be invoked relatively often, to allow frequent, smooth
+     * response to changes.
+     * 
+     * @param time
+     *            Offset in time at which the playback currently is
+     */
+    void moved(Timestamp time);
+
+    /**
      * Invoked when an error occures
      * 
      * @param e
