@@ -7,6 +7,7 @@ import java.io.IOException;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.Controllable;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
+import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
 import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 

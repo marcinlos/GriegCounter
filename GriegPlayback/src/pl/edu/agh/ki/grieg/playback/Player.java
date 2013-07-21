@@ -13,8 +13,11 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
+import pl.edu.agh.ki.grieg.playback.output.Outputs;
+import pl.edu.agh.ki.grieg.playback.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Lists;
@@ -40,7 +43,7 @@ public class Player {
     private TrackPlayback currentPlayback;
 
     /** Creates outputs */
-    private final OutputFactory outputFactory = new OutputFactory();
+    private final OutputFactory outputFactory = Outputs.getFactory();
 
     /** Size of the audio data buffer (in samples) */
     private final int bufferSize;
@@ -270,7 +273,7 @@ public class Player {
     public void play(SampleEnumerator source) throws AudioException,
             IOException {
         stop();
-        AudioOutput output = outputFactory.boundTo(source);
+        AudioOutput output = Outputs.boundTo(outputFactory, source);
         currentPlayback = new TrackPlayback(output, source);
         int sampleRate = source.getFormat().getSampleRate();
         ProgressNotifier notifier = new ProgressNotifier(sampleRate, notifyRate);

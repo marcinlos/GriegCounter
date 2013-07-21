@@ -27,21 +27,21 @@ public class Processor {
     /**
      * Conducts the whole analysis of the audio file
      * 
-     * @param file Audio file to process
+     * @param file
+     *            Audio file to process
      */
     public void process(File file) {
         try {
             // open the file
             audioFile = loader.loadFile(file);
             listeners.fileOpened(audioFile);
-            
+
             // gather the metadata
             final Set<MetaKey<?>> keys = Sets.newHashSet();
             listeners.readingMetaInfo(keys);
             MetaInfo info = audioFile.getAll(keys);
             listeners.gatheredMetainfo(info);
-            
-            
+
         } catch (AudioException e) {
             listeners.failed(e);
         } catch (IOException e) {
@@ -49,10 +49,22 @@ public class Processor {
         }
     }
 
+    /**
+     * Registers new processing listener
+     * 
+     * @param listener
+     *            Listener to be added to the list
+     */
     public void addListener(ProcessingListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Removes a listener from the list
+     * 
+     * @param listener
+     *            Listener to be disconnected
+     */
     public void removeListener(ProcessingListener listener) {
         listeners.remove(listener);
     }
