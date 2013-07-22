@@ -69,4 +69,20 @@ public class Iteratees {
         return enumerator(it.iterator());
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> Iteratee<T> upcast(Iteratee<? super T> sink) {
+        return (Iteratee<T>) sink;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Enumerator<T> upcast(Enumerator<? extends T> source) {
+        return (Enumerator<T>) source;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <S, T> Enumeratee<S, T> upcast(
+            Enumeratee<? super S, ? extends T> transform) {
+        return (Enumeratee<S, T>) transform;
+    }
+
 }

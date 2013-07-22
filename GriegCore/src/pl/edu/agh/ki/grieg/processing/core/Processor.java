@@ -10,12 +10,15 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
 import pl.edu.agh.ki.grieg.playback.Player;
+import pl.edu.agh.ki.grieg.processing.tree.FlowTree;
 
 import com.google.common.collect.Sets;
 
 public class Processor {
 
     private final FileLoader loader = FileLoader.getInstance();
+    
+    //private final FlowTree tree;
 
     private final Player player = new Player(loader);
 
