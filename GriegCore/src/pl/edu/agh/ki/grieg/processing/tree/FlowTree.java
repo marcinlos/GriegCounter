@@ -7,19 +7,22 @@ import java.util.Map;
 import pl.edu.agh.ki.grieg.utils.iteratee.Enumeratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
+import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Maps;
 
-public class FlowTree {
+public class FlowTree<T> implements Iteratee<T> {
 
     /** Root of the tree */
-    private Source<?> root;
+    private final Transform<T, T> root;
 
     /** name -> node */
     private final Map<String, Node> nodes = Maps.newHashMap();
 
-    public <T> FlowTree(Enumerator<? extends T> root, Class<T> output) {
-        this.root = Nodes.make(root, output);
+    public FlowTree(Class<T> input) {
+        Enumeratee<T, T> forwarder = Iteratees.forwarder();
+        this.root = Nodes.make(forwarder, input, input);
     }
 
     /**
@@ -65,13 +68,25 @@ public class FlowTree {
                     + clazz + ")");
         }
     }
-    
-    public <T> Connect connect(Iteratee<? super T> sink, Class<T> clazz) {
+
+    @SuppressWarnings("unchecked")
+    public <S> Enumerator<S> getSource(String name, Class<? extends S> clazz) {
+        Source<?> node = getSourceNode(name);
+        Class<?> out = node.getOutputType();
+        if (clazz.isAssignableFrom(out)) {
+            return (Enumerator<S>) node.getSource();
+        } else {
+            throw new RuntimeException("Type mismatch: source emits "
+                    + out.getName() + ", " + clazz.getName() + " required");
+        }
+    }
+
+    public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
         return new Connect(Nodes.make(sink, clazz));
     }
 
-    public <S, T> Connect connect(Enumeratee<? super S, ? extends T> transform,
-            Class<S> input, Class<T> output) {
+    public <S, R> Connect connect(Enumeratee<? super S, ? extends R> transform,
+            Class<S> input, Class<R> output) {
         return new Connect(Nodes.make(transform, input, output));
     }
 
@@ -87,13 +102,13 @@ public class FlowTree {
             this.name = name;
         }
 
-        public <T> Connect connect(Iteratee<? super T> sink, Class<T> clazz) {
+        public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
             return new Connect(name, Nodes.make(sink, clazz));
         }
 
-        public <S, T> Connect connect(
-                Enumeratee<? super S, ? extends T> transform, Class<S> input,
-                Class<T> output) {
+        public <S, R> Connect connect(
+                Enumeratee<? super S, ? extends R> transform, Class<S> input,
+                Class<R> output) {
             return new Connect(name, Nodes.make(transform, input, output));
         }
     }
@@ -112,7 +127,7 @@ public class FlowTree {
             this(null, sink);
         }
 
-        private FlowTree to(Source<?> source) {
+        private FlowTree<T> to(Source<?> source) {
             connect(sink, source);
             if (name != null) {
                 nodes.put(name, sink);
@@ -120,13 +135,37 @@ public class FlowTree {
             return FlowTree.this;
         }
 
-        public FlowTree toRoot() {
+        public FlowTree<T> toRoot() {
             return to(root);
         }
 
-        public FlowTree to(String source) {
+        public FlowTree<T> to(String source) {
             return to(getSourceNode(source));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public State step(T item) {
+        return root.getSink().step(item);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void finished() {
+        root.getSink().finished();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void failed(Throwable e) {
+        root.getSink().failed(e);
     }
 
 }

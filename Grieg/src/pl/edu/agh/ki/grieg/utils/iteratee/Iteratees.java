@@ -58,6 +58,14 @@ public class Iteratees {
     }
 
     /**
+     * @return Universal forwarding enumeratee
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Enumeratee<T, T> forwarder() {
+        return (Enumeratee<T, T>) Forwarder.INSTANCE;
+    }
+
+    /**
      * Creates an {@code Enumerator} using the stream extracted from the
      * {@code it} iterable.
      * 
@@ -83,6 +91,38 @@ public class Iteratees {
     public static <S, T> Enumeratee<S, T> upcast(
             Enumeratee<? super S, ? extends T> transform) {
         return (Enumeratee<S, T>) transform;
+    }
+
+    /**
+     * Implementation of an universal forwarder enumeratee, that transparently
+     * sends chunks and other signals to attached iteratees.
+     */
+    private static final class Forwarder extends AbstractEnumerator<Object>
+            implements Enumeratee<Object, Object> {
+
+        /** Single instance */
+        public static final Forwarder INSTANCE = new Forwarder();
+
+        private Forwarder() {
+            // non-instantiable outside
+        }
+
+        @Override
+        public State step(Object item) {
+            pushChunk(item);
+            return State.Cont;
+        }
+
+        @Override
+        public void finished() {
+            signalEndOfStream();
+        }
+
+        @Override
+        public void failed(Throwable e) {
+            signalFailure(e);
+        }
+
     }
 
 }

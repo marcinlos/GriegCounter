@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.utils;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Simple utility class abstracting periodical execution of some task.
@@ -51,13 +51,16 @@ public abstract class PeriodicTask {
      * @return New value of the index
      */
     public int step(int n) {
-        Preconditions.checkArgument(n >= 0, "Negative step size");
-        index += n;
-        total += n;
-        while (index >= period) {
-            index -= period;
+        checkArgument(n >= 0, "Negative step size");
+        while (index + n >= period) {
+            int difference = period - index;
+            n -= difference;
+            total += difference;
+            index = 0;
             execute();
         }
+        index += n;
+        total += n;
         return index;
     }
 

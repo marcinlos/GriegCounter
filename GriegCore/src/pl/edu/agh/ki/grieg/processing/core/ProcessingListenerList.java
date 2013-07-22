@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.processing.tree.FlowTree;
 
 /**
  * Thread-safe list of {@link ProcessingListener}s. Implements
@@ -39,12 +40,12 @@ class ProcessingListenerList implements ProcessingListener {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void processingStarted(Context context) {
-        for (ProcessingListener listener : listeners) {
-            listener.processingStarted(context);
-        }
-    }
+//    @Override
+//    public void processingStarted(Context context) {
+//        for (ProcessingListener listener : listeners) {
+//            listener.processingStarted(context);
+//        }
+//    }
 
     /**
      * {@inheritDoc}
@@ -73,6 +74,13 @@ class ProcessingListenerList implements ProcessingListener {
     public void gatheredMetainfo(MetaInfo info) {
         for (ProcessingListener listener : listeners) {
             listener.gatheredMetainfo(info);
+        }
+    }
+    
+    @Override
+    public void processingStarted(FlowTree<float[][]> flow) {
+        for (ProcessingListener listener : listeners) {
+            listener.processingStarted(flow);
         }
     }
 

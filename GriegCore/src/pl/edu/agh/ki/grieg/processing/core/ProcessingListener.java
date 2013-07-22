@@ -5,6 +5,7 @@ import java.util.Set;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.processing.tree.FlowTree;
 
 public interface ProcessingListener {
 
@@ -14,7 +15,7 @@ public interface ProcessingListener {
      * @param context
      *            Processing context
      */
-    void processingStarted(Context context);
+    //void processingStarted(Context context);
 
     /**
      * Invoked when processing of the new file begins (before actually analysing
@@ -45,7 +46,7 @@ public interface ProcessingListener {
      */
     void gatheredMetainfo(MetaInfo info);
 
-    
+    void processingStarted(FlowTree<float[][]> flow);
     
     /**
      * Invoked when the processing fails (i.e. encounters fatal error) and can

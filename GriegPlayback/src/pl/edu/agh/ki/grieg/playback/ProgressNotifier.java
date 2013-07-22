@@ -17,7 +17,7 @@ public class ProgressNotifier extends AbstractEnumerator<Timestamp> implements
     /** Number of samples in a second of audio data */
     private final int sampleRate;
 
-    /** Auxilary object for tracking number of procssed samples */
+    /** Auxilary object for tracking number of processed samples */
     private final PeriodicTask task;
 
     /**
