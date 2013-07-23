@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.example;
+package pl.edu.agh.ki.grieg.console;
 
 import java.io.File;
 

@@ -266,7 +266,6 @@ public class Player {
     public void play(SampleEnumerator source) throws PlaybackException {
         stop();
         prepare(source);
-        System.out.println("badsfasdf");
         startPlaying();
     }
 

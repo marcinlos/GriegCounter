@@ -117,8 +117,8 @@ public class MainWindow extends JFrame {
         try {
             Processor proc = analyzer.newProcessing(file);
             proc.gatherMetadata();
-            //AudioFile audio = proc.getFile();
-            //player.play(audio);
+            AudioFile audio = proc.getFile();
+            player.play(audio);
         } catch (Exception e) {
             displayErrorMessage(e);
         }
