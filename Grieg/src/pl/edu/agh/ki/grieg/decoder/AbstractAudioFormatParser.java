@@ -1,9 +1,9 @@
-package pl.edu.agh.ki.grieg.decoder.spi;
+package pl.edu.agh.ki.grieg.decoder;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 /**
  * Abstract base class for {@linkplain AudioFormatParser}s. Implements

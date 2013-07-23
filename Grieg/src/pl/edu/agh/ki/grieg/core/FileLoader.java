@@ -23,32 +23,21 @@ import com.google.common.io.Files;
  */
 public class FileLoader {
 
+    /** Root decoder manager, ancestor of all the managers */
+    private static final DecoderManager root = new DecoderManager();
+
     /** Collection of audio parsers */
-    private DecoderManager decoders = new DecoderManager();
+    private DecoderManager decoders = new DecoderManager(root);
 
-    /** Single instance of the file loader */
-    private static FileLoader instance = new FileLoader();
-
-    private FileLoader() {
-        registerBuiltins();
+    static {
+        // register builtin decoders here
+        root.register(new WavFileParser());
+        root.register(new Mp3Parser());
 
         // gather all the implementations
         for (AudioFormatParser p : ServiceLoader.load(AudioFormatParser.class)) {
-            decoders.register(p);
+            root.register(p);
         }
-    }
-
-    private void registerBuiltins() {
-        // register builtin decoders here
-        decoders.register(new WavFileParser());
-        decoders.register(new Mp3Parser());
-    }
-
-    /**
-     * @return Instance of {@code FileLoader}
-     */
-    public static FileLoader getInstance() {
-        return instance;
     }
 
     /**

@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Set;
 
 import javazoom.jl.decoder.Bitstream;
+import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.decoder.spi.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;

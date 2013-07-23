@@ -34,7 +34,7 @@ public class MainWindow extends JFrame {
     
     private static final int BUFFER_SIZE = 8192;
     
-    private final FileLoader fileLoader = FileLoader.getInstance();
+    private final FileLoader fileLoader = new FileLoader();
     private final Player player = new Player(BUFFER_SIZE);
     
     private final Analyzer analyzer = new Analyzer(fileLoader);

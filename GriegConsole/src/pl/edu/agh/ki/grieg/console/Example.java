@@ -21,7 +21,7 @@ public class Example {
 
     public static void main(String[] args) throws Exception {
 
-        final FileLoader fileLoader = FileLoader.getInstance();
+        final FileLoader fileLoader = new FileLoader();
         final Player player = new Player(2048);
 
         File file = new File(FILE);

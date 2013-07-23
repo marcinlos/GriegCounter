@@ -7,6 +7,7 @@ import java.util.Set;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
@@ -19,18 +20,29 @@ import com.google.common.io.Files;
  */
 public class DecoderManager {
 
+    /**
+     * Parent manager, should be consulted if this manager cannot find suitable
+     * parser
+     */
+    private DecoderManager parent;
+
     /** mappipng: extension -> providers */
-    private Multimap<String, AudioFormatParser> decoders2;
-    
+    private Multimap<String, AudioFormatParser> decoders;
+
     /** set of all the decoders */
     private Set<AudioFormatParser> decoderSet;
+
+    public DecoderManager(DecoderManager parent) {
+        this.parent = parent;
+        decoders = ArrayListMultimap.create();
+        decoderSet = Sets.newHashSet();
+    }
 
     /**
      * Creates a new, empty decoder manager
      */
     public DecoderManager() {
-        decoders2 = ArrayListMultimap.create();
-        decoderSet = Sets.newHashSet();
+        this(null);
     }
 
     /**
@@ -44,7 +56,7 @@ public class DecoderManager {
      *            {@code AudioFormatParser} provider
      */
     private void register(String ext, AudioFormatParser provider) {
-        decoders2.put(ext, provider);
+        decoders.put(ext, provider);
         decoderSet.add(provider);
     }
 
@@ -61,12 +73,19 @@ public class DecoderManager {
             register(ext, provider);
         }
     }
-    
+
     /**
      * @return Unmodifiable set of all the registered decoders
      */
     public Set<AudioFormatParser> getAllDecoders() {
-        return Collections.unmodifiableSet(decoderSet);
+        if (parent != null) {
+            Set<AudioFormatParser> set = Sets.newHashSet();
+            set.addAll(decoderSet);
+            set.addAll(parent.getAllDecoders());
+            return set;
+        } else {
+            return Collections.unmodifiableSet(decoderSet);
+        }
     }
 
     /**
@@ -79,7 +98,14 @@ public class DecoderManager {
      * @see #getByExtension(File)
      */
     public Iterable<AudioFormatParser> getByExtension(String ext) {
-        return Collections.unmodifiableCollection(decoders2.get(ext));
+        if (parent != null) {
+            Set<AudioFormatParser> parsers = Sets.newHashSet();
+            Iterables.addAll(parsers, parent.getByExtension(ext));
+            parsers.addAll(decoders.get(ext));
+            return parsers;
+        } else {
+            return Collections.unmodifiableCollection(decoders.get(ext));
+        }
     }
 
     /**
