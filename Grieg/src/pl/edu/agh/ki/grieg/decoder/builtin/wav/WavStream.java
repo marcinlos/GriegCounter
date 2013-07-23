@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.data.AudioDetails;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.riff.ChunkHeader;
 import pl.edu.agh.ki.grieg.decoder.riff.NotRiffException;
@@ -15,8 +14,6 @@ import pl.edu.agh.ki.grieg.decoder.riff.RiffParser;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.SimpleTagContainer;
-import pl.edu.agh.ki.grieg.meta.TagSet;
 import pl.edu.agh.ki.grieg.utils.NotImplementedException;
 
 import com.google.common.io.LittleEndianDataInputStream;
@@ -75,9 +72,8 @@ class WavStream implements AudioStream {
         int sampleRate = wav.getSampleRate();
         float length = sampleCount / (float) sampleRate;
         SoundFormat format = new SoundFormat(sampleRate, channels);
-        TagSet tags = new SimpleTagContainer();
         converter = chooseConverter(bitsPerSample);
-        return new AudioDetails(length, sampleCount, format, tags);
+        return new AudioDetails(length, sampleCount, format);
     }
 
     private PCMReader chooseConverter(int depth) {

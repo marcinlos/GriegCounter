@@ -115,30 +115,32 @@ public class AudioFile {
      *            Information to load
      * @return Requested information of {@code null} if it is not available
      */
-    public <T> T getIfCached(MetaKey<T> key) {
+    public <T> T get(MetaKey<T> key) {
         return infoCache.get(key);
     }
 
     /**
-     * Attempts to retrieve, if necessary, and returns, specified metainfo about
-     * the audio file represented by this object. Updates metainfo cache.
+     * Attempts to determine, exmining the file if necessary, and returns,
+     * specified metainfo about the audio file represented by this object.
+     * Updates metainfo cache.
      * 
      * @param key
-     *            Information to retrieve
+     *            Information to be provided
      * @return Value associated with the {@code key}
      * @throws DecodeException
      *             If a decoding fails
      * @throws IOException
      *             If an IO error occurs
      */
-    public <T> T get(MetaKey<T> key) throws DecodeException, IOException {
+    public <T> T determine(MetaKey<T> key) throws DecodeException, IOException {
         parser.getDetails(file, Keys.set(key), infoCache);
         return infoCache.get(key);
     }
 
     /**
-     * Updates metainfo cache with all the informati on described by the
+     * Updates metainfo cache with all the information described by the
      * {@code desired} (if it manages to retrieve it) and returns this cache.
+     * Examines the file if necessary.
      * 
      * @param desired
      *            Set of needed pieces of information
@@ -148,7 +150,7 @@ public class AudioFile {
      * @throws IOException
      *             If an IO error occurs
      */
-    public MetaInfo getAll(Set<MetaKey<?>> desired) throws DecodeException,
+    public MetaInfo computeAll(Set<MetaKey<?>> desired) throws DecodeException,
             IOException {
         parser.getDetails(file, desired, infoCache);
         return infoCache;

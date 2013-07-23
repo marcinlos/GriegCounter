@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -19,14 +20,24 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.meta.Keys;
+import pl.edu.agh.ki.grieg.meta.MetaInfo;
+import pl.edu.agh.ki.grieg.meta.MetaKey;
 import pl.edu.agh.ki.grieg.playback.Player;
+import pl.edu.agh.ki.grieg.processing.core.Analyzer;
+import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
+import pl.edu.agh.ki.grieg.processing.core.Processor;
+import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
 
 public class MainWindow extends JFrame {
     
     private static final int BUFFER_SIZE = 8192;
     
-    private FileLoader fileLoader = FileLoader.getInstance();
-    private Player player = new Player(fileLoader, BUFFER_SIZE);
+    private final FileLoader fileLoader = FileLoader.getInstance();
+    private final Player player = new Player(BUFFER_SIZE);
+    
+    private final Analyzer analyzer = new Analyzer(fileLoader);
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -42,6 +53,38 @@ public class MainWindow extends JFrame {
     private static final String RACH = DIR + "Rachmaninov/Op. 28 (PS no. 1 in D minor)/03 Piano Sonata No.1 in D minor Op.28 - III. Allegro molto.mp3";
     
     private static final String[] EXTS = { "mp3", "wav" };
+    
+    {
+        analyzer.addListener(new ProcessingListener() {
+            
+            @Override
+            public void readingMetaInfo(Set<MetaKey<?>> desired) {
+                System.out.println("Reading metainfo");
+                desired.add(Keys.SAMPLES);
+            }
+            
+            @Override
+            public void processingStarted(ProcessingTree<float[][]> flow) {
+                
+            }
+            
+            @Override
+            public void gatheredMetainfo(MetaInfo info) {
+                long length = info.get(Keys.SAMPLES);
+                System.out.println("Frames: " + length);
+            }
+            
+            @Override
+            public void fileOpened(AudioFile file) {
+                
+            }
+            
+            @Override
+            public void failed(Exception e) {
+                
+            }
+        });
+    }
     
     public MainWindow(String label) {
         super(label);
@@ -72,7 +115,10 @@ public class MainWindow extends JFrame {
 
     private void openFile(File file) {
         try {
-            player.play(file);
+            Processor proc = analyzer.newProcessing(file);
+            proc.gatherMetadata();
+            //AudioFile audio = proc.getFile();
+            //player.play(audio);
         } catch (Exception e) {
             displayErrorMessage(e);
         }

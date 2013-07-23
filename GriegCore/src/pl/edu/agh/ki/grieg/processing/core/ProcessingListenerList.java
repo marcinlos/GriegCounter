@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -8,7 +9,7 @@ import com.google.common.collect.Lists;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.MetaInfo;
 import pl.edu.agh.ki.grieg.meta.MetaKey;
-import pl.edu.agh.ki.grieg.processing.tree.FlowTree;
+import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
 
 /**
  * Thread-safe list of {@link ProcessingListener}s. Implements
@@ -17,7 +18,8 @@ import pl.edu.agh.ki.grieg.processing.tree.FlowTree;
  * 
  * @author los
  */
-class ProcessingListenerList implements ProcessingListener {
+class ProcessingListenerList implements ProcessingListener,
+        Iterable<ProcessingListener> {
 
     /** Actual list of listeners */
     private final List<ProcessingListener> listeners = Lists
@@ -36,16 +38,6 @@ class ProcessingListenerList implements ProcessingListener {
     public void remove(ProcessingListener listener) {
         listeners.remove(listener);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-//    @Override
-//    public void processingStarted(Context context) {
-//        for (ProcessingListener listener : listeners) {
-//            listener.processingStarted(context);
-//        }
-//    }
 
     /**
      * {@inheritDoc}
@@ -76,9 +68,12 @@ class ProcessingListenerList implements ProcessingListener {
             listener.gatheredMetainfo(info);
         }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void processingStarted(FlowTree<float[][]> flow) {
+    public void processingStarted(ProcessingTree<float[][]> flow) {
         for (ProcessingListener listener : listeners) {
             listener.processingStarted(flow);
         }
@@ -92,6 +87,11 @@ class ProcessingListenerList implements ProcessingListener {
         for (ProcessingListener listener : listeners) {
             listener.failed(e);
         }
+    }
+
+    @Override
+    public Iterator<ProcessingListener> iterator() {
+        return listeners.iterator();
     }
 
 }

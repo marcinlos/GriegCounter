@@ -1,23 +1,19 @@
 package pl.edu.agh.ki.grieg.playback;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.io.AudioStream;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
-import pl.edu.agh.ki.grieg.io.StreamSampleEnumerator;
 import pl.edu.agh.ki.grieg.output.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
 import pl.edu.agh.ki.grieg.playback.output.Outputs;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Lists;
@@ -32,9 +28,6 @@ public class Player {
 
     /** Default size of the audio buffer */
     public static final int DEFAULT_BUFFER_SIZE = 2048;
-
-    /** Used to load audio files */
-    private final FileLoader loader;
 
     /** List of listeners */
     private final List<PlaybackListener> listeners = Lists.newArrayList();
@@ -72,16 +65,13 @@ public class Player {
     /**
      * Creates new Player with specified configuration parameters.
      * 
-     * @param loader
-     *            {@link FileLoader} used to load audio files
      * @param bufferSize
      *            Size of the audio output buffers
      * @param notifyRate
      *            How often are the {@code PlaybackListener}s notified about the
      *            playback progress
      */
-    public Player(FileLoader loader, int bufferSize, int notifyRate) {
-        this.loader = loader;
+    public Player(int bufferSize, int notifyRate) {
         this.bufferSize = bufferSize;
         this.notifyRate = notifyRate;
     }
@@ -90,24 +80,18 @@ public class Player {
      * Creates new Player with specified configuration parameters and default
      * progress notify rate.
      * 
-     * @param loader
-     *            {@link FileLoader} used to load audio files
      * @param bufferSize
      *            Size of the audio output buffers
      */
-    public Player(FileLoader loader, int bufferSize) {
-        this(loader, bufferSize, DEFAULT_NOTIFY_RATE);
+    public Player(int bufferSize) {
+        this(bufferSize, DEFAULT_NOTIFY_RATE);
     }
 
     /**
-     * Creates new Player with specified file loader and default progress notify
-     * rate and buffer size.
-     * 
-     * @param loader
-     *            {@link FileLoader} used to load audio files
+     * Creates new Player with default progress notify rate and buffer size.
      */
-    public Player(FileLoader loader) {
-        this(loader, DEFAULT_BUFFER_SIZE);
+    public Player() {
+        this(DEFAULT_BUFFER_SIZE);
     }
 
     /**
@@ -255,30 +239,59 @@ public class Player {
         executor.awaitTermination(timeout, unit);
     }
 
-    public void play(String path) throws IOException, AudioException {
-        play(new File(path));
-    }
-
-    public void play(File file) throws IOException, AudioException {
-        AudioFile audioFile = loader.loadFile(file);
-        play(audioFile);
-    }
-
+    /**
+     * Plays the specified {@link AudioFile} using separate internal thread.
+     * 
+     * @param file
+     *            File to play
+     * @throws IOException
+     *             If an IO error occurs
+     * @throws AudioException
+     *             If there is a problem with the audio data
+     */
     public void play(AudioFile file) throws IOException, AudioException {
-        AudioStream stream = file.openStream();
-        SampleEnumerator source = new StreamSampleEnumerator(stream, bufferSize);
+        SampleEnumerator source = file.openSource(bufferSize);
         play(source);
     }
 
-    public void play(SampleEnumerator source) throws AudioException,
-            IOException {
+    /**
+     * Plays the audio data emited by the specified source. Starts the source in
+     * its internal thread.
+     * 
+     * @param source
+     *            Source of an audio data
+     * @throws PlaybackException
+     *             If a problem with playback occurs
+     */
+    public void play(SampleEnumerator source) throws PlaybackException {
         stop();
+        prepare(source);
+        System.out.println("badsfasdf");
+        startPlaying();
+    }
+
+    /**
+     * Prepares the audio source for playback. Creates suitable output and
+     * attaches it to the source.
+     * 
+     * @param source
+     *            Source of an audio data
+     * @throws PlaybackException
+     *             If a problem with playback occurs
+     */
+    private void prepare(SampleEnumerator source) throws PlaybackException {
         AudioOutput output = Outputs.boundTo(outputFactory, source);
         currentPlayback = new TrackPlayback(output, source);
         int sampleRate = source.getFormat().getSampleRate();
         ProgressNotifier notifier = new ProgressNotifier(sampleRate, notifyRate);
         notifier.connect(progressForwarder);
         currentPlayback.connect(notifier);
+    }
+
+    /**
+     * Starts playing using currently set audio source in its internal thread.
+     */
+    private void startPlaying() {
         executor.execute(new Runnable() {
             @Override
             public void run() {

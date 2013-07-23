@@ -12,7 +12,7 @@ import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Maps;
 
-public class FlowTree<T> implements Iteratee<T> {
+public class ProcessingTree<T> implements Iteratee<T> {
 
     /** Root of the tree */
     private final Transform<T, T> root;
@@ -20,9 +20,13 @@ public class FlowTree<T> implements Iteratee<T> {
     /** name -> node */
     private final Map<String, Node> nodes = Maps.newHashMap();
 
-    public FlowTree(Class<T> input) {
+    public ProcessingTree(Class<T> input) {
         Enumeratee<T, T> forwarder = Iteratees.forwarder();
         this.root = Nodes.make(forwarder, input, input);
+    }
+    
+    public static <T> ProcessingTree<T> make(Class<T> input) {
+        return new ProcessingTree<T>(input);
     }
 
     /**
@@ -127,19 +131,19 @@ public class FlowTree<T> implements Iteratee<T> {
             this(null, sink);
         }
 
-        private FlowTree<T> to(Source<?> source) {
+        private ProcessingTree<T> to(Source<?> source) {
             connect(sink, source);
             if (name != null) {
                 nodes.put(name, sink);
             }
-            return FlowTree.this;
+            return ProcessingTree.this;
         }
 
-        public FlowTree<T> toRoot() {
+        public ProcessingTree<T> toRoot() {
             return to(root);
         }
 
-        public FlowTree<T> to(String source) {
+        public ProcessingTree<T> to(String source) {
             return to(getSourceNode(source));
         }
     }

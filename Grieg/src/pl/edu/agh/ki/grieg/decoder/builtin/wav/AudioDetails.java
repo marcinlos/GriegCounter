@@ -1,6 +1,7 @@
-package pl.edu.agh.ki.grieg.data;
+package pl.edu.agh.ki.grieg.decoder.builtin.wav;
 
-import pl.edu.agh.ki.grieg.meta.TagSet;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
+
 
 /**
  * 
@@ -14,7 +15,6 @@ public class AudioDetails {
     private float length;
     private long sampleCount;
     private SoundFormat format;
-    private TagSet tags;
 
     public AudioDetails() {
         this.length = UNKNOWN;
@@ -22,12 +22,10 @@ public class AudioDetails {
         this.format = null;
     }
 
-    public AudioDetails(float length, long sampleCount, SoundFormat format,
-            TagSet tags) {
+    public AudioDetails(float length, long sampleCount, SoundFormat format) {
         this.length = length;
         this.sampleCount = sampleCount;
         this.format = format;
-        this.tags = tags;
     }
 
     public float getLength() {
@@ -52,10 +50,6 @@ public class AudioDetails {
 
     public void setFormat(SoundFormat format) {
         this.format = format;
-    }
-
-    public TagSet getTags() {
-        return tags;
     }
 
     @Override

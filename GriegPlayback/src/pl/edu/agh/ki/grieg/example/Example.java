@@ -22,7 +22,7 @@ public class Example {
     public static void main(String[] args) throws Exception {
 
         final FileLoader fileLoader = FileLoader.getInstance();
-        final Player player = new Player(fileLoader, 2048);
+        final Player player = new Player(2048);
 
         File file = new File(FILE);
 
@@ -30,7 +30,7 @@ public class Example {
         AudioFile audioFile = fileLoader.loadFile(file);
 
         {
-            final long count = audioFile.get(Keys.SAMPLES);
+            final long count = audioFile.determine(Keys.SAMPLES);
             System.out.println("Frames = " + count);
             player.addListener(new PlaybackAdapter() {
                 @Override
