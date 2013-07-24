@@ -12,17 +12,12 @@ import javax.swing.JPanel;
 
 public abstract class TwoChannelPannel extends JPanel {
 
-//    private Player player;
-//    protected Track track;
     protected ImagePanel leftChannel;
     protected ImagePanel rightChannel;
     
     private float start;
     private float position;
 
-    public TwoChannelPannel(/*Player player*/) {
-        //this.player = player;
-    }
 
     protected void setupUI() {
         leftChannel = new ImagePanel();
@@ -35,13 +30,6 @@ public abstract class TwoChannelPannel extends JPanel {
         }
         
         setupLayout();
-        /*player.getSegmenter().addSegmentListener(new SegmentListener() {
-            @Override
-            public void newSegment(TimeStamp begin, TimeStamp end) {
-                position = (float) begin.getTimeMS();
-                repaint();
-            }
-        });*/
     }
 
     private void setupLayout() {
@@ -59,18 +47,8 @@ public abstract class TwoChannelPannel extends JPanel {
         add(rightChannel, c);
     }
 
-    /*public void setTrack(Track track) {
-        this.track = track;
-        start = position;
-        repaint();
-    }*/
-
     protected abstract void refreshPanels();
 
-    /*public boolean hasTrack() {
-        return track != null;
-    }*/
-    
     protected void drawPosition() {
         drawPosition(position - start);
     }

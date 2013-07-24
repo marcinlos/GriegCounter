@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
 import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
+
+import com.google.common.collect.Lists;
 
 /**
  * Thread-safe list of {@link ProcessingListener}s. Implements
@@ -53,7 +53,7 @@ class ProcessingListenerList implements ProcessingListener,
      * {@inheritDoc}
      */
     @Override
-    public void readingMetaInfo(Set<MetaKey<?>> desired) {
+    public void readingMetaInfo(Set<Key<?>> desired) {
         for (ProcessingListener listener : listeners) {
             listener.readingMetaInfo(desired);
         }
@@ -63,7 +63,7 @@ class ProcessingListenerList implements ProcessingListener,
      * {@inheritDoc}
      */
     @Override
-    public void gatheredMetainfo(MetaInfo info) {
+    public void gatheredMetainfo(Properties info) {
         for (ProcessingListener listener : listeners) {
             listener.gatheredMetainfo(info);
         }

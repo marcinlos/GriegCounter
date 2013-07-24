@@ -26,6 +26,10 @@ public class Analyzer {
         return processor;
     }
     
+    public Processor getCurrentProcessor() {
+        return currentProcessor;
+    }
+    
     /**
      * Registers new processing listener
      * 

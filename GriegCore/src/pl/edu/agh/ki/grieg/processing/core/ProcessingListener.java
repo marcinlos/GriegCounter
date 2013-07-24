@@ -3,15 +3,15 @@ package pl.edu.agh.ki.grieg.processing.core;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
 import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
 
 public interface ProcessingListener {
 
     /**
      * Invoked when processing of the new file begins (before actually analysing
-     * any data etc)
+     * any data etc).
      * 
      * @param file
      *            Audio file whose processing begins
@@ -27,7 +27,7 @@ public interface ProcessingListener {
      * @param desired
      *            Set of metadata that should be gathered during the processing
      */
-    void readingMetaInfo(Set<MetaKey<?>> desired);
+    void readingMetaInfo(Set<Key<?>> desired);
 
     /**
      * Invoked when metadata for the audio file has been gathered during
@@ -36,10 +36,17 @@ public interface ProcessingListener {
      * @param info
      *            Information abouth the file
      */
-    void gatheredMetainfo(MetaInfo info);
+    void gatheredMetainfo(Properties info);
 
-    void processingStarted(ProcessingTree<float[][]> flow);
-    
+    /**
+     * Invoked before the actual sound data processing takes place. In this
+     * method components may connect to tree leaf they see fit.
+     * 
+     * @param tree
+     *            Structure defining the data flow
+     */
+    void processingStarted(ProcessingTree<float[][]> tree);
+
     /**
      * Invoked when the processing fails (i.e. encounters fatal error) and can
      * no longer proceed.

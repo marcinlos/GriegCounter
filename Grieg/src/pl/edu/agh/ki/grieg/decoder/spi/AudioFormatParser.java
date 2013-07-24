@@ -7,8 +7,8 @@ import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
 
 /**
  * Provider interface of audio file format(s) parser.
@@ -68,7 +68,7 @@ public interface AudioFormatParser {
      * @throws DecodeException
      *             If the file could not be properly decoded
      */
-    void getDetails(File file, Set<MetaKey<?>> desired, MetaInfo info)
+    void getDetails(File file, Set<Key<?>> desired, Properties info)
             throws IOException, DecodeException;
 
 }

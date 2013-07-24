@@ -13,10 +13,10 @@ import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
-import pl.edu.agh.ki.grieg.meta.Keys;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
 
 import com.google.common.collect.Sets;
 
@@ -54,9 +54,9 @@ public class Processor {
 
     public void gatherMetadata() {
         try {
-            final Set<MetaKey<?>> keys = Sets.newHashSet();
+            final Set<Key<?>> keys = Sets.newHashSet();
             listeners.readingMetaInfo(keys);
-            MetaInfo info = audioFile.computeAll(keys);
+            Properties info = audioFile.computeAll(keys);
             listeners.gatheredMetainfo(info);
         } catch (AudioException e) {
             listeners.failed(e);
@@ -82,8 +82,8 @@ public class Processor {
 
     private void buildTree() {
         tree = ProcessingTree.make(float[][].class);
-        long length = audioFile.get(Keys.SAMPLES);
-        SoundFormat format = audioFile.get(Keys.FORMAT);
+        long length = audioFile.get(AudioKeys.SAMPLES);
+        SoundFormat format = audioFile.get(AudioKeys.FORMAT);
         int channels = format.getChannels();
         int packetSize = (int) (length / 1000);
         WaveCompressor compressor = new WaveCompressor(channels, packetSize);

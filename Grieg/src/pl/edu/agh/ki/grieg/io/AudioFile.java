@@ -7,9 +7,11 @@ import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.meta.Keys;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Keys;
+import pl.edu.agh.ki.grieg.utils.Properties;
+
+import com.google.common.base.Objects;
 
 /**
  * Audio file, consisting of a {@link File} object and a parser capable of
@@ -32,7 +34,7 @@ public class AudioFile {
     private final AudioFormatParser parser;
 
     /** Metadata retrieved so far */
-    private final MetaInfo infoCache;
+    private final Properties infoCache;
 
     /**
      * Creates new {@code AudioFile} using given path and parser.
@@ -40,7 +42,7 @@ public class AudioFile {
     public AudioFile(File file, AudioFormatParser parser) {
         this.file = file;
         this.parser = parser;
-        this.infoCache = new MetaInfo();
+        this.infoCache = new Properties();
     }
 
     /**
@@ -103,7 +105,7 @@ public class AudioFile {
     /**
      * @return Cached metainfo
      */
-    public MetaInfo getInfo() {
+    public Properties getInfo() {
         return infoCache;
     }
 
@@ -115,7 +117,7 @@ public class AudioFile {
      *            Information to load
      * @return Requested information of {@code null} if it is not available
      */
-    public <T> T get(MetaKey<T> key) {
+    public <T> T get(Key<T> key) {
         return infoCache.get(key);
     }
 
@@ -132,7 +134,7 @@ public class AudioFile {
      * @throws IOException
      *             If an IO error occurs
      */
-    public <T> T determine(MetaKey<T> key) throws DecodeException, IOException {
+    public <T> T determine(Key<T> key) throws DecodeException, IOException {
         parser.getDetails(file, Keys.set(key), infoCache);
         return infoCache.get(key);
     }
@@ -150,10 +152,18 @@ public class AudioFile {
      * @throws IOException
      *             If an IO error occurs
      */
-    public MetaInfo computeAll(Set<MetaKey<?>> desired) throws DecodeException,
+    public Properties computeAll(Set<Key<?>> desired) throws DecodeException,
             IOException {
         parser.getDetails(file, desired, infoCache);
         return infoCache;
+    }
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("file", file)
+            .add("parser", parser)
+            .toString();
     }
 
 }

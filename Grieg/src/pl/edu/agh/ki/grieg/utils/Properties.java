@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.meta;
+package pl.edu.agh.ki.grieg.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -8,11 +8,19 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 
-public class MetaInfo {
+public class Properties {
     
     private final Map<String, Object> info = Maps.newHashMap();
+    
+    public Properties() {
+        // empty
+    }
+    
+    public Properties(Properties other) {
+        addAll(other);
+    }
 
-    public <T> Object put(MetaKey<T> key, T value) {
+    public <T> Object put(Key<T> key, T value) {
         return put(key.name, value);
     }
     
@@ -22,20 +30,44 @@ public class MetaInfo {
         return info.put(name, value);
     }
     
-    public <T> T get(MetaKey<T> key) {
+    public <T> T get(Key<T> key) {
         return get(key.name, key.type);
     }
     
     public <T> T get(String name, Class<T> type) {
-        Object o = info.get(name);
-        return o == null ? null : type.cast(o);
+        Object o = get(name);
+        return type.cast(o);
+    }
+    
+    public <T> T tryGet(String name, Class<T> type) {
+        Object o = get(name);
+        return type.isInstance(o) ? type.cast(o) : null;
     }
     
     public Object get(String name) {
         return info.get(name);
     }
     
-    public Set<String> getKeys() {
+    public <T> boolean contains(Key<T> key) {
+        Object o = info.get(key.name);
+        return key.type.isInstance(o);
+    }
+
+    public boolean contains(String key) {
+        return info.containsKey(key);
+    }
+
+    public Object remove(String key) {
+        return info.remove(key);
+    }
+    
+    public <T> T remove(Key<T> key) {
+        T value = get(key);
+        remove(key.name);
+        return value;
+    }
+    
+    public Set<String> keySet() {
         return info.keySet();
     }
 
@@ -50,16 +82,8 @@ public class MetaInfo {
     public boolean isEmpty() {
         return info.isEmpty();
     }
-
-    public boolean contains(String key) {
-        return info.containsKey(key);
-    }
-
-    public Object remove(String key) {
-        return info.remove(key);
-    }
     
-    public MetaInfo addAll(MetaInfo other) {
+    public Properties addAll(Properties other) {
         info.putAll(other.info);
         return this;
     }

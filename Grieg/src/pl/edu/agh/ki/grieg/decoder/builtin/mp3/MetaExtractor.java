@@ -11,32 +11,32 @@ import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.meta.Keys;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
 
 import com.google.common.io.Closeables;
 
 class MetaExtractor {
 
     private final File file;
-    private final Set<MetaKey<?>> desired;
-    private final MetaInfo info;
+    private final Set<Key<?>> desired;
+    private final Properties info;
 
-    public MetaExtractor(File file, Set<MetaKey<?>> desired) {
-        this(file, desired, new MetaInfo());
+    public MetaExtractor(File file, Set<Key<?>> desired) {
+        this(file, desired, new Properties());
     }
 
-    public MetaExtractor(File file, Set<MetaKey<?>> desired, MetaInfo info) {
+    public MetaExtractor(File file, Set<Key<?>> desired, Properties info) {
         this.file = file;
         this.info = info;
         this.desired = desired;
     }
 
-    public MetaInfo extract() throws DecodeException, IOException {
-        if (desired.contains(Keys.SAMPLES)) {
+    public Properties extract() throws DecodeException, IOException {
+        if (desired.contains(AudioKeys.SAMPLES)) {
             determineLength();
-            desired.remove(Keys.SAMPLES);
+            desired.remove(AudioKeys.SAMPLES);
         }
         return info;
     }
@@ -54,7 +54,7 @@ class MetaExtractor {
                 count += bufferSize / channels;
                 reader.closeFrame();
             }
-            info.put(Keys.SAMPLES, count);
+            info.put(AudioKeys.SAMPLES, count);
         } catch (DecoderException e) {
             throw new DecodeException(e);
         } finally {

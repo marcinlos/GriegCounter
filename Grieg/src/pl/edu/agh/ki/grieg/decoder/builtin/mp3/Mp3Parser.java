@@ -10,8 +10,8 @@ import javazoom.jl.decoder.Bitstream;
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
+import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.Properties;
 
 public class Mp3Parser extends AbstractAudioFormatParser {
 
@@ -30,7 +30,7 @@ public class Mp3Parser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public void getDetails(File file, Set<MetaKey<?>> desired, MetaInfo info)
+    public void getDetails(File file, Set<Key<?>> desired, Properties info)
             throws IOException, DecodeException {
         new MetaExtractor(file, desired, info).extract();
     }

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.meta;
+package pl.edu.agh.ki.grieg.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
  * @param <T>
  *            Type of the data associated with the key
  */
-public final class MetaKey<T> {
+public final class Key<T> {
 
     /** Type of the metadata */
     public final Class<T> type;
@@ -22,33 +22,20 @@ public final class MetaKey<T> {
     /** Name of the entry */
     public final String name;
 
-    MetaKey(String name, Class<T> type) {
-        checkNotNull(name, "Key name cannot be null");
-        checkNotNull(type, "Key type cannot be null");
-        this.name = name;
-        this.type = type;
-    }
-
-    /**
-     * Casts specified object into the type associated with this key.
-     * 
-     * @param o
-     *            Object to cast
-     * @return Object casted to the right type
-     */
-    public T cast(Object o) {
-        return type.cast(o);
+    Key(String name, Class<T> type) {
+        this.name = checkNotNull(name, "Key name cannot be null");
+        this.type = checkNotNull(type, "Key type cannot be null");
     }
 
     @Override
     public String toString() {
-        return name + "[" + type.getSimpleName() + "]";
+        return String.format("Key{%s: %s}", name, type.getSimpleName());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof MetaKey<?>) {
-            MetaKey<?> key = (MetaKey<?>) o;
+        if (o instanceof Key<?>) {
+            Key<?> key = (Key<?>) o;
             return type.equals(key.type) && name.equals(key.name);
         } else {
             return false;

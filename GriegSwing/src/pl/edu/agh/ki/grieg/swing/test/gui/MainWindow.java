@@ -5,8 +5,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -19,24 +20,23 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.Keys;
-import pl.edu.agh.ki.grieg.meta.MetaInfo;
-import pl.edu.agh.ki.grieg.meta.MetaKey;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Analyzer;
-import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
 
 public class MainWindow extends JFrame {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
     
     private static final int BUFFER_SIZE = 8192;
     
     private final FileLoader fileLoader = new FileLoader();
     private final Player player = new Player(BUFFER_SIZE);
-    
     private final Analyzer analyzer = new Analyzer(fileLoader);
 
     private JMenuBar menuBar;
@@ -54,40 +54,16 @@ public class MainWindow extends JFrame {
     
     private static final String[] EXTS = { "mp3", "wav" };
     
-    {
-        analyzer.addListener(new ProcessingListener() {
-            
-            @Override
-            public void readingMetaInfo(Set<MetaKey<?>> desired) {
-                System.out.println("Reading metainfo");
-                desired.add(Keys.SAMPLES);
-            }
-            
-            @Override
-            public void processingStarted(ProcessingTree<float[][]> flow) {
-                
-            }
-            
-            @Override
-            public void gatheredMetainfo(MetaInfo info) {
-                long length = info.get(Keys.SAMPLES);
-                System.out.println("Frames: " + length);
-            }
-            
-            @Override
-            public void fileOpened(AudioFile file) {
-                
-            }
-            
-            @Override
-            public void failed(Exception e) {
-                
-            }
-        });
-    }
     
     public MainWindow(String label) {
         super(label);
+        logger.info("Window created");
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                logger.debug("Window closing");
+            }
+        });
         
         /*FFT fft = new FFT();
         player.addAnalysis(fft);
@@ -115,9 +91,13 @@ public class MainWindow extends JFrame {
 
     private void openFile(File file) {
         try {
+            logger.info("Opening file {}", file);
             Processor proc = analyzer.newProcessing(file);
+            logger.info("Gathering metadata");
             proc.gatherMetadata();
+            logger.info("Metadata gathered");
             AudioFile audio = proc.getFile();
+            logger.info("Playing...");
             player.play(audio);
         } catch (Exception e) {
             displayErrorMessage(e);
@@ -141,6 +121,7 @@ public class MainWindow extends JFrame {
     }
     
     private void displayErrorMessage(Throwable e) {
+        logger.error("Error", e);
         JOptionPane.showMessageDialog(MainWindow.this, e, "Error", 
                 JOptionPane.ERROR_MESSAGE);
     }
