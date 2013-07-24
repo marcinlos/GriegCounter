@@ -27,7 +27,7 @@ public interface ProcessingListener {
      * @param desired
      *            Set of metadata that should be gathered during the processing
      */
-    void readingMetaInfo(Set<Key<?>> desired);
+    void readingMetaInfo(Set<Key<?>> desired, Properties config);
 
     /**
      * Invoked when metadata for the audio file has been gathered during
@@ -35,6 +35,8 @@ public interface ProcessingListener {
      * 
      * @param info
      *            Information abouth the file
+     * @param config
+     *            Configuration properties for the rest of the process
      */
     void gatheredMetainfo(Properties info);
 

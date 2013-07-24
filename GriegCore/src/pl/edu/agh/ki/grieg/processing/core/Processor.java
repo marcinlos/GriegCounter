@@ -55,8 +55,9 @@ public class Processor {
     public void gatherMetadata() {
         try {
             final Set<Key<?>> keys = Sets.newHashSet();
-            listeners.readingMetaInfo(keys);
-            Properties info = audioFile.computeAll(keys);
+            final Properties config = new Properties();
+            listeners.readingMetaInfo(keys, config);
+            Properties info = audioFile.computeAll(keys, config);
             listeners.gatheredMetainfo(info);
         } catch (AudioException e) {
             listeners.failed(e);

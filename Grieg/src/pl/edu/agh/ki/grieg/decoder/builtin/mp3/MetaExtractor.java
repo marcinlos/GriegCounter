@@ -14,6 +14,7 @@ import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.utils.TypedMap;
 
 import com.google.common.io.Closeables;
 
@@ -33,7 +34,7 @@ class MetaExtractor {
         this.desired = desired;
     }
 
-    public Properties extract() throws DecodeException, IOException {
+    public TypedMap extract() throws DecodeException, IOException {
         if (desired.contains(AudioKeys.SAMPLES)) {
             determineLength();
             desired.remove(AudioKeys.SAMPLES);

@@ -59,7 +59,7 @@ public abstract class PCMObserver extends ProcessingAdapter implements
     }
 
     @Override
-    public void readingMetaInfo(Set<Key<?>> desired) {
+    public void readingMetaInfo(Set<Key<?>> desired, Properties config) {
         desired.add(AudioKeys.SAMPLES);
         desired.add(AudioKeys.FORMAT);
     }

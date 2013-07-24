@@ -10,6 +10,7 @@ import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Keys;
 import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.utils.TypedMap;
 
 import com.google.common.base.Objects;
 
@@ -105,7 +106,7 @@ public class AudioFile {
     /**
      * @return Cached metainfo
      */
-    public Properties getInfo() {
+    public TypedMap getInfo() {
         return infoCache;
     }
 
@@ -135,7 +136,7 @@ public class AudioFile {
      *             If an IO error occurs
      */
     public <T> T determine(Key<T> key) throws DecodeException, IOException {
-        parser.getDetails(file, Keys.set(key), infoCache);
+        parser.getDetails(file, Keys.set(key), new Properties(), infoCache);
         return infoCache.get(key);
     }
 
@@ -146,24 +147,24 @@ public class AudioFile {
      * 
      * @param desired
      *            Set of needed pieces of information
+     * @param config
+     *            Additional configuration
      * @return Metainfo cache
      * @throws DecodeException
      *             If a decoding fails
      * @throws IOException
      *             If an IO error occurs
      */
-    public Properties computeAll(Set<Key<?>> desired) throws DecodeException,
-            IOException {
-        parser.getDetails(file, desired, infoCache);
+    public Properties computeAll(Set<Key<?>> desired, Properties config)
+            throws DecodeException, IOException {
+        parser.getDetails(file, desired, config, infoCache);
         return infoCache;
     }
-    
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("file", file)
-            .add("parser", parser)
-            .toString();
+        return Objects.toStringHelper(this).add("file", file)
+                .add("parser", parser).toString();
     }
 
 }

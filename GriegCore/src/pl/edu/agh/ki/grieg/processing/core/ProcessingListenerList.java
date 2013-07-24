@@ -53,9 +53,9 @@ class ProcessingListenerList implements ProcessingListener,
      * {@inheritDoc}
      */
     @Override
-    public void readingMetaInfo(Set<Key<?>> desired) {
+    public void readingMetaInfo(Set<Key<?>> desired, Properties config) {
         for (ProcessingListener listener : listeners) {
-            listener.readingMetaInfo(desired);
+            listener.readingMetaInfo(desired, config);
         }
     }
 

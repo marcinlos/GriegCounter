@@ -55,8 +55,8 @@ public class WavFileParser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public void getDetails(File file, Set<Key<?>> desired, Properties info)
-            throws IOException, DecodeException {
+    public void getDetails(File file, Set<Key<?>> desired, Properties config,
+            Properties info) throws IOException, DecodeException {
         AudioDetails details = getDetails(file);
         info.put(AudioKeys.SAMPLES, details.getSampleCount());
         info.put(AudioKeys.DURATION, details.getLength());

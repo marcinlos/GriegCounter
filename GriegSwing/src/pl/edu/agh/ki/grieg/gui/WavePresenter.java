@@ -35,8 +35,8 @@ public class WavePresenter extends PCMObserver {
     }
 
     @Override
-    public void readingMetaInfo(Set<Key<?>> desired) {
-        super.readingMetaInfo(desired);
+    public void readingMetaInfo(Set<Key<?>> desired, Properties config) {
+        super.readingMetaInfo(desired, config);
         logger.trace("Before reading metainfo");
     }
 

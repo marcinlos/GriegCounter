@@ -30,8 +30,8 @@ public class Mp3Parser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public void getDetails(File file, Set<Key<?>> desired, Properties info)
-            throws IOException, DecodeException {
+    public void getDetails(File file, Set<Key<?>> desired, Properties config,
+            Properties info) throws IOException, DecodeException {
         new MetaExtractor(file, desired, info).extract();
     }
 

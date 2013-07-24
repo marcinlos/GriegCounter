@@ -21,7 +21,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void readingMetaInfo(Set<Key<?>> desired) {
+    public void readingMetaInfo(Set<Key<?>> desired, Properties config) {
         // empty
     }
 
