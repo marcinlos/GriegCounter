@@ -9,8 +9,8 @@ import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Keys;
+import pl.edu.agh.ki.grieg.utils.PropertyMap;
 import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.TypedMap;
 
 import com.google.common.base.Objects;
 
@@ -43,7 +43,7 @@ public class AudioFile {
     public AudioFile(File file, AudioFormatParser parser) {
         this.file = file;
         this.parser = parser;
-        this.infoCache = new Properties();
+        this.infoCache = new PropertyMap();
     }
 
     /**
@@ -106,7 +106,7 @@ public class AudioFile {
     /**
      * @return Cached metainfo
      */
-    public TypedMap getInfo() {
+    public Properties getInfo() {
         return infoCache;
     }
 
@@ -136,7 +136,7 @@ public class AudioFile {
      *             If an IO error occurs
      */
     public <T> T determine(Key<T> key) throws DecodeException, IOException {
-        parser.getDetails(file, Keys.set(key), new Properties(), infoCache);
+        parser.getDetails(file, Keys.set(key), new PropertyMap(), infoCache);
         return infoCache.get(key);
     }
 

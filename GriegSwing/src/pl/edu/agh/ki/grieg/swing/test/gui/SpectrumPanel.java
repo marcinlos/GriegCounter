@@ -11,7 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import pl.edu.agh.ki.grieg.swing.graphics.Drawable;
-import pl.edu.agh.ki.grieg.swing.graphics.Gfx;
+import pl.edu.agh.ki.grieg.swing.graphics.Drawables;
 import pl.edu.agh.ki.grieg.swing.graphics.Point;
 
 public class SpectrumPanel extends JPanel {
@@ -71,7 +71,7 @@ public class SpectrumPanel extends JPanel {
     /*private void paintSpectrum(float[] data) {
         Drawable d = panel.getDrawable();
         int N = data.length;
-        Gfx.setBounds(d, 0, N - 1, MIN, MAX);
+        Drawables.setBounds(d, 0, N - 1, MIN, MAX);
         
         Graphics2D g = ((DrawableGraphics2d) d).getGraphics();
         Color c = g.getColor();
@@ -92,7 +92,7 @@ public class SpectrumPanel extends JPanel {
     
     private void paintSpectrumLog(float[] data) {
         Drawable d = panel.getDrawable();
-        Gfx.setBounds(d, 0, (float) Math.log(data.length), MIN, MAX);
+        Drawables.setBounds(d, 0, (float) Math.log(data.length), MIN, MAX);
         for (int i = 1; i < data.length; ++ i) {
             float val = clamp(db(data[i]), MIN, MAX);
             float x = (float) Math.log(i);

@@ -16,7 +16,9 @@ import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
 import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.PropertyMap;
 import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.utils.Range;
 
 import com.google.common.collect.Sets;
 
@@ -25,8 +27,8 @@ public class Processor {
     private ProcessingTree<float[][]> tree;
 
     private final FileLoader loader;
-
-    private AudioFile audioFile;
+    
+    private final Environment env = new Environment();
 
     /** Collection of listeners */
     private final ProcessingListenerList listeners = new ProcessingListenerList();
@@ -43,7 +45,8 @@ public class Processor {
      */
     public void openFile(File file) {
         try {
-            audioFile = loader.loadFile(file);
+            AudioFile audioFile = loader.loadFile(file);
+            env.setFile(audioFile);
             listeners.fileOpened(audioFile);
         } catch (AudioException e) {
             listeners.failed(e);
@@ -55,9 +58,9 @@ public class Processor {
     public void gatherMetadata() {
         try {
             final Set<Key<?>> keys = Sets.newHashSet();
-            final Properties config = new Properties();
+            final Properties config = new PropertyMap();
             listeners.readingMetaInfo(keys, config);
-            Properties info = audioFile.computeAll(keys, config);
+            Properties info = env.getFile().computeAll(keys, config);
             listeners.gatheredMetainfo(info);
         } catch (AudioException e) {
             listeners.failed(e);
@@ -69,8 +72,7 @@ public class Processor {
     public void analyze() {
         try {
             buildTree();
-
-            SampleEnumerator source = audioFile.openSource();
+            SampleEnumerator source = env.getFile().openSource();
             source.connect(tree);
             listeners.processingStarted(tree);
             source.start();
@@ -83,14 +85,14 @@ public class Processor {
 
     private void buildTree() {
         tree = ProcessingTree.make(float[][].class);
-        long length = audioFile.get(AudioKeys.SAMPLES);
-        SoundFormat format = audioFile.get(AudioKeys.FORMAT);
+        long length = env.getFile().get(AudioKeys.SAMPLES);
+        SoundFormat format = env.getFile().get(AudioKeys.FORMAT);
         int channels = format.getChannels();
         int packetSize = (int) (length / 1000);
         WaveCompressor compressor = new WaveCompressor(channels, packetSize);
 
         tree.as("compressor")
-            .connect(compressor, float[][].class)
+            .connect(compressor, float[][].class, Range[].class)
             .toRoot();
 
         Segmenter segmenter = new Segmenter(channels, 441, 2048);
@@ -104,7 +106,7 @@ public class Processor {
      * @return Audio file being processed
      */
     public AudioFile getFile() {
-        return audioFile;
+        return env.getFile();
     }
 
     /**

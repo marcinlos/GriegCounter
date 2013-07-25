@@ -3,9 +3,9 @@ package pl.edu.agh.ki.grieg.swing.graphics;
 import pl.edu.agh.ki.grieg.swing.graphics.transform.Transform;
 import pl.edu.agh.ki.grieg.swing.graphics.transform.Transforms;
 
-public class Gfx {
+public final class Drawables {
 
-    private Gfx() {
+    private Drawables() {
         // empty
     }
 
@@ -71,11 +71,5 @@ public class Gfx {
         }
         popTransforms(channels);
     }*/
-    
-    private static void popTransforms(Drawable[] channels) {
-        for (Drawable d: channels) {
-            d.pop();
-        }
-    }
 
 }

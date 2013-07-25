@@ -58,7 +58,7 @@ public abstract class TwoChannelPannel extends JPanel {
             float total = track.getSample().getLength();
             for (ImagePanel p: new ImagePanel[] { leftChannel, rightChannel} ) {
                 Drawable d = p.getDrawable();
-                Gfx.setBounds(d, 0, total, 0, 1);
+                Drawables.setBounds(d, 0, total, 0, 1);
                 d.line(new Point(pos, 0), new Point(pos, 1));
             }
         }*/

@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Abstract implementation of the {@link TypedMap}, requiring the implementor
+ * Abstract implementation of the {@link Properties}, requiring the implementor
  * to provide modifiable {@link Map} view of the mapping.
  * 
  * @author los
  */
-public abstract class AbstractTypedMap implements TypedMap {
+public abstract class AbstractProperties implements Properties {
 
     /**
      * {@inheritDoc}
@@ -137,7 +137,7 @@ public abstract class AbstractTypedMap implements TypedMap {
      * {@inheritDoc}
      */
     @Override
-    public TypedMap addAll(TypedMap other) {
+    public Properties addAll(Properties other) {
         asMap().putAll(other.asMap());
         return this;
     }

@@ -1,6 +1,11 @@
 package pl.edu.agh.ki.grieg.gui;
 
-public interface WaveView {
+import pl.edu.agh.ki.grieg.utils.Range;
 
+public interface WaveView {
+    
+    void repaint();
+    
+    void drawRange(float x, Range[] ranges);
 
 }

@@ -2,11 +2,15 @@ package pl.edu.agh.ki.grieg.gui.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+
+import pl.edu.agh.ki.grieg.swing.graphics.Drawable;
+import pl.edu.agh.ki.grieg.swing.test.gui.DrawableGraphics2d;
 
 public class ImagePanel extends JPanel {
 
@@ -31,6 +35,12 @@ public class ImagePanel extends JPanel {
     public Graphics2D getGraphics() {
         checkNotNull(image, "Cannot obtain Graphics for null image");
         return image.createGraphics();
+    }
+    
+    public Drawable getDrawable() {
+        Graphics2D g = getGraphics();
+        g.setColor(Color.black);
+        return new DrawableGraphics2d(g, getWidth(), getHeight());
     }
 
     @Override

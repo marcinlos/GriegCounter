@@ -58,7 +58,7 @@ class Mp3Stream implements AudioStream {
             SampleBuffer samples = (SampleBuffer) decoder.decodeFrame(
                     frame, bitstream);
             if (format == null) {
-                format = extractFormat(samples);
+                format = MetaExtractor.extractFormat(samples);
             }
             sampleBuffer = samples.getBuffer();
             sampleOffset = 0;
@@ -68,12 +68,6 @@ class Mp3Stream implements AudioStream {
             done = true;
             return false;
         }
-    }
-
-    private SoundFormat extractFormat(SampleBuffer samples) {
-        int freq = samples.getSampleFrequency();
-        int channels = samples.getChannelCount();
-        return new SoundFormat(freq, channels);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class PowerPanel extends TwoChannelPannel {
             rightChannel.refresh();
             Drawable left = leftChannel.getDrawable();
             Drawable right = rightChannel.getDrawable();
-            //Gfx.drawPower(track, new Drawable[] { left,  right }, 10000);
+            //Drawables.drawPower(track, new Drawable[] { left,  right }, 10000);
         }
         drawPosition();
     }

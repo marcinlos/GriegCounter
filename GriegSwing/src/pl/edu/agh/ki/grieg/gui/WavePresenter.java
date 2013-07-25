@@ -10,6 +10,8 @@ import pl.edu.agh.ki.grieg.processing.observers.PCMObserver;
 import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 public class WavePresenter extends PCMObserver {
 
@@ -50,6 +52,20 @@ public class WavePresenter extends PCMObserver {
     public void processingStarted(ProcessingTree<float[][]> tree) {
         super.processingStarted(tree);
         logger.trace("Processing has started");
+    }
+    
+    @Override
+    public State step(Range[] item) {
+        super.step(item);
+        view.drawRange(progress(), item);
+        view.repaint();
+        return State.Cont;
+    }
+    
+    @Override
+    public void finished() {
+        logger.trace("Done processing");
+        view.repaint();
     }
 
     @Override

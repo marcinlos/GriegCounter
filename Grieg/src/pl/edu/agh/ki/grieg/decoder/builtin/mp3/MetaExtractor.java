@@ -10,11 +10,12 @@ import java.util.Set;
 import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
+import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.utils.PropertyMap;
 import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.TypedMap;
 
 import com.google.common.io.Closeables;
 
@@ -25,7 +26,7 @@ class MetaExtractor {
     private final Properties info;
 
     public MetaExtractor(File file, Set<Key<?>> desired) {
-        this(file, desired, new Properties());
+        this(file, desired, new PropertyMap());
     }
 
     public MetaExtractor(File file, Set<Key<?>> desired, Properties info) {
@@ -34,7 +35,7 @@ class MetaExtractor {
         this.desired = desired;
     }
 
-    public TypedMap extract() throws DecodeException, IOException {
+    public Properties extract() throws DecodeException, IOException {
         if (desired.contains(AudioKeys.SAMPLES)) {
             determineLength();
             desired.remove(AudioKeys.SAMPLES);
@@ -48,11 +49,16 @@ class MetaExtractor {
         try {
             stream = new BufferedInputStream(new FileInputStream(file));
             FrameReader reader = new FrameReader(stream);
+            boolean first = true;
             for (Header header : reader) {
                 SampleBuffer samples = reader.readSamples(header);
                 int bufferSize = samples.getBufferLength();
                 int channels = samples.getChannelCount();
                 count += bufferSize / channels;
+                if (first) {
+                    info.put(AudioKeys.FORMAT, extractFormat(samples));
+                }
+                first = false;
                 reader.closeFrame();
             }
             info.put(AudioKeys.SAMPLES, count);
@@ -61,6 +67,12 @@ class MetaExtractor {
         } finally {
             Closeables.close(stream, true);
         }
+    }
+
+    public static SoundFormat extractFormat(SampleBuffer samples) {
+        int freq = samples.getSampleFrequency();
+        int channels = samples.getChannelCount();
+        return new SoundFormat(freq, channels);
     }
 
 }

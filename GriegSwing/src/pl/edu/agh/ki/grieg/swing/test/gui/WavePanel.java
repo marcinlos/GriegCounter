@@ -18,7 +18,7 @@ public class WavePanel extends TwoChannelPannel {
             rightChannel.refresh();
             Drawable left = leftChannel.getDrawable();
             Drawable right = rightChannel.getDrawable();
-//            Gfx.drawWave(track, new Drawable[] { left,  right }, 10000);
+//            Drawables.drawWave(track, new Drawable[] { left,  right }, 10000);
         }
         drawPosition();
     }
