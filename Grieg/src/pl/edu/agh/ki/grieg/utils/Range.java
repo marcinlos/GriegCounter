@@ -9,12 +9,15 @@ import com.google.common.base.Objects;
  */
 public final class Range {
 
+    /** Empty range centered at the origint */
+    public static final Range EMPTY = new Range(0, 0);
+    
     /** Lower bound */
     public final float min;
 
     /** Upper bound */
     public final float max;
-
+    
     public Range(float min, float max) {
         this.min = min;
         this.max = max;

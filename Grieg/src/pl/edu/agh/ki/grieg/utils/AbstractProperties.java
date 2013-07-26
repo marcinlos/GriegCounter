@@ -70,6 +70,198 @@ public abstract class AbstractProperties implements Properties {
      * {@inheritDoc}
      */
     @Override
+    public void putByte(String name, byte value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putChar(String name, char value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putShort(String name, short value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putInt(String name, int value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putLong(String name, long value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putFloat(String name, float value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putDouble(String name, double value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void putString(String name, String value) {
+        put(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte getByte(String name) {
+        return get(name, byte.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public char getChar(String name) {
+        return get(name, char.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public short getShort(String name) {
+        return get(name, short.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInt(String name) {
+        return get(name, int.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getLong(String name) {
+        return get(name, long.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public float getFloat(String name) {
+        return get(name, float.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getDouble(String name) {
+        return get(name, double.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getString(String name) {
+        return get(name, String.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte getByte(String name, byte def) {
+        return contains(name) ? getByte(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public char getChar(String name, char def) {
+        return contains(name) ? getChar(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public short getShort(String name, short def) {
+        return contains(name) ? getShort(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInt(String name, int def) {
+        return contains(name) ? getInt(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getLong(String name, long def) {
+        return contains(name) ? getLong(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public float getFloat(String name, float def) {
+        return contains(name) ? getFloat(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getDouble(String name, double def) {
+        return contains(name) ? getDouble(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getString(String name, String def) {
+        return contains(name) ? getString(name) : def;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public <T> boolean contains(Key<T> key) {
         Object o = get(key.name);
         return key.type.isInstance(o);

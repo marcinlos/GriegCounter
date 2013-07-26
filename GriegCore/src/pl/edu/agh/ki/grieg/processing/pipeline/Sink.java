@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.tree;
+package pl.edu.agh.ki.grieg.processing.pipeline;
 
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 

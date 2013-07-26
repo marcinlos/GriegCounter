@@ -16,9 +16,9 @@ public final class Drawables {
         float sx = d.getWidth() / w;
         float sy = d.getHeight() / h;
         Transform t = Transforms.newBuilder()
-                .move(-xmin, -ymax)
-                .scale(sx, sy)
-                .build();
+            .move(-xmin, -ymax)
+            .scale(sx, sy)
+            .build();
         d.push(t);
     }
 

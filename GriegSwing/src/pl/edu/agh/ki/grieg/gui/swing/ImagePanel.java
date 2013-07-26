@@ -40,7 +40,7 @@ public class ImagePanel extends JPanel {
     public Drawable getDrawable() {
         Graphics2D g = getGraphics();
         g.setColor(Color.black);
-        return new DrawableGraphics2d(g, getWidth(), getHeight());
+        return new DrawableGraphics2d(g, image.getWidth(), image.getHeight());
     }
 
     @Override

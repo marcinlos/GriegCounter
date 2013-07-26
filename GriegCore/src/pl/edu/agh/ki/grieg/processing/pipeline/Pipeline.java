@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.tree;
+package pl.edu.agh.ki.grieg.processing.pipeline;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,7 +12,7 @@ import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Maps;
 
-public class ProcessingTree<T> implements Iteratee<T> {
+public class Pipeline<T> implements Iteratee<T> {
 
     /** Root of the tree */
     private final Transform<T, T> root;
@@ -20,13 +20,13 @@ public class ProcessingTree<T> implements Iteratee<T> {
     /** name -> node */
     private final Map<String, Node> nodes = Maps.newHashMap();
 
-    public ProcessingTree(Class<T> input) {
+    public Pipeline(Class<T> input) {
         Enumeratee<T, T> forwarder = Iteratees.forwarder();
         this.root = Nodes.make(forwarder, input, input);
     }
     
-    public static <T> ProcessingTree<T> make(Class<T> input) {
-        return new ProcessingTree<T>(input);
+    public static <T> Pipeline<T> make(Class<T> input) {
+        return new Pipeline<T>(input);
     }
 
     /**
@@ -131,19 +131,19 @@ public class ProcessingTree<T> implements Iteratee<T> {
             this(null, sink);
         }
 
-        private ProcessingTree<T> to(Source<?> source) {
+        private Pipeline<T> to(Source<?> source) {
             connect(sink, source);
             if (name != null) {
                 nodes.put(name, sink);
             }
-            return ProcessingTree.this;
+            return Pipeline.this;
         }
 
-        public ProcessingTree<T> toRoot() {
+        public Pipeline<T> toRoot() {
             return to(root);
         }
 
-        public ProcessingTree<T> to(String source) {
+        public Pipeline<T> to(String source) {
             return to(getSourceNode(source));
         }
     }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
+import pl.edu.agh.ki.grieg.analysis.Skipper;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
@@ -14,7 +15,7 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.PropertyMap;
 import pl.edu.agh.ki.grieg.utils.Properties;
@@ -24,7 +25,7 @@ import com.google.common.collect.Sets;
 
 public class Processor {
 
-    private ProcessingTree<float[][]> tree;
+    private Pipeline<float[][]> tree;
 
     private final FileLoader loader;
     
@@ -84,11 +85,11 @@ public class Processor {
     }
 
     private void buildTree() {
-        tree = ProcessingTree.make(float[][].class);
+        tree = Pipeline.make(float[][].class);
         long length = env.getFile().get(AudioKeys.SAMPLES);
         SoundFormat format = env.getFile().get(AudioKeys.FORMAT);
         int channels = format.getChannels();
-        int packetSize = (int) (length / 1000);
+        int packetSize = (int) (length / 10000);
         WaveCompressor compressor = new WaveCompressor(channels, packetSize);
 
         tree.as("compressor")
@@ -99,6 +100,12 @@ public class Processor {
 
         tree.as("segmenter")
             .connect(segmenter, float[][].class, float[][].class)
+            .toRoot();
+        
+        Skipper skipper = new Skipper(packetSize);
+        
+        tree.as("skipper")
+            .connect(skipper, float[][].class, float[].class)
             .toRoot();
     }
 

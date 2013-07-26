@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
 
@@ -73,7 +73,7 @@ class ProcessingListenerList implements ProcessingListener,
      * {@inheritDoc}
      */
     @Override
-    public void processingStarted(ProcessingTree<float[][]> flow) {
+    public void processingStarted(Pipeline<float[][]> flow) {
         for (ProcessingListener listener : listeners) {
             listener.processingStarted(flow);
         }

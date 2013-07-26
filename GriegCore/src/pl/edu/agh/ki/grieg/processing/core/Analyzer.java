@@ -3,6 +3,8 @@ package pl.edu.agh.ki.grieg.processing.core;
 import java.io.File;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.utils.PropertyMap;
 
 public class Analyzer {
     
@@ -11,11 +13,16 @@ public class Analyzer {
     
     /** Collection of listeners */
     private final ProcessingListenerList listeners = new ProcessingListenerList();
+
+    private final Properties config = new PropertyMap();
     
     private Processor currentProcessor;
-
+    
     public Analyzer(FileLoader loader) {
         this.loader = loader;
+        
+        
+        
     }
     
     public Processor newProcessing(File file) {

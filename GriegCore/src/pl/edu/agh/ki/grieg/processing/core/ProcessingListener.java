@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
 
@@ -47,7 +47,7 @@ public interface ProcessingListener {
      * @param tree
      *            Structure defining the data flow
      */
-    void processingStarted(ProcessingTree<float[][]> tree);
+    void processingStarted(Pipeline<float[][]> tree);
 
     /**
      * Invoked when the processing fails (i.e. encounters fatal error) and can

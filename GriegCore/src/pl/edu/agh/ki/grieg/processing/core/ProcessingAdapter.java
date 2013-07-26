@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 import java.util.Set;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
 
@@ -37,7 +37,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void processingStarted(ProcessingTree<float[][]> tree) {
+    public void processingStarted(Pipeline<float[][]> tree) {
         // empty
     }
 

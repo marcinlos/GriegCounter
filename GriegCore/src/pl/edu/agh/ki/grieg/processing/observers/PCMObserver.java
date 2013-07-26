@@ -10,7 +10,7 @@ import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Range;
 import pl.edu.agh.ki.grieg.utils.Properties;
@@ -57,7 +57,7 @@ public abstract class PCMObserver extends ProcessingAdapter implements
     }
     
     protected float progress() {
-        return rangeCount() / 1000.0f;
+        return rangeCount() / 10000.0f;
     }
 
     @Override
@@ -85,7 +85,7 @@ public abstract class PCMObserver extends ProcessingAdapter implements
     }
 
     @Override
-    public void processingStarted(ProcessingTree<float[][]> tree) {
+    public void processingStarted(Pipeline<float[][]> tree) {
         tree.connect(this, Range[].class).to("compressor");
     }
 

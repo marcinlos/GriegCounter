@@ -13,7 +13,7 @@ import java.util.Map.Entry;
  * 
  * @author los
  */
-public interface Properties {
+public interface Properties extends PrimitiveMap {
 
     /**
      * Inserts new value into the map. Both {@code key} and {@code value} must
@@ -90,7 +90,7 @@ public interface Properties {
      * @return Value as a raw {@code Object}
      */
     Object get(String name);
-
+    
     /**
      * Checks whether the map contains value for the specified key
      * <strong>and</strong> it is of the correct type.

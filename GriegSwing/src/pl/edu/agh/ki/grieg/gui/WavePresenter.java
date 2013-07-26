@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.processing.observers.PCMObserver;
-import pl.edu.agh.ki.grieg.processing.tree.ProcessingTree;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
 import pl.edu.agh.ki.grieg.utils.Range;
@@ -49,7 +49,7 @@ public class WavePresenter extends PCMObserver {
     }
 
     @Override
-    public void processingStarted(ProcessingTree<float[][]> tree) {
+    public void processingStarted(Pipeline<float[][]> tree) {
         super.processingStarted(tree);
         logger.trace("Processing has started");
     }
