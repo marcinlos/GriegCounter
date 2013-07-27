@@ -10,7 +10,6 @@ import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
 public class Pipeline<T> implements Iteratee<T> {
