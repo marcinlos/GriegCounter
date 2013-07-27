@@ -57,8 +57,8 @@ public class WavePresenter2 extends WaveObserver {
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> tree) {
-        super.beforeAnalysis(tree);
+    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+        super.beforeAnalysis(pipeline);
         logger.trace("Processing has started");
     }
     

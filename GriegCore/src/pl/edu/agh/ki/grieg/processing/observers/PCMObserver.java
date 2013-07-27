@@ -85,8 +85,8 @@ public abstract class PCMObserver extends ProcessingAdapter implements
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> tree) {
-        tree.connect(this, Range[].class).to("compressor");
+    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+        pipeline.connect(this, Range[].class).to("compressor");
     }
 
     protected abstract void sampleCountMissing();

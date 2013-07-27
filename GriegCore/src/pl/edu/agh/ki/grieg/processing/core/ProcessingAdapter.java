@@ -38,7 +38,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> tree) {
+    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
         // empty
     }
 

@@ -44,10 +44,10 @@ public interface ProcessingListener {
      * Invoked before the actual sound data processing takes place. In this
      * method components may connect to tree leaf they see fit.
      * 
-     * @param tree
+     * @param pipeline
      *            Structure defining the data flow
      */
-    void beforeAnalysis(Pipeline<float[][]> tree);
+    void beforeAnalysis(Pipeline<float[][]> pipeline);
     
     /**
      * Invoked after the main phase of sound analysis has been completed.

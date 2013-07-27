@@ -52,8 +52,8 @@ public class WavePresenter extends PCMObserver {
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> tree) {
-        super.beforeAnalysis(tree);
+    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+        super.beforeAnalysis(pipeline);
         logger.trace("Processing has started");
     }
     
