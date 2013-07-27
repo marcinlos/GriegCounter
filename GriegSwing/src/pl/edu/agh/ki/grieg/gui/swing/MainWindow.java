@@ -89,6 +89,7 @@ public class MainWindow extends JFrame {
         try {
             logger.info("Opening file {}", file);
             final Processor proc = analyzer.newProcessing(file);
+            proc.openFile();
             logger.info("Gathering metadata");
             proc.preAnalyze();
             logger.info("Metadata gathered");
@@ -96,9 +97,13 @@ public class MainWindow extends JFrame {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    logger.info("Beginning audio analysis");
-                    proc.analyze();
-                    logger.info("Audio analysis finished");
+                    try {
+                        logger.info("Beginning audio analysis");
+                        proc.analyze();
+                        logger.info("Audio analysis finished");
+                    } catch (Exception e) {
+                        displayErrorMessage(e);
+                    }
                 }
             });
 

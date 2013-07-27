@@ -52,34 +52,39 @@ public class Processor {
     }
     
 
-    public void openFile() {
+    public void openFile() throws AudioException, IOException {
         try {
             audioFile = loader.loadFile(file);
             logger.info("Opened file {}", audioFile);
             signalFileOpened(audioFile);
         } catch (AudioException e) {
             signalFailure(e);
+            throw e;
         } catch (IOException e) {
             signalFailure(e);
+            throw e;
         }
 
     }
 
-    public void preAnalyze() {
+    public void preAnalyze() throws AudioException, IOException {
         try {
             Set<Key<?>> keys = Sets.newHashSet();
             Properties config = new PropertyMap();
             signalBeforePreAnalysis(keys, config);
             Properties info = audioFile.computeAll(keys);
-            signalAfterPreAnalysis(info);
+            results.addAll(info);
+            signalAfterPreAnalysis(results);
         } catch (AudioException e) {
             signalFailure(e);
+            throw e;
         } catch (IOException e) {
             signalFailure(e);
+            throw e;
         }
     }
 
-    public void analyze() {
+    public void analyze() throws AudioException, IOException {
         try {
             tree = Pipeline.make(float[][].class);
             assembler.build(tree, config, results);
@@ -90,8 +95,10 @@ public class Processor {
             signalAfterAnalysis();
         } catch (AudioException e) {
             signalFailure(e);
+            throw e;
         } catch (IOException e) {
             signalFailure(e);
+            throw e;
         }
     }
 
