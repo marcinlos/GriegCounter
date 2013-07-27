@@ -12,23 +12,22 @@ import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Range;
 import pl.edu.agh.ki.grieg.utils.Properties;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
 import com.google.common.collect.Lists;
 
-public abstract class PCMObserver extends ProcessingAdapter implements
-        Iteratee<Range[]> {
+public abstract class WaveObserver extends ProcessingAdapter implements
+        Iteratee<float[]> {
 
     private AudioFile file;
 
     private SoundFormat format;
 
     private long totalSampleCount;
-    
-    private final List<List<Range>> ranges = Lists.newArrayList();
+
+    private final List<List<Float>> points = Lists.newArrayList();
     
     private int rangeCount;
 
@@ -48,8 +47,8 @@ public abstract class PCMObserver extends ProcessingAdapter implements
         return format.channels;
     }
 
-    protected List<List<Range>> data() {
-        return ranges;
+    protected List<List<Float>> data() {
+        return points;
     }
 
     protected int rangeCount() {
@@ -75,7 +74,7 @@ public abstract class PCMObserver extends ProcessingAdapter implements
     public void afterPreAnalysis(Properties results) {
         format = results.get(AudioKeys.FORMAT);
         for (int i = 0; i < format.channels; ++i) {
-            ranges.add(new ArrayList<Range>());
+            points.add(new ArrayList<Float>());
         }
         if (results.contains(AudioKeys.SAMPLES)) {
             totalSampleCount = results.get(AudioKeys.SAMPLES);
@@ -86,18 +85,18 @@ public abstract class PCMObserver extends ProcessingAdapter implements
 
     @Override
     public void beforeAnalysis(Pipeline<float[][]> tree) {
-        tree.connect(this, Range[].class).to("compressor");
+        tree.connect(this, float[].class).to("skipper");
     }
 
     protected abstract void sampleCountMissing();
 
-    protected List<Range> getChannel(int i) {
+    protected List<Float> getChannel(int i) {
         checkPositionIndex(i, channels());
-        return ranges.get(i);
+        return points.get(i);
     }
 
     @Override
-    public State step(Range[] item) {
+    public State step(float[] item) {
         for (int i = 0; i < item.length; ++i) {
             getChannel(i).add(item[i]);
         }

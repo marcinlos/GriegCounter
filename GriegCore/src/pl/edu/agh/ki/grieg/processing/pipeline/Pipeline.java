@@ -10,6 +10,7 @@ import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
 public class Pipeline<T> implements Iteratee<T> {
@@ -24,7 +25,7 @@ public class Pipeline<T> implements Iteratee<T> {
         Enumeratee<T, T> forwarder = Iteratees.forwarder();
         this.root = Nodes.make(forwarder, input, input);
     }
-    
+
     public static <T> Pipeline<T> make(Class<T> input) {
         return new Pipeline<T>(input);
     }
@@ -68,8 +69,8 @@ public class Pipeline<T> implements Iteratee<T> {
             throw new RuntimeException("Specified source does not exist");
         } else {
             String clazz = node.getClass().getName();
-            throw new RuntimeException("Specified node is not a source ("
-                    + clazz + ")");
+            throw new IllegalArgumentException("Specified node is not a "
+                    + "source (" + clazz + ")");
         }
     }
 
@@ -80,8 +81,9 @@ public class Pipeline<T> implements Iteratee<T> {
         if (clazz.isAssignableFrom(out)) {
             return (Enumerator<S>) node.getSource();
         } else {
-            throw new RuntimeException("Type mismatch: source emits "
-                    + out.getName() + ", " + clazz.getName() + " required");
+            String pattern = "Type mismatch: source emits %s, %s required";
+            throw new IllegalArgumentException(String.format(pattern,
+                    out.getName(), clazz.getName()));
         }
     }
 

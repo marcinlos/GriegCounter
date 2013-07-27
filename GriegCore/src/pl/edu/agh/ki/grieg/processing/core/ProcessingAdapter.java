@@ -21,7 +21,16 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void readingMetaInfo(Set<Key<?>> desired, Properties config) {
+    public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void afterPreAnalysis(Properties results) {
         // empty
     }
 
@@ -29,7 +38,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void gatheredMetainfo(Properties info) {
+    public void beforeAnalysis(Pipeline<float[][]> tree) {
         // empty
     }
 
@@ -37,7 +46,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void processingStarted(Pipeline<float[][]> tree) {
+    public void afterAnalysis() {
         // empty
     }
 
@@ -45,7 +54,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void failed(Exception e) {
+    public void failed(Throwable e) {
         // empty
     }
 

@@ -136,7 +136,7 @@ public class AudioFile {
      *             If an IO error occurs
      */
     public <T> T determine(Key<T> key) throws DecodeException, IOException {
-        parser.getDetails(file, Keys.set(key), new PropertyMap(), infoCache);
+        parser.getDetails(file, Keys.set(key), infoCache);
         return infoCache.get(key);
     }
 
@@ -155,16 +155,18 @@ public class AudioFile {
      * @throws IOException
      *             If an IO error occurs
      */
-    public Properties computeAll(Set<Key<?>> desired, Properties config)
-            throws DecodeException, IOException {
-        parser.getDetails(file, desired, config, infoCache);
+    public Properties computeAll(Set<Key<?>> desired) throws DecodeException,
+            IOException {
+        parser.getDetails(file, desired, infoCache);
         return infoCache;
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("file", file)
-                .add("parser", parser).toString();
+        return Objects.toStringHelper(this)
+            .add("file", file)
+            .add("parser", parser)
+            .toString();
     }
 
 }

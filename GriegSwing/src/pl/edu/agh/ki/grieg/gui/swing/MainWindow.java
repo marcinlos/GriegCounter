@@ -26,10 +26,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Analyzer;
+import pl.edu.agh.ki.grieg.processing.core.AnalyzerBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 
 public class MainWindow extends JFrame {
@@ -39,9 +39,13 @@ public class MainWindow extends JFrame {
 
     private static final int BUFFER_SIZE = 8192;
 
-    private final FileLoader fileLoader = new FileLoader();
     private final Player player = new Player(BUFFER_SIZE);
-    private final Analyzer analyzer = new Analyzer(fileLoader);
+    private final Analyzer analyzer;
+    
+    {
+        AnalyzerBootstrap bootstrap = new AnalyzerBootstrap();
+        analyzer = bootstrap.createAnalyzer();
+    }
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -86,15 +90,15 @@ public class MainWindow extends JFrame {
             logger.info("Opening file {}", file);
             final Processor proc = analyzer.newProcessing(file);
             logger.info("Gathering metadata");
-            proc.gatherMetadata();
+            proc.preAnalyze();
             logger.info("Metadata gathered");
 
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    logger.info("Processing");
+                    logger.info("Beginning audio analysis");
                     proc.analyze();
-                    logger.info("Done analyzing");
+                    logger.info("Audio analysis finished");
                 }
             });
 

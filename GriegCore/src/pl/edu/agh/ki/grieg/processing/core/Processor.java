@@ -1,119 +1,113 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
-import pl.edu.agh.ki.grieg.analysis.Segmenter;
-import pl.edu.agh.ki.grieg.analysis.Skipper;
-import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.PropertyMap;
 import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.utils.PropertyMap;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class Processor {
 
-    private Pipeline<float[][]> tree;
-
-    private final FileLoader loader;
+    private static final Logger logger = LoggerFactory.getLogger(Processor.class);
     
-    private final Environment env = new Environment();
+    private final File file;
+    
+    private final FileLoader loader;
+
+    private final PipelineAssembler assembler;
+
+    private final Properties config;
+
+    private final Properties results;
 
     /** Collection of listeners */
-    private final ProcessingListenerList listeners = new ProcessingListenerList();
+    private final List<ProcessingListener> listeners = Lists.newArrayList();
 
-    public Processor(FileLoader loader) {
-        this.loader = checkNotNull(loader);
+    private AudioFile audioFile;
+
+    private Pipeline<float[][]> tree;
+
+    
+    public Processor(File file, FileLoader loader, PipelineAssembler assembler,
+            Properties config) {
+        this.file = file;
+        this.loader = loader;
+        this.assembler = assembler;
+        this.config = config;
+        this.results = new PropertyMap();
     }
+    
 
-    /**
-     * Looks up suitable parser for the file and uses it to load the file.
-     * 
-     * @param file
-     *            Audio file to open
-     */
-    public void openFile(File file) {
+    public void openFile() {
         try {
-            AudioFile audioFile = loader.loadFile(file);
-            env.setFile(audioFile);
-            listeners.fileOpened(audioFile);
+            audioFile = loader.loadFile(file);
+            logger.info("Opened file {}", audioFile);
+            signalFileOpened(audioFile);
         } catch (AudioException e) {
-            listeners.failed(e);
+            signalFailure(e);
         } catch (IOException e) {
-            listeners.failed(e);
+            signalFailure(e);
         }
+
     }
 
-    public void gatherMetadata() {
+    public void preAnalyze() {
         try {
-            final Set<Key<?>> keys = Sets.newHashSet();
-            final Properties config = new PropertyMap();
-            listeners.readingMetaInfo(keys, config);
-            Properties info = env.getFile().computeAll(keys, config);
-            listeners.gatheredMetainfo(info);
+            Set<Key<?>> keys = Sets.newHashSet();
+            Properties config = new PropertyMap();
+            signalBeforePreAnalysis(keys, config);
+            Properties info = audioFile.computeAll(keys);
+            signalAfterPreAnalysis(info);
         } catch (AudioException e) {
-            listeners.failed(e);
+            signalFailure(e);
         } catch (IOException e) {
-            listeners.failed(e);
+            signalFailure(e);
         }
     }
 
     public void analyze() {
         try {
-            buildTree();
-            SampleEnumerator source = env.getFile().openSource();
+            tree = Pipeline.make(float[][].class);
+            assembler.build(tree, config, results);
+            SampleEnumerator source = audioFile.openSource();
             source.connect(tree);
-            listeners.processingStarted(tree);
+            signalBeforeAnalysis(tree);
             source.start();
+            signalAfterAnalysis();
         } catch (AudioException e) {
-            listeners.failed(e);
+            signalFailure(e);
         } catch (IOException e) {
-            listeners.failed(e);
+            signalFailure(e);
         }
     }
 
-    private void buildTree() {
-        tree = Pipeline.make(float[][].class);
-        long length = env.getFile().get(AudioKeys.SAMPLES);
-        SoundFormat format = env.getFile().get(AudioKeys.FORMAT);
-        int channels = format.getChannels();
-        int packetSize = (int) (length / 10000);
-        WaveCompressor compressor = new WaveCompressor(channels, packetSize);
-
-        tree.as("compressor")
-            .connect(compressor, float[][].class, Range[].class)
-            .toRoot();
-
-        Segmenter segmenter = new Segmenter(channels, 441, 2048);
-
-        tree.as("segmenter")
-            .connect(segmenter, float[][].class, float[][].class)
-            .toRoot();
-        
-        Skipper skipper = new Skipper(packetSize);
-        
-        tree.as("skipper")
-            .connect(skipper, float[][].class, float[].class)
-            .toRoot();
-    }
-
     /**
-     * @return Audio file being processed
+     * @return Audio audioFile being processed
      */
     public AudioFile getFile() {
-        return env.getFile();
+        return audioFile;
+    }
+
+    public Properties getConfig() {
+        return config;
+    }
+
+    public Properties getResults() {
+        return results;
     }
 
     /**
@@ -146,6 +140,90 @@ public class Processor {
      */
     public void removeListener(ProcessingListener listener) {
         listeners.remove(listener);
+    }
+
+    /**
+     * Adds listener to the list
+     */
+    public void add(ProcessingListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes listener from the list
+     */
+    public void remove(ProcessingListener listener) {
+        listeners.remove(listener);
+    }
+    
+    /**
+     * Notifies all the listeners that an audio file has been opened.
+     * 
+     * @param audioFile
+     */
+    public void signalFileOpened(AudioFile audioFile) {
+        for (ProcessingListener listener : listeners) {
+            listener.fileOpened(audioFile);
+        }
+    }
+
+    /**
+     * Notifies all the listeners pre-analysis is about to begin.
+     * 
+     * @param desired
+     *            Set of audio properties to be collected during pre-analysis
+     * @param config
+     *            Configuration properties
+     */
+    public void signalBeforePreAnalysis(Set<Key<?>> desired, Properties config) {
+        for (ProcessingListener listener : listeners) {
+            listener.beforePreAnalysis(desired, config);
+        }
+    }
+
+    /**
+     * Notifies all the listeners pre-analysis has been completed.
+     * 
+     * @param info
+     *            Audio properties collected during pre-analysis
+     */
+    public void signalAfterPreAnalysis(Properties info) {
+        for (ProcessingListener listener : listeners) {
+            listener.afterPreAnalysis(info);
+        }
+    }
+
+    /**
+     * Notifies all the listeners that main analysis is about to begin.
+     * 
+     * @param pipeline
+     *            Processing pipeline
+     */
+    public void signalBeforeAnalysis(Pipeline<float[][]> pipeline) {
+        for (ProcessingListener listener : listeners) {
+            listener.beforeAnalysis(pipeline);
+        }
+    }
+
+    /**
+     * Notifies all the listeners the main analysis has been completed.
+     */
+    public void signalAfterAnalysis() {
+        for (ProcessingListener listener : listeners) {
+            listener.afterAnalysis();
+        }
+    }
+
+    /**
+     * Notifies all the listeners about the processing failure.
+     * 
+     * @param e
+     *            Exception that caused the failure
+     */
+    public void signalFailure(Throwable e) {
+        for (ProcessingListener listener : listeners) {
+            listener.failed(e);
+        }
     }
 
 }

@@ -14,7 +14,7 @@ public class Main {
     
     private final FileLoader loader = new FileLoader();
     
-    private final Analyzer analyzer = new Analyzer(loader);
+//    private final Analyzer analyzer = new Analyzer(loader);
     
     
     
@@ -22,7 +22,7 @@ public class Main {
     
     public void process(File file) {
         logger.info("Processing file {}", file);
-        analyzer.newProcessing(file);
+//        analyzer.newProcessing(file);
     }
     
     public void process(String path) {

@@ -27,18 +27,18 @@ public interface ProcessingListener {
      * @param desired
      *            Set of metadata that should be gathered during the processing
      */
-    void readingMetaInfo(Set<Key<?>> desired, Properties config);
+    void beforePreAnalysis(Set<Key<?>> desired, Properties config);
 
     /**
      * Invoked when metadata for the audio file has been gathered during
      * processing.
      * 
-     * @param info
+     * @param results
      *            Information abouth the file
      * @param config
      *            Configuration properties for the rest of the process
      */
-    void gatheredMetainfo(Properties info);
+    void afterPreAnalysis(Properties results);
 
     /**
      * Invoked before the actual sound data processing takes place. In this
@@ -47,7 +47,12 @@ public interface ProcessingListener {
      * @param tree
      *            Structure defining the data flow
      */
-    void processingStarted(Pipeline<float[][]> tree);
+    void beforeAnalysis(Pipeline<float[][]> tree);
+    
+    /**
+     * Invoked after the main phase of sound analysis has been completed.
+     */
+    void afterAnalysis();
 
     /**
      * Invoked when the processing fails (i.e. encounters fatal error) and can
@@ -56,6 +61,6 @@ public interface ProcessingListener {
      * @param e
      *            Exception that caused the failure
      */
-    void failed(Exception e);
+    void failed(Throwable e);
 
 }

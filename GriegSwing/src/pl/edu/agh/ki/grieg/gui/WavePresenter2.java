@@ -1,27 +1,34 @@
 package pl.edu.agh.ki.grieg.gui;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.impl.StaticLoggerBinder;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.processing.observers.PCMObserver;
+import pl.edu.agh.ki.grieg.processing.observers.WaveObserver;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
+import pl.edu.agh.ki.grieg.swing.graphics.Point;
 import pl.edu.agh.ki.grieg.utils.Key;
 import pl.edu.agh.ki.grieg.utils.Properties;
 import pl.edu.agh.ki.grieg.utils.Range;
 import pl.edu.agh.ki.grieg.utils.iteratee.State;
 
-public class WavePresenter extends PCMObserver {
+public class WavePresenter2 extends WaveObserver {
 
     private static final Logger logger = LoggerFactory
-            .getLogger(WavePresenter.class);
+            .getLogger(WavePresenter2.class);
     
-    private final WaveView view;
+    private final WaveView2 view;
+    
+    private Point[] prev = new Point[2]; 
+    {
+        Arrays.fill(prev, Point.ORIGIN);
+    }
 
-    public WavePresenter(WaveView view) {
+    public WavePresenter2(WaveView2 view) {
         this.view = view;
         logger.trace("Wave presenter created, using view = {}", view);
     }
@@ -36,8 +43,6 @@ public class WavePresenter extends PCMObserver {
         super.fileOpened(file);
         logger.trace("File opened: {}", file);
     }
-    
-    StaticLoggerBinder a;
 
     @Override
     public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
@@ -58,9 +63,14 @@ public class WavePresenter extends PCMObserver {
     }
     
     @Override
-    public State step(Range[] item) {
+    public State step(float[] item) {
         super.step(item);
-        view.drawRange(progress(), item);
+        float x = progress();
+        for (int i = 0; i < item.length; ++ i) {
+            Point end = new Point(progress(), item[i]);
+            view.drawLine(i, prev[i], end);
+            prev[i] = end;
+        }
         view.repaint();
         return State.Cont;
     }
