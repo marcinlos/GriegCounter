@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumeratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratees;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 import com.google.common.collect.Maps;
 

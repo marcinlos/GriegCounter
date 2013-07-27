@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils.iteratee;
+package pl.edu.agh.ki.grieg.util.iteratee;
 
 /**
  * {@code Enumeratee} implementation transforming the input stream with a

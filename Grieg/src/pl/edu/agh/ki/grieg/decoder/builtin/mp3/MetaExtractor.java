@@ -13,9 +13,9 @@ import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.PropertyMap;
-import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.PropertyMap;
 
 import com.google.common.io.Closeables;
 

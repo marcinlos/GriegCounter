@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils.iteratee;
+package pl.edu.agh.ki.grieg.util.iteratee;
 
 import java.util.ArrayList;
 import java.util.Collection;

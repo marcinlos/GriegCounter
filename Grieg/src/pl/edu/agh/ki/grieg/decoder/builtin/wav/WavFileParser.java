@@ -11,8 +11,8 @@ import java.util.Set;
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
 
 import com.google.common.io.Closeables;
 

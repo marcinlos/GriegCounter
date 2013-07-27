@@ -6,7 +6,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumerator;
 
 /**
  * Implementation of {@link SampleEnumerator} using {@link AudioStream} as the

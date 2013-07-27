@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.pipeline;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratees;
 
 class SourceNode<T> implements Source<T> {
 

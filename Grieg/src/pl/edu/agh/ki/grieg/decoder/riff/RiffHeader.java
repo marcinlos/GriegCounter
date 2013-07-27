@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.decoder.riff;
 
-import pl.edu.agh.ki.grieg.utils.Bytes;
+import pl.edu.agh.ki.grieg.util.Bytes;
 
 /**
  * Header of the first (root) chunk of the RIFF file. Contains the file format

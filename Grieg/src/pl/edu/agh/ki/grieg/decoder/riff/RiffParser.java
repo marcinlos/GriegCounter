@@ -5,7 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pl.edu.agh.ki.grieg.utils.Bytes;
+import pl.edu.agh.ki.grieg.util.Bytes;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInts;

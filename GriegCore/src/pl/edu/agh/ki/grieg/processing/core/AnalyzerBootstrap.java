@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.utils.PropertyMap;
+import pl.edu.agh.ki.grieg.util.PropertyMap;
 
 public class AnalyzerBootstrap {
 

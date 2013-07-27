@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils.iteratee;
+package pl.edu.agh.ki.grieg.util.iteratee;
 
 /**
  * Producer of stream of {@code T} items.

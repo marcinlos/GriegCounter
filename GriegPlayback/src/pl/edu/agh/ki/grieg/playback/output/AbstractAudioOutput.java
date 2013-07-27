@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.playback.output;
 import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 /**
  * Partial implementation of {@link AudioOutput}, to facilitate creating new

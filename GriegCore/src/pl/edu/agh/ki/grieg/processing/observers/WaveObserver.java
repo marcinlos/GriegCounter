@@ -11,10 +11,10 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.AudioKeys;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 import com.google.common.collect.Lists;
 

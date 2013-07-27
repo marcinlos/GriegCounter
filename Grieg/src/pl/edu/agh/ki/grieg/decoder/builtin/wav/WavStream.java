@@ -14,7 +14,7 @@ import pl.edu.agh.ki.grieg.decoder.riff.RiffParser;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.utils.NotImplementedException;
+import pl.edu.agh.ki.grieg.util.NotImplementedException;
 
 import com.google.common.io.LittleEndianDataInputStream;
 

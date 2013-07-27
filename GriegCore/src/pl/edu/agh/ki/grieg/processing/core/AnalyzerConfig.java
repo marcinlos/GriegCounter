@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.util.Properties;
 
 class AnalyzerConfig {
 

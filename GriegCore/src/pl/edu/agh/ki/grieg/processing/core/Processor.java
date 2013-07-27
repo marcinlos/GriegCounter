@@ -13,9 +13,9 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.PropertyMap;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.PropertyMap;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

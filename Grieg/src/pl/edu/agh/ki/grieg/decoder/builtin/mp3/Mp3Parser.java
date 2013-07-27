@@ -10,8 +10,8 @@ import javazoom.jl.decoder.Bitstream;
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Properties;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
 
 public class Mp3Parser extends AbstractAudioFormatParser {
 

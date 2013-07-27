@@ -1,8 +1,8 @@
 package pl.edu.agh.ki.grieg.processing.pipeline;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumeratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
 final class Nodes {
 

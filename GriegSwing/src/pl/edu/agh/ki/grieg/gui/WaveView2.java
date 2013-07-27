@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.gui;
 
 import pl.edu.agh.ki.grieg.swing.graphics.Point;
-import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.util.Range;
 
 public interface WaveView2 extends WaveView {
     

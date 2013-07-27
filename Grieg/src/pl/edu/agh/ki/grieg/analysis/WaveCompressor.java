@@ -2,10 +2,10 @@ package pl.edu.agh.ki.grieg.analysis;
 
 import java.util.Arrays;
 
-import pl.edu.agh.ki.grieg.utils.Range;
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractEnumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumeratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.Range;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 /**
  * Class grouping ("compressing") fixed-size portions of raw PCM data into

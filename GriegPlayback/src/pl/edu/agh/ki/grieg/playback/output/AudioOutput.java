@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.playback.output;
 
 import java.io.Closeable;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
 public interface AudioOutput extends Closeable, Iteratee<float[][]> {
 

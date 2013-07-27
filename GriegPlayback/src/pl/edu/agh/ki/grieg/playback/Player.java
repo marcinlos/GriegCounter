@@ -12,9 +12,9 @@ import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.output.spi.OutputFactory;
 import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
 import pl.edu.agh.ki.grieg.playback.output.Outputs;
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 import com.google.common.collect.Lists;
 

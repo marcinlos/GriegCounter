@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.util;
 
 /**
  * Exception thrown to fill implementation holes. Apparently there is no exact

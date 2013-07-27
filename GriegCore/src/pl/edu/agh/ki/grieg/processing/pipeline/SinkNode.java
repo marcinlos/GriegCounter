@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.pipeline;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratees;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratees;
 
 class SinkNode<T> implements Sink<T> {
     

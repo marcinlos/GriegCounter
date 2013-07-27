@@ -1,8 +1,8 @@
 package pl.edu.agh.ki.grieg.meta;
 
-import static pl.edu.agh.ki.grieg.utils.Keys.make;
+import static pl.edu.agh.ki.grieg.util.Keys.make;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.utils.Key;
+import pl.edu.agh.ki.grieg.util.Key;
 
 /**
  * Static utilities for dealing with metainfo keys

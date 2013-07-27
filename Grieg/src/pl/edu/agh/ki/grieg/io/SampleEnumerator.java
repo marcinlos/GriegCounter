@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.io;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
 
 /**
  * Raw audio data producer. Pushes chunks of samples to the attached iteratees.

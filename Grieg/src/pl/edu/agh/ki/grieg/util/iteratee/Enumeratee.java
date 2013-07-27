@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils.iteratee;
+package pl.edu.agh.ki.grieg.util.iteratee;
 
 /**
  * Enumerator transforming stream of {@code T} items into the stream of

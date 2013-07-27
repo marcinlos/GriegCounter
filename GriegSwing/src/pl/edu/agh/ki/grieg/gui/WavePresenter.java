@@ -9,10 +9,10 @@ import org.slf4j.impl.StaticLoggerBinder;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.processing.observers.PCMObserver;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.utils.Key;
-import pl.edu.agh.ki.grieg.utils.Properties;
-import pl.edu.agh.ki.grieg.utils.Range;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.Range;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 public class WavePresenter extends PCMObserver {
 

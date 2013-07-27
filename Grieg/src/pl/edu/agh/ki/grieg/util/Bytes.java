@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.utils;
+package pl.edu.agh.ki.grieg.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.primitives.Ints;

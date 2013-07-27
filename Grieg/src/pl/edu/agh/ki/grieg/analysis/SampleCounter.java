@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.analysis;
 
-import pl.edu.agh.ki.grieg.utils.iteratee.AbstractIteratee;
-import pl.edu.agh.ki.grieg.utils.iteratee.State;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractIteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 /**
  * Simple class counting the received samples.

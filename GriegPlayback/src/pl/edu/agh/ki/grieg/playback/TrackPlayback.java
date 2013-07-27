@@ -8,8 +8,8 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.Controllable;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.playback.output.AudioOutput;
-import pl.edu.agh.ki.grieg.utils.iteratee.Enumerator;
-import pl.edu.agh.ki.grieg.utils.iteratee.Iteratee;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
 /**
  * Class representing a concrete playback functionality, consisting of pair

@@ -9,7 +9,7 @@ import pl.edu.agh.ki.grieg.processing.core.Analyzer;
 import pl.edu.agh.ki.grieg.swing.graphics.Drawable;
 import pl.edu.agh.ki.grieg.swing.graphics.Drawables;
 import pl.edu.agh.ki.grieg.swing.graphics.Point;
-import pl.edu.agh.ki.grieg.utils.Range;
+import pl.edu.agh.ki.grieg.util.Range;
 
 public class WaveViewPanel extends MultiChannelPanel implements WaveView2 {
 
