@@ -7,13 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.processing.observers.PCMObserver;
 import pl.edu.agh.ki.grieg.processing.observers.WaveObserver;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.swing.graphics.Point;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.Range;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 public class WavePresenter2 extends WaveObserver {

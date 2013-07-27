@@ -135,7 +135,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public byte getByte(String name) {
-        return get(name, byte.class);
+        return get(name, Byte.class);
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public char getChar(String name) {
-        return get(name, char.class);
+        return get(name, Character.class);
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public short getShort(String name) {
-        return get(name, short.class);
+        return get(name, Short.class);
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public int getInt(String name) {
-        return get(name, int.class);
+        return get(name, Integer.class);
     }
 
     /**
@@ -167,7 +167,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public long getLong(String name) {
-        return get(name, long.class);
+        return get(name, Long.class);
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public float getFloat(String name) {
-        return get(name, float.class);
+        return get(name, Float.class);
     }
 
     /**
@@ -183,7 +183,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public double getDouble(String name) {
-        return get(name, double.class);
+        return get(name, Double.class);
     }
 
     /**

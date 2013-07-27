@@ -39,7 +39,7 @@ public abstract class MultiChannelPanel extends JPanel {
             panel.refresh();
         }
     }
-
+    
     protected int channelCount() {
         return channelPanels.size();
     }

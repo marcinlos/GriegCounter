@@ -43,6 +43,10 @@ public class Analyzer {
     public Processor getCurrentProcessor() {
         return currentProcessor;
     }
+    
+    public Properties getConfig() {
+        return properties;
+    }
 
     /**
      * Registers new processing listener

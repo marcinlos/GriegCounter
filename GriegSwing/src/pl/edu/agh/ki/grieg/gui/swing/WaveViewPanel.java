@@ -21,7 +21,6 @@ public class WaveViewPanel extends MultiChannelPanel implements WaveView2 {
         logger.debug("Panel created");
         this.presenter = new WavePresenter2(this);
         analyzer.addListener(presenter);
-
         setupUI(maxChannels);
         refresh(600, 50);
     }
@@ -42,6 +41,11 @@ public class WaveViewPanel extends MultiChannelPanel implements WaveView2 {
         Drawable d = panel(channel).getDrawable();
         Drawables.setBounds(d, 0, 1, -1, 1);
         d.line(begin, end);
+    }
+
+    @Override
+    public void reset() {
+        refresh();
     }
 
 }

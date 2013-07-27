@@ -23,7 +23,7 @@ class AnalyzerConfig {
         return assembler;
     }
 
-    public void setPipelineFactory(PipelineAssembler assembler) {
+    public void setPipelineAssembler(PipelineAssembler assembler) {
         this.assembler = assembler;
     }
 

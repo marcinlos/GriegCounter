@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.gui.swing;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,8 +33,10 @@ import org.slf4j.LoggerFactory;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Analyzer;
-import pl.edu.agh.ki.grieg.processing.core.AnalyzerBootstrap;
+import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
+import pl.edu.agh.ki.grieg.processing.core.DefaultAnalyzerBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 
 public class MainWindow extends JFrame {
 
@@ -42,10 +48,6 @@ public class MainWindow extends JFrame {
     private final Player player = new Player(BUFFER_SIZE);
     private final Analyzer analyzer;
     
-    {
-        AnalyzerBootstrap bootstrap = new AnalyzerBootstrap();
-        analyzer = bootstrap.createAnalyzer();
-    }
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -65,8 +67,12 @@ public class MainWindow extends JFrame {
 
     private static final String[] EXTS = { "mp3", "wav" };
 
-    public MainWindow(String label) {
+    public MainWindow(String label) throws ConfigException {
         super(label);
+        
+        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
+        analyzer = bootstrap.createAnalyzer();
+        
         logger.info("Creating window");
         getContentPane().setBackground(Color.black);
 
@@ -102,7 +108,7 @@ public class MainWindow extends JFrame {
                         proc.analyze();
                         logger.info("Audio analysis finished");
                     } catch (Exception e) {
-                        displayErrorMessage(e);
+                        displayErrorMessage(MainWindow.this, e);
                     }
                 }
             });
@@ -111,13 +117,14 @@ public class MainWindow extends JFrame {
             logger.info("Playing...");
             player.play(audio);
         } catch (Exception e) {
-            displayErrorMessage(e);
+            displayErrorMessage(this, e);
         }
     }
 
-    private void displayErrorMessage(Throwable e) {
+    private static void displayErrorMessage(Component parent, Throwable e) {
         logger.error("Error", e);
-        JOptionPane.showMessageDialog(MainWindow.this, e, "Error",
+        StringWriter stringWriter = new StringWriter();
+        JOptionPane.showMessageDialog(parent, e, "Error",
                 JOptionPane.ERROR_MESSAGE);
     }
 
@@ -204,7 +211,12 @@ public class MainWindow extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
                 new MainWindow("GriegCounter");
+                } catch (ConfigException e) {
+                    logger.error("Configuration error", e);
+                    displayErrorMessage(null, e);
+                }
             }
         });
     }

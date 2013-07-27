@@ -9,13 +9,11 @@ import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Range;
 
-public class DefaultPipelineFactory implements PipelineAssembler {
+public class DefaultPipelineAssembler implements PipelineAssembler {
 
-    public static final int RESOLUTION = 10000;
+    public static final int DEFAULT_CHUNK_SIZE = 2048;
     
-    public static final int CHUNK_SIZE = 2048;
-    
-    public static final int HOP_SIZE = 441;
+    public static final int DEFAULT_HOP_SIZE = 441;
 
     @Override
     public void build(Pipeline<float[][]> pipeline, Properties config,
@@ -25,14 +23,18 @@ public class DefaultPipelineFactory implements PipelineAssembler {
         SoundFormat format = audio.get(AudioKeys.FORMAT);
         int channels = format.getChannels();
 
-        int packetSize = (int) (length / RESOLUTION);
+        int resolution = config.getInt("resolution", 99);
+        int chunkSize = config.getInt("chunk-size", DEFAULT_CHUNK_SIZE);
+        int hopSize = config.getInt("hop-size", DEFAULT_HOP_SIZE);
+        
+        int packetSize = (int) (length / resolution);
         WaveCompressor compressor = new WaveCompressor(channels, packetSize);
 
         pipeline.as("compressor")
                 .connect(compressor, float[][].class, Range[].class)
                 .toRoot();
 
-        Segmenter segmenter = new Segmenter(channels, HOP_SIZE, CHUNK_SIZE);
+        Segmenter segmenter = new Segmenter(channels, hopSize, chunkSize);
 
         pipeline.as("segmenter")
                 .connect(segmenter, float[][].class, float[][].class)
