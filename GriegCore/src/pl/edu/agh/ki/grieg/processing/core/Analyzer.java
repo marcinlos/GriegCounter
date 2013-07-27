@@ -34,6 +34,7 @@ public class Analyzer {
     }
     
     public Processor newProcessing(File file) {
+        logger.info("Beginning processing new file: {}", file);
         Processor processor = new Processor(file, loader, assembler, properties);
         processor.addAll(listeners);
         currentProcessor = processor;

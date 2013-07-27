@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
@@ -124,7 +123,11 @@ public class MainWindow extends JFrame {
     private static void displayErrorMessage(Component parent, Throwable e) {
         logger.error("Error", e);
         StringWriter stringWriter = new StringWriter();
-        JOptionPane.showMessageDialog(parent, e, "Error",
+        PrintWriter writer = new PrintWriter(stringWriter);
+        writer.println("Application encountered an error.\n");
+        writer.println("Reason:");
+        writer.println(e);
+        JOptionPane.showMessageDialog(parent, stringWriter, "Error",
                 JOptionPane.ERROR_MESSAGE);
     }
 
