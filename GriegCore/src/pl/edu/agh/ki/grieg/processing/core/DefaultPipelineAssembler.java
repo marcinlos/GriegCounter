@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
+import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
 import pl.edu.agh.ki.grieg.analysis.Skipper;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
@@ -28,16 +29,23 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         int hopSize = config.getInt("hop-size", DEFAULT_HOP_SIZE);
         
         int packetSize = (int) (length / resolution);
-        WaveCompressor compressor = new WaveCompressor(channels, packetSize);
+        
+        Segmenter segmenter = new Segmenter(channels, packetSize);
+        
+        pipeline.as("segmenter")
+                .connect(segmenter, float[][].class, float[][].class)
+                .toRoot();
+        
+        WaveCompressor compressor = new WaveCompressor(channels);
 
         pipeline.as("compressor")
                 .connect(compressor, float[][].class, Range[].class)
-                .toRoot();
+                .to("segmenter");
 
-        Segmenter segmenter = new Segmenter(channels, hopSize, chunkSize);
+        HammingSegmenter hamming = new HammingSegmenter(channels, hopSize, chunkSize);
 
-        pipeline.as("segmenter")
-                .connect(segmenter, float[][].class, float[][].class)
+        pipeline.as("hamming")
+                .connect(hamming, float[][].class, float[][].class)
                 .toRoot();
         
         Skipper skipper = new Skipper(packetSize);

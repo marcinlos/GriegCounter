@@ -1,8 +1,7 @@
 package pl.edu.agh.ki.grieg.playback;
 
 import pl.edu.agh.ki.grieg.util.PeriodicTask;
-import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumerator;
-import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 /**
@@ -11,8 +10,7 @@ import pl.edu.agh.ki.grieg.util.iteratee.State;
  * 
  * @author los
  */
-public class ProgressNotifier extends AbstractEnumerator<Timestamp> implements
-        Enumeratee<float[][], Timestamp> {
+public class ProgressNotifier extends AbstractEnumeratee<float[][], Timestamp> {
 
     /** Number of samples in a second of audio data */
     private final int sampleRate;

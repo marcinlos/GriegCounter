@@ -45,7 +45,8 @@ public class WaveViewPanel extends MultiChannelPanel implements WaveView2 {
 
     @Override
     public void reset() {
-        refresh();
+        super.refresh();
+        repaint();
     }
 
 }

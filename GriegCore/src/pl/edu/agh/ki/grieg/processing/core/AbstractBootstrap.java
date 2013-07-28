@@ -15,6 +15,10 @@ public abstract class AbstractBootstrap implements Bootstrap {
     
     private final AnalyzerConfig config = new AnalyzerConfig();
     
+    protected AbstractBootstrap() {
+        logger.info("Beginning initialization sequence");
+    }
+    
     protected abstract void prepare() throws ConfigException;
     
     protected void setLoader(FileLoader loader) {

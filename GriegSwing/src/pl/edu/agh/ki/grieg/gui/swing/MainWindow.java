@@ -36,6 +36,7 @@ import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.DefaultAnalyzerBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config.XMLFileSystemBootstrap;
 
 public class MainWindow extends JFrame {
 
@@ -69,7 +70,8 @@ public class MainWindow extends JFrame {
     public MainWindow(String label) throws ConfigException {
         super(label);
         
-        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
+        Bootstrap bootstrap = new XMLFileSystemBootstrap("grieg-config.xml");
+//        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
         analyzer = bootstrap.createAnalyzer();
         
         logger.info("Creating window");
@@ -215,9 +217,8 @@ public class MainWindow extends JFrame {
             @Override
             public void run() {
                 try {
-                new MainWindow("GriegCounter");
+                    new MainWindow("GriegCounter");
                 } catch (ConfigException e) {
-                    logger.error("Configuration error", e);
                     displayErrorMessage(null, e);
                 }
             }

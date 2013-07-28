@@ -1,12 +1,10 @@
 package pl.edu.agh.ki.grieg.analysis;
 
 import pl.edu.agh.ki.grieg.util.PeriodicTask;
-import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumerator;
-import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
-public class Skipper extends AbstractEnumerator<float[]> implements
-        Enumeratee<float[][], float[]> {
+public class Skipper extends AbstractEnumeratee<float[][], float[]> {
             
     private float[][] currentData;
     

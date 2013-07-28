@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.core.config;
+package pl.edu.agh.ki.grieg.processing.core.config.xml;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.collect.Lists;
 
 @XmlRootElement(name = "grieg")
-class XMLConfig {
+public class XMLConfig {
     
     @XmlElementWrapper(name = "properties")
-    @XmlElement(name = "property")
+    @XmlElement
     public List<XMLProperty> properties = Lists.newArrayList();
     
 

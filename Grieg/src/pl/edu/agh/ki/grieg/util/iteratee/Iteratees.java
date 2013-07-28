@@ -97,8 +97,8 @@ public class Iteratees {
      * Implementation of an universal forwarder enumeratee, that transparently
      * sends chunks and other signals to attached iteratees.
      */
-    private static final class Forwarder extends AbstractEnumerator<Object>
-            implements Enumeratee<Object, Object> {
+    private static final class Forwarder extends
+            AbstractEnumeratee<Object, Object> {
 
         /** Single instance */
         public static final Forwarder INSTANCE = new Forwarder();

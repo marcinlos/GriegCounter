@@ -35,6 +35,7 @@ public class WavePresenter extends PCMObserver {
     public void fileOpened(AudioFile file) {
         super.fileOpened(file);
         logger.trace("File opened: {}", file);
+        view.reset();
     }
     
     StaticLoggerBinder a;

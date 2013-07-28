@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  elementFormDefault="qualified">
+
+  <xs:complexType name="property">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="properties">
+    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="property" type="tns:property" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Main document body -->
+  <xs:element name="grieg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="properties" type="tns:properties" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
