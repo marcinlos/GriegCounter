@@ -8,13 +8,13 @@ import java.io.InputStream;
 
 import com.google.common.io.Closeables;
 
-public class XMLFileSystemBootstrap extends XMLBootstrap {
+public class XmlFileSystemBootstrap extends XmlBootstrap {
 
-    public XMLFileSystemBootstrap(String path) throws ConfigException {
+    public XmlFileSystemBootstrap(String path) throws ConfigException {
         this(new File(path));
     }
 
-    public XMLFileSystemBootstrap(File file) throws ConfigException {
+    public XmlFileSystemBootstrap(File file) throws ConfigException {
         logger().info("Using XML configuration from the filesystem");
         InputStream stream = null;
         try {

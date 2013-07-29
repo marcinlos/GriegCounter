@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grieg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
-    xsi:schemaLocation="
-    https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter 
-    config.xsd">
+       xmlns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+       xmlns:p="http://dupa.com"
+       xsi:schemaLocation="
+       https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter 
+       config.xsd">
 
   <properties>
-    <property name="sth">2343</property>
+    <int name="resolution">10000</int>
+    <int name="chunk-size">2048</int>
+    <int name="hop-size">441</int>
   </properties>
-  
+
 </grieg>

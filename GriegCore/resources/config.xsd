@@ -4,25 +4,19 @@
   xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
   elementFormDefault="qualified">
 
-  <xs:complexType name="property">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute name="name" type="xs:string" use="required" />
-      </xs:extension>
-    </xs:simpleContent>
+  <xs:include schemaLocation="property.xsd" />
+  <xs:include schemaLocation="values.xsd" />
+  
+  <xs:complexType name="pipelineElement">
+    <xs:all>
+    </xs:all>
+    <xs:attribute name="name" />
   </xs:complexType>
 
-  <xs:complexType name="properties">
-    <xs:sequence maxOccurs="unbounded" minOccurs="0">
-      <xs:element name="property" type="tns:property" />
-    </xs:sequence>
-  </xs:complexType>
-
-  <!-- Main document body -->
   <xs:element name="grieg">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="properties" type="tns:properties" />
+        <xs:element name="properties" type="tns:propertyType" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
