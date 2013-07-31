@@ -7,8 +7,6 @@ import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.Range;
-import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
 public class PowerObserver implements ProcessingListener {
 

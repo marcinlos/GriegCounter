@@ -2,6 +2,7 @@ package pl.edu.agh.ki.grieg.processing.core.config.xml;
 
 import javax.xml.bind.annotation.XmlType;
 
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.ConversionException;
 
 @XmlType
@@ -13,7 +14,7 @@ public class XmlFloatProperty extends XmlProperty<Float> {
     }
 
     @Override
-    public Float convert() throws ConversionException {
+    public Float convert() throws ConfigException {
         try {
             return Float.valueOf(getString());
         } catch (NumberFormatException e) {
@@ -23,7 +24,7 @@ public class XmlFloatProperty extends XmlProperty<Float> {
 
     @Override
     public String toString() {
-        return String.format("[int] %s -> %s", getName(), getString());
+        return String.format("[int] %s -> %s", getName(), safeGetString());
     }
 
 }

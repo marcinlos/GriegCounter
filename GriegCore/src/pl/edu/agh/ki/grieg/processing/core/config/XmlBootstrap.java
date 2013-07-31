@@ -18,11 +18,9 @@ import org.xml.sax.SAXException;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
-import pl.edu.agh.ki.grieg.processing.core.DefaultPipelineAssembler;
+import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfig;
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlProperty;
 import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.PropertyMap;
 
 import com.google.common.io.Closeables;
 
@@ -31,6 +29,8 @@ public class XmlBootstrap extends AbstractBootstrap {
     private static final String SCHEMA = "/config.xsd";
 
     private XmlConfig config;
+
+    private Context ctx = new Context() { };
 
     public XmlBootstrap(InputStream input) throws ConfigException {
         try {
@@ -58,7 +58,7 @@ public class XmlBootstrap extends AbstractBootstrap {
             JAXBContext context = JAXBContext.newInstance(XmlConfig.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Schema schema = loadSchema(SCHEMA);
-            unmarshaller.setSchema(schema);
+             unmarshaller.setSchema(schema);
             logger().debug("Attempting to parse the XML");
             config = (XmlConfig) unmarshaller.unmarshal(input);
             printConfigContent();
@@ -99,42 +99,27 @@ public class XmlBootstrap extends AbstractBootstrap {
     protected void prepare() throws ConfigException {
         logger().debug("Interpreting configuration");
 
-        logger().info("Using default file loader");
-        setLoader(new FileLoader());
-
+        chooseFileLoader();
         loadProperties();
-
-        logger().info("Using default pipeline assembler");
-        setPipelineAssembler(new DefaultPipelineAssembler());
+        buildFactory();
     }
 
-    private void loadProperties() {
+    private void chooseFileLoader() {
+        logger().info("Using default file loader");
+        setLoader(new FileLoader());
+    }
+
+    private void loadProperties() throws ConfigException {
         logger().trace("Interpreting properties");
-        Properties properties = new PropertyMap();
-        for (XmlProperty<?> property : config.properties.properties) {
-            try {
-                String name = property.getName();
-                Class<?> type = property.getType();
-                String text = property.getString();
-                logger().trace("Property [{}]: converting \"{}\" to {}", name,
-                        text, type);
-                
-                Object value = property.convert();
-                properties.put(property.getName(), value);
-                logger().trace("    {} -> {}", name, value);
-            } catch (ConversionException e) {
-                logger().warn(
-                        "Failed to convert property {}, it will be "
-                                + "unavailable in runtime", property, e);
-            } catch (ConfigException e) {
-                logger().debug("Failed to process property {}", property, e);
-            }
-        }
-        for (Object o : config.properties.custom) {
-            System.out.println(o);
-        }
-        logger().trace("Finished interpreting properties");
+        Properties properties = config.buildProperties(ctx);
         setProperties(properties);
     }
 
+    private void buildFactory() throws ConfigException {
+        logger().info("Searching for pipeline assembler");
+        PipelineAssembler assembler = config.createAssembler(ctx);
+        logger().info("Created pipeline assembler");
+        setPipelineAssembler(assembler);
+    }
+    
 }

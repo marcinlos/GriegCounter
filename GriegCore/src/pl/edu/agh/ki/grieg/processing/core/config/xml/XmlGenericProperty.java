@@ -1,12 +1,11 @@
 package pl.edu.agh.ki.grieg.processing.core.config.xml;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
+import pl.edu.agh.ki.grieg.processing.util.Reflection;
+import pl.edu.agh.ki.grieg.processing.util.ReflectionException;
 
 @XmlType
 public class XmlGenericProperty extends XmlProperty<Object> {
@@ -25,21 +24,9 @@ public class XmlGenericProperty extends XmlProperty<Object> {
 
     @Override
     public Object convert() throws ConfigException {
-        Class<?> clazz = getType();
         try {
-            Constructor<?> ctor = clazz.getConstructor(String.class);
-            return ctor.newInstance(getString());
-        } catch (SecurityException e) {
-            throw new ConfigException(e);
-        } catch (NoSuchMethodException e) {
-            throw new ConfigException(e);
-        } catch (IllegalArgumentException e) {
-            throw new ConfigException(e);
-        } catch (InstantiationException e) {
-            throw new ConfigException(e);
-        } catch (IllegalAccessException e) {
-            throw new ConfigException(e);
-        } catch (InvocationTargetException e) {
+            return Reflection.create(className, getString());
+        } catch (ReflectionException e) {
             throw new ConfigException(e);
         }
     }

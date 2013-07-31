@@ -33,7 +33,6 @@ import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Analyzer;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
-import pl.edu.agh.ki.grieg.processing.core.DefaultAnalyzerBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.XmlFileSystemBootstrap;

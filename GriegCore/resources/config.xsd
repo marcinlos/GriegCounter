@@ -6,17 +6,14 @@
 
   <xs:include schemaLocation="property.xsd" />
   <xs:include schemaLocation="values.xsd" />
+  <xs:include schemaLocation="pipeline.xsd" />
   
-  <xs:complexType name="pipelineElement">
-    <xs:all>
-    </xs:all>
-    <xs:attribute name="name" />
-  </xs:complexType>
 
   <xs:element name="grieg">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="properties" type="tns:propertyType" />
+        <xs:element name="pipeline" type="tns:pipelineType" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

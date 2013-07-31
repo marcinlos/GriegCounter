@@ -1,27 +1,36 @@
 package pl.edu.agh.ki.grieg.processing.core.config.xml;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.google.common.collect.Lists;
+import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
+import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
+import pl.edu.agh.ki.grieg.processing.core.config.Context;
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
+import pl.edu.agh.ki.grieg.util.Properties;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "grieg")
-public class XmlConfig {
-    
-//    @XmlElementWrapper
-//    @XmlElements({
-//        @XmlElement(name = "string", type = XmlStringProperty.class),
-//        @XmlElement(name = "int", type = XmlIntProperty.class),
-//        @XmlElement(name = "long", type = XmlLongProperty.class),
-//    })
-//    public List<XmlProperty<?>> properties = Lists.newArrayList();
-    
-    @XmlElement(name = "properties")
-    public XmlPropertyList properties;
+public class XmlConfig implements PropertiesDefinition, AssemblerDefinition {
+
+    @XmlElement
+    private XmlPropertyList properties;
+
+    @XmlElement
+    private XmlPipeline pipeline;
+
+    @Override
+    public Properties buildProperties(Context ctx) throws ConfigException {
+        return properties.buildProperties(ctx);
+    }
+
+    @Override
+    public PipelineAssembler createAssembler(Context ctx)
+            throws ConfigException {
+        return pipeline.createAssembler(ctx);
+    }
 
 }
