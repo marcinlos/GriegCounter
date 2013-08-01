@@ -7,6 +7,12 @@ import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 
+/**
+ * Empty implementation of {@link ProcessingListener}, added for convenience of
+ * users, who often don'st need all the hooks.
+ * 
+ * @author los
+ */
 public class ProcessingAdapter implements ProcessingListener {
 
     /**

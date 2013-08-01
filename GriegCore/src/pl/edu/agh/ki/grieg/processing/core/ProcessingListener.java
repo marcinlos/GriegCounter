@@ -7,6 +7,12 @@ import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 
+/**
+ * Interface for receiving notifications about important events of the
+ * processing lifecycle.
+ * 
+ * @author los
+ */
 public interface ProcessingListener {
 
     /**
@@ -48,7 +54,7 @@ public interface ProcessingListener {
      *            Structure defining the data flow
      */
     void beforeAnalysis(Pipeline<float[][]> pipeline);
-    
+
     /**
      * Invoked after the main phase of sound analysis has been completed.
      */

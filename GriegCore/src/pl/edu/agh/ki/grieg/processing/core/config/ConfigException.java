@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config;
 
 /**
- * Base class for exceptions indicating problem regarding configuration 
+ * Base class for exceptions indicating problem regarding configuration.
  * 
  * @author los
  */

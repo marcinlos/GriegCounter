@@ -10,10 +10,22 @@ import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Range;
 
+/**
+ * Default {@link PipelineAssembler} implementation. Creates few basic
+ * processing nodes.
+ * 
+ * @author los
+ * 
+ */
 public class DefaultPipelineAssembler implements PipelineAssembler {
 
+    /**
+     * Default number of samples to be emited in each batch of the hamming
+     * segmenter
+     */
     public static final int DEFAULT_CHUNK_SIZE = 2048;
-    
+
+    /** How many samples in each batch should overlap with the previous */
     public static final int DEFAULT_HOP_SIZE = 441;
 
     @Override

@@ -6,14 +6,36 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
+
 import com.google.common.io.Closeables;
 
+/**
+ * Implementation of {@link Bootstrap} using XML configuration file from the
+ * file system.
+ * 
+ * @author los
+ */
 public class XmlFileSystemBootstrap extends XmlBootstrap {
 
+    /**
+     * Creates a {@link Bootstrap} object using file at the {@code path} as the
+     * configuration source.
+     * 
+     * @param path
+     *            Path of the config file
+     */
     public XmlFileSystemBootstrap(String path) throws ConfigException {
         this(new File(path));
     }
 
+    /**
+     * Creates a {@link Bootstrap} object using the specified configuration
+     * file.
+     * 
+     * @param file
+     *            File to read configuration from
+     */
     public XmlFileSystemBootstrap(File file) throws ConfigException {
         logger().info("Using XML configuration from the filesystem");
         InputStream stream = null;
@@ -31,5 +53,5 @@ public class XmlFileSystemBootstrap extends XmlBootstrap {
             }
         }
     }
-    
+
 }

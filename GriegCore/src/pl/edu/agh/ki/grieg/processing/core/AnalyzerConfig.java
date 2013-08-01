@@ -3,6 +3,12 @@ package pl.edu.agh.ki.grieg.processing.core;
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.util.Properties;
 
+/**
+ * Simple structure containing  configuration required by the {@link Analyzer}
+ * in order to fulfill its task. Simple POJO structure.
+ * 
+ * @author los
+ */
 class AnalyzerConfig {
 
     private FileLoader fileLoader;
@@ -11,6 +17,7 @@ class AnalyzerConfig {
 
     private Properties properties;
 
+    
     public FileLoader getFileLoader() {
         return fileLoader;
     }

@@ -20,27 +20,46 @@ import pl.edu.agh.ki.grieg.util.PropertyMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+/**
+ * Class representing complete analysis process for one audio source. It is
+ * created by the {@link Analyzer} and has public methods corresponding to
+ * phases of analysis:
+ * <ol>
+ * <li>{@link #openFile()}
+ * <li>{@link #preAnalyze()}
+ * <li>{@link #analyze()}
+ * </ol>
+ * that should be invoked in this particular order in order to carry out a full
+ * audio analysis.
+ * 
+ * @author los
+ */
 public class Processor {
 
     private static final Logger logger = LoggerFactory
             .getLogger(Processor.class);
 
+    /** Audio file to be processed */
     private final File file;
 
+    /** File loader used to load the file */
     private final FileLoader loader;
 
+    /** Used to create processing pipeline */
     private final PipelineAssembler assembler;
 
+    /** Configuration obtained from some external source */
     private final Properties config;
 
+    /** Audio properties */
     private final Properties results;
 
     /** Collection of listeners */
     private final List<ProcessingListener> listeners = Lists.newArrayList();
 
+    /** Audio file being processed */
     private AudioFile audioFile;
 
-    private Pipeline<float[][]> tree;
 
     public Processor(File file, FileLoader loader, PipelineAssembler assembler,
             Properties config) {
@@ -51,6 +70,17 @@ public class Processor {
         this.results = new PropertyMap();
     }
 
+    /**
+     * Determines appropriate parser for the file it is supposed to process
+     * using its {@link FileLoader}. Informs all the registered listeners about
+     * the result of this action, calling
+     * {@link ProcessingListener#fileOpened(AudioFile)} on succes.
+     * 
+     * @throws AudioException
+     *             If there is a problem with interpreting the audio file
+     * @throws IOException
+     *             If an IO error occured
+     */
     public void openFile() throws AudioException, IOException {
         try {
             audioFile = loader.loadFile(file);
@@ -67,6 +97,18 @@ public class Processor {
 
     }
 
+    /**
+     * Carries out a preliminary analysis, gathering simple properties of the
+     * audio file, without using the processing tree. Informs all the registered
+     * listeners and gathers information about which file properties are needed.
+     * Having finished the processing it informs the listeners about its'
+     * result, using {@link ProcessingListener#afterPreAnalysis(Properties)}.
+     * 
+     * @throws AudioException
+     *             If there is a problem with the audio file
+     * @throws IOException
+     *             If an IO error occured
+     */
     public void preAnalyze() throws AudioException, IOException {
         try {
             Set<Key<?>> keys = Sets.newHashSet();
@@ -87,17 +129,30 @@ public class Processor {
         }
     }
 
+    /**
+     * Carries out the actual, full analysis, using pipeline created by the
+     * {@link PipelineAssembler} instance used by thie {@code Processor}.
+     * Registered listeners are informed through the
+     * {@link ProcessingListener#beforeAnalysis(Pipeline)} method call.
+     * Listeners may at this point modify/connect to the pipeline to receive
+     * output.
+     * 
+     * @throws AudioException
+     *             If there is a problem with decoding the audio file
+     * @throws IOException
+     *             If an IO error occured
+     */
     public void analyze() throws AudioException, IOException {
         try {
             logger.info("Beginning main analysis");
-            tree = Pipeline.make(float[][].class);
+            Pipeline<float[][]> pipeline = Pipeline.make(float[][].class);
             logger.debug("Assembling processing tree");
-            assembler.build(tree, config, results);
+            assembler.build(pipeline, config, results);
             logger.debug("Creating an audio source");
             SampleEnumerator source = audioFile.openSource();
-            source.connect(tree);
+            source.connect(pipeline);
             logger.debug("Audio source created");
-            signalBeforeAnalysis(tree);
+            signalBeforeAnalysis(pipeline);
             logger.debug("Activating audio source");
             source.start();
             logger.info("Main analysis has been completed");
@@ -118,10 +173,16 @@ public class Processor {
         return audioFile;
     }
 
+    /**
+     * @return Configuration properties
+     */
     public Properties getConfig() {
         return config;
     }
 
+    /**
+     * @return Information about the audio file gathered while processing
+     */
     public Properties getResults() {
         return results;
     }
@@ -167,7 +228,7 @@ public class Processor {
      * 
      * @param audioFile
      */
-    public void signalFileOpened(AudioFile audioFile) {
+    private void signalFileOpened(AudioFile audioFile) {
         logger.trace("Notifying {} listener(s) about opening the file",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
@@ -184,7 +245,7 @@ public class Processor {
      * @param config
      *            Configuration properties
      */
-    public void signalBeforePreAnalysis(Set<Key<?>> desired, Properties config) {
+    private void signalBeforePreAnalysis(Set<Key<?>> desired, Properties config) {
         logger.trace("Notifying {} listener(s) about pre-analysis",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
@@ -199,7 +260,7 @@ public class Processor {
      * @param info
      *            Audio properties collected during pre-analysis
      */
-    public void signalAfterPreAnalysis(Properties info) {
+    private void signalAfterPreAnalysis(Properties info) {
         logger.trace("Notifying {} listener(s) about the end of pre-analysis",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
@@ -214,7 +275,7 @@ public class Processor {
      * @param pipeline
      *            Processing pipeline
      */
-    public void signalBeforeAnalysis(Pipeline<float[][]> pipeline) {
+    private void signalBeforeAnalysis(Pipeline<float[][]> pipeline) {
         logger.trace("Notifying {} listener(s) about the beginning of "
                 + "analysis", listeners.size());
         for (ProcessingListener listener : listeners) {
@@ -226,7 +287,7 @@ public class Processor {
     /**
      * Notifies all the listeners the main analysis has been completed.
      */
-    public void signalAfterAnalysis() {
+    private void signalAfterAnalysis() {
         logger.trace("Notifying {} listener(s) about the end of analysis",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
@@ -241,7 +302,7 @@ public class Processor {
      * @param e
      *            Exception that caused the failure
      */
-    public void signalFailure(Throwable e) {
+    private void signalFailure(Throwable e) {
         logger.trace("Notifying {} listener(s) about the error",
                 listeners.size());
         for (ProcessingListener listener : listeners) {

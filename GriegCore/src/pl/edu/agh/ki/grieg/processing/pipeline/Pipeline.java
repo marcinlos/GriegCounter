@@ -12,6 +12,31 @@ import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 import com.google.common.collect.Maps;
 
+/**
+ * Processing pipeline, a tree-like structure consisting of one main, "root"
+ * source {@link Enumerator}, and possibly many nodes ({@link Iteratee}s and
+ * {@link Enumeratee}s) connected to each other in arbitrary configurations.
+ * Each node can be named, to facilitate selecting the required node. Root node
+ * is pluggable - is acutally more of a slot, making the {@link Pipeline}
+ * composable.
+ * 
+ * <p>
+ * {@link Pipeline} allows building the connection structure using fluent
+ * interface:
+ * 
+ * <pre>
+ * pipeline.as(&quot;segmenter&quot;).connect(segmenter, float[][].class, float[][].class)
+ *         .toRoot();
+ * 
+ * pipeline.as(&quot;compressor&quot;).connect(compressor, float[][].class, Range[].class)
+ *         .to(&quot;segmenter&quot;);
+ * </pre>
+ * 
+ * @author los
+ * 
+ * @param <T>
+ *            Type of the input data
+ */
 public class Pipeline<T> implements Iteratee<T> {
 
     /** Root of the tree */
@@ -20,11 +45,24 @@ public class Pipeline<T> implements Iteratee<T> {
     /** name -> node */
     private final Map<String, Node> nodes = Maps.newHashMap();
 
+    /**
+     * Creates new {@link Pipeline} object with specified input type
+     * 
+     * @param input
+     *            {@code Class} object of the input type
+     */
     public Pipeline(Class<T> input) {
         Enumeratee<T, T> forwarder = Iteratees.forwarder();
         this.root = Nodes.make(forwarder, input, input);
     }
 
+    /**
+     * Creates new {@link Pipeline} object with the specified input type
+     * 
+     * @param input
+     *            {@code Class} object of the input type
+     * @return {@link Pipeline} object
+     */
     public static <T> Pipeline<T> make(Class<T> input) {
         return new Pipeline<T>(input);
     }
@@ -52,6 +90,14 @@ public class Pipeline<T> implements Iteratee<T> {
         return (Iteratee<Object>) sink;
     }
 
+    /**
+     * Connects specified nodes, if possible.
+     * 
+     * @param sink
+     *            Node accepting data
+     * @param source
+     *            Node generating data
+     */
     private void connect(Sink<?> sink, Source<?> source) {
         if (compatible(source, sink)) {
             Enumerator<?> src = source.getSource();
@@ -140,10 +186,19 @@ public class Pipeline<T> implements Iteratee<T> {
             return Pipeline.this;
         }
 
+        /**
+         * Connects the node to the source
+         */
         public Pipeline<T> toRoot() {
             return to(root);
         }
 
+        /**
+         * Connects the node to some named node
+         * 
+         * @param source
+         *            Name of the node to connect to
+         */
         public Pipeline<T> to(String source) {
             return to(getSourceNode(source));
         }
