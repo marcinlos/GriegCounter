@@ -62,7 +62,7 @@ public class Iteratees {
      */
     @SuppressWarnings("unchecked")
     public static <T> Enumeratee<T, T> forwarder() {
-        return (Enumeratee<T, T>) Forwarder.INSTANCE;
+        return (Enumeratee<T, T>) new Forwarder();
     }
 
     /**
@@ -99,9 +99,6 @@ public class Iteratees {
      */
     private static final class Forwarder extends
             AbstractEnumeratee<Object, Object> {
-
-        /** Single instance */
-        public static final Forwarder INSTANCE = new Forwarder();
 
         private Forwarder() {
             // non-instantiable outside

@@ -12,13 +12,15 @@ import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 public abstract class WaveObserver extends ProcessingAdapter implements
         Iteratee<float[]> {
-            
-    private static final Logger logger = LoggerFactory.getLogger(WaveObserver.class);
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(WaveObserver.class);
 
     private AudioFile file;
 
@@ -47,7 +49,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     protected int rangeCount() {
         return rangeCount;
     }
-    
+
     protected float progress() {
         return rangeCount() / 10000.0f;
     }
@@ -72,7 +74,8 @@ public abstract class WaveObserver extends ProcessingAdapter implements
         } else {
             sampleCountMissing();
         }
-        logger.debug("After preanalysis, format={}, samples={}", format, totalSampleCount);
+        logger.debug("After preanalysis, format={}, samples={}", format,
+                totalSampleCount);
     }
 
     @Override
@@ -84,7 +87,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     @Override
     public State step(float[] item) {
-        ++ rangeCount;
+        ++rangeCount;
         return State.Cont;
     }
 
@@ -97,7 +100,6 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     public void failed(Throwable e) {
         reset();
     }
-    
 
     protected void reset() {
         file = null;

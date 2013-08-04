@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.google.common.collect.Lists;
+
 /**
  * Concrete implementation of the {@linkplain Enumerator}, managing connected
  * {@linkplain Iteratee}s.
@@ -41,7 +43,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * Override it to customize the output listeners collection.
      */
     protected void initOutputs() {
-        outputs = new ArrayList<Iteratee<? super T>>();
+        outputs = Lists.newArrayList();
     }
 
     /**
@@ -94,7 +96,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      *            {@code Throwable} that describes the error
      */
     public void signalFailure(Throwable e) {
-        for (Iteratee<?> it : outputs) {
+        for (Iteratee<?> it : Lists.newArrayList(outputs)) {
             it.failed(e);
         }
     }
@@ -105,7 +107,7 @@ public abstract class AbstractEnumerator<T> implements Enumerator<T> {
      * {@code Iteratee}.
      */
     public void signalEndOfStream() {
-        for (Iteratee<?> it : outputs) {
+        for (Iteratee<?> it : Lists.newArrayList(outputs)) {
             it.finished();
         }
     }

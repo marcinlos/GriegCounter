@@ -156,6 +156,7 @@ public class Processor {
             logger.debug("Activating audio source");
             source.start();
             logger.info("Main analysis has been completed");
+            source.disconnect(pipeline);
             signalAfterAnalysis();
         } catch (AudioException e) {
             signalFailure(e);

@@ -4,6 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.util.iteratee.Enumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.Enumerator;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
@@ -25,10 +28,12 @@ import com.google.common.collect.Maps;
  * interface:
  * 
  * <pre>
- * pipeline.as(&quot;segmenter&quot;).connect(segmenter, float[][].class, float[][].class)
+ * pipeline.as(&quot;segmenter&quot;)
+ *         .connect(segmenter, float[][].class, float[][].class)
  *         .toRoot();
  * 
- * pipeline.as(&quot;compressor&quot;).connect(compressor, float[][].class, Range[].class)
+ * pipeline.as(&quot;compressor&quot;)
+ *         .connect(compressor, float[][].class, Range[].class)
  *         .to(&quot;segmenter&quot;);
  * </pre>
  * 
@@ -38,6 +43,8 @@ import com.google.common.collect.Maps;
  *            Type of the input data
  */
 public class Pipeline<T> implements Iteratee<T> {
+    
+    private static final Logger logger = LoggerFactory.getLogger(Pipeline.class);
 
     /** Root of the tree */
     private final Transform<T, T> root;
