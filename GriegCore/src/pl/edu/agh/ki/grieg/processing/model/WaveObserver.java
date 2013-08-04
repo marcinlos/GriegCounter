@@ -68,7 +68,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     public void beforePreAnalysis(ExtractionContext ctx) {
         
         logger.debug("Before pre-analysis, requesting SAMPLES and FORMAT");
-        ctx.request(AudioFeatures.SAMPLES, AudioFeatures.FORMAT);
+        ctx.requestFeatures(AudioFeatures.SAMPLES, AudioFeatures.FORMAT);
     }
 
     @Override

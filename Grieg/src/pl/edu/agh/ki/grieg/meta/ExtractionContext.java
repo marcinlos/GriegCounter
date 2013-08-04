@@ -1,6 +1,5 @@
 package pl.edu.agh.ki.grieg.meta;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Set;
 
@@ -19,9 +18,6 @@ import com.google.common.collect.Sets;
  */
 public class ExtractionContext {
 
-    /** File to be processed */
-    private final File file;
-    
     /** Features that need to be extracted */
     private final Set<String> requested;
 
@@ -37,36 +33,39 @@ public class ExtractionContext {
     /** Feature listeners, notified after feature extraction */
     private final Set<FeaturesListener> featureListeners;
     
-    public ExtractionContext(File file) {
-        this.file = file;
+    {
         requested = Sets.newHashSet();
         features = new PropertyMap();
-        config = new PropertyMap();
+        
         progressListeners = Sets.newCopyOnWriteArraySet();
         featureListeners = Sets.newCopyOnWriteArraySet();
     }
     
-    public File getFile() {
-        return file;
+    public ExtractionContext(Properties config) {
+        this.config = new PropertyMap(config);
     }
     
-    public void request(String... features) {
+    public ExtractionContext() {
+        this(new PropertyMap());
+    }
+    
+    public void requestFeature(String... features) {
         for (String feature : features) {
             requested.add(feature);
         }
     }
     
-    public void request(Key<?>... features) {
+    public void requestFeatures(Key<?>... features) {
         for (Key<?> feature : features) {
             requested.add(feature.name);
         }
     }
     
-    public boolean isNeeded(String feature) {
+    public boolean isFeatureNeeded(String feature) {
         return requested.contains(feature);
     }
     
-    public boolean isNeeded(Key<?> feature) {
+    public boolean isFeatureNeeded(Key<?> feature) {
         return requested.contains(feature.name);
     }
     
@@ -79,15 +78,15 @@ public class ExtractionContext {
         return requested.contains(name) && ! hasFeature(feature);
     }
     
-    public Set<String> getRequested() {
+    public Set<String> getRequestedFeatures() {
         return Collections.unmodifiableSet(requested);
     }
     
-    public Set<String> getComputed() {
+    public Set<String> getComputedFeatures() {
         return Collections.unmodifiableSet(features.keySet());
     }
     
-    public Set<String> getMissing() {
+    public Set<String> getMissingFeatures() {
         Set<String> missing = Sets.newHashSet(requested);
         missing.removeAll(features.keySet());
         return missing;
@@ -97,16 +96,8 @@ public class ExtractionContext {
         progressListeners.add(listener);
     }
     
-    public Set<ProgressListener> getProgressListeners() {
-        return Collections.unmodifiableSet(progressListeners);
-    }
-
     public void addFeaturesListener(FeaturesListener listener) {
         featureListeners.add(listener);
-    }
-    
-    public Set<FeaturesListener> getFeaturesListeners() {
-        return Collections.unmodifiableSet(featureListeners);
     }
     
     public boolean hasProperty(String name) {
@@ -155,43 +146,43 @@ public class ExtractionContext {
     
     public <T> void setFeature(String name, T value) {
         features.put(name, value);
-        notifyAboutFeature(name, value);
+        signalFeature(name, value);
     }
     
     public <T> void setFeature(Key<T> key, T value) {
         features.put(key, value);
-        notifyAboutFeature(key.name, value);
+        signalFeature(key.name, value);
     }
     
     public Properties getFeatures() {
         return features;
     }
     
-    public void notifyAboutFeature(String name, Object value) {
+    public void signalFeature(String name, Object value) {
         for (FeaturesListener listener : featureListeners) {
             listener.extracted(name, value);
         }
     }
     
-    public void notifyStarted() {
+    public void signalStart() {
         for (ProgressListener listener : progressListeners) {
             listener.started();
         }
     }
     
-    public void notifyProgress(float progress) {
+    public void signalProgress(float progress) {
         for (ProgressListener listener : progressListeners) {
             listener.progress(progress);
         }
     }
     
-    public void notifyFinished() {
+    public void signalFinish() {
         for (ProgressListener listener : progressListeners) {
             listener.finished();
         }
     }
     
-    public void notifyFailed(Exception e) {
+    public void signalFailure(Exception e) {
         for (ProgressListener listener : progressListeners) {
             listener.failed(e);
         }

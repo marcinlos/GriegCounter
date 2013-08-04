@@ -45,8 +45,8 @@ class WavStream implements AudioStream {
         }
     };
 
-    private DataInput input;
-    private InputStream stream;
+    private final DataInput input;
+    private final InputStream stream;
 
     private PCMReader converter;
 

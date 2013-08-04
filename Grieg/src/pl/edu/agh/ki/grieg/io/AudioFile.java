@@ -11,8 +11,8 @@ import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import com.google.common.base.Objects;
 
 /**
- * Audio file, consisting of a {@link File} object and a parser capable of
- * interpreting the data it contains. Simple representation of an audio file.
+ * Audio file, consisting of a {@link File} object representing filesystem path
+ * of the file and a parser capable of interpreting the data it contains.
  * 
  * @author los
  */
@@ -96,15 +96,9 @@ public class AudioFile {
     }
 
     /**
-     * @return {@link ExtractionContext} with file set to this one
-     */
-    public ExtractionContext prepareExtractionContext() {
-        return new ExtractionContext(file);
-    }
-
-    /**
-     * Forwards the {@code extractFeatures} call to the audio parser suitable
-     * for this file.
+     * Attempts to determine features of the audio file specified by the
+     * {@code context}. Delegates this task to the audio parser suitable for
+     * this file.
      * 
      * @param context
      *            Configuration of the extraction process
@@ -115,15 +109,13 @@ public class AudioFile {
      */
     public void extractFeatures(ExtractionContext context)
             throws DecodeException, IOException {
-        parser.extractFeatures(context);
+        parser.extractFeatures(file, context);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("file", file)
-            .add("parser", parser)
-            .toString();
+        return Objects.toStringHelper(this).add("file", file)
+                .add("parser", parser).toString();
     }
 
 }

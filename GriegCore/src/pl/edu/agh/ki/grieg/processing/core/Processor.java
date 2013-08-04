@@ -144,7 +144,7 @@ public class Processor {
      * @return Appropriately prepared {@link ExtractionContext}
      */
     private ExtractionContext makeContext() {
-        ExtractionContext ctx = audioFile.prepareExtractionContext();
+        ExtractionContext ctx = new ExtractionContext();
         ctx.getConfig().addAll(config);
         return ctx;
     }

@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.decoder.spi;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -49,11 +50,10 @@ public interface AudioFormatParser {
     boolean readable(InputStream stream) throws IOException;
 
     /**
-     * Retrieves details about the file specified by the supplied
-     * {@link ExtractionContext} structure. Features to extract, precomputed
-     * features and specific configuration settings are taken from the passed
-     * context. Implementation if not obliged to provide all the requested
-     * features, nor is it constrained to provide only these.
+     * Retrieves details about the specified file. Features to extract,
+     * precomputed features and specific configuration settings are taken from
+     * the passed context. Implementation if not obliged to provide all the
+     * requested features, nor is it constrained to provide only these.
      * 
      * <p>
      * Two kinds of listeners are associated with the feature extraction
@@ -65,6 +65,9 @@ public interface AudioFormatParser {
      * features during the extraction
      * </ul>
      * 
+     * @param file
+     *            File to be examined
+     * 
      * @param context
      *            Structure describing the extraction process
      * @throws IOException
@@ -72,7 +75,7 @@ public interface AudioFormatParser {
      * @throws DecodeException
      *             If the file could not be properly decoded
      */
-    void extractFeatures(ExtractionContext context) throws IOException,
-            DecodeException;
+    void extractFeatures(File file, ExtractionContext context)
+            throws IOException, DecodeException;
 
 }
