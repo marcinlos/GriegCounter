@@ -42,6 +42,12 @@ public class ProcessorFactory {
     /** Collection of listeners */
     private final List<ProcessingListener> listeners = Lists.newArrayList();
 
+    /**
+     * Creates {@link ProcessorFactory} using the specified configuration.
+     * 
+     * @param config
+     *            Configuration and dependencies to use for processor creation
+     */
     public ProcessorFactory(FactoryConfig config) {
         this.loader = config.getFileLoader();
         this.assembler = config.getPipelineFactory();
@@ -53,9 +59,10 @@ public class ProcessorFactory {
      * {@link Processor} object using contained dependencies and configuration.
      * 
      * @param file
-     * @return
+     *            Audio file to create processor for
+     * @return {@link Processor} ready to process specified file
      */
-    public Processor newProcessing(File file) {
+    public Processor newFileProcessor(File file) {
         logger.info("Beginning processing new file: {}", file);
         Processor processor = new Processor(file, loader, assembler, properties);
         processor.addAll(listeners);
@@ -63,7 +70,7 @@ public class ProcessorFactory {
     }
 
     /**
-     * @return Configuration propertiesd
+     * @return Configuration properties
      */
     public Properties getConfig() {
         return properties;

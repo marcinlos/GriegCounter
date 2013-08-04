@@ -125,7 +125,7 @@ public class MainWindow extends JFrame {
         String path = file.getAbsolutePath();
         logger.info("Opening file {}", path);
         try {
-            final Processor proc = analyzer.newProcessing(file);
+            final Processor proc = analyzer.newFileProcessor(file);
             proc.openFile();
             
             enqueue(new PreAnalysis(proc));
