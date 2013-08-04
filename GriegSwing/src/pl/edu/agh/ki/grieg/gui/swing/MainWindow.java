@@ -3,20 +3,19 @@ package pl.edu.agh.ki.grieg.gui.swing;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
-import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -29,6 +28,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
+import pl.edu.agh.ki.grieg.gui.AudioModel;
+import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Analyzer;
@@ -37,81 +39,97 @@ import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.XmlFileSystemBootstrap;
 
+import com.google.gson.Gson;
+
 public class MainWindow extends JFrame {
 
     private static final Logger logger = LoggerFactory
             .getLogger(MainWindow.class);
 
-    private static final int BUFFER_SIZE = 8192;
+    private static final String CWDIR = "user.dir";
+    
+    private static final File CONFIG_FILE = new File("settings");
 
+    private static final int BUFFER_SIZE = 8192;
+    
+    private static final String[] EXTS = { "mp3", "wav" };
+    
+
+    private final Settings settings;
+    
     private final Player player = new Player(BUFFER_SIZE);
     private final Analyzer analyzer;
     
+    private final ChannelsChart waveView;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu presetMenu;
-
-    private WaveViewPanel waveView;
-    // private TwoChannelPannel powerPanel;
-    // private SpectrumPanel spectrumPanel;
-
-    private static final String DIR = "/media/los/Data/muzyka/Klasyczna/";
-    private static final String FILE = DIR + "Bach/Inventions/Invention no. 8 (F major).mp3";
-    private static final String BEETH = DIR + "Beethoven/Op. 109 (PS no. 30 in E major)/Piano Sonata no.30 in E major op.109 - II- Prestissimo.mp3";
-    private static final String BIG = DIR + "Beethoven/Beethoven's 9th.mp3";
-    private static final String RACH = DIR + "Rachmaninov/Op. 28 (PS no. 1 in D minor)/03 Piano Sonata No.1 in D minor Op.28 - III. Allegro molto.mp3";
-
-    private static final String[] EXTS = { "mp3", "wav" };
+    
 
     public MainWindow(String label) throws ConfigException {
         super(label);
+        logger.info("Starting in directory {}", System.getProperty(CWDIR));
+        settings = readSettings(); 
         
-        Bootstrap bootstrap = new XmlFileSystemBootstrap("grieg-config.xml");
 //        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
+        Bootstrap bootstrap = new XmlFileSystemBootstrap("grieg-config.xml");
         analyzer = bootstrap.createAnalyzer();
         
+        AudioModel model = new AudioModel();
+        analyzer.addListener(model);
+        
+        waveView = new ChannelsChart(model.getChartModel(), 1, 2);
+
         logger.info("Creating window");
-        getContentPane().setBackground(Color.black);
-
-        waveView = new WaveViewPanel(analyzer, 2);
-
-        this.addWindowListener(new ClosingListener());
         setupUI();
 
-        /*
-         * FFT fft = new FFT(); player.addAnalysis(fft); PowerSpectrum ps = new
-         * PowerSpectrum(); fft.addListener(ps); SpectralDifference sd = new
-         * SpectralDifference(ac.getSampleRate()); ps.addListener(sd);
-         * PeakDetector beatDetector = new PeakDetector();
-         * sd.addListener(beatDetector); beatDetector.setThreshold(0.2f);
-         * beatDetector.setAlpha(.3f);
-         */
+        this.addWindowListener(new ClosingListener());
+    }
+
+    private Settings readSettings() {
+        Settings settings;
+        String path = CONFIG_FILE.getAbsolutePath();
+        logger.info("Attempting to read settings from {}", path);
+        try (Reader config = new FileReader(CONFIG_FILE)) {
+            Gson gson = new Gson();
+            settings = gson.fromJson(config, Settings.class);
+        } catch (IOException e) {
+            logger.warn("Cannot read config file {}, reason:", path, e);
+            logger.warn("Using default configuration");
+            settings = createDefaultSettings();
+        }
+        logger.debug("Using following settings: ");
+        logSettings(settings);
+        return settings;
+    }
+    
+    private void logSettings(Settings settings) {
+        File dir = new File(settings.getDirectory());
+        logger.debug("  dir = {}", dir.getAbsolutePath());
+        logger.debug("  files = {");
+        for (String file : settings.getFiles()) {
+            logger.debug("    {}", file);
+        }
+        logger.debug("  }");
+    }
+
+    private Settings createDefaultSettings() {
+        String path = System.getProperty(CWDIR);
+        return new Settings(path);
     }
 
     private void openFile(File file) {
+        String path = file.getAbsolutePath();
+        logger.info("Opening file {}", path);
         try {
-            logger.info("Opening file {}", file);
             final Processor proc = analyzer.newProcessing(file);
             proc.openFile();
-            logger.info("Gathering metadata");
-            proc.preAnalyze();
-            logger.info("Metadata gathered");
-
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        logger.info("Beginning audio analysis");
-                        proc.analyze();
-                        logger.info("Audio analysis finished");
-                    } catch (Exception e) {
-                        displayErrorMessage(MainWindow.this, e);
-                    }
-                }
-            });
+            
+            enqueue(new PreAnalysis(proc));
+            enqueue(new Analysis(proc));
 
             AudioFile audio = proc.getFile();
             logger.info("Playing...");
@@ -119,6 +137,10 @@ public class MainWindow extends JFrame {
         } catch (Exception e) {
             displayErrorMessage(this, e);
         }
+    }
+    
+    private void enqueue(Runnable action) {
+        executor.execute(action);
     }
 
     private static void displayErrorMessage(Component parent, Throwable e) {
@@ -133,24 +155,26 @@ public class MainWindow extends JFrame {
     }
 
     private File chooseFile() {
-        JFileChooser chooser = new JFileChooser(DIR);
+        logger.debug("Opening file choosing dialog");
+        JFileChooser chooser = new JFileChooser(settings.getDirectory());
         FileFilter filter = new FileNameExtensionFilter("Audio", EXTS);
         chooser.setFileFilter(filter);
         int ret = chooser.showOpenDialog(this);
         if (ret == JFileChooser.APPROVE_OPTION) {
-            return chooser.getSelectedFile();
+            File choosen = chooser.getSelectedFile();
+            logger.debug("Choosen file: {}", choosen.getAbsolutePath());
+            return choosen;
         } else {
+            logger.debug("File choosing cancelled");
             return null;
         }
     }
 
     private void setupUI() {
+        getContentPane().setBackground(Color.black);
         setupPosition();
         setupMenu();
         setupLayout();
-        pack();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     private void setupPosition() {
@@ -170,58 +194,68 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-        presetMenu = new JMenu("Preset");
-        addPreset(presetMenu, "Invention no. 8 (Bach)", FILE);
-        addPreset(presetMenu, "Symphony no. 9 (Beethoven)", BIG);
-        addPreset(presetMenu, "Sonata no. 30 Prestissimo (Beethoven)", BEETH);
-        addPreset(presetMenu, "Sonata no. 1 Allegro Molto (Rach)", RACH);
+        presetMenu = new JMenu("Recent");
+        for (String path : settings.getFiles()) {
+            addPreset(presetMenu, new File(path));
+        }
 
         menuBar.add(fileMenu);
         menuBar.add(presetMenu);
         setJMenuBar(menuBar);
     }
 
-    private void addPreset(JMenu menu, String name, final String path) {
-        menu.add(new AbstractAction(name) {
+    private void addPreset(JMenu menu, final File file) {
+        menu.add(new AbstractAction(file.getName()) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openFile(new File(path));
+                openFile(file);
             }
         });
     }
 
     private void setupLayout() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5, 5, 5, 5);
-        c.weightx = 1.0;
-        c.weighty = 0;
-        c.gridheight = 1;
-        c.gridy = 0;
-        add(waveView, c);
-        ++c.gridy;
-        // add(powerPanel, c);
-        ++c.gridy;
-        // add(spectrumPanel, c);
-
-        ++c.gridy;
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 1.0;
-        add(Box.createVerticalGlue(), c);
+        add(waveView);
     }
+    
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new MainWindow("GriegCounter");
-                } catch (ConfigException e) {
-                    displayErrorMessage(null, e);
-                }
+    private final class PreAnalysis implements Runnable {
+        private final Processor proc;
+
+        PreAnalysis(Processor proc) {
+            this.proc = proc;
+        }
+
+        @Override
+        public void run() {
+            logger.info("Gathering metadata");
+            try {
+                proc.preAnalyze();
+                logger.info("Metadata gathered");
+            } catch (AudioException | IOException e) {
+                displayErrorMessage(MainWindow.this, e);
+                logger.error("Error during preliminary analysis", e);
             }
-        });
+        }
+    }
+    
+    private final class Analysis implements Runnable {
+        private final Processor proc;
+
+        Analysis(Processor proc) {
+            this.proc = proc;
+        }
+
+        @Override
+        public void run() {
+            try {
+                logger.info("Beginning audio analysis");
+                proc.analyze();
+                logger.info("Audio analysis finished");
+            } catch (AudioException | IOException e) {
+                displayErrorMessage(MainWindow.this, e);
+                logger.error("Error during the main analysis phase", e);
+            }
+        }
     }
 
     private class ClosingListener extends WindowAdapter {
@@ -229,6 +263,22 @@ public class MainWindow extends JFrame {
         public void windowClosing(WindowEvent e) {
             logger.debug("Window closing");
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MainWindow window = new MainWindow("GriegCounter");
+                    window.pack();
+                    window.setDefaultCloseOperation(EXIT_ON_CLOSE);
+                    window.setVisible(true);
+                } catch (ConfigException e) {
+                    displayErrorMessage(null, e);
+                }
+            }
+        });
     }
 
 }

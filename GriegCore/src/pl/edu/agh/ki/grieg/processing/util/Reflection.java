@@ -9,6 +9,7 @@ public final class Reflection {
         // non-instantiable
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Class<? extends T> getClass(String name)
             throws ReflectionException {
         try {

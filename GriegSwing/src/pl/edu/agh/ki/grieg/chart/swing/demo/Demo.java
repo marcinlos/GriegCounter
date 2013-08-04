@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import pl.edu.agh.ki.grieg.chart.Chart;
 import pl.edu.agh.ki.grieg.chart.ChartModel;
 import pl.edu.agh.ki.grieg.chart.Serie;
+import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.gfx.Point;
 
 import com.google.common.collect.Lists;
@@ -26,22 +27,22 @@ public class Demo extends JFrame {
 
     private final ChannelsChart chartView;
 
-    private final Serie<List<Point>> topSerie;
+    private final Serie<List<Point>> leftSerie;
 
-    private final Serie<List<Point>> bottomSerie;
+    private final Serie<List<Point>> rightSerie;
 
     private final Executor executor;
 
     {
-        List<Point> topList = Lists.newArrayList();
-        List<Point> bottomList = Lists.newArrayList();
+        List<Point> leftList = Lists.newArrayList();
+        List<Point> rightList = Lists.newArrayList();
 
-        topSerie = Serie.of(topList);
-        bottomSerie = Serie.of(bottomList);
+        leftSerie = Serie.of(rightList);
+        rightSerie = Serie.of(leftList);
 
         chart = new Chart<List<Point>>();
-        chart.add("top", topSerie);
-        chart.add("bottom", bottomSerie);
+        chart.add("left", leftSerie);
+        chart.add("right", rightSerie);
 
         chartView = new ChannelsChart(chart, 1.0f, 0.5f);
 
@@ -58,8 +59,8 @@ public class Demo extends JFrame {
         int n = 10000;
         float f = 1.0f / 250;
 
-        RandomWalk topWalk = new RandomWalk(topSerie, n, f, 1);
-        RandomWalk bottomWalk = new RandomWalk(bottomSerie, n, f, 1);
+        RandomWalk topWalk = new RandomWalk(leftSerie, n, f, 1);
+        RandomWalk bottomWalk = new RandomWalk(rightSerie, n, f, 1);
 
         executor.execute(topWalk);
         executor.execute(bottomWalk);

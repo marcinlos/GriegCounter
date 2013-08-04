@@ -1,10 +1,9 @@
 package pl.edu.agh.ki.grieg.processing.observers;
 
-import static com.google.common.base.Preconditions.checkPositionIndex;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioFile;
@@ -16,10 +15,10 @@ import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
-import com.google.common.collect.Lists;
-
 public abstract class WaveObserver extends ProcessingAdapter implements
         Iteratee<float[]> {
+            
+    private static final Logger logger = LoggerFactory.getLogger(WaveObserver.class);
 
     private AudioFile file;
 
@@ -27,8 +26,6 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     private long totalSampleCount;
 
-    private final List<List<Float>> points = Lists.newArrayList();
-    
     private int rangeCount;
 
     protected AudioFile file() {
@@ -47,10 +44,6 @@ public abstract class WaveObserver extends ProcessingAdapter implements
         return format.channels;
     }
 
-    protected List<List<Float>> data() {
-        return points;
-    }
-
     protected int rangeCount() {
         return rangeCount;
     }
@@ -66,6 +59,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     @Override
     public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
+        logger.debug("Before analysis, requesting SAMPLES and FORMAT");
         desired.add(AudioKeys.SAMPLES);
         desired.add(AudioKeys.FORMAT);
     }
@@ -73,14 +67,12 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     @Override
     public void afterPreAnalysis(Properties results) {
         format = results.get(AudioKeys.FORMAT);
-        for (int i = 0; i < format.channels; ++i) {
-            points.add(new ArrayList<Float>());
-        }
         if (results.contains(AudioKeys.SAMPLES)) {
             totalSampleCount = results.get(AudioKeys.SAMPLES);
         } else {
             sampleCountMissing();
         }
+        logger.debug("After preanalysis, format={}, samples={}", format, totalSampleCount);
     }
 
     @Override
@@ -90,28 +82,28 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     protected abstract void sampleCountMissing();
 
-    protected List<Float> getChannel(int i) {
-        checkPositionIndex(i, channels());
-        return points.get(i);
-    }
-
     @Override
     public State step(float[] item) {
-        for (int i = 0; i < item.length; ++i) {
-            getChannel(i).add(item[i]);
-        }
         ++ rangeCount;
         return State.Cont;
     }
 
     @Override
     public void finished() {
-        // empty
+        reset();
     }
 
     @Override
     public void failed(Throwable e) {
-        // empty
+        reset();
+    }
+    
+
+    protected void reset() {
+        file = null;
+        format = null;
+        totalSampleCount = -1;
+        rangeCount = 0;
     }
 
 }

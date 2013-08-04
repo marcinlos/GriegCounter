@@ -28,8 +28,7 @@ public class ProcessingAdapter implements ProcessingListener {
      */
     @Override
     public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
-        // TODO Auto-generated method stub
-        
+        // empty
     }
 
     /**

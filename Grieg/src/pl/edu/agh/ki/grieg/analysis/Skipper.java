@@ -35,14 +35,4 @@ public class Skipper extends AbstractEnumeratee<float[][], float[]> {
         return State.Cont;
     }
 
-    @Override
-    public void finished() {
-        // empty
-    }
-
-    @Override
-    public void failed(Throwable e) {
-        // empty
-    }
-
 }

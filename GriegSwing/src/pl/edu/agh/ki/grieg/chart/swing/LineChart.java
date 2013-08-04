@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.chart.swing.demo;
+package pl.edu.agh.ki.grieg.chart.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -11,12 +11,14 @@ import pl.edu.agh.ki.grieg.gfx.Point;
 public class LineChart extends LineChartView implements
         SerieListener<List<Point>> {
 
-    public LineChart(Serie<List<Point>> model, float width, float height) {
+    public LineChart(Serie<List<Point>> serie, float width, float height) {
         super(width, height);
-        checkNotNull(model);
-        model.addListener(this);
-        setData(model.getData());
+        checkNotNull(serie);
+        serie.addListener(this);
+        setData(serie.getData());
+        refresh();
     }
+
 
     @Override
     public void updated(Serie<List<Point>> serie) {

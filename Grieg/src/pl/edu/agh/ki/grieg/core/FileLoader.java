@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ServiceLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.decoder.DecoderManager;
 import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
 import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
@@ -23,13 +26,19 @@ import com.google.common.io.Files;
  */
 public class FileLoader {
 
+    private static final Logger logger = LoggerFactory
+            .getLogger(FileLoader.class);
+
     /** Root decoder manager, ancestor of all the managers */
-    private static final DecoderManager root = new DecoderManager();
+    private static final DecoderManager root;
 
     /** Collection of audio parsers */
-    private DecoderManager decoders = new DecoderManager(root);
+    private final DecoderManager decoders = new DecoderManager(root);
 
     static {
+        logger.info("Initializing file loader system");
+        root = new DecoderManager();
+
         // register builtin decoders here
         root.register(new WavFileParser());
         root.register(new Mp3Parser());
@@ -38,6 +47,7 @@ public class FileLoader {
         for (AudioFormatParser p : ServiceLoader.load(AudioFormatParser.class)) {
             root.register(p);
         }
+        logger.info("File loader system initialization completed");
     }
 
     /**

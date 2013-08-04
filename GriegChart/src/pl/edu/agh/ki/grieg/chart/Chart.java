@@ -20,6 +20,10 @@ public class Chart<T> implements ChartModel<T> {
         listeners = Sets.newCopyOnWriteArraySet();
         series = Maps.newConcurrentMap();
     }
+    
+    public static <T> Chart<T> create() {
+        return new Chart<T>();
+    }
 
     /**
      * {@inheritDoc}

@@ -1,23 +1,21 @@
-package pl.edu.agh.ki.grieg.chart.swing.demo;
+package pl.edu.agh.ki.grieg.chart.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import pl.edu.agh.ki.grieg.chart.swing.SwingCanvas;
 import pl.edu.agh.ki.grieg.gfx.Point;
 import pl.edu.agh.ki.grieg.gfx.PointI;
 
 public class LineChartView extends SwingCanvas {
 
     private List<Point> data;
-    
+
     private final JPanel p = swingPanel();
 
     public LineChartView(float width, float height) {
@@ -27,7 +25,7 @@ public class LineChartView extends SwingCanvas {
 
     private void setupUI() {
         p.setBackground(Color.black);
-        p.setBorder(BorderFactory.createLineBorder(Color.green, 2));
+        p.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
     }
 
     public void setData(List<Point> data) {
@@ -48,21 +46,13 @@ public class LineChartView extends SwingCanvas {
             }
         }
     }
-    
-    private PointI _(Point p) {
-        return toScreen(p);
-    }
 
     private void drawLines(Graphics2D graphics) {
-        if (!data.isEmpty()) {
-            Iterator<Point> it = data.iterator();
-            Point a = it.next();
-            while (it.hasNext()) {
-                Point b = it.next();
-                PointI p = _(a), q = _(b);
-                graphics.drawLine(p.x, p.y, q.x, q.y);
-                a = b;
-            }
+        for (int i = 1; i < data.size(); ++i) {
+            Point a = data.get(i - 1), b = data.get(i);
+            PointI p = toScreen(a), q = toScreen(b);
+            graphics.drawLine(p.x, p.y, q.x, q.y);
+            a = b;
         }
     }
 }

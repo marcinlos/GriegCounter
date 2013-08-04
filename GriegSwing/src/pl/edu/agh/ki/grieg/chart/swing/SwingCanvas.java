@@ -57,7 +57,7 @@ public class SwingCanvas extends AbstractCanvas {
     }
     
     protected void paint(Graphics2D graphics) {
-        
+        // empty
     }
 
 }
