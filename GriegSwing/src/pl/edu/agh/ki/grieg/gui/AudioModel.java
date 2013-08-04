@@ -59,8 +59,8 @@ public class AudioModel extends WaveObserver {
     }
 
     @Override
-    public void fileOpened(AudioFile file) {
-        super.fileOpened(file);
+    public void fileOpened(AudioFile file, Properties config) {
+        super.fileOpened(file, config);
         logger.trace("File opened: {}", file);
         clear();
     }

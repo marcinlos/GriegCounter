@@ -13,6 +13,7 @@ import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
+import pl.edu.agh.ki.grieg.processing.util.PropertiesHelper;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;
@@ -59,7 +60,6 @@ public class Processor {
 
     /** Audio file being processed */
     private AudioFile audioFile;
-
 
     public Processor(File file, FileLoader loader, PipelineAssembler assembler,
             Properties config) {
@@ -117,6 +117,8 @@ public class Processor {
             signalBeforePreAnalysis(keys, config);
             logger.debug("Extracting audio properties from the file");
             Properties info = audioFile.computeAll(keys);
+            logger.debug("Properties have been computed");
+            logComputedProperties(info);
             results.addAll(info);
             signalAfterPreAnalysis(results);
             logger.info("Pre-analysis has been completed");
@@ -127,6 +129,16 @@ public class Processor {
             signalFailure(e);
             throw e;
         }
+    }
+
+    /**
+     * Logs all the (key, value) pairs in the specified property container.
+     * 
+     * @param info
+     *            Properties to log
+     */
+    private void logComputedProperties(Properties info) {
+        logger.debug("Computed properties:\n{}", PropertiesHelper.dump(info));
     }
 
     /**
@@ -233,7 +245,7 @@ public class Processor {
         logger.trace("Notifying {} listener(s) about opening the file",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
-            listener.fileOpened(audioFile);
+            listener.fileOpened(audioFile, config);
         }
         logger.trace("All the listeners have been notified");
     }

@@ -12,7 +12,7 @@ public class PowerObserver implements ProcessingListener {
 
 
     @Override
-    public void fileOpened(AudioFile file) {
+    public void fileOpened(AudioFile file, Properties config) {
         
     }
 

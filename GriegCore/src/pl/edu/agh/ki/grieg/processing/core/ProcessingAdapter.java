@@ -19,7 +19,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void fileOpened(AudioFile file) {
+    public void fileOpened(AudioFile file, Properties config) {
         // empty
     }
 

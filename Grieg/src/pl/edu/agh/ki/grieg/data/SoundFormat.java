@@ -37,7 +37,7 @@ public class SoundFormat {
     @Override
     public String toString() {
         String rate = String.format("%.1fkHz", sampleRate / 1000.0f);
-        return String.format("%d x %s", channels, rate);
+        return String.format("%dx%s", channels, rate);
     }
 
     @Override

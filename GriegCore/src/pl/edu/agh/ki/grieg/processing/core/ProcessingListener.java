@@ -21,17 +21,23 @@ public interface ProcessingListener {
      * 
      * @param file
      *            Audio file whose processing begins
+     * @param config
+     *            Read-only configuration
      */
-    void fileOpened(AudioFile file);
+    void fileOpened(AudioFile file, Properties config);
 
     /**
      * Invoked when the process of extracting metadata is about to begin. By
      * manipulating contents of the {@code desired} set, component can provide
      * clues as to what data is needed. There is no guarantee that all the
-     * pieces of information are actually collected.
+     * pieces of information are actually collected. Second parameter allows
+     * components provide additional hints and configuration parameters for the
+     * process.
      * 
      * @param desired
      *            Set of metadata that should be gathered during the processing
+     * @param config
+     *            Arbitrary (key, value) pairs used during the pre-analysis
      */
     void beforePreAnalysis(Set<Key<?>> desired, Properties config);
 
