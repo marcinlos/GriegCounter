@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.output.dummy;
+package pl.edu.agh.ki.grieg.output.spi.dummy;
 
 import java.io.IOException;
 

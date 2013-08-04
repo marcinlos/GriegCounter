@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.output.javasound;
+package pl.edu.agh.ki.grieg.output.spi.javasound;
 
 
 import javax.sound.sampled.AudioFormat;

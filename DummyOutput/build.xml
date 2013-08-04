@@ -3,8 +3,8 @@
 
   <property name="output.dir" value="target" />
 
-  <property name="pkg" value="pl.edu.agh.ki.grieg.output" />
-  <property name="service" value="${pkg}.spi.OutputFactory" />
+  <property name="pkg" value="pl.edu.agh.ki.grieg.output.spi" />
+  <property name="service" value="${pkg}.OutputFactory" />
 
   <!-- These 2 are provider-specific -->
   <property name="impl" value="${pkg}.dummy.DummyOutputFactory" />
