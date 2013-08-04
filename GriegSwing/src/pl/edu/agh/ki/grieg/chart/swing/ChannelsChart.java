@@ -6,9 +6,9 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
-import pl.edu.agh.ki.grieg.chart.ChartModel;
-import pl.edu.agh.ki.grieg.chart.Serie;
-import pl.edu.agh.ki.grieg.gfx.Point;
+import pl.edu.agh.ki.grieg.model.ChartModel;
+import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.util.Point;
 
 public class ChannelsChart extends JPanel {
 

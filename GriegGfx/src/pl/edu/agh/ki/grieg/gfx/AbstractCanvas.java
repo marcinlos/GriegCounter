@@ -1,6 +1,8 @@
 package pl.edu.agh.ki.grieg.gfx;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import pl.edu.agh.ki.grieg.util.Point;
+import pl.edu.agh.ki.grieg.util.PointI;
 
 public abstract class AbstractCanvas implements Canvas {
 

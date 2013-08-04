@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.chart;
+package pl.edu.agh.ki.grieg.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

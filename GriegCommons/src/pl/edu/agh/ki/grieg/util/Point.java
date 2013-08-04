@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.gfx;
+package pl.edu.agh.ki.grieg.util;
 
 public final class Point {
     

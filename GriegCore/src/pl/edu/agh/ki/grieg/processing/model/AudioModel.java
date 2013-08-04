@@ -6,13 +6,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.agh.ki.grieg.chart.Chart;
-import pl.edu.agh.ki.grieg.chart.ChartModel;
-import pl.edu.agh.ki.grieg.chart.Serie;
-import pl.edu.agh.ki.grieg.gfx.Point;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.model.Chart;
+import pl.edu.agh.ki.grieg.model.ChartModel;
+import pl.edu.agh.ki.grieg.model.Serie;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.Point;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 

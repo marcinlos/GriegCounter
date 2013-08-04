@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import pl.edu.agh.ki.grieg.chart.Chart;
-import pl.edu.agh.ki.grieg.chart.ChartModel;
-import pl.edu.agh.ki.grieg.chart.Serie;
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
-import pl.edu.agh.ki.grieg.gfx.Point;
+import pl.edu.agh.ki.grieg.model.Chart;
+import pl.edu.agh.ki.grieg.model.ChartModel;
+import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.util.Point;
 
 import com.google.common.collect.Lists;
 

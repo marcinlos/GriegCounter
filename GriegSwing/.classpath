@@ -12,10 +12,11 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="lib" path="/JavaSoundOutput/target/javasound-output-provider.jar"/>
 	<classpathentry kind="lib" path="lib/guava-14.0.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/GriegChart"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GriegGfx"/>
 	<classpathentry kind="lib" path="lib/miglayout-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar" sourcepath="lib/gson-2.2.4-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
