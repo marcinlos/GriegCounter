@@ -23,7 +23,7 @@ import com.google.common.collect.Sets;
 
 /**
  * Class representing complete analysis process for one audio source. It is
- * created by the {@link Analyzer} and has public methods corresponding to
+ * created by the {@link ProcessorFactory} and has public methods corresponding to
  * phases of analysis:
  * <ol>
  * <li>{@link #openFile()}

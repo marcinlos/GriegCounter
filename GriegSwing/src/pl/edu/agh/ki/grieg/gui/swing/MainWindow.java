@@ -32,7 +32,7 @@ import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
-import pl.edu.agh.ki.grieg.processing.core.Analyzer;
+import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
@@ -58,11 +58,11 @@ public class MainWindow extends JFrame {
     private final Settings settings;
     
     private final Player player = new Player(BUFFER_SIZE);
-    private final Analyzer analyzer;
+    private final ProcessorFactory analyzer;
     
     private final ChannelsChart waveView;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -76,7 +76,7 @@ public class MainWindow extends JFrame {
         
 //        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
         Bootstrap bootstrap = new XmlFileSystemBootstrap("grieg-config.xml");
-        analyzer = bootstrap.createAnalyzer();
+        analyzer = bootstrap.createFactory();
         
         AudioModel model = new AudioModel();
         analyzer.addListener(model);

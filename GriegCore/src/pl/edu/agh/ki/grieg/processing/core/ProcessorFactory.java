@@ -18,17 +18,17 @@ import com.google.common.collect.Lists;
  * actual instantiation of the {@code Processor} objects.
  * 
  * <p>
- * Analyzer is created by the implementation of {@link Bootstrap}, which is
- * responsible for providing {@code Analyzer} with aforementioned configuration
- * and actual instantiation of the {@link Analyzer}
+ * ProcessorFactory is created by the implementation of {@link Bootstrap}, which
+ * is responsible for providing {@code ProcessorFactory} with aforementioned
+ * configuration and actual instantiation of the {@link ProcessorFactory}
  * 
  * @author los
  * @see Bootstrap
  */
-public class Analyzer {
+public class ProcessorFactory {
 
     private static final Logger logger = LoggerFactory
-            .getLogger(Analyzer.class);
+            .getLogger(ProcessorFactory.class);
 
     /** File loader used to open audio files */
     private final FileLoader loader;
@@ -42,10 +42,7 @@ public class Analyzer {
     /** Collection of listeners */
     private final List<ProcessingListener> listeners = Lists.newArrayList();
 
-    /** Currently active process */
-    private Processor currentProcessor;
-
-    public Analyzer(AnalyzerConfig config) {
+    public ProcessorFactory(FactoryConfig config) {
         this.loader = config.getFileLoader();
         this.assembler = config.getPipelineFactory();
         this.properties = config.getProperties();
@@ -62,15 +59,7 @@ public class Analyzer {
         logger.info("Beginning processing new file: {}", file);
         Processor processor = new Processor(file, loader, assembler, properties);
         processor.addAll(listeners);
-        currentProcessor = processor;
         return processor;
-    }
-
-    /**
-     * @return Currently active {@code Processor}
-     */
-    public Processor getCurrentProcessor() {
-        return currentProcessor;
     }
 
     /**
@@ -87,6 +76,7 @@ public class Analyzer {
      *            Listener to be added to the list
      */
     public void addListener(ProcessingListener listener) {
+        logger.debug("Adding processing listener: {}", listener);
         listeners.add(listener);
     }
 
@@ -97,6 +87,7 @@ public class Analyzer {
      *            Listener to be disconnected
      */
     public void removeListener(ProcessingListener listener) {
+        logger.debug("Removing processing listener: {}", listener);
         listeners.remove(listener);
     }
 

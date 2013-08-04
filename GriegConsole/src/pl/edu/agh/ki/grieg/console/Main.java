@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.processing.core.Analyzer;
+import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 
 public class Main {
     
@@ -14,7 +14,7 @@ public class Main {
     
     private final FileLoader loader = new FileLoader();
     
-//    private final Analyzer analyzer = new Analyzer(loader);
+//    private final ProcessorFactory analyzer = new ProcessorFactory(loader);
     
     
     

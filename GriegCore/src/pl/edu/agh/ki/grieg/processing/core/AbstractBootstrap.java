@@ -11,7 +11,7 @@ import pl.edu.agh.ki.grieg.util.Properties;
 
 /**
  * Abstract base class facilitating creation of {@link Bootstrap}
- * implementations. Takes care of actual {@link Analyzer} initialization,
+ * implementations. Takes care of actual {@link ProcessorFactory} initialization,
  * requires only providing the necessary dependencies. Typical implementation
  * will read and interpret some configuration in the {@link #prepare()} method,
  * and inside it call all the setters, providing the base class with necessary
@@ -30,9 +30,9 @@ public abstract class AbstractBootstrap implements Bootstrap {
 
     /**
      * POJO used to store dependencies and configuration used later to create an
-     * {@code Analyzer}
+     * {@code ProcessorFactory}
      */
-    private final AnalyzerConfig config = new AnalyzerConfig();
+    private final FactoryConfig config = new FactoryConfig();
 
     /**
      * Empty consstructor
@@ -43,9 +43,9 @@ public abstract class AbstractBootstrap implements Bootstrap {
 
     /**
      * Abstract method to be provided by the concrete {@link Bootstrap}
-     * implementation. It is called in the {@link #createAnalyzer()}. The
+     * implementation. It is called in the {@link #createFactory()}. The
      * implementation is supposed to provide necessary ingredients of the
-     * {@link Analyzer} using protected setters.
+     * {@link ProcessorFactory} using protected setters.
      * 
      * @throws ConfigException
      *             If there is a problem with configuration
@@ -94,11 +94,11 @@ public abstract class AbstractBootstrap implements Bootstrap {
      * {@inheritDoc}
      * 
      * <p>
-     * Assembles the {@link Analyzer} using dependencies provided by the actual
+     * Assembles the {@link ProcessorFactory} using dependencies provided by the actual
      * implementation in the {@link #prepare()} method.
      */
     @Override
-    public final Analyzer createAnalyzer() throws ConfigException {
+    public final ProcessorFactory createFactory() throws ConfigException {
         logger.info("Initializing the system");
         logger.info("Initializing the dependencies");
         prepare();
@@ -107,6 +107,6 @@ public abstract class AbstractBootstrap implements Bootstrap {
         checkNotNull(config.getPipelineFactory());
 
         logger.info("Dependencies ready, creating the main object");
-        return new Analyzer(config);
+        return new ProcessorFactory(config);
     }
 }
