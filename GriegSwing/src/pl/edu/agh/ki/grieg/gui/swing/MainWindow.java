@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
-import pl.edu.agh.ki.grieg.gui.AudioModel;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.playback.Player;
@@ -38,6 +37,7 @@ import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.XmlFileSystemBootstrap;
+import pl.edu.agh.ki.grieg.processing.model.AudioModel;
 
 import com.google.gson.Gson;
 

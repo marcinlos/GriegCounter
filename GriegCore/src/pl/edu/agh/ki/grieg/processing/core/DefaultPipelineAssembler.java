@@ -5,7 +5,7 @@ import pl.edu.agh.ki.grieg.analysis.Segmenter;
 import pl.edu.agh.ki.grieg.analysis.Skipper;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.meta.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Range;
@@ -27,13 +27,16 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
 
     /** How many samples in each batch should overlap with the previous */
     public static final int DEFAULT_HOP_SIZE = 441;
+    
+    /** How many batches in total should the data be split into */
+    public static final int DEFAULT_RESOLUTION = 10000;
 
     @Override
     public void build(Pipeline<float[][]> pipeline, Properties config,
             Properties audio) {
 
-        long length = audio.get(AudioKeys.SAMPLES);
-        SoundFormat format = audio.get(AudioKeys.FORMAT);
+        long length = audio.get(AudioFeatures.SAMPLES);
+        SoundFormat format = audio.get(AudioFeatures.FORMAT);
         int channels = format.getChannels();
 
         int resolution = config.getInt("resolution", 99);

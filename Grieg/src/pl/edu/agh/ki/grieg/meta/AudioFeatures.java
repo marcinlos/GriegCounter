@@ -5,13 +5,13 @@ import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.util.Key;
 
 /**
- * Static utilities for dealing with metainfo keys
+ * Container for static {@link Key}s of commonly used audio file properties.
  * 
  * @author los
  */
-public final class AudioKeys {
+public final class AudioFeatures {
 
-    private AudioKeys() {
+    private AudioFeatures() {
         // non-instantiable
     }
 

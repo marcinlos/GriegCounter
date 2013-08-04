@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.observers;
+package pl.edu.agh.ki.grieg.processing.model;
 
 import java.util.Set;
 
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.meta.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
@@ -70,16 +70,16 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
         
         logger.debug("Before pre-analysis, requesting SAMPLES and FORMAT");
-        desired.add(AudioKeys.SAMPLES);
-        desired.add(AudioKeys.FORMAT);
+        desired.add(AudioFeatures.SAMPLES);
+        desired.add(AudioFeatures.FORMAT);
     }
 
     @Override
     public void afterPreAnalysis(Properties results) {
-        format = results.get(AudioKeys.FORMAT);
+        format = results.get(AudioFeatures.FORMAT);
         logger.debug("After preanalysis, format={}", format);
-        if (results.contains(AudioKeys.SAMPLES)) {
-            totalSampleCount = results.get(AudioKeys.SAMPLES);
+        if (results.contains(AudioFeatures.SAMPLES)) {
+            totalSampleCount = results.get(AudioFeatures.SAMPLES);
             logger.debug("Total {} samples", totalSampleCount);
         } else {
             logger.warn("Missing property - total sample count");

@@ -12,7 +12,7 @@ import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.meta.AudioFeatures;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;
@@ -36,9 +36,9 @@ class MetaExtractor {
     }
 
     public Properties extract() throws DecodeException, IOException {
-        if (desired.contains(AudioKeys.SAMPLES)) {
+        if (desired.contains(AudioFeatures.SAMPLES)) {
             determineLength();
-            desired.remove(AudioKeys.SAMPLES);
+            desired.remove(AudioFeatures.SAMPLES);
         }
         return info;
     }
@@ -56,12 +56,12 @@ class MetaExtractor {
                 int channels = samples.getChannelCount();
                 count += bufferSize / channels;
                 if (first) {
-                    info.put(AudioKeys.FORMAT, extractFormat(samples));
+                    info.put(AudioFeatures.FORMAT, extractFormat(samples));
                 }
                 first = false;
                 reader.closeFrame();
             }
-            info.put(AudioKeys.SAMPLES, count);
+            info.put(AudioFeatures.SAMPLES, count);
         } catch (DecoderException e) {
             throw new DecodeException(e);
         } finally {

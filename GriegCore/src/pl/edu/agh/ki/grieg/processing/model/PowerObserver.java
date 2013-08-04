@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.observers;
+package pl.edu.agh.ki.grieg.processing.model;
 
 import java.util.Set;
 

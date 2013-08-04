@@ -10,7 +10,7 @@ import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.meta.AudioFeatures;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 
@@ -58,9 +58,9 @@ public class WavFileParser extends AbstractAudioFormatParser {
     public void getDetails(File file, Set<Key<?>> desired, Properties info)
             throws IOException, DecodeException {
         AudioDetails details = getDetails(file);
-        info.put(AudioKeys.SAMPLES, details.getSampleCount());
-        info.put(AudioKeys.DURATION, details.getLength());
-        info.put(AudioKeys.FORMAT, details.getFormat());
+        info.put(AudioFeatures.SAMPLES, details.getSampleCount());
+        info.put(AudioFeatures.DURATION, details.getLength());
+        info.put(AudioFeatures.FORMAT, details.getFormat());
     }
 
 }

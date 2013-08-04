@@ -4,7 +4,7 @@ import java.io.File;
 
 import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.AudioKeys;
+import pl.edu.agh.ki.grieg.meta.AudioFeatures;
 import pl.edu.agh.ki.grieg.playback.PlaybackAdapter;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.playback.Timestamp;
@@ -30,7 +30,7 @@ public class Example {
         AudioFile audioFile = fileLoader.loadFile(file);
 
         {
-            final long count = audioFile.determine(AudioKeys.SAMPLES);
+            final long count = audioFile.determine(AudioFeatures.SAMPLES);
             System.out.println("Frames = " + count);
             player.addListener(new PlaybackAdapter() {
                 @Override
@@ -43,7 +43,7 @@ public class Example {
         }
         /*{
             Stopwatch stopwatch = new Stopwatch().start();
-            Long count = audioFile.getInfo(AudioKeys.SAMPLES);
+            Long count = audioFile.getInfo(AudioFeatures.SAMPLES);
             stopwatch.stop();
 
             System.out.println("Done in " + stopwatch);

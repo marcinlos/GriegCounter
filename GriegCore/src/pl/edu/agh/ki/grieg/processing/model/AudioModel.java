@@ -1,6 +1,5 @@
-package pl.edu.agh.ki.grieg.gui;
+package pl.edu.agh.ki.grieg.processing.model;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +11,12 @@ import pl.edu.agh.ki.grieg.chart.ChartModel;
 import pl.edu.agh.ki.grieg.chart.Serie;
 import pl.edu.agh.ki.grieg.gfx.Point;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.processing.observers.WaveObserver;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public class AudioModel extends WaveObserver {
@@ -42,7 +41,7 @@ public class AudioModel extends WaveObserver {
         leftSerie = Serie.of(leftData);
         rightSerie = Serie.of(rightData);
 
-        series = Arrays.asList(leftSerie, rightSerie);
+        series = ImmutableList.of(leftSerie, rightSerie);
 
         model = Chart.create();
         model.add("left", leftSerie);
