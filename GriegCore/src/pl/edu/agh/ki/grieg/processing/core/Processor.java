@@ -3,7 +3,6 @@ package pl.edu.agh.ki.grieg.processing.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +11,13 @@ import pl.edu.agh.ki.grieg.core.FileLoader;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.processing.util.PropertiesHelper;
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Class representing complete analysis process for one audio source. It is
@@ -122,12 +120,12 @@ public class Processor {
      */
     public void preAnalyze() throws AudioException, IOException {
         try {
-            Set<Key<?>> keys = Sets.newHashSet();
-            Properties config = new PropertyMap();
             logger.info("Beginning pre-analysis");
-            signalBeforePreAnalysis(keys, config);
+            ExtractionContext ctx = makeContext();
+            signalBeforePreAnalysis(ctx);
             logger.debug("Extracting audio properties from the file");
-            Properties info = audioFile.computeAll(keys);
+            audioFile.extractFeatures(ctx);
+            Properties info = ctx.getFeatures();
             logger.debug("Properties have been computed");
             logComputedProperties(info);
             results.addAll(info);
@@ -140,6 +138,15 @@ public class Processor {
             signalFailure(e);
             throw e;
         }
+    }
+    
+    /**
+     * @return Appropriately prepared {@link ExtractionContext}
+     */
+    private ExtractionContext makeContext() {
+        ExtractionContext ctx = audioFile.prepareExtractionContext();
+        ctx.getConfig().addAll(config);
+        return ctx;
     }
 
     /**
@@ -264,16 +271,14 @@ public class Processor {
     /**
      * Notifies all the listeners pre-analysis is about to begin.
      * 
-     * @param desired
-     *            Set of audio properties to be collected during pre-analysis
-     * @param config
-     *            Configuration properties
+     * @param ctx
+     *            Extraction context
      */
-    private void signalBeforePreAnalysis(Set<Key<?>> desired, Properties config) {
+    private void signalBeforePreAnalysis(ExtractionContext ctx) {
         logger.trace("Notifying {} listener(s) about pre-analysis",
                 listeners.size());
         for (ProcessingListener listener : listeners) {
-            listener.beforePreAnalysis(desired, config);
+            listener.beforePreAnalysis(ctx);
         }
         logger.trace("All the listeners have been notified");
     }

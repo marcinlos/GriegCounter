@@ -1,16 +1,14 @@
 package pl.edu.agh.ki.grieg.processing.model;
 
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.meta.AudioFeatures;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
@@ -67,11 +65,10 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     }
 
     @Override
-    public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
+    public void beforePreAnalysis(ExtractionContext ctx) {
         
         logger.debug("Before pre-analysis, requesting SAMPLES and FORMAT");
-        desired.add(AudioFeatures.SAMPLES);
-        desired.add(AudioFeatures.FORMAT);
+        ctx.request(AudioFeatures.SAMPLES, AudioFeatures.FORMAT);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.core;
+package pl.edu.agh.ki.grieg.util;
 
 /**
  * Generic listener for receiving notifications about progress of arbitrary

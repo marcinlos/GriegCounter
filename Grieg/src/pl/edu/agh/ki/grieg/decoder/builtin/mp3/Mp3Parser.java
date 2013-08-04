@@ -1,17 +1,14 @@
 package pl.edu.agh.ki.grieg.decoder.builtin.mp3;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Set;
 
 import javazoom.jl.decoder.Bitstream;
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.util.Key;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 
 public class Mp3Parser extends AbstractAudioFormatParser {
 
@@ -30,9 +27,11 @@ public class Mp3Parser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public void getDetails(File file, Set<Key<?>> desired, Properties info)
-            throws IOException, DecodeException {
-        new MetaExtractor(file, desired, info).extract();
+    public void extractFeatures(ExtractionContext context) throws IOException,
+            DecodeException {
+        MetaExtractor extractor = new MetaExtractor(context);
+        extractor.extract();
+
     }
 
 }

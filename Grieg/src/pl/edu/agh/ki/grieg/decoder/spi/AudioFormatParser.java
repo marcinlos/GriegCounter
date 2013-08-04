@@ -1,14 +1,13 @@
 package pl.edu.agh.ki.grieg.decoder.spi;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.util.Key;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
+import pl.edu.agh.ki.grieg.meta.FeaturesListener;
+import pl.edu.agh.ki.grieg.util.ProgressListener;
 
 /**
  * Provider interface of audio file format(s) parser.
@@ -50,25 +49,30 @@ public interface AudioFormatParser {
     boolean readable(InputStream stream) throws IOException;
 
     /**
-     * Retrieves details about the specified audio file. Desired details are
-     * specified as the argument, so that the method can avoid expensive
-     * computation (e.g. calculating total number of samples in the file).
-     * Implementation is not obliged to provide all the desired details, nor
-     * constrained to provide only desired ones.
+     * Retrieves details about the file specified by the supplied
+     * {@link ExtractionContext} structure. Features to extract, precomputed
+     * features and specific configuration settings are taken from the passed
+     * context. Implementation if not obliged to provide all the requested
+     * features, nor is it constrained to provide only these.
      * 
-     * @param file
-     *            File to investigate
-     * @param desired
-     *            Set of metadata entries that are desired by the caller
-     * @param config
-     *            Additional configuration
-     * @return Details about the audio file
+     * <p>
+     * Two kinds of listeners are associated with the feature extraction
+     * process:
+     * <ul>
+     * <li> {@link ProgressListener} for receiving notifications about the
+     * "lifecycle" of the extraction
+     * <li> {@link FeaturesListener} for receiving notifications about extracted
+     * features during the extraction
+     * </ul>
+     * 
+     * @param context
+     *            Structure describing the extraction process
      * @throws IOException
      *             If an IO error occurs
      * @throws DecodeException
      *             If the file could not be properly decoded
      */
-    void getDetails(File file, Set<Key<?>> desired, Properties info)
-            throws IOException, DecodeException;
+    void extractFeatures(ExtractionContext context) throws IOException,
+            DecodeException;
 
 }

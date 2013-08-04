@@ -6,13 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.meta.AudioFeatures;
-import pl.edu.agh.ki.grieg.util.Key;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 
 import com.google.common.io.Closeables;
 
@@ -55,12 +53,12 @@ public class WavFileParser extends AbstractAudioFormatParser {
     }
 
     @Override
-    public void getDetails(File file, Set<Key<?>> desired, Properties info)
-            throws IOException, DecodeException {
-        AudioDetails details = getDetails(file);
-        info.put(AudioFeatures.SAMPLES, details.getSampleCount());
-        info.put(AudioFeatures.DURATION, details.getLength());
-        info.put(AudioFeatures.FORMAT, details.getFormat());
+    public void extractFeatures(ExtractionContext context) throws IOException,
+            DecodeException {
+        AudioDetails details = getDetails(context.getFile());
+        context.setFeature(AudioFeatures.SAMPLES, details.getSampleCount());
+        context.setFeature(AudioFeatures.DURATION, details.getLength());
+        context.setFeature(AudioFeatures.FORMAT, details.getFormat());
     }
 
 }

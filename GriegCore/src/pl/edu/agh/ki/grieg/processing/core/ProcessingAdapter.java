@@ -1,10 +1,8 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import java.util.Set;
-
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 
 /**
@@ -27,7 +25,7 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
+    public void beforePreAnalysis(ExtractionContext ctx) {
         // empty
     }
 

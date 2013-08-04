@@ -30,16 +30,16 @@ public class Example {
         AudioFile audioFile = fileLoader.loadFile(file);
 
         {
-            final long count = audioFile.determine(AudioFeatures.SAMPLES);
-            System.out.println("Frames = " + count);
-            player.addListener(new PlaybackAdapter() {
-                @Override
-                public void moved(Timestamp time) {
-                    float percent = time.sample / (float) count;
-                    System.out.printf("%.1f%% - %s\n", percent * 100, time);
-                }
-            });
-            player.play(audioFile);
+//            final long count = audioFile.determine(AudioFeatures.SAMPLES);
+//            System.out.println("Frames = " + count);
+//            player.addListener(new PlaybackAdapter() {
+//                @Override
+//                public void moved(Timestamp time) {
+//                    float percent = time.sample / (float) count;
+//                    System.out.printf("%.1f%% - %s\n", percent * 100, time);
+//                }
+//            });
+//            player.play(audioFile);
         }
         /*{
             Stopwatch stopwatch = new Stopwatch().start();

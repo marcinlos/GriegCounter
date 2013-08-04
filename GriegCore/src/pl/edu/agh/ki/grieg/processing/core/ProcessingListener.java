@@ -1,10 +1,8 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import java.util.Set;
-
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Properties;
 
 /**
@@ -34,12 +32,10 @@ public interface ProcessingListener {
      * components provide additional hints and configuration parameters for the
      * process.
      * 
-     * @param desired
-     *            Set of metadata that should be gathered during the processing
-     * @param config
-     *            Arbitrary (key, value) pairs used during the pre-analysis
+     * @param ctx
+     *            Extraction context, allowing to specify desired features
      */
-    void beforePreAnalysis(Set<Key<?>> desired, Properties config);
+    void beforePreAnalysis(ExtractionContext ctx);
 
     /**
      * Invoked when metadata for the audio file has been gathered during

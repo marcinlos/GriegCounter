@@ -5,14 +5,11 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
-import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
-
 public class Main {
     
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     
-    private final FileLoader loader = new FileLoader();
+//    private final FileLoader loader = new FileLoader();
     
 //    private final ProcessorFactory analyzer = new ProcessorFactory(loader);
     

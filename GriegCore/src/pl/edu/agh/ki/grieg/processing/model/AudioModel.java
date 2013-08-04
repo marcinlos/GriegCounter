@@ -1,17 +1,16 @@
 package pl.edu.agh.ki.grieg.processing.model;
 
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.model.Chart;
 import pl.edu.agh.ki.grieg.model.ChartModel;
 import pl.edu.agh.ki.grieg.model.Serie;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.Point;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
@@ -65,8 +64,8 @@ public class AudioModel extends WaveObserver {
     }
 
     @Override
-    public void beforePreAnalysis(Set<Key<?>> desired, Properties config) {
-        super.beforePreAnalysis(desired, config);
+    public void beforePreAnalysis(ExtractionContext ctx) {
+        super.beforePreAnalysis(ctx);
         logger.trace("Before reading metainfo");
     }
 

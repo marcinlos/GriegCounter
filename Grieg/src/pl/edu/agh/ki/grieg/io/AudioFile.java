@@ -3,14 +3,10 @@ package pl.edu.agh.ki.grieg.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.util.Key;
-import pl.edu.agh.ki.grieg.util.Keys;
-import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.PropertyMap;
+import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 
 import com.google.common.base.Objects;
 
@@ -34,16 +30,12 @@ public class AudioFile {
     /** Parser suitable for dealing with the format of the file */
     private final AudioFormatParser parser;
 
-    /** Metadata retrieved so far */
-    private final Properties infoCache;
-
     /**
      * Creates new {@code AudioFile} using given path and parser.
      */
     public AudioFile(File file, AudioFormatParser parser) {
         this.file = file;
         this.parser = parser;
-        this.infoCache = new PropertyMap();
     }
 
     /**
@@ -75,7 +67,7 @@ public class AudioFile {
 
     /**
      * Creates a new audio source from contained file using specified buffer
-     * size
+     * size.
      * 
      * @param bufferSize
      *            Size of the source buffer
@@ -91,7 +83,7 @@ public class AudioFile {
     }
 
     /**
-     * Creates a new audio source from contained file using default buffer size
+     * Creates a new audio source from contained file using default buffer size.
      * 
      * @return Audio source - {@link SampleEnumerator}
      * @throws IOException
@@ -104,61 +96,26 @@ public class AudioFile {
     }
 
     /**
-     * @return Cached metainfo
+     * @return {@link ExtractionContext} with file set to this one
      */
-    public Properties getInfo() {
-        return infoCache;
+    public ExtractionContext prepareExtractionContext() {
+        return new ExtractionContext(file);
     }
 
     /**
-     * Retrieves data if it has been in the cache already. That is, this method
-     * does not try to extract required information from the audio file.
+     * Forwards the {@code extractFeatures} call to the audio parser suitable
+     * for this file.
      * 
-     * @param key
-     *            Information to load
-     * @return Requested information of {@code null} if it is not available
-     */
-    public <T> T get(Key<T> key) {
-        return infoCache.get(key);
-    }
-
-    /**
-     * Attempts to determine, exmining the file if necessary, and returns,
-     * specified metainfo about the audio file represented by this object.
-     * Updates metainfo cache.
-     * 
-     * @param key
-     *            Information to be provided
-     * @return Value associated with the {@code key}
+     * @param context
+     *            Configuration of the extraction process
      * @throws DecodeException
-     *             If a decoding fails
+     *             If the data contained in the file cannot be properly decoded
      * @throws IOException
      *             If an IO error occurs
      */
-    public <T> T determine(Key<T> key) throws DecodeException, IOException {
-        parser.getDetails(file, Keys.set(key), infoCache);
-        return infoCache.get(key);
-    }
-
-    /**
-     * Updates metainfo cache with all the information described by the
-     * {@code desired} (if it manages to retrieve it) and returns this cache.
-     * Examines the file if necessary.
-     * 
-     * @param desired
-     *            Set of needed pieces of information
-     * @param config
-     *            Additional configuration
-     * @return Metainfo cache
-     * @throws DecodeException
-     *             If a decoding fails
-     * @throws IOException
-     *             If an IO error occurs
-     */
-    public Properties computeAll(Set<Key<?>> desired) throws DecodeException,
-            IOException {
-        parser.getDetails(file, desired, infoCache);
-        return infoCache;
+    public void extractFeatures(ExtractionContext context)
+            throws DecodeException, IOException {
+        parser.extractFeatures(context);
     }
 
     @Override
