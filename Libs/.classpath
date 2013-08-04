@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/guava-14.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/guava-14.0.1.jar" sourcepath="/home/los/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.5.jar" sourcepath="lib/slf4j-api-1.7.5-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
