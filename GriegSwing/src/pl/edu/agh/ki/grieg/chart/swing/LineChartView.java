@@ -50,9 +50,10 @@ public class LineChartView extends SwingCanvas {
     private void drawLines(Graphics2D graphics) {
         for (int i = 1; i < data.size(); ++i) {
             Point a = data.get(i - 1), b = data.get(i);
-            PointI p = toScreen(a), q = toScreen(b);
+            Point aa = new Point(a.x, a.y + 1);
+            Point bb = new Point(b.x, b.y + 1);
+            PointI p = toScreen(aa), q = toScreen(bb);
             graphics.drawLine(p.x, p.y, q.x, q.y);
-            a = b;
         }
     }
 }

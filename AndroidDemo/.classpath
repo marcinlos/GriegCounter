@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="lib" path="/Libs/lib/guava-14.0.1.jar" sourcepath="/home/los/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Grieg/lib/jl1.0.1.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Grieg"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegCommons"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegCore"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegGfx"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegPlayback"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

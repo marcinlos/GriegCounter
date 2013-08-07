@@ -86,7 +86,7 @@ public class AudioModel extends WaveObserver {
         super.step(item);
         float x = progress();
         for (int i = 0; i < item.length; ++i) {
-            Point p = new Point(x, item[i] + 1);
+            Point p = new Point(x, item[i]);
             Serie<List<Point>> serie = series.get(i);
             List<Point> data = serie.getData();
             synchronized (data) {
