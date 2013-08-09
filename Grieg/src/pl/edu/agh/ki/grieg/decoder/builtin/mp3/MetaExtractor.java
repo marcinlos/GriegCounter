@@ -11,8 +11,8 @@ import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.meta.AudioFeatures;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
+import pl.edu.agh.ki.grieg.features.AudioFeatures;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.CountingInputStream;

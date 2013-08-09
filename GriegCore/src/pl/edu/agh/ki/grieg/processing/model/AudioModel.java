@@ -5,8 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.model.Chart;
 import pl.edu.agh.ki.grieg.model.ChartModel;
 import pl.edu.agh.ki.grieg.model.Serie;

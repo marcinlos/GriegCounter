@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
+import pl.edu.agh.ki.grieg.features.FeaturesListener;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
-import pl.edu.agh.ki.grieg.meta.FeaturesListener;
 import pl.edu.agh.ki.grieg.util.ProgressListener;
 
 /**

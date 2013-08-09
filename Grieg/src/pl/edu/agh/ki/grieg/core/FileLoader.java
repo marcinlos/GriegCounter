@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,21 @@ public class FileLoader {
         for (AudioFormatParser p : ServiceLoader.load(AudioFormatParser.class)) {
             root.register(p);
         }
+        logDetails();
         logger.info("File loader system initialization completed");
+    }
+
+    private static void logDetails() {
+        Set<String> extensions = root.getKnownExtensions();
+        int parserCount = root.getAllDecoders().size();
+        int extCount = extensions.size();
+        logger.debug("Found {} parsers for {} formats", parserCount, extCount);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Parsers:");
+            for (String ext : extensions) {
+                logger.trace("{} -> {}", ext, root.getByExtension(ext));
+            }
+        }
     }
 
     /**
@@ -99,6 +114,21 @@ public class FileLoader {
         } finally {
             Closeables.close(stream, true);
         }
+    }
+
+    /**
+     * @return Decoder manager used by this file loader
+     */
+    public DecoderManager getDecoderManager() {
+        return decoders;
+    }
+
+    /**
+     * @return Collection of common extensions of files usually parsable by this
+     *         {@link FileLoader}. Does not need to be accurate.
+     */
+    public Set<String> getKnownExtensions() {
+        return decoders.getKnownExtensions();
     }
 
 }

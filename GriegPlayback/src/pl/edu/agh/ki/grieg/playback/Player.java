@@ -30,13 +30,13 @@ public class Player {
     public static final int DEFAULT_BUFFER_SIZE = 2048;
 
     /** List of listeners */
-    private final List<PlaybackListener> listeners = Lists.newArrayList();
+    private final List<PlaybackListener> listeners;
 
     /** Track currently being played */
     private TrackPlayback currentPlayback;
 
     /** Creates outputs */
-    private final OutputFactory outputFactory = Outputs.getFactory();
+    private final OutputFactory outputFactory;
 
     /** Size of the audio data buffer (in samples) */
     private final int bufferSize;
@@ -48,19 +48,27 @@ public class Player {
     private final int notifyRate;
 
     /** Worker pool used to asynchronously play audio */
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService executor;
 
     /**
      * Listens to notifications form {@link ProgressNotifier} and forwards to
      * the {@link PlaybackListener}s
      */
-    private final Iteratee<Timestamp> progressForwarder = new AbstractIteratee<Timestamp>() {
-        @Override
-        public State step(Timestamp time) {
-            signalProgress(time);
-            return State.Cont;
-        }
-    };
+    private final Iteratee<Timestamp> progressForwarder;
+    
+    {
+        listeners = Lists.newArrayList();
+        outputFactory = Outputs.getFactory();
+        executor = Executors.newSingleThreadExecutor();
+        
+        progressForwarder = new AbstractIteratee<Timestamp>() {
+            @Override
+            public State step(Timestamp time) {
+                signalProgress(time);
+                return State.Cont;
+            }
+        };
+    }
 
     /**
      * Creates new Player with specified configuration parameters.

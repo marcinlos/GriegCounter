@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.meta;
+package pl.edu.agh.ki.grieg.features;
 
 import java.util.Collections;
 import java.util.Set;

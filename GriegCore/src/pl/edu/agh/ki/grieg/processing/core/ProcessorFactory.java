@@ -68,6 +68,20 @@ public class ProcessorFactory {
         processor.addAll(listeners);
         return processor;
     }
+    
+    /**
+     * @return File loader injected into the produced processors
+     */
+    public FileLoader getFileLoader() {
+        return loader;
+    }
+    
+    /**
+     * @return Pipeline assembler injected into the produced processors
+     */
+    public PipelineAssembler getAssembler() {
+        return assembler;
+    }
 
     /**
      * @return Configuration properties

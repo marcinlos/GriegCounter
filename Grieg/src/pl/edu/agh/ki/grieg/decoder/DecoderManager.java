@@ -4,11 +4,15 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
@@ -20,22 +24,37 @@ import com.google.common.io.Files;
  */
 public class DecoderManager {
 
+    private static final Logger logger = LoggerFactory
+            .getLogger(DecoderManager.class);
+
     /**
      * Parent manager, should be consulted if this manager cannot find suitable
      * parser
      */
-    private DecoderManager parent;
+    private final DecoderManager parent;
 
     /** mappipng: extension -> providers */
-    private Multimap<String, AudioFormatParser> decoders;
+    private final Multimap<String, AudioFormatParser> decoders;
 
     /** set of all the decoders */
-    private Set<AudioFormatParser> decoderSet;
+    private final Set<AudioFormatParser> decoderSet;
 
+    /**
+     * Creates a new, empty decoder manager with specified decoder manager as
+     * the parent.
+     * 
+     * @param parent
+     *            Parent of the newly created decoder manager
+     */
     public DecoderManager(DecoderManager parent) {
         this.parent = parent;
         decoders = ArrayListMultimap.create();
         decoderSet = Sets.newHashSet();
+        if (parent != null) {
+            logger.debug("Created decoder manager with parent={}", parent);
+        } else {
+            logger.debug("Created top-level decoder manager");
+        }
     }
 
     /**
@@ -69,23 +88,41 @@ public class DecoderManager {
      *            Provider to be registered
      */
     public void register(AudioFormatParser provider) {
-        for (String ext : provider.extensions()) {
+        Iterable<String> exts = provider.extensions();
+        for (String ext : exts) {
             register(ext, provider);
         }
+        logger.debug("Registered format provider {} for {}", provider, exts);
     }
 
     /**
      * @return Unmodifiable set of all the registered decoders
      */
     public Set<AudioFormatParser> getAllDecoders() {
+        Set<AudioFormatParser> parsers = Sets.newHashSet(decoderSet);
         if (parent != null) {
-            Set<AudioFormatParser> set = Sets.newHashSet();
-            set.addAll(decoderSet);
-            set.addAll(parent.getAllDecoders());
-            return set;
-        } else {
-            return Collections.unmodifiableSet(decoderSet);
+            parsers.addAll(parent.getAllDecoders());
         }
+        return Collections.unmodifiableSet(parsers);
+    }
+
+    /**
+     * @return Set of strings containing all the extensions with matching parser
+     *         entries
+     */
+    public Set<String> getKnownExtensions() {
+        Set<String> extensions = Sets.newHashSet(decoders.keySet());
+        if (parent != null) {
+            extensions.addAll(parent.getKnownExtensions());
+        }
+        return extensions;
+    }
+    
+    /**
+     * @return Unmodifiable multimap of extensions and matching decoders
+     */
+    public Multimap<String, AudioFormatParser> getParsersMap() {
+        return Multimaps.unmodifiableMultimap(decoders);
     }
 
     /**
@@ -98,14 +135,11 @@ public class DecoderManager {
      * @see #getByExtension(File)
      */
     public Iterable<AudioFormatParser> getByExtension(String ext) {
+        Set<AudioFormatParser> parsers = Sets.newHashSet(decoders.get(ext));
         if (parent != null) {
-            Set<AudioFormatParser> parsers = Sets.newHashSet();
             Iterables.addAll(parsers, parent.getByExtension(ext));
-            parsers.addAll(decoders.get(ext));
-            return parsers;
-        } else {
-            return Collections.unmodifiableCollection(decoders.get(ext));
         }
+        return Collections.unmodifiableCollection(parsers);
     }
 
     /**

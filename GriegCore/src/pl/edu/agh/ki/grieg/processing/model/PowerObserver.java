@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.model;
 
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;

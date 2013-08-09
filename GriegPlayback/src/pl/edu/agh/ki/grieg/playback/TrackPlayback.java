@@ -29,10 +29,8 @@ class TrackPlayback implements Controllable, Enumerator<float[][]> {
      * Creates a playback object using supplied output and sourc.
      */
     public TrackPlayback(AudioOutput output, SampleEnumerator source) {
-        checkNotNull(output, "Null audio output");
-        checkNotNull(source, "Null audio source");
-        this.output = output;
-        this.source = source;
+        this.output = checkNotNull(output, "Null audio output");
+        this.source = checkNotNull(source, "Null audio source");
     }
 
     /**

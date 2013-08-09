@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
-import pl.edu.agh.ki.grieg.meta.AudioFeatures;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
+import pl.edu.agh.ki.grieg.features.AudioFeatures;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 
 import com.google.common.io.Closeables;
 

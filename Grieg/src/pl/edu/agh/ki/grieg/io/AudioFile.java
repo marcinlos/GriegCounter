@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 
 import com.google.common.base.Objects;
 

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.meta;
+package pl.edu.agh.ki.grieg.features;
 
 import static pl.edu.agh.ki.grieg.util.Keys.make;
 import pl.edu.agh.ki.grieg.data.SoundFormat;

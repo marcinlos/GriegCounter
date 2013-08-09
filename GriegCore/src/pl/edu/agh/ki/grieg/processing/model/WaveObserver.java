@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
+import pl.edu.agh.ki.grieg.features.AudioFeatures;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.meta.AudioFeatures;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;

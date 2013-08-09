@@ -8,8 +8,8 @@ import java.util.Arrays;
 import javazoom.jl.decoder.Bitstream;
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.meta.ExtractionContext;
 
 public class Mp3Parser extends AbstractAudioFormatParser {
 
