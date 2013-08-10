@@ -39,14 +39,15 @@ public class SimpleModelTest {
         assertThat(model.getChildren().keySet(), empty());
     }
     
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = NoSuchModelException.class)
     public void cannotAddListenersByPath() {
         model.addListener("some.path", listener1, String.class);
     }
     
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void cannotRemoveListenerByPath() {
         model.removeListener("some.path", listener1);
+        // nothing happens, no exception
     }
 
 }

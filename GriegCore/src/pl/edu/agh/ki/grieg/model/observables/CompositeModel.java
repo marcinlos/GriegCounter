@@ -1,42 +1,34 @@
 package pl.edu.agh.ki.grieg.model.observables;
 
+import java.util.Collections;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
+
 public class CompositeModel<T> extends AbstractModel<T> {
+    
+    private final Map<String, Model<?>> models = Maps.newHashMap();
 
     public CompositeModel(Class<? extends T> dataType) {
         super(dataType);
     }
-
-    @Override
-    public <S> void addListener(String path, Listener<? super S> listener,
-            Class<S> clazz) {
-        // TODO Auto-generated method stub
-        
+    
+    public static <T> CompositeModel<T> of(Class<? extends T> dataType) {
+        return new CompositeModel<T>(dataType);
     }
-
-    @Override
-    public void removeListener(String path, Listener<?> listener) {
-        // TODO Auto-generated method stub
-        
+    
+    public void addModel(String name, Model<?> model) {
+        models.put(name, model);
     }
-
-    @Override
-    public boolean hasChild(String path) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public Model<?> getChild(String path) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    public void removeModel(String name) {
+        models.remove(name);
     }
 
     @Override
     public Map<String, Model<?>> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.unmodifiableMap(models);
     }
 
 

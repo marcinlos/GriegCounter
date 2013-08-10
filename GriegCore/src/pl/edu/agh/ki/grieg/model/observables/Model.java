@@ -21,12 +21,13 @@ import java.util.Map;
  * the following regexp:
  * 
  * <pre>
- * \w+(\.\w)*
+ * (|\w+(\.\w+)*)
  * </pre>
  * 
  * Each dot-separated component specifies one named model. E.g.
  * {@code "root.sound.wave.left"} specifies model {@code left} in the model
  * {@code wave} in the model {@code sound} in the model {@code root}:
+ * 
  * <pre>
  * root
  *  |- sound
@@ -59,15 +60,14 @@ public interface Model<T> {
      * @param listener
      *            Listener to be unregistered
      */
-    void removeListener(Listener<? super T> listener);
+    void removeListener(Listener<?> listener);
 
     /**
      * Searches the model specified by the {@code path} in its submodels tree,
      * and if it finds one, attempts to register the listener with it. If the
      * listener has not been previously registered with the specified submodule,
-     * this method does nothing but validates the path. If the path does not
-     * conform to the format described in the interface javadoc,
-     * {@link InvalidPathFormatException} is thrown.
+     * this method does nothing but validates the path. If the specified path is
+     * empty, adds the listener to this model.
      * 
      * @param path
      *            Path of the submodel
@@ -81,17 +81,57 @@ public interface Model<T> {
      *             If the specified class is not assignable from the class of
      *             the model specified by the path
      */
+    <S> void addListener(Path path, Listener<? super S> listener,
+            Class<S> clazz);
+
+    /**
+     * Searches the model specified by the {@code path} in its submodels tree,
+     * and if it finds one, attempts to register the listener with it. If the
+     * listener has not been previously registered with the specified submodule,
+     * this method does nothing but validates the path. If the path does not
+     * conform to the format described in the {@link Path} doc,
+     * {@link InvalidPathFormatException} is thrown. If the specified path is
+     * empty, adds the listener to this model.
+     * 
+     * @param path
+     *            Path of the submodel
+     * @param listener
+     *            Listener to be registered
+     * @param clazz
+     *            Type of the requested submodel's data
+     * @throws NoSuchModelException
+     *             If there is no model with specified path
+     * @throws InvalidModelTypeException
+     *             If the specified class is not assignable from the class of
+     *             the model specified by the path
+     * @throws InvalidPathFormatException
+     *             If the path does not conform to the path format
+     */
     <S> void addListener(String path, Listener<? super S> listener,
             Class<S> clazz);
 
     /**
-     * Removes the listener from the model specified by the path. If there is no
-     * such model, or the listener has not been registered with it, this method
-     * does nothing except validating the path. If the path does not conform to
-     * the format described in {@link #addListener(Listener)},
-     * {@link InvalidPathFormatException} is thrown. If none of the above
-     * applies, the listener is unregistered from the model specified by the
-     * path.
+     * Removes the listener from the model specified by the path. If the path is
+     * empty, this model is used. If there is no such model, or the listener has
+     * not been registered with it, this method does nothing except validating
+     * the path. If none of the above applies, the listener is unregistered from
+     * the model specified by the path.
+     * 
+     * @param path
+     *            Path specifying the submodel
+     * @param listener
+     *            Listener to be unregistered
+     */
+    void removeListener(Path path, Listener<?> listener);
+
+    /**
+     * Removes the listener from the model specified by the path. If the path is
+     * empty, this model is used. If there is no such model, or the listener has
+     * not been registered with it, this method does nothing except validating
+     * the path. If the path does not conform to the format described in
+     * {@link #addListener(Listener)}, {@link InvalidPathFormatException} is
+     * thrown. If none of the above applies, the listener is unregistered from
+     * the model specified by the path.
      * 
      * @param path
      *            Path specifying the submodel
@@ -114,7 +154,18 @@ public interface Model<T> {
     Class<? extends T> getDataType();
 
     /**
-     * Checks whether the model has submodel of any type with matching path.
+     * Checks whether the model has submodel of any type with matching path. If
+     * the path is empty, returns {@code true}.
+     * 
+     * @param path
+     *            Path to the submodel
+     * @return {@code true} if the model exists, {@code false} otherwise
+     */
+    boolean hasChild(Path path);
+
+    /**
+     * Checks whether the model has submodel of any type with matching path. If
+     * the path is empty, returns {@code true}.
      * 
      * @param path
      *            Path to the submodel
@@ -125,7 +176,8 @@ public interface Model<T> {
     boolean hasChild(String path);
 
     /**
-     * Retrieves the child specified by the path. If this child does not exist
+     * Retrieves the child specified by the path. If the path is empty, returns
+     * this module, provided the types match. If this child does not exist
      * (either the child itself, or any component on the path), {@code null} is
      * returned. If the child exists, and if the specified {@code type} is
      * assignable from this child's data type, the child is returned. Otherwise,
@@ -135,19 +187,52 @@ public interface Model<T> {
      *            Path to the submodel
      * @param type
      *            Type of the data expected for the requested submodel
-     * @return
+     * @return Child model specified by the path, or {@code null} if there is
+     *         none
+     * @throws InvalidModelTypeException
+     *             If the actual type of the child's data is incompatible with
+     *             the expected one
+     */
+    <S> Model<S> getChild(Path path, Class<? extends S> type);
+
+    /**
+     * Retrieves the child specified by the path. If the path is empty, returns
+     * this module, provided the types match. If this child does not exist
+     * (either the child itself, or any component on the path), {@code null} is
+     * returned. If the child exists, and if the specified {@code type} is
+     * assignable from this child's data type, the child is returned. Otherwise,
+     * {@link InvalidModelTypeException} is thrown.
+     * 
+     * @param path
+     *            Path to the submodel
+     * @param type
+     *            Type of the data expected for the requested submodel
+     * @return Child model specified by the path, of {@code null} if there is
+     *         none
      * @throws InvalidModelTypeException
      *             If the actual type of the child's data is incompatible with
      *             the expected one
      * @throws InvalidPathFormatException
      *             If the path does not conform to the path format
      */
-    <S> Model<? extends S> getChild(String path, Class<S> type);
+    <S> Model<S> getChild(String path, Class<? extends S> type);
 
     /**
-     * Retrieves the child specified by the path. If this child does not exist
-     * (either the child itself, or any component on the path), {@code null} is
-     * returned.
+     * Retrieves the child specified by the path. If the path is empty, returns
+     * this module. If this child does not exist (either the child itself, or
+     * any component on the path), {@code null} is returned.
+     * 
+     * @param path
+     *            Path to the submodel
+     * @return Child model specified by the path, or {@code null} if there is
+     *         none
+     */
+    Model<?> getChild(Path path);
+
+    /**
+     * Retrieves the child specified by the path. If the path is empty, returns
+     * this module. If this child does not exist (either the child itself, or
+     * any component on the path), {@code null} is returned.
      * 
      * @param path
      *            Path to the submodel

@@ -96,28 +96,7 @@ public class AbstractModelTest {
         }
 
         @Override
-        public void removeListener(String path, Listener<?> listener) {
-            throw new AbstractMethodError();
-        }
-
-        @Override
-        public boolean hasChild(String path) {
-            throw new AbstractMethodError();
-        }
-
-        @Override
         public Map<String, Model<?>> getChildren() {
-            throw new AbstractMethodError();
-        }
-
-        @Override
-        public Model<?> getChild(String path) {
-            throw new AbstractMethodError();
-        }
-
-        @Override
-        public <S> void addListener(String path, Listener<? super S> listener,
-                Class<S> clazz) {
             throw new AbstractMethodError();
         }
     }
