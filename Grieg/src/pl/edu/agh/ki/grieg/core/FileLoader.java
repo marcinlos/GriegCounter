@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.Iterator;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -40,18 +42,84 @@ public class FileLoader {
         logger.info("Initializing file loader system");
         root = new DecoderManager();
 
-        // register builtin decoders here
-        root.register(new WavFileParser());
-        root.register(new Mp3Parser());
+        logger.info("Loading builtin providers...");
+        loadBuiltinProviders();
 
-        // gather all the implementations
-        for (AudioFormatParser p : ServiceLoader.load(AudioFormatParser.class)) {
-            root.register(p);
-        }
+        logger.info("Loading custom providers...");
+        loadCustomProviders();
+
         logDetails();
         logger.info("File loader system initialization completed");
     }
+    
+    /**
+     * Loads builtin parsers, should probably disappear in the future.
+     */
+    private static void loadBuiltinProviders() {
+        root.register(new WavFileParser());
+        root.register(new Mp3Parser());
+    }
 
+    /**
+     * Finds providers using thread-context classloader.
+     */
+    private static void loadCustomProviders() {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        logger.debug("Using context classloader: {}", cl);
+
+        Iterator<AudioFormatParser> iter = providersIter(cl);
+        int found = 0, registered = 0;
+        while (true) {
+            try {
+                if (iter.hasNext()) {
+                    AudioFormatParser parser = iter.next();
+                    root.register(parser);
+                    ++registered;
+                } else {
+                    break;
+                }
+            } catch (ServiceConfigurationError e) {
+                logger.warn("Error in audio parser configuration", e);
+            }
+        }
+        logCustomSummary(found, registered);
+    }
+
+    /**
+     * Creates a lazy iterator over the available providers, using jdk spi
+     * mechanism ({@link ServiceLoader}).
+     * 
+     * @param cl
+     *            Classloader to be used
+     * @return Iterator
+     */
+    private static Iterator<AudioFormatParser> providersIter(ClassLoader cl) {
+        return ServiceLoader
+                .load(AudioFormatParser.class, cl)
+                .iterator();
+    }
+
+    /**
+     * Logs a brief summary showing how many parsers were attempted to use, and
+     * which of them were further successfully instantiated.
+     * 
+     * @param found Number of successfulyy loaded implementation 
+     * @param registered
+     */
+    private static void logCustomSummary(int found, int registered) {
+        if (registered > 0) {
+            logger.info("Found {} custom audio parsers, registered {}", found,
+                    registered);
+        } else if (found > 0) {
+            logger.warn("Found {} custom audio parsers, none registered", found);
+        } else {
+            logger.warn("No custom audio parsers found");
+        }
+    }
+
+    /**
+     * Outputs summary of found & loaded audio parsers
+     */
     private static void logDetails() {
         Set<String> extensions = root.getKnownExtensions();
         int parserCount = root.getAllDecoders().size();
@@ -115,7 +183,7 @@ public class FileLoader {
             Closeables.close(stream, true);
         }
     }
-
+    
     /**
      * @return Decoder manager used by this file loader
      */
