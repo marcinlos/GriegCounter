@@ -11,16 +11,14 @@ public class PathTest {
     private static final String SECOND = "some.other.path";
 
     private Path first = new Path(FIRST);
-
     private Path second = new Path(SECOND);
-
     private Path empty = new Path("");
 
     @Test(expected = NullPointerException.class)
     public void throwsNpeWhenNullInConstructor() {
         new Path((String) null);
     }
-    
+
     @Test
     public void varargsConstructorWorks() {
         Path path = new Path("some", "random.component");
@@ -28,10 +26,19 @@ public class PathTest {
         assertEquals(path, other);
         assertEquals(path.toString(), "some.random.component");
     }
-    
+
     @Test(expected = InvalidPathFormatException.class)
     public void throwsInvalidPathFormatGivenInvalidPath() {
         new Path("this.is..not.a.valid.path");
+    }
+    
+    @Test
+    public void componentVerificationWorks() {
+        assertFalse(Path.isValidComponent(null));
+        assertFalse(Path.isValidComponent(""));
+        assertFalse(Path.isValidComponent("FE$#"));
+        assertTrue(Path.isValidComponent("b"));
+        assertTrue(Path.isValidComponent("sdf343_3"));
     }
 
     @Test

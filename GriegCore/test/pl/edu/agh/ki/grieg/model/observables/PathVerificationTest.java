@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.model.observables;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class PathVerificationTest {
-    
+
     private static final Object[][] params = {
         { "some.random.path", true },
         { "other", true },
@@ -23,27 +23,30 @@ public class PathVerificationTest {
         { ".wrong", false },
         { "..", false },
         { "incorrect..path", false }
-        
     };
-    
+
     private String path;
     private boolean valid;
-    
+
     public PathVerificationTest(String path, boolean valid) {
         this.path = path;
         this.valid = valid;
     }
-    
+
     @Test
     public void matchesExpectations() {
-        boolean isOk = Path.verify(path);
+        boolean isOk = Path.isValid(path);
         assertEquals("For '" + path + "'", valid, isOk);
     }
     
-    
+    @Test
+    public void nullIsNotValid() {
+        assertFalse(Path.isValid(null));
+    }
+
     @Parameters
     public static Collection<Object[]> parmas() {
         return Arrays.asList(params);
     }
-    
+
 }

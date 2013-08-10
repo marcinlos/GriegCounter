@@ -14,14 +14,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CompositeModelTest {
 
-    @Mock
-    private Listener<String> leftListener;
-    @Mock
-    private Listener<Integer> leftTopListener;
-    @Mock
-    private Listener<Integer> leftBottomListener;
-    @Mock
-    private Listener<Integer> rightTopListener;
+    @Mock private Listener<String> leftListener;
+    @Mock private Listener<Integer> leftTopListener;
+    @Mock private Listener<Integer> leftBottomListener;
+    @Mock private Listener<Integer> rightTopListener;
 
     private CompositeModel<Void> model;
 
@@ -58,6 +54,11 @@ public class CompositeModelTest {
         model.addListener("left.top", leftTopListener, Integer.class);
         model.addListener("left.bottom", leftBottomListener, Integer.class);
         model.addListener("right.top", rightTopListener, Integer.class);
+    }
+    
+    @Test(expected = InvalidModelNameException.class)
+    public void addListenerGivenInvalidNameThrows() {
+        left.addModel("adf_Bd  f&*", leftTop);
     }
 
     @Test
@@ -171,7 +172,7 @@ public class CompositeModelTest {
     public void removedListenersDontReceiveNotifications() {
         wireListeners();
         model.removeListener("left", leftListener);
-        model.removeListener("left.bottom", leftBottomListener);
+        leftBottom.removeListener("", leftBottomListener);
         
         left.update("left value");
         leftBottom.update(666);
@@ -183,6 +184,11 @@ public class CompositeModelTest {
         
         verifyNoMoreInteractions(leftTopListener, rightTopListener);
         verifyZeroInteractions(leftListener, leftBottomListener);
-        
+    }
+    
+    @Test(expected = NoSuchModelException.class)
+    public void removedSubmodelsAreRemoved() {
+        model.removeModel("left");
+        model.addListener("left", leftListener, String.class);
     }
 }

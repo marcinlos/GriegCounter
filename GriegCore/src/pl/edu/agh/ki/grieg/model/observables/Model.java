@@ -12,16 +12,19 @@ import java.util.Map;
  * direct child of two different models, cyclic structores are strongly
  * discouraged (though still not strictly prohibited at the moment). Children
  * are named, to facilitate navigation. Model names are unique in the containing
- * model's scope. Model name is not its intrinsic property, names are just keys
- * in the model's children map.
+ * model's scope. Names must conform to the format specified for path
+ * components.Model name is not its intrinsic property, names are just keys in
+ * the model's children map.
  * 
  * <p>
- * Children of a given model may be accessed by their paths. Path should consist
- * of nonempty alphanumeric identifiers separated by the dot, i.e. should match
- * the following regexp:
+ * Children of a given model may be accessed by their paths. This provides for
+ * concise and readable, declarative bindings:
  * 
  * <pre>
- * (|\w+(\.\w+)*)
+ * Model&lt;?&gt;  model = ...
+ * model.addListener("data.wave.left", listener, Integer.class)
+ * model.addListener("other.data", otherListener, String.class)
+ * ...
  * </pre>
  * 
  * Each dot-separated component specifies one named model. E.g.

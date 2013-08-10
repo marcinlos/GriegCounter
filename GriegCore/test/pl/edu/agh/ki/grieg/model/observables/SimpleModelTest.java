@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SimpleModelTest {
 
     @Mock private Listener<String> listener1;
-    
     @Mock private Listener<String> listener2;
     
     private SimpleModel<String> model;

@@ -14,11 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractModelTest {
 
-    @Mock
-    private Listener<String> listener1;
-
-    @Mock
-    private Listener<String> listener2;
+    @Mock private Listener<String> listener1;
+    @Mock private Listener<String> listener2;
 
     private AbstractModel<String> model;
 
