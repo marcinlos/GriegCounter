@@ -198,9 +198,12 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     @Override
     public void pause() {
         lock.lock();
-        ensureNotStopped();
-        state = PlaybackState.PAUSED;
-        lock.unlock();
+        try {
+            ensureNotStopped();
+            state = PlaybackState.PAUSED;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
