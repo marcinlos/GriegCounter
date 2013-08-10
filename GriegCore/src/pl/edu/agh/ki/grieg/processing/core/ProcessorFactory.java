@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.util.Properties;
 
 import com.google.common.collect.Lists;

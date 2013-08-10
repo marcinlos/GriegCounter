@@ -16,7 +16,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfig;

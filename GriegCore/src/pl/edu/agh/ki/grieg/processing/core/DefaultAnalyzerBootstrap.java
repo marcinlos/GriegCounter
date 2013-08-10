@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import pl.edu.agh.ki.grieg.core.FileLoader;
+import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;

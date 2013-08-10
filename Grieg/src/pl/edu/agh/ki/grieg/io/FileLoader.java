@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.core;
+package pl.edu.agh.ki.grieg.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +17,6 @@ import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
 import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
 import pl.edu.agh.ki.grieg.decoder.builtin.wav.WavFileParser;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.io.AudioFile;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
