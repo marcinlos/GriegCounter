@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import pl.edu.agh.ki.grieg.model.Serie;
-import pl.edu.agh.ki.grieg.model.SerieListener;
+import pl.edu.agh.ki.grieg.model.observables.Listener;
+import pl.edu.agh.ki.grieg.model.observables.Model;
 import pl.edu.agh.ki.grieg.util.Point;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,7 +14,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class LineChartView extends View implements SerieListener<List<Point>> {
+public class LineChartView extends View implements Listener<List<Point>> {
 
     private final Paint paint;
 
@@ -33,6 +33,11 @@ public class LineChartView extends View implements SerieListener<List<Point>> {
         checkNotNull(data);
         this.data = data;
         invalidate();
+    }
+    
+    public void setModel(Model<List<Point>> model) {
+        model.addListener(this);
+        setData(model.getData());
     }
 
     public void clearData() {
@@ -77,7 +82,7 @@ public class LineChartView extends View implements SerieListener<List<Point>> {
     }
 
     @Override
-    public void updated(Serie<List<Point>> serie) {
+    public void update(List<Point> serie) {
         postInvalidate();
     }
     

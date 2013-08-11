@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.model.observables;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -56,7 +58,7 @@ public class PathTest {
 
     @Test
     public void nonequalPathsAreNotEqual() {
-        assertNotEquals(first, second);
+        assertThat(first, not(equalTo(second)));
     }
 
     @Test

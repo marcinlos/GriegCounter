@@ -10,11 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioException;
-import pl.edu.agh.ki.grieg.model.ChartModel;
-import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
+import pl.edu.agh.ki.grieg.model.observables.Model;
+import pl.edu.agh.ki.grieg.model.observables.Models;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
+import pl.edu.agh.ki.grieg.processing.util.Reflection;
 import pl.edu.agh.ki.grieg.util.Point;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -33,6 +35,8 @@ public class GriegMain extends RoboActivity {
     @InjectView(R.id.rightChannel)
     private LineChartView rightChannel;
     
+    private CompositeModel<?> modelRoot;
+    
     
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     
@@ -47,20 +51,20 @@ public class GriegMain extends RoboActivity {
         
         factory = getGrieg().getFactory();
         
+        modelRoot = Models.container();
+        
         AudioModel model = new AudioModel();
         factory.addListener(model);
         
+        Model<?> m = model.getChartModel();
+        modelRoot.addModel("wave", m);
         
-        ChartModel<List<Point>> chart = model.getChartModel();
-        Serie<List<Point>> leftSerie = chart.getSerie("left");
-        Serie<List<Point>> rightSerie = chart.getSerie("right");
-        
-        rightChannel.setData(rightSerie.getData());
-        leftChannel.setData(leftSerie.getData());
-        
-        rightSerie.addListener(rightChannel);
-        leftSerie.addListener(leftChannel);
-        
+        Class<? extends List<Point>> clazz = Reflection.castClass(List.class);
+        Model<List<Point>> leftSerie = m.getChild("left", clazz);
+        Model<List<Point>> rightSerie = m.getChild("right", clazz);
+        leftChannel.setModel(leftSerie);
+        rightChannel.setModel(rightSerie);
+
         startProcessing();
     }
 
