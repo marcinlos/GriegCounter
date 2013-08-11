@@ -19,13 +19,13 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
         implements SampleEnumerator {
 
     /** Source of audio data */
-    private AudioStream stream;
+    private final AudioStream stream;
 
     /** Buffer for raw float PCM samples */
-    private float[][] buffer;
+    private final float[][] buffer;
 
     /** Size of the buffer */
-    private int size;
+    private final int size;
 
     /** States for FSM this class fundamentally is */
     private enum PlaybackState {
@@ -38,10 +38,10 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     /** Lock protecting playback state */
     // Caution: fairness is important, transitions between tracks can be delayed
     // few seconds without it
-    private Lock lock = new ReentrantLock(true);
+    private final Lock lock = new ReentrantLock(true);
 
     /** Signaled upon state changes */
-    private Condition stateChange = lock.newCondition();
+    private final Condition stateChange = lock.newCondition();
 
     /**
      * Creates new {@link StreamSampleEnumerator} using {@code stream} as the
@@ -55,7 +55,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     public StreamSampleEnumerator(AudioStream stream, int bufferSize) {
         this.stream = stream;
         this.size = bufferSize;
-        buffer = makeBuffer(size);
+        this.buffer = makeBuffer(size);
     }
 
     /**
@@ -196,11 +196,15 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      * {@inheritDoc}
      */
     @Override
-    public void pause() {
+    public boolean pause() {
         lock.lock();
         try {
-            ensureNotStopped();
-            state = PlaybackState.PAUSED;
+            if (!isStopped()) {
+                setStateWhileHoldingLock(PlaybackState.PAUSED);
+                return true;
+            } else {
+                return false;
+            }
         } finally {
             lock.unlock();
         }
@@ -218,8 +222,18 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
      * {@inheritDoc}
      */
     @Override
-    public void stop() {
-        changeAndSignal(PlaybackState.STOPPED);
+    public boolean stop() {
+        lock.lock();
+        try {
+            if (!isStopped()) {
+                setStateWhileHoldingLock(PlaybackState.STOPPED);
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -233,6 +247,18 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
     }
 
     /**
+     * Sets the state and signals the associated condition variable, assuming
+     * the lock is held. Cannot be called if it is not.
+     * 
+     * @param newState
+     *            State to be set
+     */
+    private void setStateWhileHoldingLock(PlaybackState newState) {
+        state = newState;
+        stateChange.signal();
+    }
+
+    /**
      * Changes state to a specified value and signals the associated condition
      * variable.
      * 
@@ -243,8 +269,7 @@ public class StreamSampleEnumerator extends AbstractEnumerator<float[][]>
         lock.lock();
         try {
             ensureNotStopped();
-            state = newState;
-            stateChange.signal();
+            setStateWhileHoldingLock(newState);
         } finally {
             lock.unlock();
         }

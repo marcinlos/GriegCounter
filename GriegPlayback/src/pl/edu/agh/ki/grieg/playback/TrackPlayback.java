@@ -60,8 +60,8 @@ class TrackPlayback implements Controllable, Enumerator<float[][]> {
      * {@inheritDoc}
      */
     @Override
-    public void pause() {
-        source.pause();
+    public boolean pause() {
+        return source.pause();
     }
 
     /**
@@ -76,8 +76,8 @@ class TrackPlayback implements Controllable, Enumerator<float[][]> {
      * {@inheritDoc}
      */
     @Override
-    public void stop() {
-        source.stop();
+    public boolean stop() {
+        return source.stop();
         // this will do, output will be closed by the source
     }
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 public interface Controllable {
 
     /**
-     * Begins processing audio data
+     * Begins processing the audio data.
      * 
      * @throws AudioException
      *             If an audio-related exception occurs
@@ -21,18 +21,29 @@ public interface Controllable {
     void start() throws AudioException, IOException;
 
     /**
-     * Pauses data processing with the possibiliity to resume it later
+     * Pauses data processing with the possibiliity to resume it later. If the
+     * processing has already finished, it does nothing and returns
+     * {@code false}.
+     * 
+     * @return {@code true} if the processing has been in progress when the
+     *         method was called and it was trully paused, {@code false} if it
+     *         had finished by then
      */
-    void pause();
+    boolean pause();
 
     /**
-     * Resumes previously paused processing
+     * Resumes previously paused processing.
      */
     void resume();
 
     /**
-     * Definitely stops processing
+     * Definitely stops processing, if it has not been finished already.
+     * Otherwise, it does nothing.
+     * 
+     * @return {@code true} if the processing has been in progress when the
+     *         method was called and it was trully paused, {@code false} if it
+     *         had finished by then
      */
-    void stop();
+    boolean stop();
 
 }
