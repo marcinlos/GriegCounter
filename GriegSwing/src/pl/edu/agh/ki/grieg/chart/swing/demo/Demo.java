@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
-import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
-import pl.edu.agh.ki.grieg.model.observables.Model;
-import pl.edu.agh.ki.grieg.model.observables.Models;
+import pl.edu.agh.ki.grieg.model.model.CompositeModel;
+import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.model.Models;
 import pl.edu.agh.ki.grieg.util.Point;
 
 import com.google.common.collect.Lists;

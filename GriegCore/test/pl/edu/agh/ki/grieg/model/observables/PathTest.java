@@ -6,6 +6,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import pl.edu.agh.ki.grieg.model.model.InvalidPathFormatException;
+import pl.edu.agh.ki.grieg.model.model.Path;
+
 public class PathTest {
 
     private static final String FIRST = "root.data";

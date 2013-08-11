@@ -9,6 +9,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.edu.agh.ki.grieg.model.model.Listener;
+import pl.edu.agh.ki.grieg.model.model.NoSuchModelException;
+import pl.edu.agh.ki.grieg.model.model.SimpleModel;
+
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleModelTest {
 

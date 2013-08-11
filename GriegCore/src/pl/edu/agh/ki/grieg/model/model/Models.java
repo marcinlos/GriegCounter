@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.observables;
+package pl.edu.agh.ki.grieg.model.model;
 
 /**
  * Helper class consisting of static utility methods for dealing with models.

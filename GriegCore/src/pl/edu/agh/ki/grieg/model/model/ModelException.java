@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.observables;
+package pl.edu.agh.ki.grieg.model.model;
 
 /**
  * Thrown to indicate invalid operations attempted at the model.

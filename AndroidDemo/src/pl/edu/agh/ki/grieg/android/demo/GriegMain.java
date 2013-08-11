@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioException;
-import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
-import pl.edu.agh.ki.grieg.model.observables.Model;
-import pl.edu.agh.ki.grieg.model.observables.Models;
+import pl.edu.agh.ki.grieg.model.model.CompositeModel;
+import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.model.Models;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
