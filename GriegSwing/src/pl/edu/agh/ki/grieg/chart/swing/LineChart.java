@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import pl.edu.agh.ki.grieg.model.model.Listener;
-import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.Listener;
+import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Point;
 
 public class LineChart extends LineChartView implements

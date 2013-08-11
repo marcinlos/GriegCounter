@@ -11,10 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import pl.edu.agh.ki.grieg.model.model.AbstractModel;
-import pl.edu.agh.ki.grieg.model.model.InvalidModelTypeException;
-import pl.edu.agh.ki.grieg.model.model.Listener;
-import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.AbstractModel;
+import pl.edu.agh.ki.grieg.model.InvalidModelTypeException;
+import pl.edu.agh.ki.grieg.model.Listener;
+import pl.edu.agh.ki.grieg.model.Model;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractModelTest {

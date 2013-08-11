@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.model;
+package pl.edu.agh.ki.grieg.model;
 
 /**
  * Interface of the generic listener receiving notifications about updates of

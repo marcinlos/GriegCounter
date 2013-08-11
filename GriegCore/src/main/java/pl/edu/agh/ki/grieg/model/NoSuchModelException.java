@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.model;
+package pl.edu.agh.ki.grieg.model;
 
 /**
  * Thrown upon an attempt to register listener for nonexistant model.

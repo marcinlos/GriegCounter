@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.Application;
-import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.XmlFileSystemBootstrap;

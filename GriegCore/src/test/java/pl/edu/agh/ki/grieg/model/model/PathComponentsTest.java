@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import pl.edu.agh.ki.grieg.model.model.Path;
+import pl.edu.agh.ki.grieg.model.Path;
 
 @RunWith(Parameterized.class)
 public class PathComponentsTest {

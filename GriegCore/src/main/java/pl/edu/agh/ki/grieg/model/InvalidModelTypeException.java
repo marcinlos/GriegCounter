@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.model;
+package pl.edu.agh.ki.grieg.model;
 
 /**
  * Thrown upon a type mismatch during some model operation that checks it, e.g.

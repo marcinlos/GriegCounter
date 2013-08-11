@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
-import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.processing.util.Reflection;
 import pl.edu.agh.ki.grieg.util.Point;
 

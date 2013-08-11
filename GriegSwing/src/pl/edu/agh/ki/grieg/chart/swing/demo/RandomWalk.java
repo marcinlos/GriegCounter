@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import pl.edu.agh.ki.grieg.model.model.Model;
+import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Point;
 
 class RandomWalk implements Runnable {

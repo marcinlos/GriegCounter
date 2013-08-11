@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.model.model.CompositeModel;
-import pl.edu.agh.ki.grieg.model.model.Model;
-import pl.edu.agh.ki.grieg.model.model.Models;
-import pl.edu.agh.ki.grieg.model.model.SimpleModel;
+import pl.edu.agh.ki.grieg.model.CompositeModel;
+import pl.edu.agh.ki.grieg.model.Model;
+import pl.edu.agh.ki.grieg.model.Models;
+import pl.edu.agh.ki.grieg.model.SimpleModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Point;
 import pl.edu.agh.ki.grieg.util.Properties;

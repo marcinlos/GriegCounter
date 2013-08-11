@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.model;
+package pl.edu.agh.ki.grieg.model;
 
 /**
  * Thrown when an invalid model name is encountered.

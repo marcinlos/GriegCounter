@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import pl.edu.agh.ki.grieg.model.model.InvalidPathFormatException;
-import pl.edu.agh.ki.grieg.model.model.Path;
+import pl.edu.agh.ki.grieg.model.InvalidPathFormatException;
+import pl.edu.agh.ki.grieg.model.Path;
 
 public class PathTest {
 
