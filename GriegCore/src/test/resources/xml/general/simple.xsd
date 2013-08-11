@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://some.random.namespace/schema" 
+  xmlns:tns="https://some.random.namespace/schema"
+  xmlns:missing="https://no.such.schema/nope"
+  elementFormDefault="qualified">
+
+  <xs:complexType name="personType">
+    <xs:sequence>
+      <xs:element name="name" />
+      <xs:element name="surname" />
+    </xs:sequence>
+    <xs:attribute name="nice" type="xs:boolean" />
+  </xs:complexType>
+
+  <xs:element name="people">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="person" type="tns:personType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

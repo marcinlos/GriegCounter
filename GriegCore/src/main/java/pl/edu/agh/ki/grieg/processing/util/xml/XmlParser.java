@@ -14,9 +14,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import pl.edu.agh.ki.grieg.processing.util.Resources;
 
 /**
  * Class providing convinient interface to XML DOM parser. Dealing with DOM
@@ -113,10 +116,31 @@ public class XmlParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setIgnoringComments(true);
-        factory.setValidating(false); // see the javadoc
-        factory.setSchema(schema);
+        if (schema != null) {
+            factory.setValidating(false); // see the javadoc
+            factory.setSchema(schema);
+        } else {
+            factory.setValidating(true);
+            String JAXP_SCHEMA_LANGUAGE =
+                    "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        }
 
         DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setEntityResolver(new EntityResolver() {
+            
+            @Override
+            public InputSource resolveEntity(String publicId, String systemId)
+                    throws SAXException, IOException {
+                if (systemId.startsWith("classpath:")) {
+                    String path = systemId.split(":", 2)[1];
+                    InputStream stream = Resources.asStream(path);
+                    return stream == null ? null : new InputSource(stream);
+                } else {
+                return null;
+                }
+            }
+        });
         builder.setErrorHandler(StrictErrorHandler.INSTANCE);
         return builder;
     }

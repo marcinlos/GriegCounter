@@ -4,6 +4,7 @@
   xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
   elementFormDefault="qualified">
 
+  <!-- 
   <xs:include schemaLocation="attributes.xsd" />
 
   <xs:complexType name="pipelineElementType">
@@ -25,6 +26,21 @@
       </xs:sequence>
       <xs:element name="assembler" type="tns:assemblerType" />
     </xs:choice>
+  </xs:complexType>
+   -->
+
+  <xs:complexType name="pipelineElementType">
+    <xs:all>
+      <xs:element name="name" />
+      <xs:element name="class" />
+      <xs:element name="source" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="pipelineType">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element name="node" type="tns:pipelineElementType" />
+    </xs:sequence>
   </xs:complexType>
 
 </xs:schema>

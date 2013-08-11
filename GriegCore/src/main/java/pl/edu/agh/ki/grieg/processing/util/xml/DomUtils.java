@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.core.config.xml;
+package pl.edu.agh.ki.grieg.processing.util.xml;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

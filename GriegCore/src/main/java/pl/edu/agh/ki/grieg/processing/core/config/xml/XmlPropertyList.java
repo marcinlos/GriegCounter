@@ -15,6 +15,7 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.ConversionException;
 import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
+import pl.edu.agh.ki.grieg.processing.util.xml.DomUtils;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grieg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  xsi:schemaLocation="
+       https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter 
+       config.xsd">
+
+  <!-- 
+  <properties>
+    <int name="resolution">10000</int>
+    <int name="chunk-size">2048</int>
+    <int name="hop-size">441</int>
+  </properties>
+  -->
+
+  <pipeline>
+    <node>
+      <name>segmenter</name>
+      <class>pl.edu.agh.ki.grieg.analysis.Segmenter</class>
+      <source>ROOT</source>
+    </node>
+    <node>
+      <name>compressor</name>
+      <class>pl.edu.agh.ki.grieg.analysis.WaveCompressor</class>
+      <source>segmenter</source>
+    </node>
+    <node>
+      <name>hamming</name>
+      <class>pl.edu.agh.ki.grieg.analysis.HammingSegmenter</class>
+      <source>ROOT</source>
+    </node>
+  </pipeline>
+
+</grieg>
