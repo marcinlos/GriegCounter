@@ -7,21 +7,18 @@ package pl.edu.agh.ki.grieg.model.observables;
  * @author los
  */
 public class InvalidModelTypeException extends ModelException {
+    
+    private final Class<?> expected;
+    private final Class<?> actual;
 
-    public InvalidModelTypeException() {
-        // empty
+    public InvalidModelTypeException(Class<?> expected, Class<?> actual) {
+        this.expected = expected;
+        this.actual = actual;
     }
 
-    public InvalidModelTypeException(String message) {
-        super(message);
-    }
-
-    public InvalidModelTypeException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidModelTypeException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public String toString() {
+        return String.format("Expected %s, but was %s", expected, actual);
     }
 
 }

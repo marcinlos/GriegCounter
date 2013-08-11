@@ -151,6 +151,19 @@ public interface Model<T> {
     T getData();
 
     /**
+     * Attempts to cast the model value to the specified type. Does not use the
+     * data type specified in the constructor, instead it checks whether the
+     * actual model data has the compatible type. If so, returns it, otherwise
+     * {@link InvalidModelTypeException} is thrown. In particular, if the model
+     * contains {@code null} data, it always succeedes.
+     * 
+     * @param dataType
+     *            Type the model data is to be cast to
+     * @return Model data cast to the appropriate type
+     */
+    <S> S getData(Class<S> dataType);
+
+    /**
      * @return The {@code Class} object denoting the type of the underlying data
      *         of this model
      */

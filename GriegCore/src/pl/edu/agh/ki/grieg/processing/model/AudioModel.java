@@ -9,6 +9,7 @@ import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
 import pl.edu.agh.ki.grieg.model.observables.Model;
+import pl.edu.agh.ki.grieg.model.observables.Models;
 import pl.edu.agh.ki.grieg.model.observables.SimpleModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Point;
@@ -31,17 +32,17 @@ public class AudioModel extends WaveObserver {
     
     private final List<SimpleModel<List<Point>>> series;
     
-    private final CompositeModel<Void> model;
+    private final CompositeModel<?> model;
 
     {
         leftData = Lists.newArrayList();
         rightData = Lists.newArrayList();
         
-        leftSerie = SimpleModel.of(leftData);
-        rightSerie = SimpleModel.of(rightData);
+        leftSerie = Models.simple(leftData);
+        rightSerie = Models.simple(rightData);
 
         series = ImmutableList.of(leftSerie, rightSerie);
-        model = CompositeModel.of(Void.class);
+        model = Models.container();
         model.addModel("left", leftSerie);
         model.addModel("right", rightSerie);
     }

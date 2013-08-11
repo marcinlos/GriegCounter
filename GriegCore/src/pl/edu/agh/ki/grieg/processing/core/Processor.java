@@ -21,8 +21,8 @@ import com.google.common.collect.Lists;
 
 /**
  * Class representing complete analysis process for one audio source. It is
- * created by the {@link ProcessorFactory} and has public methods corresponding to
- * phases of analysis:
+ * created by the {@link ProcessorFactory} and has public methods corresponding
+ * to phases of analysis:
  * <ol>
  * <li>{@link #openFile()}
  * <li>{@link #preAnalyze()}
@@ -58,9 +58,9 @@ public class Processor {
 
     /** Audio file being processed */
     private AudioFile audioFile;
-    
+
     private volatile State state = State.INITIAL;
-    
+
     private static enum State {
         INITIAL,
         OPENED,
@@ -139,7 +139,7 @@ public class Processor {
             throw e;
         }
     }
-    
+
     /**
      * @return Appropriately prepared {@link ExtractionContext}
      */

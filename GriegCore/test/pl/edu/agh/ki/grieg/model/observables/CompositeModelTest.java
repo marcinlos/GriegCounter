@@ -19,7 +19,7 @@ public class CompositeModelTest {
     @Mock private Listener<Integer> leftBottomListener;
     @Mock private Listener<Integer> rightTopListener;
 
-    private CompositeModel<Void> model;
+    private CompositeModel<?> model;
 
     private CompositeModel<String> left;
     private CompositeModel<String> right;
@@ -30,14 +30,14 @@ public class CompositeModelTest {
 
     @Before
     public void setup() {
-        model = CompositeModel.of(Void.class);
+        model = Models.container();
 
-        left = CompositeModel.of("string");
-        right = CompositeModel.of("blah");
+        left = Models.composite("string");
+        right = Models.composite("blah");
 
-        leftTop = SimpleModel.of(666);
-        leftBottom = SimpleModel.of(123);
-        rightTop = SimpleModel.of(Integer.class);
+        leftTop = Models.simple(666);
+        leftBottom = Models.simple(123);
+        rightTop = Models.simple(Integer.class);
 
         model.addModel("left", left);
         model.addModel("right", right);

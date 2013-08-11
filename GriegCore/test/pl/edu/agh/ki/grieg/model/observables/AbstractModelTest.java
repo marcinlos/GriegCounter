@@ -85,6 +85,31 @@ public class AbstractModelTest {
         verify(listener1, never()).update(anyString());
         verify(listener2).update(value);
     }
+    
+    @Test
+    public void getDataGivenCorrectTypeReturnsGoodValue() {
+        String value = "some value";
+        model.update(value);
+        
+        @SuppressWarnings("unchecked")
+        Model<Object> objectModel = (Model<Object>) (Model<?>) model;
+        assertEquals(value, objectModel.getData(String.class));
+    }
+    
+    @Test(expected = InvalidModelTypeException.class)
+    public void getDataGivenInvalidTypeThrows() {
+        model.update("some value");
+        
+        @SuppressWarnings("unchecked")
+        Model<Object> objectModel = (Model<Object>) (Model<?>) model;
+        objectModel.getData(Integer.class);
+    }
+    
+    @Test
+    public void getDataCanCastNullToAnyType() {
+        model.update(null);
+        assertNull(model.getData(Runtime[][].class));
+    }
 
     private class StubModel<T> extends AbstractModel<T> {
 

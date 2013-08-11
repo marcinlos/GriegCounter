@@ -35,7 +35,7 @@ public class CompositeModel<T> extends AbstractModel<T> {
     public CompositeModel(Class<? extends T> dataType) {
         super(dataType);
     }
-    
+
     /**
      * Creates a new model for the data type taken from the specifie initial
      * value.
@@ -45,29 +45,6 @@ public class CompositeModel<T> extends AbstractModel<T> {
      */
     public CompositeModel(T data) {
         super(data);
-    }
-
-    /**
-     * Static helper factory, creates new model for the specified data type.
-     * 
-     * @param dataType
-     *            Type of the data of the model
-     * @return New {@link CompositeModel}
-     */
-    public static <T> CompositeModel<T> of(Class<? extends T> dataType) {
-        return new CompositeModel<T>(dataType);
-    }
-    
-    /**
-     * Static helper factory, creates new model for the specified data type with
-     * specified initial value.
-     * 
-     * @param data
-     *            Initial value of the data
-     * @return New {@link CompositeModel}
-     */
-    public static <T> CompositeModel<T> of(T data) {
-        return new CompositeModel<T>(data);
     }
 
     /**
@@ -81,7 +58,7 @@ public class CompositeModel<T> extends AbstractModel<T> {
      * @return Previous child of such name, or {@code null} if there was none
      */
     public Model<?> addModel(String name, Model<?> model) {
-        if (! Path.isValidComponent(name)) {
+        if (!Path.isValidComponent(name)) {
             throw new InvalidModelNameException(name);
         }
         return models.put(name, model);

@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
 import pl.edu.agh.ki.grieg.model.observables.Model;
-import pl.edu.agh.ki.grieg.model.observables.SimpleModel;
+import pl.edu.agh.ki.grieg.model.observables.Models;
 import pl.edu.agh.ki.grieg.util.Point;
 
 import com.google.common.collect.Lists;
@@ -23,7 +23,7 @@ public class Demo extends JFrame {
 
     private static final int HEIGHT = 400;
 
-    private final CompositeModel<Void> chart;
+    private final CompositeModel<?> chart;
 
     private final ChannelsChart chartView;
 
@@ -37,10 +37,10 @@ public class Demo extends JFrame {
         List<Point> leftList = Lists.newArrayList();
         List<Point> rightList = Lists.newArrayList();
 
-        leftSerie = SimpleModel.of(rightList);
-        rightSerie = SimpleModel.of(leftList);
+        leftSerie = Models.simple(rightList);
+        rightSerie = Models.simple(leftList);
 
-        chart = CompositeModel.of(Void.class);
+        chart = Models.container();
         chart.addModel("left", leftSerie);
         chart.addModel("right", rightSerie);
 

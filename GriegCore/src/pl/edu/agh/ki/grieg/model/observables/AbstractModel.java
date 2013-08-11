@@ -52,7 +52,7 @@ public abstract class AbstractModel<T> implements Model<T> {
      */
     private static void checkTypesMatch(Class<?> consumed, Class<?> produced) {
         if (!consumed.isAssignableFrom(produced)) {
-            throw new InvalidModelTypeException();
+            throw new InvalidModelTypeException(consumed, produced);
         }
     }
 
@@ -178,6 +178,18 @@ public abstract class AbstractModel<T> implements Model<T> {
     @Override
     public T getData() {
         return data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <S> S getData(Class<S> dataType) {
+        if (data == null || dataType.isInstance(data)) {
+            return dataType.cast(data);
+        } else {
+            throw new InvalidModelTypeException(dataType, data.getClass());
+        }
     }
 
     /**
