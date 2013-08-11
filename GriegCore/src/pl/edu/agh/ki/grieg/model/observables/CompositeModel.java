@@ -35,6 +35,17 @@ public class CompositeModel<T> extends AbstractModel<T> {
     public CompositeModel(Class<? extends T> dataType) {
         super(dataType);
     }
+    
+    /**
+     * Creates a new model for the data type taken from the specifie initial
+     * value.
+     * 
+     * @param data
+     *            Initial value of the data
+     */
+    public CompositeModel(T data) {
+        super(data);
+    }
 
     /**
      * Static helper factory, creates new model for the specified data type.
@@ -45,6 +56,18 @@ public class CompositeModel<T> extends AbstractModel<T> {
      */
     public static <T> CompositeModel<T> of(Class<? extends T> dataType) {
         return new CompositeModel<T>(dataType);
+    }
+    
+    /**
+     * Static helper factory, creates new model for the specified data type with
+     * specified initial value.
+     * 
+     * @param data
+     *            Initial value of the data
+     * @return New {@link CompositeModel}
+     */
+    public static <T> CompositeModel<T> of(T data) {
+        return new CompositeModel<T>(data);
     }
 
     /**

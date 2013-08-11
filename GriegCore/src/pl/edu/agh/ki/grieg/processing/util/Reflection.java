@@ -60,4 +60,9 @@ public final class Reflection {
         return classes;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> Class<? extends T> castClass(Class<?> clazz) {
+        return (Class<? extends T>) clazz;
+    }
+
 }

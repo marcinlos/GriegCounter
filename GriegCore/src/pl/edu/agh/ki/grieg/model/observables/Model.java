@@ -157,6 +157,28 @@ public interface Model<T> {
     Class<? extends T> getDataType();
 
     /**
+     * Sends update notification to all the listeners without actually changing
+     * the value.
+     * 
+     * <p>
+     * Note: Listeners' callbacks are invoked immediatelly in the invoking
+     * thread, so no significant work should be done inside the callbacks.
+     */
+    public void update();
+
+    /**
+     * Updates the model data, and sends notifications to all the listeners.
+     * 
+     * <p>
+     * Note: Listeners' callbacks are invoked immediatelly in the invoking
+     * thread, so no significant work should be done inside the callbacks.
+     * 
+     * @param newValue
+     *            New value of the model data
+     */
+    public void update(T newValue);
+
+    /**
      * Checks whether the model has submodel of any type with matching path. If
      * the path is empty, returns {@code true}.
      * 

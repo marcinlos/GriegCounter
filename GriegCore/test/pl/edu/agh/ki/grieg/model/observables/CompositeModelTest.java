@@ -32,11 +32,11 @@ public class CompositeModelTest {
     public void setup() {
         model = CompositeModel.of(Void.class);
 
-        left = CompositeModel.of(String.class);
-        right = CompositeModel.of(String.class);
+        left = CompositeModel.of("string");
+        right = CompositeModel.of("blah");
 
-        leftTop = SimpleModel.of(Integer.class);
-        leftBottom = SimpleModel.of(Integer.class);
+        leftTop = SimpleModel.of(666);
+        leftBottom = SimpleModel.of(123);
         rightTop = SimpleModel.of(Integer.class);
 
         model.addModel("left", left);

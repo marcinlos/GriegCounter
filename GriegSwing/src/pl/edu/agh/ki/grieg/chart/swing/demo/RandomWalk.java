@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.model.observables.Model;
 import pl.edu.agh.ki.grieg.util.Point;
 
 class RandomWalk implements Runnable {
@@ -12,13 +12,13 @@ class RandomWalk implements Runnable {
     private static final float MIN = 0.0f;
     private static final float MAX = 0.5f;
 
-    private final Serie<List<Point>> serie;
+    private final Model<List<Point>> serie;
     private final int count;
     private float factor;
     private final long sleep;
     private final Random random = new Random();
 
-    public RandomWalk(Serie<List<Point>> serie, int count, float factor,
+    public RandomWalk(Model<List<Point>> serie, int count, float factor,
             long sleep) {
         this.serie = serie;
         this.count = count;
@@ -44,7 +44,7 @@ class RandomWalk implements Runnable {
         for (int i = 0; i < count; ++i) {
             y += step();
             y = clamp(y, MIN, MAX);
-            append(new Point(x(i), y));
+            append(new Point(x(i), y - 1));
             sleep();
         }
     }
@@ -61,7 +61,7 @@ class RandomWalk implements Runnable {
         List<Point> data = serie.getData();
         synchronized (data) {
             data.add(p);
-            serie.signalChange();
+            serie.update();
         }
     }
 }

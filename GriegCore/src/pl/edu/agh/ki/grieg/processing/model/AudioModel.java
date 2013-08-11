@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.model.Chart;
-import pl.edu.agh.ki.grieg.model.ChartModel;
-import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
+import pl.edu.agh.ki.grieg.model.observables.Model;
+import pl.edu.agh.ki.grieg.model.observables.SimpleModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Point;
 import pl.edu.agh.ki.grieg.util.Properties;
@@ -26,25 +26,24 @@ public class AudioModel extends WaveObserver {
     private final List<Point> leftData;
     private final List<Point> rightData;
 
-    private final Serie<List<Point>> leftSerie;
-    private final Serie<List<Point>> rightSerie;
-
-    private final List<Serie<List<Point>>> series;
-
-    private final ChartModel<List<Point>> model;
+    private final SimpleModel<List<Point>> leftSerie;
+    private final SimpleModel<List<Point>> rightSerie;
+    
+    private final List<SimpleModel<List<Point>>> series;
+    
+    private final CompositeModel<Void> model;
 
     {
         leftData = Lists.newArrayList();
         rightData = Lists.newArrayList();
-
-        leftSerie = Serie.of(leftData);
-        rightSerie = Serie.of(rightData);
+        
+        leftSerie = SimpleModel.of(leftData);
+        rightSerie = SimpleModel.of(rightData);
 
         series = ImmutableList.of(leftSerie, rightSerie);
-
-        model = Chart.create();
-        model.add("left", leftSerie);
-        model.add("right", rightSerie);
+        model = CompositeModel.of(Void.class);
+        model.addModel("left", leftSerie);
+        model.addModel("right", rightSerie);
     }
 
     public AudioModel() {
@@ -87,7 +86,7 @@ public class AudioModel extends WaveObserver {
         float x = progress();
         for (int i = 0; i < item.length; ++i) {
             Point p = new Point(x, item[i]);
-            Serie<List<Point>> serie = series.get(i);
+            Model<List<Point>> serie = series.get(i);
             List<Point> data = serie.getData();
             synchronized (data) {
                 data.add(p);
@@ -98,17 +97,13 @@ public class AudioModel extends WaveObserver {
     }
 
     private void update() {
-        for (Serie<List<Point>> serie : series) {
-            serie.signalChange();
+        for (SimpleModel<List<Point>> serie : series) {
+            serie.update();
         }
     }
 
-    public ChartModel<List<Point>> getChartModel() {
-        return model;
-    }
-
     private void clear() {
-        for (Serie<List<Point>> serie : series) {
+        for (Model<List<Point>> serie : series) {
             List<Point> data = serie.getData();
             synchronized (data) {
                 data.clear();
@@ -128,6 +123,10 @@ public class AudioModel extends WaveObserver {
         // This should be logged by some higher-level code
         // logger.error("Failure", e);
         super.failed(e);
+    }
+
+    public Model<?> getChartModel() {
+        return model;
     }
 
 }

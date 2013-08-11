@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -34,7 +35,8 @@ public class LineChartView extends SwingCanvas {
     }
 
     public void clearData() {
-        setData(null);
+        List<Point> empty = Collections.emptyList();
+        setData(empty);
     }
 
     @Override

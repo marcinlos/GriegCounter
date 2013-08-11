@@ -35,6 +35,18 @@ public abstract class AbstractModel<T> implements Model<T> {
     }
 
     /**
+     * Initializes {@link AbstractModel} with the specified initial value.
+     * 
+     * @param data
+     *            Non-{@code null} Initial value of the model data
+     */
+    @SuppressWarnings("unchecked")
+    public AbstractModel(T data) {
+        this((Class<? extends T>) data.getClass());
+        this.data = data;
+    }
+
+    /**
      * Checks if the {@code produced} type can be used as the {@code consumed}
      * value. If not, throws {@link InvalidModelTypeException}.
      */
@@ -119,8 +131,7 @@ public abstract class AbstractModel<T> implements Model<T> {
     }
 
     /**
-     * Sends update notification to all the listeners without actually changing
-     * the value.
+     * {@inheritDoc}
      */
     public void update() {
         for (Listener<? super T> listener : listeners) {
@@ -129,10 +140,7 @@ public abstract class AbstractModel<T> implements Model<T> {
     }
 
     /**
-     * Updates the model data, and sends notifications to all the listeners.
-     * 
-     * @param newValue
-     *            New value of the model data
+     * {@inheritDoc}
      */
     public void update(T newValue) {
         this.data = newValue;

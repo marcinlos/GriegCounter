@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
-import pl.edu.agh.ki.grieg.model.Chart;
-import pl.edu.agh.ki.grieg.model.ChartModel;
-import pl.edu.agh.ki.grieg.model.Serie;
+import pl.edu.agh.ki.grieg.model.observables.CompositeModel;
+import pl.edu.agh.ki.grieg.model.observables.Model;
+import pl.edu.agh.ki.grieg.model.observables.SimpleModel;
 import pl.edu.agh.ki.grieg.util.Point;
 
 import com.google.common.collect.Lists;
@@ -23,13 +23,13 @@ public class Demo extends JFrame {
 
     private static final int HEIGHT = 400;
 
-    private final ChartModel<List<Point>> chart;
+    private final CompositeModel<Void> chart;
 
     private final ChannelsChart chartView;
 
-    private final Serie<List<Point>> leftSerie;
+    private final Model<List<Point>> leftSerie;
 
-    private final Serie<List<Point>> rightSerie;
+    private final Model<List<Point>> rightSerie;
 
     private final Executor executor;
 
@@ -37,12 +37,12 @@ public class Demo extends JFrame {
         List<Point> leftList = Lists.newArrayList();
         List<Point> rightList = Lists.newArrayList();
 
-        leftSerie = Serie.of(rightList);
-        rightSerie = Serie.of(leftList);
+        leftSerie = SimpleModel.of(rightList);
+        rightSerie = SimpleModel.of(leftList);
 
-        chart = new Chart<List<Point>>();
-        chart.add("left", leftSerie);
-        chart.add("right", rightSerie);
+        chart = CompositeModel.of(Void.class);
+        chart.addModel("left", leftSerie);
+        chart.addModel("right", rightSerie);
 
         chartView = new ChannelsChart(chart, 1.0f, 0.5f);
 

@@ -25,6 +25,17 @@ public class SimpleModel<T> extends AbstractModel<T> {
     }
 
     /**
+     * Creates a new model for the data type taken from the specifie initial
+     * value.
+     * 
+     * @param data
+     *            Initial value of the data
+     */
+    public SimpleModel(T data) {
+        super(data);
+    }
+
+    /**
      * Static helper factory, creates new model for the specified data type.
      * 
      * @param dataType
@@ -33,6 +44,18 @@ public class SimpleModel<T> extends AbstractModel<T> {
      */
     public static <T> SimpleModel<T> of(Class<? extends T> dataType) {
         return new SimpleModel<T>(dataType);
+    }
+
+    /**
+     * Static helper factory, creates new model for the specified data type with
+     * specified initial value.
+     * 
+     * @param data
+     *            Initial value of the data
+     * @return New {@link SimpleModel}
+     */
+    public static <T> SimpleModel<T> of(T data) {
+        return new SimpleModel<T>(data);
     }
 
     /**
