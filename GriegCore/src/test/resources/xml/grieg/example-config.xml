@@ -3,7 +3,7 @@
   xmlns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
   xsi:schemaLocation="
        https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter 
-       config.xsd">
+       classpath:config.xsd">
 
   <!-- 
   <properties>

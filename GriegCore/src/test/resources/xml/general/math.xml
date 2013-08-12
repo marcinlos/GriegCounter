@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:constants xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:c="https://some.random.namespace/math" 
+  xsi:schemaLocation="
+  https://some.random.namespace/math classpath:xml/general/math.xsd">
+
+  <c:constant>
+    <c:name>pi</c:name>
+    <c:value>3.14159265358979</c:value>
+  </c:constant>
+
+  <c:constant>
+    <c:name>e</c:name>
+    <c:value>2.7182818284</c:value>
+  </c:constant>
+
+</c:constants>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:people xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="https://some.random.namespace/people"
+  xmlns:c="https://some.random.namespace/math"
+  xsi:schemaLocation="
+  https://some.random.namespace/math classpath:xml/general/math.xsd
+  https://some.random.namespace/people classpath:xml/general/people.xsd" >
+
+  <p:person nice="true">
+    <p:name>Franz</p:name>
+    <p:surname>Liszt</p:surname>
+  </p:person>
+
+  <p:person nice="false">
+    <p:name>Carl Friedrich</p:name>
+    <p:surname>Gauss</p:surname>
+  </p:person>
+
+  <c:constants>
+    <c:constant>
+      <c:name>pi</c:name>
+      <c:value>3.14159265358979</c:value>
+    </c:constant>
+  </c:constants>
+  
+</p:people>

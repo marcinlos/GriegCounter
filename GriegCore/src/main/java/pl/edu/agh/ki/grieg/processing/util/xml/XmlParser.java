@@ -10,11 +10,12 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Document;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -37,134 +38,95 @@ import pl.edu.agh.ki.grieg.processing.util.Resources;
  */
 public class XmlParser {
 
-    /** Schema used to validate documents */
-    private final Schema schema;
+    private static final String JAXP_SCHEMA_LANGUAGE = 
+            "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+    
+    private static final String JAXP_SCHEMA_SOURCE = 
+            "http://java.sun.com/xml/jaxp/properties/schemaSource";
+    
+    private static final String W3C_XML_SCHEMA_NS_URI = 
+            XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
     /** DOM parser instance */
     private final DocumentBuilder parser;
 
-    /**
-     * Creates XML parser with no schema, i.e. not validating document structure
-     * beyond the XML syntax.
-     * 
-     * @throws XmlException
-     *             If the parser could not be created
-     */
-    public XmlParser() throws XmlException {
-        this((Schema) null, null);
+
+    public static XmlParser strict(String... schemas) throws XmlException {
+        return new XmlParser(checkNotNull(schemas), true);
     }
 
-    /**
-     * Creates XML parser validating documents using schema specified as the
-     * <strong>classpath resource</strong>. Specified {@code schemaPath} cannot
-     * be {@code null}.
-     * 
-     * @param schemaPath
-     *            Classpath-relative path to the schema
-     * @throws XmlException
-     *             If the parser using the specified schema could not be created
-     * @throws NullPointerException
-     *             If the {@code schemaPath} is {@code null}
-     */
-    public XmlParser(String schemaPath) throws XmlException {
-        this(createSchema(checkNotNull(schemaPath)));
+    public static XmlParser flexible(String... schemas) throws XmlException {
+        return new XmlParser(checkNotNull(schemas), false);
     }
-
-    /**
-     * Creates XML parser validating documents using the specified schema.
-     * Specified {@code schema} cannot be {@code null}.
-     * 
-     * @param schema
-     *            Schema to validate documents with
-     * @throws XmlException
-     *             If the parser could not be created
-     * @throws NullPointerException
-     *             If the {@code cchema} is {@code null}
-     */
-    public XmlParser(Schema schema) throws XmlException {
-        this(checkNotNull(schema), null);
-    }
-
-    /**
-     * Private auxilary constructor, not checking {@code null}-ity of the
-     * specified schema.
-     * 
-     * @param schema
-     *            Schema to be used to validate documents, possibly {@code null}
-     * @param dummy
-     *            Unused argument, only to differentiate between this
-     *            constructor and the public one with just {@link Schema}
-     *            argument
-     * @throws XmlException
-     *             If the parser could not be created
-     */
-    private XmlParser(Schema schema, Object dummy) throws XmlException {
+    
+    private XmlParser(String[] sources, boolean strict) throws XmlException {
         try {
-            this.schema = schema;
-            this.parser = createParser();
+            parser = createParser(sources, strict);
         } catch (ParserConfigurationException e) {
             throw new XmlException(e);
         }
     }
 
     /**
-     * Creates the document builder, using schema from the {@link #schema}
-     * field.
+     * Creates the document builder.
      */
-    private DocumentBuilder createParser() throws ParserConfigurationException,
-            XmlSchemaException {
+    private DocumentBuilder createParser(String[] sources, boolean strict)
+            throws ParserConfigurationException, XmlException {
+        
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setIgnoringComments(true);
-        if (schema != null) {
+        if (strict) {
             factory.setValidating(false); // see the javadoc
+            Schema schema = createSchema(sources);
             factory.setSchema(schema);
         } else {
             factory.setValidating(true);
-            String JAXP_SCHEMA_LANGUAGE =
-                    "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA_NS_URI);
+            factory.setAttribute(JAXP_SCHEMA_SOURCE, toUriArray(sources));
         }
 
         DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setEntityResolver(new EntityResolver() {
-            
-            @Override
-            public InputSource resolveEntity(String publicId, String systemId)
-                    throws SAXException, IOException {
-                if (systemId.startsWith("classpath:")) {
-                    String path = systemId.split(":", 2)[1];
-                    InputStream stream = Resources.asStream(path);
-                    return stream == null ? null : new InputSource(stream);
-                } else {
-                return null;
-                }
-            }
-        });
+        builder.setEntityResolver(ClasspathEntityResolver.INSTANCE);
         builder.setErrorHandler(StrictErrorHandler.INSTANCE);
         return builder;
     }
 
-    /**
-     * Loads classpath resource using thread's context classloader.
-     */
-    private static URL getResource(String path) {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        return cl.getResource(path);
+    private static Source[] toSourceArray(String[] paths) throws XmlException {
+        Source[] sources = new Source[paths.length];
+        for (int i = 0; i < paths.length; ++i) {
+            URL url = Resources.get(paths[i]);
+            if (url != null) {
+                sources[i] = new StreamSource(url.toExternalForm());
+            } else {
+                throw new XmlSchemaNotFoundException(paths[i]);
+            }
+        }
+        return sources;
+    }
+    
+    private static String[] toUriArray(String[] paths) throws XmlException {
+        String[] uris = new String[paths.length];
+        for (int i = 0; i < paths.length; ++ i) {
+            URL url = Resources.get(paths[i]);
+            if (url != null) {
+                uris[i] = url.toString();
+            } else {
+                throw new XmlSchemaNotFoundException(paths[i]);
+            }
+        }
+        return uris;
     }
 
-    /**
-     * Creates schema, loads it as the classpath resource.
-     */
-    private static Schema createSchema(String schemaPath) throws XmlException {
-        URL url = getResource(schemaPath);
-        if (url == null) {
-            throw new XmlSchemaNotFoundException(schemaPath);
-        }
+    private static Schema createSchema(String[] paths) throws XmlException {
+        return createSchema(toSourceArray(paths));
+    }
+
+    private static Schema createSchema(Source[] sources) throws XmlException {
         String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
         SchemaFactory factory = SchemaFactory.newInstance(language);
         try {
-            Schema schema = factory.newSchema(url);
+            Schema schema = factory.newSchema(sources);
             return schema;
         } catch (SAXException e) {
             throw new XmlSchemaException(e);

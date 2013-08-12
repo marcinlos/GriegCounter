@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  targetNamespace="https://some.random.namespace/schema" 
-  xmlns:tns="https://some.random.namespace/schema"
-  xmlns:missing="https://no.such.schema/nope"
+  targetNamespace="https://some.random.namespace/people" 
+  xmlns:tns="https://some.random.namespace/people"
   elementFormDefault="qualified">
 
   <xs:complexType name="personType">
@@ -15,8 +14,9 @@
 
   <xs:element name="people">
     <xs:complexType>
-      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:element name="person" type="tns:personType" />
+        <xs:any namespace="##other" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://some.random.namespace/math" 
+  xmlns:tns="https://some.random.namespace/math"
+  elementFormDefault="qualified">
+
+  <xs:complexType name="constantType">
+    <xs:sequence>
+      <xs:element name="name" />
+      <xs:element name="value" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="constants">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="constant" type="tns:constantType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

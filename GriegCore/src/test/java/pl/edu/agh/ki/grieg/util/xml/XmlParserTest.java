@@ -19,8 +19,9 @@ import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaException;
 
 public class XmlParserTest {
 
-    private XmlParser withSchema;
-
+    private XmlParser withPeopleSchema;
+    private XmlParser withMathSchema;
+    private XmlParser withBothSchemas;
     private XmlParser noSchema;
 
     private static InputStream open(String path) {
@@ -29,8 +30,11 @@ public class XmlParserTest {
 
     @Before
     public void setup() throws XmlException {
-        withSchema = new XmlParser("xml/general/simple.xsd");
-        noSchema = new XmlParser();
+        withPeopleSchema = XmlParser.strict("xml/general/people.xsd");
+        withMathSchema = XmlParser.strict("xml/general/math.xsd");
+        withBothSchemas = XmlParser.strict("xml/general/people.xsd",
+                "xml/general/math.xsd");
+        noSchema = XmlParser.flexible();
     }
 
     /*
@@ -39,7 +43,7 @@ public class XmlParserTest {
      */
     @Test(expected = XmlSchemaNotFoundException.class)
     public void failsWithInvalidSchemaLocation() throws XmlException {
-        new XmlParser("bad.xsd");
+        XmlParser.strict("bad.xsd");
     }
 
     /*
@@ -48,7 +52,7 @@ public class XmlParserTest {
      */
     @Test(expected = XmlSchemaException.class)
     public void failsWithBrokenSchema() throws XmlException {
-        new XmlParser("xml/general/broken.xsd");
+        XmlParser.strict("xml/general/broken.xsd");
     }
 
     /*
@@ -57,16 +61,27 @@ public class XmlParserTest {
      */
     @Test
     public void withSchemaCanParseDocumentWithSchema() throws XmlException {
-        withSchema.parse(open("xml/general/has-schema.xml"));
+        withPeopleSchema.parse(open("xml/general/people-has-schema.xml"));
     }
 
     /*
-     * Parser with no schema can parse document that conforms to this schema and
-     * specifies the schema location.
+     * Parser with math schema can parse document that conforms to this schema
+     * and specifies the schema location.
      */
     @Test
-    public void noSchemaCanParseDocumentWithSchema() throws XmlException {
-        noSchema.parse(open("xml/general/has-schema.xml"));
+    public void withMathSchemaCanParseMathDocumentWithSchema()
+            throws XmlException {
+        withMathSchema.parse(open("xml/general/math.xml"));
+    }
+
+    /*
+     * Parser with math schema cannot parse document that specifies his schema
+     * location, which is a schema for different namespace.
+     */
+    @Test(expected = XmlParseException.class)
+    public void withMathSchemaCanParsePeopleDocumentWithSchema()
+            throws XmlException {
+        withMathSchema.parse(open("xml/general/people-has-schema.xml"));
     }
 
     /*
@@ -76,7 +91,7 @@ public class XmlParserTest {
     @Test(expected = XmlParseException.class)
     public void withSchemaCannotParseWrongDocumentWithSchema()
             throws XmlException {
-        withSchema.parse(open("xml/general/error-has-schema.xml"));
+        withPeopleSchema.parse(open("xml/general/people-error-has-schema.xml"));
     }
 
     /*
@@ -86,7 +101,7 @@ public class XmlParserTest {
     @Test(expected = XmlParseException.class)
     public void noSchemaCannotParseWrongDocumentWithSchema()
             throws XmlException {
-        withSchema.parse(open("xml/general/error-has-schema.xml"));
+        withPeopleSchema.parse(open("xml/general/people-error-has-schema.xml"));
     }
 
     /*
@@ -94,7 +109,7 @@ public class XmlParserTest {
      */
     @Test(expected = XmlParseException.class)
     public void withSchemaCannotParseGibberish() throws XmlException {
-        withSchema.parse(open("xml/general/fatal.xml"));
+        withPeopleSchema.parse(open("xml/general/fatal.xml"));
     }
 
     /*
@@ -102,7 +117,7 @@ public class XmlParserTest {
      */
     @Test(expected = XmlParseException.class)
     public void noSchemaCannotParseGibberish() throws XmlException {
-        withSchema.parse(open("xml/general/fatal.xml"));
+        withPeopleSchema.parse(open("xml/general/fatal.xml"));
     }
 
     /*
@@ -112,7 +127,8 @@ public class XmlParserTest {
     @Test
     public void noSchemaCanParseDocumentWithInternalSchema()
             throws XmlException {
-        noSchema.parse(open("xml/general/has-schema.xml"));
+        noSchema.parse(open("xml/general/people-has-schema.xml"));
+
     }
 
     /*
@@ -122,7 +138,7 @@ public class XmlParserTest {
     @Test(expected = XmlParseException.class)
     public void cannotParseInvalidDocumentWithInternalSchema()
             throws XmlException {
-        noSchema.parse(open("xml/general/error-has-schema.xml"));
+        noSchema.parse(open("xml/general/people-error-has-schema.xml"));
     }
 
     /*
@@ -132,7 +148,7 @@ public class XmlParserTest {
     @Test(expected = XmlParseException.class)
     public void noSchemaCannotParseDocumentWithMissingInternalSchema()
             throws XmlException {
-        noSchema.parse(open("xml/general/missing-schema.xml"));
+        noSchema.parse(open("xml/general/people-missing-schema.xml"));
     }
 
     /*
@@ -142,7 +158,7 @@ public class XmlParserTest {
     @Test
     public void withSchemaCanParseDocumentWithMissingInternalSchema()
             throws XmlException {
-        withSchema.parse(open("xml/general/missing-schema.xml"));
+        withPeopleSchema.parse(open("xml/general/people-missing-schema.xml"));
     }
 
     /*
@@ -152,7 +168,7 @@ public class XmlParserTest {
     @Test
     public void withSchemaCanParseDocumentWithNoInternalSchema()
             throws XmlException {
-        withSchema.parse(open("xml/general/no-schema.xml"));
+        withPeopleSchema.parse(open("xml/general/people-no-schema.xml"));
     }
 
     /*
@@ -162,6 +178,30 @@ public class XmlParserTest {
     @Test(expected = XmlParseException.class)
     public void noSchemaCannotParseDocumentWithNoInternalSchema()
             throws XmlException {
-        noSchema.parse(open("xml/general/no-schema.xml"));
+        noSchema.parse(open("xml/general/people-no-schema.xml"));
+    }
+
+    /*
+     * Parser with no schema can parse document containing both namespaces.
+     */
+    @Test
+    public void noSchemaCanParseCombinedWithSchema() throws XmlException {
+        noSchema.parse(open("xml/general/both.xml"));
+    }
+
+    /*
+     * Parser with one schema cannot parse document containing both namespaces.
+     */
+    @Test(expected = XmlParseException.class)
+    public void withSchemaCanNotParseCombined() throws XmlException {
+        withPeopleSchema.parse(open("xml/general/both.xml"));
+    }
+
+    /*
+     * Parser with both schemas can parse the documen.
+     */
+    @Test
+    public void withBothSchemasCanParseCombined() throws XmlException {
+        withBothSchemas.parse(open("xml/general/both.xml"));
     }
 }

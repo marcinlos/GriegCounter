@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:people xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="https://some.random.namespace/people" >
+
+    <p:person nice="true">
+        <p:name>Franz</p:name>
+        <p:surname>Liszt</p:surname>
+    </p:person>
+    <p:person nice="false">
+        <p:name>Carl Friedrich</p:name>
+        <p:surname>Gauss</p:surname>
+    </p:person>
+
+</p:people>
