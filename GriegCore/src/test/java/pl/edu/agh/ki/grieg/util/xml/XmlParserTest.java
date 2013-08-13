@@ -11,6 +11,7 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.ResourceNotFoundException;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.util.Resources;
+import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaNotFoundException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlParseException;
@@ -30,11 +31,24 @@ public class XmlParserTest {
 
     @Before
     public void setup() throws XmlException {
-        withPeopleSchema = XmlParser.strict("xml/general/people.xsd");
-        withMathSchema = XmlParser.strict("xml/general/math.xsd");
-        withBothSchemas = XmlParser.strict("xml/general/people.xsd",
-                "xml/general/math.xsd");
-        noSchema = XmlParser.flexible();
+        
+        withPeopleSchema = new XmlParserBuilder()
+            .useClasspathSchema("xml/general/people.xsd")
+            .create();
+        
+        withMathSchema = new XmlParserBuilder()
+            .useClasspathSchema("xml/general/math.xsd")
+            .create(); 
+        
+        withBothSchemas = new XmlParserBuilder()
+            .useClasspathSchema("xml/general/people.xsd")
+            .useClasspathSchema("xml/general/math.xsd")
+            .create();
+        
+        noSchema = new XmlParserBuilder()
+            .useSchemaLocationHints()
+            .withClassPathAwareResolver()
+            .create();
     }
 
     /*
@@ -43,7 +57,9 @@ public class XmlParserTest {
      */
     @Test(expected = XmlSchemaNotFoundException.class)
     public void failsWithInvalidSchemaLocation() throws XmlException {
-        XmlParser.strict("bad.xsd");
+        new XmlParserBuilder()
+            .useClasspathSchema("bad.xsd")
+            .create();
     }
 
     /*
@@ -52,7 +68,9 @@ public class XmlParserTest {
      */
     @Test(expected = XmlSchemaException.class)
     public void failsWithBrokenSchema() throws XmlException {
-        XmlParser.strict("xml/general/broken.xsd");
+        new XmlParserBuilder()
+            .useClasspathSchema("xml/general/broken.xsd")
+            .create();
     }
 
     /*

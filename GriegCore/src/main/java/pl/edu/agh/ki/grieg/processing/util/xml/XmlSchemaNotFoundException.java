@@ -11,4 +11,8 @@ public class XmlSchemaNotFoundException extends XmlSchemaException {
         super(message);
     }
 
+    public XmlSchemaNotFoundException(Throwable cause) {
+        super(cause);
+    }
+
 }

@@ -2,8 +2,8 @@
 <grieg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
   xsi:schemaLocation="
-       https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter 
-       classpath:config.xsd">
+  https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter
+  classpath:config.xsd">
 
   <!-- 
   <properties>
