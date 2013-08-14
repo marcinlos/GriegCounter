@@ -1,22 +1,24 @@
 package pl.edu.agh.ki.grieg.util.xml;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
-import pl.edu.agh.ki.grieg.processing.core.config.ResourceNotFoundException;
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.util.Resources;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaNotFoundException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlParseException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlParser;
+import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaException;
+import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaNotFoundException;
 
 public class XmlParserTest {
 
@@ -25,30 +27,39 @@ public class XmlParserTest {
     private XmlParser withBothSchemas;
     private XmlParser noSchema;
 
+    private InputStream brokenStream;
+
     private static InputStream open(String path) {
         return Resources.asStream(path);
     }
 
     @Before
     public void setup() throws XmlException {
-        
+
         withPeopleSchema = new XmlParserBuilder()
-            .useClasspathSchema("xml/general/people.xsd")
-            .create();
-        
+                .useClasspathSchema("xml/general/people.xsd")
+                .create();
+
         withMathSchema = new XmlParserBuilder()
-            .useClasspathSchema("xml/general/math.xsd")
-            .create(); 
-        
+                .useClasspathSchema("xml/general/math.xsd")
+                .create();
+
         withBothSchemas = new XmlParserBuilder()
-            .useClasspathSchema("xml/general/people.xsd")
-            .useClasspathSchema("xml/general/math.xsd")
-            .create();
-        
+                .useClasspathSchema("xml/general/people.xsd")
+                .useClasspathSchema("xml/general/math.xsd")
+                .create();
+
         noSchema = new XmlParserBuilder()
-            .useSchemaLocationHints()
-            .withClassPathAwareResolver()
-            .create();
+                .useSchemaLocationHints()
+                .withClassPathAwareResolver()
+                .create();
+
+        brokenStream = mock(InputStream.class, new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                throw new IOException();
+            }
+        });
     }
 
     /*
@@ -58,8 +69,8 @@ public class XmlParserTest {
     @Test(expected = XmlSchemaNotFoundException.class)
     public void failsWithInvalidSchemaLocation() throws XmlException {
         new XmlParserBuilder()
-            .useClasspathSchema("bad.xsd")
-            .create();
+                .useClasspathSchema("bad.xsd")
+                .create();
     }
 
     /*
@@ -69,8 +80,13 @@ public class XmlParserTest {
     @Test(expected = XmlSchemaException.class)
     public void failsWithBrokenSchema() throws XmlException {
         new XmlParserBuilder()
-            .useClasspathSchema("xml/general/broken.xsd")
-            .create();
+                .useClasspathSchema("xml/general/broken.xsd")
+                .create();
+    }
+    
+    @Test(expected = XmlException.class)
+    public void cannotParseBrokenStream() throws XmlException {
+        noSchema.parse(brokenStream);
     }
 
     /*
@@ -80,6 +96,89 @@ public class XmlParserTest {
     @Test
     public void withSchemaCanParseDocumentWithSchema() throws XmlException {
         withPeopleSchema.parse(open("xml/general/people-has-schema.xml"));
+    }
+
+    /*
+     * XML document specified by the URL can be parsed correctly.
+     */
+    @Test
+    public void canParsePassingUrl() throws Exception {
+        URL url = Resources.get("xml/general/people-has-schema.xml");
+        withPeopleSchema.parse(url);
+    }
+
+    /*
+     * Invalid XML document specified by the URL cannot be parsed correctly.
+     */
+    @Test(expected = XmlParseException.class)
+    public void cannotParseInvalidPassingUrl() throws Exception {
+        URL url = Resources.get("xml/general/people-error-has-schema.xml");
+        withPeopleSchema.parse(url);
+    }
+
+    /*
+     * XML document specified by the URI can be parsed correctly.
+     */
+    @Test
+    public void canParsePassingUri() throws Exception {
+        URL url = Resources.get("xml/general/people-has-schema.xml");
+        withPeopleSchema.parse(url.toURI());
+    }
+
+    /*
+     * Invalid XML document specified by the URI cannot be parsed correctly.
+     */
+    @Test(expected = XmlParseException.class)
+    public void cannotParseInvalidPassingUri() throws Exception {
+        URL url = Resources.get("xml/general/people-error-has-schema.xml");
+        withPeopleSchema.parse(url.toURI());
+    }
+
+    /*
+     * XML document specified by File object can be parsed correctly.
+     */
+    @Test
+    public void canParsePassingFile() throws Exception {
+        URL url = Resources.get("xml/general/people-has-schema.xml");
+        withPeopleSchema.parse(new File(url.toURI()));
+    }
+
+    /*
+     * Invalid XML document specified by the File object cannot be parsed
+     * correctly.
+     */
+    @Test(expected = XmlParseException.class)
+    public void cannotParseInvalidPassingFile() throws Exception {
+        URL url = Resources.get("xml/general/people-error-has-schema.xml");
+        withPeopleSchema.parse(new File(url.toURI()));
+    }
+
+    /*
+     * XML document specified by the classpath-relative name can be parsed
+     * correctly.
+     */
+    @Test
+    public void canParseFromClasspath() throws Exception {
+        withPeopleSchema
+                .parseFromClasspath("xml/general/people-has-schema.xml");
+    }
+
+    /*
+     * Invalid XML document specified by the classpath-relative name cannot be
+     * parsed correctly.
+     */
+    @Test(expected = XmlParseException.class)
+    public void cannotParseInvalidFromClasspath() throws Exception {
+        withPeopleSchema.parseFromClasspath(
+                "xml/general/people-error-has-schema.xml");
+    }
+
+    /*
+     * Nonexistant XML document cannot be parsed correctly.
+     */
+    @Test(expected = XmlException.class)
+    public void cannotParseNonexistant() throws Exception {
+        withPeopleSchema.parseFromClasspath("ghhhhaww.xml");
     }
 
     /*

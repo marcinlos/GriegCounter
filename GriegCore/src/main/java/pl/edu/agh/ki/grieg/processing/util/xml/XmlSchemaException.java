@@ -8,10 +8,6 @@ package pl.edu.agh.ki.grieg.processing.util.xml;
  */
 public class XmlSchemaException extends XmlException {
 
-    public XmlSchemaException() {
-        // empty
-    }
-
     public XmlSchemaException(String message) {
         super(message);
     }

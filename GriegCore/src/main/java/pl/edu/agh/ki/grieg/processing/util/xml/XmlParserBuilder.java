@@ -13,14 +13,32 @@ import pl.edu.agh.ki.grieg.processing.util.Resources;
 
 import com.google.common.collect.Lists;
 
-public class XmlParserBuilder {
+/**
+ * Auxilary class provided as a way to configure and create {@link XmlParser}.
+ * 
+ * 
+ * @author los
+ */
+public final class XmlParserBuilder {
 
+    /** List of system identifiers dotychczas napotkany */
     private final List<String> schemas = Lists.newArrayList();
 
+    /** Entity resolver to be used by the produced neightour */
     private EntityResolver entityResolver = null;
 
+    /** Whether to user {@code schemaLocation} tags from the XML files */
     private boolean useSchemaLocation = false;
 
+    /**
+     * Adds specified schema locations to the set of schemas used by the
+     * produced parser. Schemas are specified as the local paths in the
+     * filesystem.
+     * 
+     * @param files
+     *            Files to be added
+     * @return {@code this}
+     */
     public XmlParserBuilder useSchema(File... files) {
         for (File file : files) {
             schemas.add(fromFile(file));
@@ -28,6 +46,16 @@ public class XmlParserBuilder {
         return this;
     }
 
+    /**
+     * Adds specified schema locations to the set of schemas used by the
+     * produced parser. Schemas are specified by their system identifiers - see
+     * <a href="http://www.w3.org/TR/REC-xml/#dt-sysid">XML specification</a>
+     * for detailed description.
+     * 
+     * @param systemIds
+     *            System identifier of schema resources
+     * @return {@code this}
+     */
     public XmlParserBuilder useSchema(String... systemIds) {
         for (String systemId : systemIds) {
             schemas.add(systemId);
@@ -35,6 +63,14 @@ public class XmlParserBuilder {
         return this;
     }
 
+    /**
+     * Adds specified schema locations to the set of schemas used by the
+     * produced parser. Schemas are specified by their URI.
+     * 
+     * @param uris
+     *            URIs of the schema resources
+     * @return {@code this}
+     */
     public XmlParserBuilder useSchema(URI... uris) {
         for (URI uri : uris) {
             schemas.add(fromUri(uri));
@@ -42,6 +78,14 @@ public class XmlParserBuilder {
         return this;
     }
 
+    /**
+     * Adds specified schema locations to the set of schemas used by the
+     * produced parser. Schemas are specified by their URL.
+     * 
+     * @param urls
+     *            URLs of the schema resources
+     * @return {@code this}
+     */
     public XmlParserBuilder useSchema(URL... urls) {
         for (URL url : urls) {
             schemas.add(fromUrl(url));
@@ -49,6 +93,23 @@ public class XmlParserBuilder {
         return this;
     }
 
+    /**
+     * Adds specified schema locations to the set of schemas used by the
+     * produced parser. Schemas are specified as the classpath-relative
+     * locations.
+     * 
+     * <p>
+     * Note: unlike other types of resources, classpath-relative paths are
+     * resolved immediately during the {@link #useClasspathSchema} call, hence
+     * the exception declaration. If any of the paths is invalid, all the other
+     * locations are discarded as well.
+     * 
+     * @param paths
+     *            Locations of schema resources
+     * @return {@code this}
+     * @throws XmlSchemaNotFoundException
+     *             If there is no resource the specified location
+     */
     public XmlParserBuilder useClasspathSchema(String... paths)
             throws XmlSchemaNotFoundException {
         for (String path : paths) {
@@ -57,30 +118,52 @@ public class XmlParserBuilder {
         return this;
     }
 
-    public XmlParserBuilder ignoreSchemaLocationHints() {
-        useSchemaLocation = false;
-        return this;
-    }
-
+    /**
+     * Instructs the parser-in-spe to use {@code schemaLocation} tags, if
+     * present in the root of parsed documents. By default they are discarded.
+     * 
+     * @return {@code this}
+     */
     public XmlParserBuilder useSchemaLocationHints() {
         useSchemaLocation = true;
         return this;
     }
 
+    /**
+     * Specifies an entity resolver to be used by the parser under construction.
+     * 
+     * @param resolver
+     *            Entity resolver
+     * @return {@code this}
+     */
     public XmlParserBuilder withResolver(EntityResolver resolver) {
         this.entityResolver = checkNotNull(resolver);
         return this;
     }
 
+    /**
+     * Specifies the entity resolver that understands addresses with
+     * {@code classpath} schema part.
+     * 
+     * @return {@code this}
+     */
     public XmlParserBuilder withClassPathAwareResolver() {
         return withResolver(ClasspathEntityResolver.INSTANCE);
     }
 
+    /**
+     * Creates an {@link XmlParser} based on the configuration gathered through
+     * the method calls.
+     * 
+     * @return New {@link XmlParser}
+     * @throws XmlException
+     *             If there is a problem with underlying content
+     */
     public XmlParser create() throws XmlException {
         return new XmlParser(systemIds(), entityResolver, useSchemaLocation);
     }
 
-    public String[] systemIds() {
+    private String[] systemIds() {
         String[] systemIds = new String[schemas.size()];
         return schemas.toArray(systemIds);
     }

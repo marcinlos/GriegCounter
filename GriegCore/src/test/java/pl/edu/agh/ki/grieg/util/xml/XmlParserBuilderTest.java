@@ -1,21 +1,15 @@
 package pl.edu.agh.ki.grieg.util.xml;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import javax.management.RuntimeErrorException;
-
 import org.junit.Test;
-import org.xml.sax.InputSource;
 
 import pl.edu.agh.ki.grieg.processing.util.Resources;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaNotFoundException;
 
 public class XmlParserBuilderTest {
 
@@ -95,5 +89,5 @@ public class XmlParserBuilderTest {
             .create()
             .parse(Resources.asStream(BOTH_NO_SCHEMA));
     }
-
+    
 }
