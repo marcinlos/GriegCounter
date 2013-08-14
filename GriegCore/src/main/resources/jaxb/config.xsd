@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  elementFormDefault="qualified">
+
+  <xs:include schemaLocation="property.xsd" />
+  <xs:include schemaLocation="values.xsd" />
+  <xs:include schemaLocation="pipeline.xsd" />
+  
+
+  <xs:element name="grieg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="properties" type="tns:propertyType" />
+        <xs:element name="pipeline" type="tns:pipelineType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

@@ -14,7 +14,7 @@ public interface Listener<T> {
     /**
      * Invoked by the model when the model is updated. This usually means change
      * of the data, though it is not required that the new value is different
-     * from the old.
+     * from the jaxb.
      * 
      * @param data
      *            New value of the observed model's data

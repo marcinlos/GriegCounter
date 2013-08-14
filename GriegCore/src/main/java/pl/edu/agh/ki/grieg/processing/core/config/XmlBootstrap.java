@@ -20,6 +20,7 @@ import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfig;
+import pl.edu.agh.ki.grieg.processing.util.Resources;
 import pl.edu.agh.ki.grieg.util.Properties;
 
 import com.google.common.io.Closeables;
@@ -38,7 +39,7 @@ import com.google.common.io.Closeables;
 public class XmlBootstrap extends AbstractBootstrap {
 
     /** Classpath-relative schema path */
-    private static final String SCHEMA = "/config.xsd";
+    private static final String SCHEMA = "jaxb/config.xsd";
 
     /** Config object */
     private XmlConfig config;
@@ -130,7 +131,7 @@ public class XmlBootstrap extends AbstractBootstrap {
      */
     private Schema loadSchema(String path) throws SAXException {
         logger().info("Loading schema file {} from the classpath", path);
-        URL url = getClass().getResource(path);
+        URL url = Resources.get(path);
         logger().trace("Schema url: {}", url);
         String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
         SchemaFactory factory = SchemaFactory.newInstance(language);

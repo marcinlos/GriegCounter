@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  elementFormDefault="qualified">
+
+  <xs:include schemaLocation="attributes.xsd" />
+
+
+  <xs:complexType name="simplePropertyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attributeGroup ref="tns:propertyAttrGroup" />
+        <xs:attributeGroup ref="tns:typeAttrGroup" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  
+  <xs:complexType name="intPropertyType">
+    <xs:simpleContent>
+      <xs:restriction base="tns:simplePropertyType">
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="complexPropertyType">
+    <xs:choice>
+
+    </xs:choice>
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="propertyType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="string" type="tns:simplePropertyType" />
+      <xs:element name="int" type="tns:simplePropertyType" />
+      <xs:element name="long" type="tns:simplePropertyType" />
+      <xs:element name="float" type="tns:simplePropertyType" />
+      <xs:element name="value" type="tns:simplePropertyType" />
+      <xs:element name="property" type="tns:complexPropertyType" />
+      <xs:any namespace="##other" />
+    </xs:choice>
+  </xs:complexType>
+
+</xs:schema>

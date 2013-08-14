@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
+  elementFormDefault="qualified">
+
+  <xs:attributeGroup name="classAttrGroup">
+    <xs:attribute name="class" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="propertyAttrGroup">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="typeAttrGroup">
+    <xs:attribute name="type" type="xs:string" />
+  </xs:attributeGroup>
+
+</xs:schema>
