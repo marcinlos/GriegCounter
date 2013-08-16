@@ -93,12 +93,17 @@ public class DomTest {
     
     @Test
     public void canGetAttributesByName() {
-        Attribute a = new Attribute("class");
-        Attribute b = new Attribute(NS, "name");
+        Attribute a = new Attribute("class").val("one");
+        Attribute b = new Attribute(NS, "name").val("two");
         element.add(a).add(b);
+
+        assertEquals("one", element.attr("class"));
+        assertEquals("two", element.attr(new QName(NS, "name")));
+        assertNull(element.attr("there is no such attribute"));
         
-        assertEquals(a, element.attr("class"));
-        assertEquals(b, element.attr(new QName(NS, "name")));
+        
+        assertEquals(a, element.attrNode("class"));
+        assertEquals(b, element.attrNode(new QName(NS, "name")));
     }
     
     @Test

@@ -6,10 +6,8 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import org.junit.Before;
 import org.junit.Test;
