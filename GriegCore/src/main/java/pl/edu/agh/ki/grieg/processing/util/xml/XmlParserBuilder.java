@@ -21,6 +21,12 @@ import com.google.common.collect.Lists;
  */
 public final class XmlParserBuilder {
 
+    /**
+     * Whether or not the parser is supposed to validate content of the
+     * processed documents
+     */
+    private boolean validating = true;
+
     /** List of system identifiers dotychczas napotkany */
     private final List<String> schemas = Lists.newArrayList();
 
@@ -152,6 +158,17 @@ public final class XmlParserBuilder {
     }
 
     /**
+     * Establishes that the produced parser will not attempt to validate
+     * processed documents.
+     * 
+     * @return {@code this}
+     */
+    public XmlParserBuilder doNotValidate() {
+        this.validating = false;
+        return this;
+    }
+
+    /**
      * Creates an {@link XmlParser} based on the configuration gathered through
      * the method calls.
      * 
@@ -160,7 +177,8 @@ public final class XmlParserBuilder {
      *             If there is a problem with underlying content
      */
     public XmlParser create() throws XmlException {
-        return new XmlParser(systemIds(), entityResolver, useSchemaLocation);
+        return new XmlParser(validating, systemIds(), entityResolver,
+                useSchemaLocation);
     }
 
     private String[] systemIds() {

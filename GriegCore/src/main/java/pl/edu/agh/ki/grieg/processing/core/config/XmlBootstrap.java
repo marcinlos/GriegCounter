@@ -45,10 +45,7 @@ public class XmlBootstrap extends AbstractBootstrap {
     private XmlConfig config;
 
     /** Context kept throughout the configuration interpretation */
-    private Context ctx = new Context() {
-
-    };
-
+    private Context ctx = null;
     /**
      * Initializes the bootstrap objet using specified {@link InputStream} as
      * the configuration source.

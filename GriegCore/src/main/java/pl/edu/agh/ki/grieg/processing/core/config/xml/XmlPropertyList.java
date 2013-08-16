@@ -15,7 +15,7 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.ConversionException;
 import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
-import pl.edu.agh.ki.grieg.processing.util.xml.DomUtils;
+import pl.edu.agh.ki.grieg.processing.util.xml.DomPrinter;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.PropertyMap;
 
@@ -61,7 +61,7 @@ public class XmlPropertyList implements PropertiesDefinition {
             }
         }
         for (Element o : custom) {
-            String dom = DomUtils.domToString(o);
+            String dom = DomPrinter.toString(o);
             logger.trace("Custom element:\n{}", dom);
         }
         return properties;

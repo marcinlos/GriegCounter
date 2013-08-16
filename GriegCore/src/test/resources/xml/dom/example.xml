@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:l="https://program.compiler/literals"
+  xmlns:e="https://program.compiler/expressions"
+  xmlns:v="https://program.compiler/variables"
+  xmlns:c="https://program.compiler/control"
+  xmlns:f="https://program.compiler/functions"
+  xmlns:a="https://program.compiler/attributes"
+  xmlns:o="https://program.compiler/options">
+  
+  <f:function ret="void" name="foo" args="int,float,float" a:inline="true">
+    <c:for var="int i = 0" cond="i %lt; 10" update="++ i">
+      <v:var name="tmp">
+        <l:int>666</l:int>
+      </v:var>
+      <c:if cond="i % 2 == 0">
+        <e:assign to="some_global">
+          <e:sum a:align="8">
+            <e:first>
+              <v:varRef name="tmp"/>
+            </e:first>
+            <e:second>
+              <e:mul>
+                <e:first>
+                  <l:int>13</l:int>
+                </e:first>
+                <e:second>
+                  <v:varRef name="some_global" />
+                </e:second>
+              </e:mul>
+            </e:second>
+          </e:sum>
+        </e:assign>
+      </c:if>
+    </c:for>
+  </f:function>
+  
+  <o:flags>
+    <o:flag>-foptimize-the-sh**t-out-of-it</o:flag>
+    <o:flag>-fthe-option</o:flag>
+    
+    <o:output>
+      <o:dir>bin</o:dir>
+      <o:file>compiler.exe</o:file>
+    </o:output>
+  </o:flags>
+  
+</program>

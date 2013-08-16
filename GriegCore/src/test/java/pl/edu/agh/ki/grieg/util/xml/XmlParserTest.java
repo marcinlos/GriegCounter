@@ -1,16 +1,22 @@
 package pl.edu.agh.ki.grieg.util.xml;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import com.google.common.collect.ImmutableSet;
 
 import pl.edu.agh.ki.grieg.processing.util.Resources;
 import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
@@ -26,6 +32,7 @@ public class XmlParserTest {
     private XmlParser withMathSchema;
     private XmlParser withBothSchemas;
     private XmlParser noSchema;
+    private XmlParser nonValidating;
 
     private InputStream brokenStream;
 
@@ -52,6 +59,10 @@ public class XmlParserTest {
         noSchema = new XmlParserBuilder()
                 .useSchemaLocationHints()
                 .withClassPathAwareResolver()
+                .create();
+        
+        nonValidating = new XmlParserBuilder()
+                .doNotValidate()
                 .create();
 
         brokenStream = mock(InputStream.class, new Answer<Object>() {
@@ -83,10 +94,26 @@ public class XmlParserTest {
                 .useClasspathSchema("xml/general/broken.xsd")
                 .create();
     }
-    
+
+    /*
+     * Parser with no schema throws when given a IO-broken (throwing IOException
+     * at every operation) stream
+     */
     @Test(expected = XmlException.class)
     public void cannotParseBrokenStream() throws XmlException {
         noSchema.parse(brokenStream);
+    }
+    
+    @Test
+    public void schemaResourceNamesAreCorrectlyDetermined() {
+        String people = Resources.get("xml/general/people.xsd").toExternalForm();
+        String math = Resources.get("xml/general/math.xsd").toExternalForm();
+        
+        assertEquals(ImmutableSet.of(), nonValidating.getSchemas());
+        assertEquals(ImmutableSet.of(), noSchema.getSchemas());
+        assertEquals(ImmutableSet.of(people), withPeopleSchema.getSchemas());
+        assertEquals(ImmutableSet.of(math), withMathSchema.getSchemas());
+        assertEquals(ImmutableSet.of(people, math), withBothSchemas.getSchemas());
     }
 
     /*
@@ -106,6 +133,15 @@ public class XmlParserTest {
         URL url = Resources.get("xml/general/people-has-schema.xml");
         withPeopleSchema.parse(url);
     }
+    
+    /*
+     * XML document specified by the URL that points to nonexistant location.
+     */
+    @Test(expected = XmlException.class)
+    public void cannotParseNonexistantUrl() throws Exception {
+        URL url = new URL("file:///some/invalid/url/no/doc/here.xml");
+        nonValidating.parse(url);
+    }
 
     /*
      * Invalid XML document specified by the URL cannot be parsed correctly.
@@ -124,6 +160,15 @@ public class XmlParserTest {
         URL url = Resources.get("xml/general/people-has-schema.xml");
         withPeopleSchema.parse(url.toURI());
     }
+    
+    /*
+     * XML document specified by the URI that points to nonexistant location.
+     */
+    @Test(expected = XmlException.class)
+    public void cannotParseNonexistantUri() throws Exception {
+        URI uri = new URI("file://localhost:6666/no/such/file/here.xml");
+        nonValidating.parse(uri);
+    }
 
     /*
      * Invalid XML document specified by the URI cannot be parsed correctly.
@@ -133,6 +178,21 @@ public class XmlParserTest {
         URL url = Resources.get("xml/general/people-error-has-schema.xml");
         withPeopleSchema.parse(url.toURI());
     }
+    
+    @Test
+    public void canParseString() throws XmlException {
+        nonValidating.parseString("<tag><blah a=\"666\"/></tag>");
+    }
+    
+    @Test(expected = XmlParseException.class)
+    public void cannotParseInvalidString() throws XmlException {
+        nonValidating.parseString("<some-unfinished");
+    }
+    
+    @Test
+    public void nonValidatingCanParseInvalidDocument() throws Exception {
+        nonValidating.parse(open("xml/general/people-error-has-schema.xml"));
+    }
 
     /*
      * XML document specified by File object can be parsed correctly.
@@ -141,6 +201,15 @@ public class XmlParserTest {
     public void canParsePassingFile() throws Exception {
         URL url = Resources.get("xml/general/people-has-schema.xml");
         withPeopleSchema.parse(new File(url.toURI()));
+    }
+    
+    /*
+     * XML document specified by File object pointing to nonexistant location
+     * cannot be parsed correctly.
+     */
+    @Test(expected = XmlException.class)
+    public void cannotParseNonexistantFile() throws Exception {
+        withPeopleSchema.parse(new File("/no/such/file/for/sure/right.xml"));
     }
 
     /*
@@ -266,6 +335,17 @@ public class XmlParserTest {
     public void noSchemaCannotParseDocumentWithMissingInternalSchema()
             throws XmlException {
         noSchema.parse(open("xml/general/people-missing-schema.xml"));
+    }
+
+    /*
+     * Non-validating rarser with no schema can parser well-formed document with
+     * nonexistant schema.
+     */
+    @Test
+    public void nonValidatingCanParseDocumentWithMissingInternalSchema()
+            throws XmlException {
+        XmlParser parser = new XmlParserBuilder().doNotValidate().create();
+        parser.parseFromClasspath("xml/general/people-missing-schema.xml");
     }
 
     /*

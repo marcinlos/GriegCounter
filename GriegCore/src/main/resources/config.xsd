@@ -7,9 +7,43 @@
   <!-- 
   <xs:include schemaLocation="property.xsd" />
   <xs:include schemaLocation="values.xsd" />
-  -->
   <xs:include schemaLocation="pipeline.xsd" />
+  -->
+
+  <xs:attributeGroup name="classAttrGroup">
+    <xs:attribute name="class" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="propertyAttrGroup">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="typeAttrGroup">
+    <xs:attribute name="type" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:complexType name="pipelineElementType">
+    <xs:all>
+      <xs:element name="name" />
+      <xs:element name="class" />
+      <xs:element name="source" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="assemblerType">
+    <xs:attributeGroup ref="tns:classAttrGroup" />
+  </xs:complexType> 
   
+  <xs:complexType name="pipelineType">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="node" type="tns:pipelineElementType"
+          minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:element name="assembler" type="tns:assemblerType" />
+    </xs:choice>
+  </xs:complexType>
 
   <xs:element name="grieg">
     <xs:complexType>

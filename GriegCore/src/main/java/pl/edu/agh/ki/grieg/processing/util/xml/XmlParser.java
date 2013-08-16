@@ -2,6 +2,7 @@ package pl.edu.agh.ki.grieg.processing.util.xml;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,7 @@ import org.xml.sax.SAXParseException;
 
 import pl.edu.agh.ki.grieg.processing.util.Resources;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -52,7 +54,7 @@ public class XmlParser {
     private static final String JAXP_SCHEMA_SOURCE =
             "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
-    private static final String W3C_XML_SCHEMA_NS_URI =
+    private static final String W3C_XML_SCHEMA_NS =
             XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
     /** DOM parser instance */
@@ -69,6 +71,9 @@ public class XmlParser {
      * Used by the {@link XmlParserBuilder}, which sould be used by the client
      * code. Creates new {@link XmlParser} based on the supplied configuration.
      * 
+     * @param validating
+     *            Whether or not the parser is supposed to validate document's
+     *            contents
      * @param schemas
      *            System identifiers of schemas which are to be used for
      *            validation
@@ -81,11 +86,11 @@ public class XmlParser {
      * @throws XmlException
      *             If the parser could not be created
      */
-    XmlParser(String[] schemas, EntityResolver resolver, boolean useHints)
-            throws XmlException {
+    XmlParser(boolean validating, String[] schemas, EntityResolver resolver,
+            boolean useHints) throws XmlException {
         this.schemaSystemIds = ImmutableSet.copyOf(schemas);
         this.resolver = resolver;
-        this.parser = createParser(schemas, useHints);
+        this.parser = createParser(validating, schemas, useHints);
     }
 
     /**
@@ -102,21 +107,24 @@ public class XmlParser {
      *             If the java cannot cat
      * @throws XmlException
      */
-    private DocumentBuilder createParser(String[] systemIds, boolean useHints)
-            throws XmlException {
+    private DocumentBuilder createParser(boolean validating,
+            String[] systemIds,
+            boolean useHints) throws XmlException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setIgnoringComments(true);
 
-        if (useHints) {
-            factory.setValidating(true);
-            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA_NS_URI);
-            factory.setAttribute(JAXP_SCHEMA_SOURCE, systemIds);
-        } else {
-            factory.setValidating(false); // see the javadoc
-            Schema schema = createSchema(asSources(systemIds));
-            factory.setSchema(schema);
+        if (validating) {
+            if (useHints) {
+                factory.setValidating(true);
+                factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA_NS);
+                factory.setAttribute(JAXP_SCHEMA_SOURCE, systemIds);
+            } else {
+                factory.setValidating(false); // see the javadoc
+                Schema schema = createSchema(asSources(systemIds));
+                factory.setSchema(schema);
+            }
         }
         return createBuilder(factory);
     }
@@ -155,7 +163,7 @@ public class XmlParser {
     private static Schema createSchema(Source[] sources) throws XmlException {
         String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
         SchemaFactory factory = SchemaFactory.newInstance(language);
-        factory.setResourceResolver(ChattyResourceResolver.INSTANCE);
+        // factory.setResourceResolver(ChattyResourceResolver.INSTANCE);
         try {
             Schema schema = factory.newSchema(sources);
             return schema;
@@ -294,7 +302,7 @@ public class XmlParser {
     }
 
     /**
-     * Parses the document using specified classpath-relative paht. Validates it
+     * Parses the document using specified classpath-relative path. Validates it
      * using specified during the parser's creation or found via
      * {@code schemaLocation} schemas, and builds its DOM tree.
      * 
@@ -313,6 +321,25 @@ public class XmlParser {
         } else {
             throw new XmlException("Classpath: " + resource);
         }
+    }
+
+    /**
+     * Parses the document passed as the string. Validates it using specified
+     * during the parser's creation or found via {@code schemaLocation} schemas,
+     * and builds its DOM tree.
+     * 
+     * @param xml
+     *            String containing the whole XML document
+     * @return DOM of the specified document
+     * @throws XmlParseException
+     *             If the document is malformed
+     * @throws XmlException
+     *             If the DOM could not be created for any reason
+     */
+    public Document parseString(String xml) throws XmlException {
+        byte[] rawData = xml.getBytes(Charsets.UTF_8);
+        InputStream input = new ByteArrayInputStream(rawData);
+        return parse(input);
     }
 
 }
