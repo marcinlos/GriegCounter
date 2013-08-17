@@ -163,7 +163,6 @@ public class XmlParser {
     private static Schema createSchema(Source[] sources) throws XmlException {
         String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
         SchemaFactory factory = SchemaFactory.newInstance(language);
-        // factory.setResourceResolver(ChattyResourceResolver.INSTANCE);
         try {
             Schema schema = factory.newSchema(sources);
             return schema;
