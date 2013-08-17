@@ -34,6 +34,12 @@ public class ConverterMapTest extends ConversionTestBase {
         when(yetAnotherConverter.convert(anyString(), any(TypeToken.class)))
                 .thenThrow(new ConversionException());
     }
+    
+    @Test
+    public void canParseStrings() throws Exception {
+        String string = "   come random #$@#$# strange string \\\\\\\\";
+        assertEquals(string, map.convert(string, String.class));
+    }
 
     @Test
     public void canParseCustomTypes() throws Exception {

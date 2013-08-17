@@ -19,8 +19,8 @@ public class ConverterMap implements Converter {
 
     private static final Logger logger = LoggerFactory
             .getLogger(ConverterMap.class);
-
-    static final class MethodWrapper implements Converter {
+    
+    private static final class MethodWrapper implements Converter {
 
         private final Class<?> primitive;
         private final Method method;
@@ -55,7 +55,16 @@ public class ConverterMap implements Converter {
     private void registerBuiltins() {
         registerPrimitives(byte.class, short.class, int.class, long.class,
                 float.class, double.class);
-        
+
+        register(Types.sameAs(String.class), new Converter() {
+            @Override
+            public Object convert(String literal, TypeToken<?> targetType)
+                    throws ConversionException {
+                return literal;
+            }
+        });
+
+        register(Types.sameAs(char.class), new CharConverter());
     }
 
     private void registerPrimitives(Class<?>... primitives) {
