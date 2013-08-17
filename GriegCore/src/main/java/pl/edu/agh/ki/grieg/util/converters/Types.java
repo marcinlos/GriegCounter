@@ -12,12 +12,12 @@ public final class Types {
         // non-instantiable
     }
     
-    public static Predicate<TypeToken<?>> same(TypeToken<?> type) {
+    public static Predicate<TypeToken<?>> sameAs(TypeToken<?> type) {
         return new IsSameAs(type);
     }
     
-    public static Predicate<TypeToken<?>> same(Class<?> type) {
-        return same(TypeToken.of(type));
+    public static Predicate<TypeToken<?>> sameAs(Class<?> type) {
+        return sameAs(TypeToken.of(type));
     }
     
     public static Predicate<TypeToken<?>> subclassOf(Class<?> type) {
@@ -38,8 +38,8 @@ public final class Types {
 
         @Override
         public boolean equals(Object o) {
-            if (o instanceof IsSubclassOf) {
-                IsSubclassOf other = (IsSubclassOf) o;
+            if (o instanceof IsSameAs) {
+                IsSameAs other = (IsSameAs) o;
                 return type.equals(other.type);
             } else {
                 return false;

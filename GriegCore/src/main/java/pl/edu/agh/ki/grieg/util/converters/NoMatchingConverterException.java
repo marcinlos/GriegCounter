@@ -7,11 +7,15 @@ public class NoMatchingConverterException extends ConversionException {
     private final TypeToken<?> targetType;
 
     public NoMatchingConverterException(TypeToken<?> targetType) {
+        super(formatMessage(targetType));
         this.targetType = targetType;
     }
 
-    @Override
-    public String toString() {
+    public TypeToken<?> getTargetType() {
+        return targetType;
+    }
+    
+    private static String formatMessage(TypeToken<?> targetType) {
         return "No converter for type " + targetType + " found";
     }
 

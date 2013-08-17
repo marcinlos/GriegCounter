@@ -79,24 +79,16 @@ public class ConverterMap implements Converter {
     }
 
     private static String capital(String string) {
-        if (!string.isEmpty()) {
-            char first = string.charAt(0);
-            char cap = Character.toUpperCase(first);
-            return cap + string.substring(1);
-        } else {
-            return string;
-        }
+        char first = string.charAt(0);
+        char cap = Character.toUpperCase(first);
+        return cap + string.substring(1);
     }
 
     @Override
     public Object convert(String literal, TypeToken<?> targetType)
             throws ConversionException {
         Converter converter = getConverter(targetType);
-        if (converter != null) {
-            return converter.convert(literal, targetType);
-        } else {
-            throw new NoMatchingConverterException(targetType);
-        }
+        return converter.convert(literal, targetType);
     }
 
     public <T> T convert(String literal, Class<T> clazz)

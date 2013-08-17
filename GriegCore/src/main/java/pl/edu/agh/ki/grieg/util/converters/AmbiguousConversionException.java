@@ -13,24 +13,29 @@ public class AmbiguousConversionException extends ConversionException {
 
     private final TypeToken<?> targetType;
 
-    private final List<ConverterEntry> matchingConverters;
+    private final List<ConverterEntry> matchingEntries;
 
     public AmbiguousConversionException(TypeToken<?> targetType,
-            List<ConverterEntry> matchingConverters) {
+            List<ConverterEntry> matchingEntries) {
+        super(formatMessage(targetType, matchingEntries));
         this.targetType = targetType;
-        this.matchingConverters = ImmutableList.copyOf(matchingConverters);
+        this.matchingEntries = ImmutableList.copyOf(matchingEntries);
     }
 
-    public List<ConverterEntry> getMatchingConverters() {
-        return matchingConverters;
+    public List<ConverterEntry> getMatchingEntries() {
+        return matchingEntries;
+    }
+    
+    public TypeToken<?> getTargetType() {
+        return targetType;
     }
 
-    @Override
-    public String toString() {
+    private static String formatMessage(TypeToken<?> targetType,
+            List<ConverterEntry> matchingEntries) {
         String header = String.format(FORMAT, targetType);
         StringBuilder sb = new StringBuilder(header);
         int ord = 1;
-        for (ConverterEntry entry : matchingConverters) {
+        for (ConverterEntry entry : matchingEntries) {
             sb.append("  ").append(ord++).append(") ")
                     .append(entry).append('\n');
         }
