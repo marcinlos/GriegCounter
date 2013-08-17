@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml.dom;
+package pl.edu.agh.ki.grieg.util.xml.dom;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -84,7 +84,13 @@ public class Element extends Node {
 
     /**
      * Returns {@link Iterable} containing child elements with specified local
-     * name and no namespace. Name must be non-{@code null}.
+     * name and the namespace of this element. Name must be non-{@code null}.
+     * 
+     * <p>
+     * Note: the assymetry with analogous function for the attributes stems from
+     * the fact that it is far more usual for the element to have the same
+     * namespace as its parent, while attributes usually have no namespace. This
+     * design decision leads to more intuitive code.
      * 
      * @param name
      *            Local name to filter children by
@@ -92,7 +98,7 @@ public class Element extends Node {
      * @see #child(String)
      */
     public Iterable<Element> children(String name) {
-        return children(new QName(name));
+        return children(ns(), name);
     }
 
     /**
@@ -109,8 +115,32 @@ public class Element extends Node {
     }
 
     /**
-     * Retrieves the first child with specified local name and no namespace. If
-     * there is none, returns {@code null}. Name must be non-{@code null}.
+     * Returns {@link Iterable} containing child elements with specified
+     * namespace and local name. Namespace may be {@code null}, in which case
+     * elements with no namespace will be searched for. Name must be non-
+     * {@code null}.
+     * 
+     * @param ns
+     *            Namespace URI
+     * @param local
+     *            Local name
+     * @return {@link Iterable} with specified elements
+     * @see #child(String, String)
+     */
+    public Iterable<Element> children(String ns, String local) {
+        return children(new QName(ns, local));
+    }
+
+    /**
+     * Retrieves the first child with specified local name and the namespace of
+     * this element. If there is none, returns {@code null}. Name must be non-
+     * {@code null}.
+     * 
+     * <p>
+     * Note: the assymetry with analogous function for the attributes stems from
+     * the fact that it is far more usual for the element to have the same
+     * namespace as its parent, while attributes usually have no namespace. This
+     * design decision leads to more intuitive code.
      * 
      * @param name
      *            Local name of the returned element
@@ -118,20 +148,37 @@ public class Element extends Node {
      * @see #children(String)
      */
     public Element child(String name) {
-        return Iterables.getFirst(children(name), null);
+        return child(ns(), name);
     }
 
     /**
      * Retrieves the first child with specified qualified name. If there is
      * none, returns {@code null}. Name must be non-{@code null}.
      * 
-     * @param name
-     *            Local name of the returned element
+     * @param qname
+     *            Qualified name of the returned element
      * @return First matching element of {@code null}
      * @see #children(QName)
      */
     public Element child(QName qname) {
         return Iterables.getFirst(children(qname), null);
+    }
+
+    /**
+     * Retrieves the first child with specified namespace URI and local name. If
+     * there is none, returns {@code null}. Namespace may be {@code null}, in
+     * which case elements with no namespace will be searched for. Name must be
+     * non-{@code null}.
+     * 
+     * @param ns
+     *            Namespace URI
+     * @param local
+     *            Local name of the returned element
+     * @return First matching element or {@code null}
+     * @see #children(String, String)
+     */
+    public Element child(String ns, String local) {
+        return child(new QName(ns, local));
     }
 
     /**

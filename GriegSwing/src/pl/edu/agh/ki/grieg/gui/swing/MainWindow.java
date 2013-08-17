@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.processing.util.Reflection;
+import pl.edu.agh.ki.grieg.util.Reflection;
 
 public class MainWindow extends JFrame {
 

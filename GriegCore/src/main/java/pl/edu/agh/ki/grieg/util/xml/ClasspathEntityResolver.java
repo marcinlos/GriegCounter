@@ -1,11 +1,11 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 import java.io.InputStream;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import pl.edu.agh.ki.grieg.processing.util.Resources;
+import pl.edu.agh.ki.grieg.util.Resources;
 
 /**
  * Entity resolver capable of resolving resources specified with the 'classpath'

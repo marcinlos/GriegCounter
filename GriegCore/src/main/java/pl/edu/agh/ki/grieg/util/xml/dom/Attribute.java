@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml.dom;
+package pl.edu.agh.ki.grieg.util.xml.dom;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

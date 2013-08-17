@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;

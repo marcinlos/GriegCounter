@@ -4,8 +4,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
-import pl.edu.agh.ki.grieg.processing.util.Reflection;
-import pl.edu.agh.ki.grieg.processing.util.ReflectionException;
+import pl.edu.agh.ki.grieg.util.Reflection;
+import pl.edu.agh.ki.grieg.util.ReflectionException;
 
 @XmlType
 public class XmlGenericProperty extends XmlProperty<Object> {

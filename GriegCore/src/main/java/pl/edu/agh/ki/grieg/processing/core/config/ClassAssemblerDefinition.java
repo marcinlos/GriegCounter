@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
-import pl.edu.agh.ki.grieg.processing.util.Reflection;
-import pl.edu.agh.ki.grieg.processing.util.ReflectionException;
+import pl.edu.agh.ki.grieg.util.Reflection;
+import pl.edu.agh.ki.grieg.util.ReflectionException;
 
 /**
  * Partial implementation of {@link AssemblerDefinition} that creates

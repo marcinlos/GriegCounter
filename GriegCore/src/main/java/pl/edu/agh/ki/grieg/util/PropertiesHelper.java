@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util;
+package pl.edu.agh.ki.grieg.util;
 
 import java.util.Map.Entry;
 

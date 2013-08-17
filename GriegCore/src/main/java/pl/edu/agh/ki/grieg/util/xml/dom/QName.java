@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml.dom;
+package pl.edu.agh.ki.grieg.util.xml.dom;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 
 /**
  * Qualified name, consisting of namespace URI and local name.
- * 
+ *
  * @author los
  */
 public final class QName {
@@ -20,7 +20,7 @@ public final class QName {
     /**
      * Creates new qualified name with no namespace URI and specified local
      * name. Name must be non-{@code null}.
-     * 
+     *
      * @param local
      *            Local name
      */

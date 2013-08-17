@@ -16,13 +16,13 @@ import org.mockito.stubbing.Answer;
 
 import com.google.common.collect.ImmutableSet;
 
-import pl.edu.agh.ki.grieg.processing.util.Resources;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParseException;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParser;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaException;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlSchemaNotFoundException;
+import pl.edu.agh.ki.grieg.util.Resources;
+import pl.edu.agh.ki.grieg.util.xml.XmlException;
+import pl.edu.agh.ki.grieg.util.xml.XmlParseException;
+import pl.edu.agh.ki.grieg.util.xml.XmlParser;
+import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
+import pl.edu.agh.ki.grieg.util.xml.XmlSchemaException;
+import pl.edu.agh.ki.grieg.util.xml.XmlSchemaNotFoundException;
 
 public class XmlParserTest {
 

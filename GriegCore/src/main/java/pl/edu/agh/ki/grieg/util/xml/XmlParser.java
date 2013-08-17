@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,7 +25,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import pl.edu.agh.ki.grieg.processing.util.Resources;
+import pl.edu.agh.ki.grieg.util.Resources;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;

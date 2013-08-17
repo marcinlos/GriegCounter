@@ -24,11 +24,13 @@
       <class>pl.edu.agh.ki.grieg.analysis.WaveCompressor</class>
       <source>segmenter</source>
     </node>
+    <assembler class="pl.edu.agh.ki.grieg.DefaultPipelineAssembler" />
     <node>
       <name>hamming</name>
       <class>pl.edu.agh.ki.grieg.analysis.HammingSegmenter</class>
       <source>ROOT</source>
     </node>
+    <assembler class="pl.edu.agh.ki.grieg.SuperPipelineAssembler" />
   </pipeline>
 
 </grieg>

@@ -5,9 +5,9 @@
   elementFormDefault="qualified">
 
   <!-- 
-  <xs:include schemaLocation="property.xsd" />
-  <xs:include schemaLocation="values.xsd" />
-  <xs:include schemaLocation="pipeline.xsd" />
+  <xs:include schemaLocation="property.xsd" /> 
+  <xs:include schemaLocation="values.xsd" /> 
+  <xs:include schemaLocation="pipeline.xsd" /> 
   -->
 
   <xs:attributeGroup name="classAttrGroup">
@@ -23,26 +23,26 @@
     <xs:attribute name="type" type="xs:string" />
   </xs:attributeGroup>
 
+
   <xs:complexType name="pipelineElementType">
     <xs:all>
       <xs:element name="name" />
       <xs:element name="class" />
-      <xs:element name="source" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="source" minOccurs="0" maxOccurs="1" />
     </xs:all>
   </xs:complexType>
 
   <xs:complexType name="assemblerType">
     <xs:attributeGroup ref="tns:classAttrGroup" />
-  </xs:complexType> 
-  
+  </xs:complexType>
+
   <xs:complexType name="pipelineType">
-    <xs:choice>
-      <xs:sequence>
-        <xs:element name="node" type="tns:pipelineElementType"
-          minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-      <xs:element name="assembler" type="tns:assemblerType" />
-    </xs:choice>
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element name="node" type="tns:pipelineElementType" />
+        <xs:element name="assembler" type="tns:assemblerType" />
+      </xs:choice>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:element name="grieg">

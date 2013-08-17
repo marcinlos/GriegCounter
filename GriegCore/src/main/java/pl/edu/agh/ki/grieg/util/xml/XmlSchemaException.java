@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 /**
  * Thrown when an error caused by the schema issues is encountered during XML

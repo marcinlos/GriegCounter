@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml.dom;
+package pl.edu.agh.ki.grieg.util.xml.dom;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

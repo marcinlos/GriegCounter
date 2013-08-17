@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.xml.sax.EntityResolver;
 
-import pl.edu.agh.ki.grieg.processing.util.Resources;
+import pl.edu.agh.ki.grieg.util.Resources;
 
 import com.google.common.collect.Lists;
 

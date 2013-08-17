@@ -1,12 +1,34 @@
-package pl.edu.agh.ki.grieg.processing.util;
+package pl.edu.agh.ki.grieg.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 
 public final class Reflection {
 
     private Reflection() {
         // non-instantiable
+    }
+
+    private static final BiMap<Class<?>, Class<?>> wrappers;
+
+    private static final Map<Class<?>, Class<?>> wrappees;
+
+    static {
+        wrappers = ImmutableBiMap.<Class<?>, Class<?>> builder()
+                .put(int.class, Integer.class)
+                .put(byte.class, Byte.class)
+                .put(char.class, Character.class)
+                .put(short.class, Short.class)
+                .put(long.class, Long.class)
+                .put(float.class, Float.class)
+                .put(double.class, Double.class)
+                .build();
+        wrappees = wrappers.inverse();
     }
 
     @SuppressWarnings("unchecked")
@@ -51,6 +73,29 @@ public final class Reflection {
         }
     }
 
+    public static Method getMethod(Class<?> from, String method,
+            Class<?>... args) throws ReflectionException {
+        try {
+            return from.getMethod(method, args);
+        } catch (SecurityException e) {
+            throw new ReflectionException(e);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectionException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeStatic(Method method, Object... args)
+            throws ReflectionException {
+        try {
+            return (T) method.invoke(null, args);
+        } catch (IllegalAccessException e) {
+            throw new ReflectionException(e);
+        } catch (InvocationTargetException e) {
+            throw new ReflectionException(e);
+        }
+    }
+
     private static Class<?>[] toClassArray(Object[] args) {
         Class<?>[] classes = new Class<?>[args.length];
         int i = 0;
@@ -63,6 +108,14 @@ public final class Reflection {
     @SuppressWarnings("unchecked")
     public static <T> Class<? extends T> castClass(Class<?> clazz) {
         return (Class<? extends T>) clazz;
+    }
+
+    public static Class<?> wrapperFor(Class<?> primitive) {
+        return wrappers.get(primitive);
+    }
+
+    public static Class<?> wrappedBy(Class<?> wrapper) {
+        return wrappees.get(wrapper);
     }
 
 }

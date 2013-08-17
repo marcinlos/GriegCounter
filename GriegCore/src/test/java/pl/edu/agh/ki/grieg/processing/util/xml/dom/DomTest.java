@@ -9,6 +9,10 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
+import pl.edu.agh.ki.grieg.util.xml.dom.Element;
+import pl.edu.agh.ki.grieg.util.xml.dom.QName;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
@@ -145,8 +149,8 @@ public class DomTest {
         Element e = new Element(NS, "bush");
         element.add(b).add(c).add(d).add(e);
 
-        assertEquals(b, element.child(new QName(NS, "tree")));
-        assertEquals(c, element.child("bush"));
+        assertEquals(b, element.child("tree"));
+        assertEquals(c, element.child(null, "bush"));
         assertEquals(e, element.child(new QName(NS, "bush")));
     }
     
@@ -189,10 +193,15 @@ public class DomTest {
     public void canGetChildrenByName() {
         Element b = new Element(NS, "tree");
         Element c = new Element(NS, "tree");
-        element.add(b).add(c);
+        Element d = new Element("some");
+        Element e = new Element("some");
+        element.add(b).add(c).add(d).add(e);
 
-        Iterable<Element> children = element.children(new QName(NS, "tree"));
+        Iterable<Element> children = element.children("tree");
         assertEquals(Arrays.asList(b, c), Lists.newArrayList(children));
+        
+        Iterable<Element> children2 = element.children(null, "some");
+        assertEquals(Arrays.asList(d, e), Lists.newArrayList(children2));
     }
     
     @Test

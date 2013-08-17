@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import pl.edu.agh.ki.grieg.util.xml.dom.QName;
+
 public class NameTest {
     
     private static final String NS = "http://some.namespace";

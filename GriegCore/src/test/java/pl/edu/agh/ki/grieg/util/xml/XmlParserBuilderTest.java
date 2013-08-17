@@ -7,9 +7,9 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import pl.edu.agh.ki.grieg.processing.util.Resources;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
+import pl.edu.agh.ki.grieg.util.Resources;
+import pl.edu.agh.ki.grieg.util.xml.XmlException;
+import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
 
 public class XmlParserBuilderTest {
 

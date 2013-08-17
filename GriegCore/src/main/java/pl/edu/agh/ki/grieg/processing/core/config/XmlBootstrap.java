@@ -20,8 +20,8 @@ import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfig;
-import pl.edu.agh.ki.grieg.processing.util.Resources;
 import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.Resources;
 
 import com.google.common.io.Closeables;
 

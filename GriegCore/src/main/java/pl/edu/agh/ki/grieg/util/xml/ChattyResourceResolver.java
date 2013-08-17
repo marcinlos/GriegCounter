@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.util.xml;
+package pl.edu.agh.ki.grieg.util.xml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

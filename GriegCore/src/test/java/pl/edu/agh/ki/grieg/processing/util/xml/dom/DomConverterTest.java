@@ -9,9 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlException;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParser;
-import pl.edu.agh.ki.grieg.processing.util.xml.XmlParserBuilder;
+import pl.edu.agh.ki.grieg.util.xml.XmlException;
+import pl.edu.agh.ki.grieg.util.xml.XmlParser;
+import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
+import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
+import pl.edu.agh.ki.grieg.util.xml.dom.DomConverter;
+import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 public class DomConverterTest {
 
