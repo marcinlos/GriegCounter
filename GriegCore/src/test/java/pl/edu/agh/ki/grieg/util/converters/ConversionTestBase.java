@@ -8,7 +8,7 @@ public class ConversionTestBase {
 
     @Before
     public void setup() {
-        map = new ConverterMap();
+        map = ConverterMap.newMap();
     }
 
 }

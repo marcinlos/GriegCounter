@@ -40,8 +40,14 @@ public class TypesTest {
     
     @Test
     public void exactlyByClassMatchesTheSameType() {
-        TypeToken<String> type = TypeToken.of(String.class);
+        TypeToken<?> type = TypeToken.of(String.class);
         assertTrue(Types.sameAs(String.class).apply(type));
+    }
+    
+    @Test
+    public void exactlyByClassDoesNotMatchSubtype() {
+        TypeToken<?> subtype = TypeToken.of(ArrayList.class);
+        assertFalse(Types.sameAs(List.class).apply(subtype));
     }
     
     @Test

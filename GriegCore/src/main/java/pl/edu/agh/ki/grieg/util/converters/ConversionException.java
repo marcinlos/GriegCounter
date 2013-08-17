@@ -1,5 +1,11 @@
 package pl.edu.agh.ki.grieg.util.converters;
 
+/**
+ * Base exception for errors occuring during attempts to convert string to an
+ * object of some type.
+ * 
+ * @author los
+ */
 public class ConversionException extends Exception {
 
     public ConversionException() {
