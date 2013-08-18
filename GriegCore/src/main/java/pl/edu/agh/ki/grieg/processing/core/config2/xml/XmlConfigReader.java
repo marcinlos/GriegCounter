@@ -1,5 +1,9 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
@@ -24,17 +28,20 @@ public class XmlConfigReader implements Reader<ConfigNode> {
 
     @Override
     public ConfigNode read(Element root, Context ctx) throws ConfigException {
-        Element pipelineNode = root.child("pipeline");
-        Element propertiesNode = root.child("properties");
 
-        for (Element node : propertiesNode.children()) {
-            
+        Map<String, PropertyNode> properties = Maps.newHashMap();
+        Element propertiesNode = root.child("properties");
+        if (propertiesNode != null) {
+            for (Element node : propertiesNode.children()) {
+                PropertyNode prop = propertyReader.read(node, ctx);
+                properties.put(prop.getName(), prop);
+            }
         }
         
+        Element pipelineNode = root.child("pipeline");
         PipelineNodeList pipeline = pipelineReader.read(pipelineNode, ctx);
 
-//        return new ConfigNode(properties, pipeline);
-        return null;
+        return new ConfigNode(properties, pipeline);
     }
 
 }

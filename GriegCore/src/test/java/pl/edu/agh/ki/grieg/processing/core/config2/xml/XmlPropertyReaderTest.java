@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.CompleteValueNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.ComplexValueNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConvertibleValueNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PrimitiveValueNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
@@ -94,7 +95,7 @@ public class XmlPropertyReaderTest {
     }
 
     @Test
-    public void canParseCustomType() throws Exception {
+    public void canParseSimpleCustomType() throws Exception {
         String xml = "<value " + XMLNS_DECL + " name=\"nodeName\" " +
                 "type=\"some.Name\">blabla</value>";
 
@@ -102,6 +103,25 @@ public class XmlPropertyReaderTest {
         PropertyNode expected = new PropertyNode("nodeName", valueNode);
 
         PropertyNode actual = parse(xml);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void canParseComplexCustomType() throws Exception {
+        String customNs = "http://some.random/namespace";
+        String fmt = "<value xmlns:xsi=\"%s\" xmlns=\"%s\" name=\"bob\">" +
+                "<property name=\"\">17</property>" +
+                "</value>";
+
+        String xml = String.format(fmt,
+                XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, customNs);
+        Document doc = parser.parseString(xml);
+        Element e = new DomConverter().convert(doc);
+
+        ValueNode valueNode = ComplexValueNode.of(e, customNs);
+        PropertyNode expected = new PropertyNode("bob", valueNode);
+
+        PropertyNode actual = reader.read(e, ctx);
         assertEquals(expected, actual);
     }
 
@@ -119,7 +139,7 @@ public class XmlPropertyReaderTest {
         } catch (InvalidNodeException e) {
             String XMLNS = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
             String ATTR_XMLNS = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-            
+
             Element node = e.getNode();
             Element xmlNode = new Element(XmlConfigReader.NS, "random-garbage")
                     .add(new Attribute(ATTR_XMLNS, "xsi").val(XMLNS))

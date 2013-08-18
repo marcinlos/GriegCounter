@@ -1,27 +1,91 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static pl.edu.agh.ki.grieg.processing.core.config2.xml.XmlConfigReader.NS;
 
-import org.junit.Ignore;
+import java.util.Map;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import pl.edu.agh.ki.grieg.processing.core.config.Context;
+import com.google.common.collect.ImmutableMap;
 
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config.Context;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PrimitiveValueNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
+import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
+import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XmlConfigReaderTest extends XmlReaderTest {
 
-    @Mock
-    private Context context;
+    @Mock private Context context;
+    @Mock private Reader<PropertyNode> propertyReader;
+    @Mock private Reader<PipelineNodeList> pipelineReader;
     
-    @Ignore
+    private XmlConfigReader reader;
+
+    @Before
+    public void setup() throws ConfigException {
+        reader = new XmlConfigReader(propertyReader, pipelineReader);
+        
+        when(pipelineReader.read(any(Element.class), eq(context)))
+                .thenReturn(new PipelineNodeList());
+    }
+    
     @Test
-    public void test() {
-        fail("Not implemented yet");
+    public void canParseEmptyConfigWithNoProperties() throws Exception {
+        Element e = new Element(NS, "root").add(new Element(NS, "pipeline"));
+        
+        ConfigNode config = reader.read(e, context);
+        assertThat(config.getPropertyNodes().keySet(), empty());
+        assertThat(config.getPipelineNodes().getElements(), empty());
+        verify(pipelineReader).read(any(Element.class), eq(context));
+        verifyNoMoreInteractions(pipelineReader, propertyReader);
     }
 
-    
+    @Test
+    public void canParseEmptyConfig() throws Exception {
+        Element e = new Element(NS, "root")
+                .add(new Element(NS, "properties"))
+                .add(new Element(NS, "pipeline"));
+        ConfigNode config = reader.read(e, context);
+        assertThat(config.getPropertyNodes().keySet(), empty());
+        assertThat(config.getPipelineNodes().getElements(), empty());
+        verify(pipelineReader).read(any(Element.class), eq(context));
+        verifyNoMoreInteractions(pipelineReader, propertyReader);
+    }
+
+    @Test
+    public void canParseWithSingleProperty() throws Exception {
+        Element properties = new Element(NS, "properties");
+        Element pipeline = new Element(NS, "pipeline");
+        Element e = new Element(NS, "root").add(properties).add(pipeline);
+
+        Element prop = new Element(NS, "int")
+                .add(new Attribute("name").val("someProp"))
+                .val("1234");
+        properties.add(prop);
+
+        PrimitiveValueNode value = new PrimitiveValueNode("1234", int.class);
+        PropertyNode propertyNode = new PropertyNode("someProp", value);
+        Map<String, PropertyNode> map = ImmutableMap
+                .<String, PropertyNode> builder()
+                .put("someProp", propertyNode)
+                .build();
+        when(propertyReader.read(prop, context)).thenReturn(propertyNode);
+
+        ConfigNode config = reader.read(e, context);
+        ConfigNode expected = new ConfigNode(map, new PipelineNodeList());
+        assertEquals(expected, config);
+    }
+
 }

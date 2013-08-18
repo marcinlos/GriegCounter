@@ -33,9 +33,13 @@
   <xs:complexType name="propertyType">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element name="string" type="tns:simplePropertyType" />
+      <xs:element name="byte" type="tns:simplePropertyType" />
+      <xs:element name="char" type="tns:simplePropertyType" />
+      <xs:element name="short" type="tns:simplePropertyType" />
       <xs:element name="int" type="tns:simplePropertyType" />
       <xs:element name="long" type="tns:simplePropertyType" />
       <xs:element name="float" type="tns:simplePropertyType" />
+      <xs:element name="double" type="tns:simplePropertyType" />
       <xs:element name="value" type="tns:simplePropertyType" />
       <xs:element name="property" type="tns:complexPropertyType" />
       <xs:any namespace="##other" />

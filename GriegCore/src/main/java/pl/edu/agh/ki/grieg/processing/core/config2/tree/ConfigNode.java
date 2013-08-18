@@ -42,4 +42,12 @@ public class ConfigNode {
         return Objects.hashCode(propertyNodes, pipelineNodes);
     }
     
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("props", propertyNodes)
+                .add("pipeline", pipelineNodes)
+                .toString();
+    }
+    
 }

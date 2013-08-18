@@ -15,13 +15,12 @@ import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 public class XmlPipelineReader implements Reader<PipelineNodeList> {
 
     private class NodeTransformer implements Function<Element, PipelineNode> {
-        
         private final Context ctx;
-        
+
         public NodeTransformer(Context ctx) {
             this.ctx = ctx;
         }
-        
+
         @Override
         public PipelineNode apply(Element input) {
             try {

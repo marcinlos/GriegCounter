@@ -37,4 +37,12 @@ public class PipelineNodeList implements PipelineNode {
         return elements.hashCode();
     }
     
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("elements", elements)
+                .toString();
+    }
+    
 }
+ 
