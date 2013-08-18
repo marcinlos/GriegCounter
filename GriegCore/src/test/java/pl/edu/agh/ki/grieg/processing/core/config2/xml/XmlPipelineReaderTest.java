@@ -4,7 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineAssemblerNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineElementNode;
@@ -13,6 +17,7 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XmlPipelineReaderTest extends XmlReaderTest {
 
     private XmlPipelineReader reader;
@@ -29,6 +34,8 @@ public class XmlPipelineReaderTest extends XmlReaderTest {
             new PipelineAssemblerNode(
                     "pl.edu.agh.ki.grieg.SuperPipelineAssembler")
     };
+    
+    @Mock private Context ctx;
 
     @Before
     public void setup() throws XmlException {
@@ -40,13 +47,13 @@ public class XmlPipelineReaderTest extends XmlReaderTest {
     @Test
     public void pipelineIsOk() throws Exception {
         PipelineNode node = new PipelineNodeList(nodes);
-        assertEquals(node, reader.read(pipeline));
+        assertEquals(node, reader.read(pipeline, ctx));
     }
 
     @Test(expected = XmlConfigException.class)
     public void failsWithInvalidData() throws Exception {
         pipeline.add(new Element("nothing"));
-        reader.read(pipeline);
+        reader.read(pipeline, ctx);
     }
 
 }

@@ -4,11 +4,6 @@
   xmlns:tns="https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter"
   elementFormDefault="qualified">
 
-  <!-- 
-  <xs:include schemaLocation="property.xsd" /> 
-  <xs:include schemaLocation="values.xsd" /> 
-  <xs:include schemaLocation="pipeline.xsd" /> 
-  -->
 
   <xs:attributeGroup name="classAttrGroup">
     <xs:attribute name="class" />
@@ -23,6 +18,44 @@
     <xs:attribute name="type" type="xs:string" />
   </xs:attributeGroup>
 
+  <!-- Properties -->
+
+  <xs:complexType name="simplePropertyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attributeGroup ref="tns:propertyAttrGroup" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="complexPropertyType">
+    <xs:choice>
+
+    </xs:choice>
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="propertyType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="string" type="tns:simplePropertyType" />
+      <xs:element name="int" type="tns:simplePropertyType" />
+      <xs:element name="long" type="tns:simplePropertyType" />
+      <xs:element name="float" type="tns:simplePropertyType" />
+      <xs:element name="value">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="tns:simplePropertyType">
+              <xs:attributeGroup ref="tns:typeAttrGroup" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="property" type="tns:complexPropertyType" />
+      <xs:any namespace="##other" />
+    </xs:choice>
+  </xs:complexType>
+
+  <!-- Pipeline -->
 
   <xs:complexType name="pipelineElementType">
     <xs:all>
@@ -45,10 +78,14 @@
     </xs:sequence>
   </xs:complexType>
 
+
+  <!-- Main configuration content -->
+
   <xs:element name="grieg">
     <xs:complexType>
       <xs:sequence>
-        <!-- <xs:element name="properties" type="tns:propertyType" /> -->
+        <xs:element name="properties" minOccurs="0"
+          type="tns:propertyType" />
         <xs:element name="pipeline" type="tns:pipelineType" />
       </xs:sequence>
     </xs:complexType>

@@ -4,21 +4,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
-public class ComplexValueNode implements ValueNode {
+public class ComplexValueNode<T> implements ValueNode {
     
-    private final Object content;
+    private final T content;
     
     private final String qualifier;
     
-    public ComplexValueNode(Object content, String qualifier) {
+    public ComplexValueNode(T content, String qualifier) {
         this.content = checkNotNull(content);
         this.qualifier = checkNotNull(qualifier);
+    }
+    
+    public static <T> ComplexValueNode<T> of(T content, String qualifier) {
+        return new ComplexValueNode<T>(content, qualifier);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof ComplexValueNode) {
-            ComplexValueNode other = (ComplexValueNode) o;
+            ComplexValueNode<?> other = (ComplexValueNode<?>) o;
             return content.equals(other.content) 
                     && qualifier.equals(other.qualifier);
         } else {

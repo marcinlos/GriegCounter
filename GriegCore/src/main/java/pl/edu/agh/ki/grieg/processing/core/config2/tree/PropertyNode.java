@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
-public class PropertyNode {
+public final class PropertyNode {
     
     private final String name;
     

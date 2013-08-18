@@ -17,7 +17,7 @@ public class PrimitiveValueNode extends SimpleValueNode {
     
     @Override
     public boolean equals(Object o) {
-        if (o instanceof CompleteValueNode) {
+        if (o instanceof PrimitiveValueNode) {
             PrimitiveValueNode other = (PrimitiveValueNode) o;
             return super.equals(o) && type.equals(other.type);
         } else {

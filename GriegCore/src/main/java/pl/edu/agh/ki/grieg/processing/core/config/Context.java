@@ -7,5 +7,9 @@ package pl.edu.agh.ki.grieg.processing.core.config;
  * @author los
  */
 public interface Context {
+    
+//    void setAssemblerDefinition(AssemblerDefinition definition);
+    
+    void addError(Throwable e);
 
 }

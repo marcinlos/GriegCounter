@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
@@ -22,7 +23,7 @@ public class XmlConfigReader implements Reader<ConfigNode> {
     }
 
     @Override
-    public ConfigNode read(Element root) throws ConfigException {
+    public ConfigNode read(Element root, Context ctx) throws ConfigException {
         Element pipelineNode = root.child("pipeline");
         Element propertiesNode = root.child("properties");
 
@@ -30,7 +31,7 @@ public class XmlConfigReader implements Reader<ConfigNode> {
             
         }
         
-        PipelineNodeList pipeline = pipelineReader.read(pipelineNode);
+        PipelineNodeList pipeline = pipelineReader.read(pipelineNode, ctx);
 
 //        return new ConfigNode(properties, pipeline);
         return null;

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 
 public final class Reflection {
 
@@ -17,6 +18,8 @@ public final class Reflection {
     private static final BiMap<Class<?>, Class<?>> wrappers;
 
     private static final Map<Class<?>, Class<?>> wrappees;
+    
+    private static final Map<String, Class<?>> primitives;
 
     static {
         wrappers = ImmutableBiMap.<Class<?>, Class<?>> builder()
@@ -29,6 +32,16 @@ public final class Reflection {
                 .put(double.class, Double.class)
                 .build();
         wrappees = wrappers.inverse();
+        
+        primitives = ImmutableMap.<String, Class<?>>builder()
+                .put("byte", byte.class)
+                .put("char", char.class)
+                .put("short", short.class)
+                .put("int", int.class)
+                .put("long", long.class)
+                .put("float", float.class)
+                .put("double", double.class)
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -116,6 +129,14 @@ public final class Reflection {
 
     public static Class<?> wrappedBy(Class<?> wrapper) {
         return wrappees.get(wrapper);
+    }
+    
+    public static Map<String, Class<?>> primitivesMap() {
+        return primitives;
+    }
+    
+    public static Class<?> primitiveForName(String name) {
+        return primitives.get(name);
     }
 
 }

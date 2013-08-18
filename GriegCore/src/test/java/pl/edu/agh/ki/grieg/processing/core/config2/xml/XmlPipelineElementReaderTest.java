@@ -4,12 +4,17 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineElementNode;
 import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XmlPipelineElementReaderTest extends XmlReaderTest {
 
     private Element first;
@@ -29,6 +34,8 @@ public class XmlPipelineElementReaderTest extends XmlReaderTest {
     private PipelineElementNode thirdDefinition =
             new PipelineElementNode("hamming",
                     "pl.edu.agh.ki.grieg.analysis.HammingSegmenter", "ROOT");
+    
+    @Mock private Context ctx;
 
     @Before
     public void setup() throws XmlException {
@@ -40,9 +47,9 @@ public class XmlPipelineElementReaderTest extends XmlReaderTest {
 
     @Test
     public void definitionsAreParsedCorrectly() throws XmlConfigException {
-        assertEquals(firstDefinition, reader.read(first));
-        assertEquals(secondDefinition, reader.read(second));
-        assertEquals(thirdDefinition, reader.read(third));
+        assertEquals(firstDefinition, reader.read(first, ctx));
+        assertEquals(secondDefinition, reader.read(second, ctx));
+        assertEquals(thirdDefinition, reader.read(third, ctx));
     }
 
 
