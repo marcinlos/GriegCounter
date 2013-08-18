@@ -46,7 +46,7 @@ public class PipelineReaderTest extends ReaderTest {
 
     @Test
     public void pipelineIsOk() throws Exception {
-        PipelineNode node = new PipelineNodeList(nodes);
+        PipelineNodeList node = new PipelineNodeList(nodes);
         assertEquals(node, reader.read(pipeline, ctx));
     }
 

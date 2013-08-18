@@ -131,6 +131,15 @@ public final class Reflection {
         return wrappees.get(wrapper);
     }
     
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> unwrap(Class<T> clazz) {
+        if (wrappers.containsKey(clazz)) {
+            return (Class<T>) wrappers.get(clazz);
+        } else {
+            return clazz;
+        }
+    }
+    
     public static Map<String, Class<?>> primitivesMap() {
         return primitives;
     }

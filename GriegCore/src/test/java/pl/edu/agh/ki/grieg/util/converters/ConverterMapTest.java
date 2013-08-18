@@ -36,6 +36,17 @@ public class ConverterMapTest extends ConversionTestBase {
     }
     
     @Test
+    public void canParsePrimitives() throws Exception {
+        assertEquals(4, (int) map.convert("4", int.class));
+        assertEquals('c', (char) map.convert("  c", char.class));
+        assertEquals((byte) 16, (byte) map.convert("16 ", byte.class));
+        assertEquals((short) 1234, (short) map.convert("1234", short.class));
+        assertEquals(1111L, (long) map.convert("1111", long.class));
+        assertEquals(3.14f, (float) map.convert("3.14", float.class), 1e-6f);
+        assertEquals(3.14, (double) map.convert("3.14", double.class), 1e-6);
+    }
+    
+    @Test
     public void canParseStrings() throws Exception {
         String string = "   come random #$@#$# strange string \\\\\\\\";
         assertEquals(string, map.convert(string, String.class));
