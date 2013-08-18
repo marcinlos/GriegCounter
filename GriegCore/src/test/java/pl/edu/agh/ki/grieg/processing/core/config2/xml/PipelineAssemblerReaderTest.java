@@ -14,7 +14,7 @@ import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XmlPipelineAssemblerReaderTest extends XmlReaderTest {
+public class PipelineAssemblerReaderTest extends ReaderTest {
 
     private static final String CLASS_NAME =
             "pl.edu.agh.ki.grieg.DefaultPipelineAssembler";
@@ -22,13 +22,13 @@ public class XmlPipelineAssemblerReaderTest extends XmlReaderTest {
     private static final PipelineAssemblerNode assemblerNode = 
             new PipelineAssemblerNode(CLASS_NAME);
 
-    private static XmlPipelineAssemblerReader reader;
+    private static PipelineAssemblerReader reader;
     
     @Mock private Context ctx;
     
     @BeforeClass
     public static void parseDocument() throws XmlException {
-        reader = new XmlPipelineAssemblerReader();
+        reader = new PipelineAssemblerReader();
     }
     
     @Test

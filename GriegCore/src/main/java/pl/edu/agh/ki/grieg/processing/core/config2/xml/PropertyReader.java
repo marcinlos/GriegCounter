@@ -11,9 +11,9 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.ValueNode;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class XmlPropertyReader implements Reader<PropertyNode> {
+public class PropertyReader implements Reader<PropertyNode> {
 
-    public XmlPropertyReader() {
+    public PropertyReader() {
         // empty
     }
 
@@ -28,7 +28,7 @@ public class XmlPropertyReader implements Reader<PropertyNode> {
             throws ConfigException {
         String nodeName = node.name();
         String value = node.val();
-        if (node.ns().equals(XmlConfigReader.NS)) {
+        if (node.ns().equals(ConfigReader.NS)) {
             Class<?> type = Reflection.primitiveForName(nodeName);
             if (type != null) {
                 return new PrimitiveValueNode(value, type);

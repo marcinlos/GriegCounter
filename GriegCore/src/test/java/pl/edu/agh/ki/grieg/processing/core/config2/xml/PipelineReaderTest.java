@@ -18,9 +18,9 @@ import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XmlPipelineReaderTest extends XmlReaderTest {
+public class PipelineReaderTest extends ReaderTest {
 
-    private XmlPipelineReader reader;
+    private PipelineReader reader;
 
     private PipelineNode[] nodes = {
             new PipelineElementNode("segmenter",
@@ -39,9 +39,9 @@ public class XmlPipelineReaderTest extends XmlReaderTest {
 
     @Before
     public void setup() throws XmlException {
-        Reader<PipelineNode> elementReader = new XmlPipelineElementReader();
-        Reader<PipelineNode> assemblerReader = new XmlPipelineAssemblerReader();
-        reader = new XmlPipelineReader(elementReader, assemblerReader);
+        Reader<PipelineNode> elementReader = new PipelineElementReader();
+        Reader<PipelineNode> assemblerReader = new PipelineAssemblerReader();
+        reader = new PipelineReader(elementReader, assemblerReader);
     }
 
     @Test

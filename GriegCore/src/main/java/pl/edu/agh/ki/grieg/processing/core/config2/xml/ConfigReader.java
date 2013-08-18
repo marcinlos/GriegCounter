@@ -11,7 +11,7 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class XmlConfigReader implements Reader<ConfigNode> {
+public class ConfigReader implements Reader<ConfigNode> {
 
     public static final String NS =
             "https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter";
@@ -20,7 +20,7 @@ public class XmlConfigReader implements Reader<ConfigNode> {
 
     private final Reader<PipelineNodeList> pipelineReader;
 
-    public XmlConfigReader(Reader<PropertyNode> propertyReader,
+    public ConfigReader(Reader<PropertyNode> propertyReader,
             Reader<PipelineNodeList> pipelineReader) {
         this.propertyReader = propertyReader;
         this.pipelineReader = pipelineReader;

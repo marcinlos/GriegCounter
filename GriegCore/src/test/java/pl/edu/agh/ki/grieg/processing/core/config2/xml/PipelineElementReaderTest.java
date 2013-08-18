@@ -15,13 +15,13 @@ import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XmlPipelineElementReaderTest extends XmlReaderTest {
+public class PipelineElementReaderTest extends ReaderTest {
 
     private Element first;
     private Element second;
     private Element third;
 
-    private XmlPipelineElementReader reader;
+    private PipelineElementReader reader;
 
     private PipelineElementNode firstDefinition =
             new PipelineElementNode("segmenter",
@@ -39,7 +39,7 @@ public class XmlPipelineElementReaderTest extends XmlReaderTest {
 
     @Before
     public void setup() throws XmlException {
-        reader = new XmlPipelineElementReader();
+        reader = new PipelineElementReader();
         first = pipeline.children().get(0);
         second = pipeline.children().get(1);
         third = pipeline.children().get(3);

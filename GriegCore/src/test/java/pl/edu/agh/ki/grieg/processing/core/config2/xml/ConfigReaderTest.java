@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static pl.edu.agh.ki.grieg.processing.core.config2.xml.XmlConfigReader.NS;
+import static pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigReader.NS;
 
 import java.util.Map;
 
@@ -25,17 +25,17 @@ import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XmlConfigReaderTest extends XmlReaderTest {
+public class ConfigReaderTest extends ReaderTest {
 
     @Mock private Context context;
     @Mock private Reader<PropertyNode> propertyReader;
     @Mock private Reader<PipelineNodeList> pipelineReader;
     
-    private XmlConfigReader reader;
+    private ConfigReader reader;
 
     @Before
     public void setup() throws ConfigException {
-        reader = new XmlConfigReader(propertyReader, pipelineReader);
+        reader = new ConfigReader(propertyReader, pipelineReader);
         
         when(pipelineReader.read(any(Element.class), eq(context)))
                 .thenReturn(new PipelineNodeList());

@@ -10,7 +10,7 @@ import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
 import pl.edu.agh.ki.grieg.util.xml.dom.DomConverter;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class XmlReaderTest {
+public class ReaderTest {
 
     protected static final String CONFIG = "xml/grieg/example-config.xml";
     

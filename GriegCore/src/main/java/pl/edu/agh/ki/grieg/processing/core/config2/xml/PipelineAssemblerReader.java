@@ -5,9 +5,9 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineAssemblerNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class XmlPipelineAssemblerReader implements Reader<PipelineNode> {
+public class PipelineAssemblerReader implements Reader<PipelineNode> {
 
-    public XmlPipelineAssemblerReader() {
+    public PipelineAssemblerReader() {
         // empty
     }
     

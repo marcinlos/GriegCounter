@@ -12,7 +12,7 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class XmlPipelineReader implements Reader<PipelineNodeList> {
+public class PipelineReader implements Reader<PipelineNodeList> {
 
     private class NodeTransformer implements Function<Element, PipelineNode> {
         private final Context ctx;
@@ -34,7 +34,7 @@ public class XmlPipelineReader implements Reader<PipelineNodeList> {
     private final Reader<? extends PipelineNode> elementReader;
     private final Reader<? extends PipelineNode> assemblerReader;
 
-    public XmlPipelineReader(Reader<? extends PipelineNode> elementReader,
+    public PipelineReader(Reader<? extends PipelineNode> elementReader,
             Reader<? extends PipelineNode> assemblerReader) {
         this.elementReader = elementReader;
         this.assemblerReader = assemblerReader;
