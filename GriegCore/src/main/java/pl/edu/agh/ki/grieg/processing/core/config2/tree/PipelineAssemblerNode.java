@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.PipelineVisitor;
 
 import com.google.common.base.Objects;
@@ -40,7 +41,7 @@ public class PipelineAssemblerNode implements PipelineNode {
     }
     
     @Override
-    public void accept(PipelineVisitor visitor) {
+    public void accept(PipelineVisitor visitor) throws ConfigException {
         visitor.visit(this);
     }
 

@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
+import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.ValueVisitor;
 
 import com.google.common.base.Objects;
@@ -41,7 +42,7 @@ public class PrimitiveValueNode extends SimpleValueNode {
     }
     
     @Override
-    public void accept(ValueVisitor visitor) {
+    public void accept(ValueVisitor visitor) throws ConfigException {
         visitor.visit(this);
     }
     
