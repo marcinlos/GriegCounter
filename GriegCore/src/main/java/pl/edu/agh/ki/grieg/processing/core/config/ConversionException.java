@@ -1,5 +1,8 @@
 package pl.edu.agh.ki.grieg.processing.core.config;
 
+import pl.edu.agh.ki.grieg.processing.core.config2.ValueException;
+
+
 /**
  * Thrown when the configuration requires string value conversion that cannot be
  * performed, either because of lack of appropriate parser or due to malformed
@@ -7,11 +10,7 @@ package pl.edu.agh.ki.grieg.processing.core.config;
  * 
  * @author los
  */
-public class ConversionException extends ConfigException {
-
-    public ConversionException() {
-        // empty
-    }
+public class ConversionException extends ValueException {
 
     public ConversionException(String message) {
         super(message);

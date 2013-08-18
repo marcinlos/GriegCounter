@@ -7,10 +7,6 @@ package pl.edu.agh.ki.grieg.processing.core.config;
  */
 public class ConfigException extends Exception {
 
-    public ConfigException() {
-        // empty
-    }
-
     public ConfigException(String message) {
         super(message);
     }

@@ -51,9 +51,10 @@ public class Evaluator implements ValueVisitor {
             Class<?> unwrapped = Reflection.wrap(clazz);
             value = converter.convert(literal, TypeToken.of(unwrapped));
         } catch (ReflectionException e) {
-            throw new ConfigException("Invalid type", e);
+            String msg = "Problem with specified type [" + type + "]";
+            throw new ValueException(msg, e);
         } catch (ConversionException e) {
-            throw new ConfigException("Conversion failure", e);
+            throw new ValueException(e);
         }
     }
 

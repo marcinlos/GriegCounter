@@ -4,10 +4,6 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 
 public class XmlConfigException extends ConfigException {
 
-    public XmlConfigException() {
-        // empty
-    }
-
     public XmlConfigException(String message) {
         super(message);
     }

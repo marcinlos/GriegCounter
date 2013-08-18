@@ -2,10 +2,6 @@ package pl.edu.agh.ki.grieg.processing.core.config;
 
 public class ResourceNotFoundException extends ConfigException {
 
-    public ResourceNotFoundException() {
-        // empty
-    }
-
     public ResourceNotFoundException(String message) {
         super(message);
     }

@@ -5,11 +5,7 @@ package pl.edu.agh.ki.grieg.processing.core.config;
  * 
  * @author los
  */
-public class ConfigFileNotFoundException extends ConfigException {
-
-    public ConfigFileNotFoundException() {
-        // empty
-    }
+public class ConfigFileNotFoundException extends ResourceNotFoundException {
 
     public ConfigFileNotFoundException(String message, Throwable cause) {
         super(message, cause);

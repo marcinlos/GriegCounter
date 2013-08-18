@@ -39,7 +39,7 @@ public abstract class XmlProperty<T> implements PropertyDefinition<T> {
      */
     protected void checkValidity() throws DuplicateValueException {
         if (!isValid()) {
-            throw new DuplicateValueException();
+            throw new DuplicateValueException(name);
         }
     }
 
