@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 
 /**
  * Static utilities for dealing with heterogenous map keys.
- * 
+ *
  * @author los
  */
 public final class Keys {
@@ -16,8 +16,8 @@ public final class Keys {
     }
 
     /**
-     * Creates new {@link Key} object
-     * 
+     * Creates new {@link Key} object.
+     *
      * @param name
      *            Name of the entry
      * @param type
@@ -31,7 +31,7 @@ public final class Keys {
     /**
      * Creates a set of keys of unspecified bound, as turns out to be a little
      * bit awkward and uncomfortable.
-     * 
+     *
      * @param keys
      *            Keys to create set of
      * @return Set consisting of all the specified keys

@@ -8,9 +8,9 @@ import com.google.common.base.Objects;
  * Value class representing metadata entry type (not specific, concrete entry,
  * but rather the general idea, i.e. "Composer [String]" rather than
  * "F. Chopin".
- * 
+ *
  * @author los
- * 
+ *
  * @param <T>
  *            Type of the data associated with the key
  */

@@ -4,20 +4,20 @@ import com.google.common.base.Objects;
 
 /**
  * Structure representing floating point interval
- * 
+ *
  * @author los
  */
 public final class Range {
 
     /** Empty range centered at the origint */
     public static final Range EMPTY = new Range(0, 0);
-    
+
     /** Lower bound */
     public final float min;
 
     /** Upper bound */
     public final float max;
-    
+
     public Range(float min, float max) {
         this.min = min;
         this.max = max;
@@ -41,7 +41,7 @@ public final class Range {
      * Returns smallest possible range containing both the old range (if valid)
      * and the specified value. It may return a range upon which the method was
      * called, if it contains the value.
-     * 
+     *
      * @param value
      *            Value to be contained in the returned range
      * @return Range containing the {@code value} and the original range

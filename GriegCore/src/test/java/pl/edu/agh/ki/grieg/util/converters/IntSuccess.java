@@ -20,7 +20,7 @@ public final class IntSuccess extends
         super(string, value);
     }
 
-    private static final Object[][] data = {
+    private static final Object[][] DATA = {
         {" 0", 0 },
         { "1 ", 1 },
         { " 1", 1},
@@ -35,7 +35,7 @@ public final class IntSuccess extends
 
     @Parameters
     public static List<Object[]> params() {
-        return Arrays.asList(data);
+        return Arrays.asList(DATA);
     }
 
     @Test

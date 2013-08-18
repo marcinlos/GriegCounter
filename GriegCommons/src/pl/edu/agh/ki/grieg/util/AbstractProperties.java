@@ -3,13 +3,12 @@ package pl.edu.agh.ki.grieg.util;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map.Entry;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Abstract implementation of the {@link Properties}, requiring the implementor
  * to provide modifiable {@link Map} view of the mapping.
- * 
+ *
  * @author los
  */
 public abstract class AbstractProperties implements Properties {

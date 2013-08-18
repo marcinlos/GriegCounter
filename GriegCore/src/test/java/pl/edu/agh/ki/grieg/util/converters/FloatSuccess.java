@@ -22,7 +22,7 @@ public final class FloatSuccess extends
         super(string, value);
     }
 
-    private static final Object[][] data = {
+    private static final Object[][] DATA = {
         {" 0", 0.0f },
         { "1 ", 1.0f },
         { " 1", 1.0f},
@@ -39,7 +39,7 @@ public final class FloatSuccess extends
 
     @Parameters
     public static List<Object[]> params() {
-        return Arrays.asList(data);
+        return Arrays.asList(DATA);
     }
     
     private float actual() throws ConversionException {

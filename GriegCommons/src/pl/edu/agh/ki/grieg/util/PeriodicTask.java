@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Simple utility class abstracting periodical execution of some task.
- * 
+ *
  * @author los
  */
 public abstract class PeriodicTask {
@@ -36,7 +36,7 @@ public abstract class PeriodicTask {
     /**
      * Makes a single step, returns new value of index. Equivalent to
      * {@code step(1)}.
-     * 
+     *
      * @return New value of index
      */
     public int step() {
@@ -44,8 +44,8 @@ public abstract class PeriodicTask {
     }
 
     /**
-     * Makes arbitrarily large step
-     * 
+     * Makes arbitrarily large step.
+     *
      * @param n
      *            Number of single steps to make
      * @return New value of the index
