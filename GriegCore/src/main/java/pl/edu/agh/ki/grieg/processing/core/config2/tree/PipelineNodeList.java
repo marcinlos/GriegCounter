@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-public class PipelineNodeList implements PipelineNode {
+public class PipelineNodeList {
     
     private final List<PipelineNode> elements;
     

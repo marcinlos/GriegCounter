@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
+import pl.edu.agh.ki.grieg.processing.core.config2.ValueVisitor;
+
 import com.google.common.base.Objects;
 
 public class PrimitiveValueNode extends SimpleValueNode {
@@ -36,6 +38,11 @@ public class PrimitiveValueNode extends SimpleValueNode {
                 .add("type", getType())
                 .add("value", getValue())
                 .toString();
+    }
+    
+    @Override
+    public void accept(ValueVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

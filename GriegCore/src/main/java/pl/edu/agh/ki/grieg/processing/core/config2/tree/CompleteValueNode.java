@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
+import pl.edu.agh.ki.grieg.processing.core.config2.ValueVisitor;
+
 import com.google.common.base.Objects;
 
 public class CompleteValueNode implements ValueNode {
@@ -34,5 +36,10 @@ public class CompleteValueNode implements ValueNode {
         return Objects.toStringHelper(this)
                 .add("value", value)
                 .toString();
+    }
+
+    @Override
+    public void accept(ValueVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import pl.edu.agh.ki.grieg.processing.core.config2.ValueVisitor;
 
 import com.google.common.base.Objects;
 
@@ -38,6 +39,11 @@ public class ConvertibleValueNode extends SimpleValueNode {
                 .add("type", getType())
                 .add("value", getValue())
                 .toString();
+    }
+    
+    @Override
+    public void accept(ValueVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

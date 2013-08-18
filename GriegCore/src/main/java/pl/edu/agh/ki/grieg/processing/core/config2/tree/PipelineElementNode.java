@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import pl.edu.agh.ki.grieg.processing.core.config2.PipelineVisitor;
 
 import com.google.common.base.Objects;
 
@@ -54,6 +55,11 @@ public class PipelineElementNode implements PipelineNode {
                 .add("type", type)
                 .add("source", source)
                 .toString();
+    }
+
+    @Override
+    public void accept(PipelineVisitor visitor) {
+        visitor.visit(this);
     }
 
 }
