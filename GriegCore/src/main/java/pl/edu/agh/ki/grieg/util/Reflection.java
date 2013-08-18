@@ -132,7 +132,7 @@ public final class Reflection {
     }
     
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> unwrap(Class<T> clazz) {
+    public static <T> Class<T> wrap(Class<T> clazz) {
         if (wrappers.containsKey(clazz)) {
             return (Class<T>) wrappers.get(clazz);
         } else {

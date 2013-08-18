@@ -202,8 +202,8 @@ public final class ConverterMap implements Converter {
     public <T> T convert(String literal, Class<T> clazz)
             throws ConversionException {
         Object result = convert(literal, TypeToken.of(clazz));
-        Class<T> unwrapped = Reflection.unwrap(clazz);
-        return unwrapped.cast(result);
+        Class<T> wrapped = Reflection.wrap(clazz);
+        return wrapped.cast(result);
     }
 
     /**
