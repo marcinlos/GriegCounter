@@ -14,7 +14,7 @@ import java.net.URL;
  */
 public final class Resources {
 
-    /** Prefix of {@code classpath-scnę} */
+    /** Prefix of {@code classpath} schema */
     public static final String CLASSPATH_URI_SCHEME = "classpath";
 
     private Resources() {
