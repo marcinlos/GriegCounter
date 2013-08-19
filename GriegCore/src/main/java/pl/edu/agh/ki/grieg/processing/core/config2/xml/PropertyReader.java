@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
+import com.google.common.base.Objects;
+
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.CompleteValueNode;
@@ -41,7 +43,8 @@ public class PropertyReader implements Reader<PropertyNode> {
                 throw new InvalidNodeException(node);
             }
         } else {
-            return ComplexValueNode.of(node, node.ns());
+            String qualifier = Objects.firstNonNull(node.ns(), "[global]");
+            return ComplexValueNode.of(node, qualifier);
         }
     }
 

@@ -21,6 +21,14 @@ public class ComplexValueNode<T> implements ValueNode {
         return new ComplexValueNode<T>(content, qualifier);
     }
 
+    public T getContent() {
+        return content;
+    }
+    
+    public String getQualifier() {
+        return qualifier;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof ComplexValueNode) {

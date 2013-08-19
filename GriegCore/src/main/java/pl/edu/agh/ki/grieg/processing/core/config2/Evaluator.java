@@ -1,7 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config2;
 
-import com.google.common.reflect.TypeToken;
-
+import static com.google.common.base.Preconditions.checkNotNull;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.CompleteValueNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ComplexValueNode;
@@ -12,23 +11,41 @@ import pl.edu.agh.ki.grieg.util.ReflectionException;
 import pl.edu.agh.ki.grieg.util.converters.ConversionException;
 import pl.edu.agh.ki.grieg.util.converters.Converter;
 
+import com.google.common.reflect.TypeToken;
+
 public class Evaluator implements ValueVisitor {
 
     private Object value;
 
     private final Converter converter;
 
-    public Evaluator(Converter converter) {
-        this.converter = converter;
+    private final ContentHandlerProvider handlers;
+
+    public Evaluator(Converter converter, ContentHandlerProvider handlers) {
+        this.converter = checkNotNull(converter);
+        this.handlers = checkNotNull(handlers);
     }
 
     public <T> T getValue(Class<T> clazz) {
-        Class<T> unwrapped = Reflection.wrap(clazz);
-        return unwrapped.cast(value);
+        Class<T> wrapped = Reflection.wrap(clazz);
+        return wrapped.cast(value);
     }
-    
+
     public Object getValue() {
         return value;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ContentHandler<Object> getHandlerForQualifier(String qualifier)
+            throws NoHandlerException {
+        ContentHandler<?> handler = handlers.forQualifier(qualifier);
+        if (handler != null) {
+            // really, really unsafe, but genericity makes it look nicer from
+            // the outside...
+            return (ContentHandler<Object>) handler;
+        } else {
+            throw new NoHandlerException(qualifier);
+        }
     }
 
     @Override
@@ -38,8 +55,23 @@ public class Evaluator implements ValueVisitor {
 
     @Override
     public void visit(ComplexValueNode<?> node) throws ConfigException {
-        // TODO Auto-generated method stub
+        String qualifier = node.getQualifier();
+        Object content = node.getContent();
+        ContentHandler<Object> handler = getHandlerForQualifier(qualifier);
+        try {
+            value = handler.evaluate(content);
+        } catch (Exception e) {
+            throw new ContentHandlerException(content, e);
+        }
+    }
 
+    private void convert(String literal, Class<?> clazz) throws ValueException {
+        try {
+            Class<?> type = Reflection.wrap(clazz);
+            value = converter.convert(literal, TypeToken.of(type));
+        } catch (ConversionException e) {
+            throw new ValueException("Conversion failure", e);
+        }
     }
 
     @Override
@@ -48,25 +80,18 @@ public class Evaluator implements ValueVisitor {
         String literal = node.getValue();
         try {
             Class<?> clazz = Reflection.getClass(type);
-            Class<?> unwrapped = Reflection.wrap(clazz);
-            value = converter.convert(literal, TypeToken.of(unwrapped));
+            convert(literal, clazz);
         } catch (ReflectionException e) {
             String msg = "Problem with specified type [" + type + "]";
             throw new ValueException(msg, e);
-        } catch (ConversionException e) {
-            throw new ValueException(e);
         }
     }
 
     @Override
     public void visit(PrimitiveValueNode node) throws ConfigException {
-        try {
-            Class<?> type = Reflection.wrap(node.getType());
-            String literal = node.getValue();
-            value = converter.convert(literal, TypeToken.of(type));
-        } catch (ConversionException e) {
-            throw new ConfigException("Conversion failure", e);
-        }
+        Class<?> type = node.getType();
+        String literal = node.getValue();
+        convert(literal, type);
     }
 
 }
