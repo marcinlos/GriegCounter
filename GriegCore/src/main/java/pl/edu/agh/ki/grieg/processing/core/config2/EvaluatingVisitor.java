@@ -13,7 +13,7 @@ import pl.edu.agh.ki.grieg.util.converters.Converter;
 
 import com.google.common.reflect.TypeToken;
 
-public class Evaluator implements ValueVisitor {
+public class EvaluatingVisitor implements ValueVisitor {
 
     private Object value;
 
@@ -21,7 +21,8 @@ public class Evaluator implements ValueVisitor {
 
     private final ContentHandlerProvider handlers;
 
-    public Evaluator(Converter converter, ContentHandlerProvider handlers) {
+    public EvaluatingVisitor(Converter converter,
+            ContentHandlerProvider handlers) {
         this.converter = checkNotNull(converter);
         this.handlers = checkNotNull(handlers);
     }
