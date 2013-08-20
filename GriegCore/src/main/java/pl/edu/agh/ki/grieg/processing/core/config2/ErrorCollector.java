@@ -12,13 +12,21 @@ import com.google.common.collect.Lists;
  */
 class ErrorCollector implements ErrorHandler {
 
+    /** List of exceptions */
     private final List<Throwable> exceptions = Lists.newArrayList();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error(Throwable e) {
         exceptions.add(e);
     }
-    
+
+    /**
+     * @return Immutable list of all the exceptions received by this
+     *         {@link ErrorCollector}
+     */
     public List<Throwable> getExceptions() {
         return Collections.unmodifiableList(exceptions);
     }
