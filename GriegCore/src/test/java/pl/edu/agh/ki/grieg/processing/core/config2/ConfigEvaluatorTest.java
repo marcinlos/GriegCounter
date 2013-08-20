@@ -18,7 +18,7 @@ import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +39,7 @@ public class ConfigEvaluatorTest {
     @Test
     public void canProcessEmptyConfig() throws Exception {
         Map<String, PropertyNode> propertyNodes = Maps.newHashMap();
-        PipelineNodeList pipeline = new PipelineNodeList();
+        PipelineNode pipeline = new PipelineNode();
         
         ConfigNode node = new ConfigNode(propertyNodes, pipeline);
         Config config = configEvaluator.evaluate(node);

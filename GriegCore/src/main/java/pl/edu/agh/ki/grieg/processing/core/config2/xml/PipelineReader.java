@@ -8,13 +8,13 @@ import com.google.common.collect.Lists;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelinePartNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class PipelineReader implements Reader<PipelineNodeList> {
+public class PipelineReader implements Reader<PipelineNode> {
 
-    private class NodeTransformer implements Function<Element, PipelineNode> {
+    private class NodeTransformer implements Function<Element, PipelinePartNode> {
         private final Context ctx;
 
         public NodeTransformer(Context ctx) {
@@ -22,7 +22,7 @@ public class PipelineReader implements Reader<PipelineNodeList> {
         }
 
         @Override
-        public PipelineNode apply(Element input) {
+        public PipelinePartNode apply(Element input) {
             try {
                 return process(input, ctx);
             } catch (ConfigException e) {
@@ -31,23 +31,23 @@ public class PipelineReader implements Reader<PipelineNodeList> {
         }
     }
 
-    private final Reader<? extends PipelineNode> elementReader;
-    private final Reader<? extends PipelineNode> assemblerReader;
+    private final Reader<? extends PipelinePartNode> elementReader;
+    private final Reader<? extends PipelinePartNode> assemblerReader;
 
-    public PipelineReader(Reader<? extends PipelineNode> elementReader,
-            Reader<? extends PipelineNode> assemblerReader) {
+    public PipelineReader(Reader<? extends PipelinePartNode> elementReader,
+            Reader<? extends PipelinePartNode> assemblerReader) {
         this.elementReader = elementReader;
         this.assemblerReader = assemblerReader;
     }
 
     @Override
-    public PipelineNodeList read(Element node, Context ctx)
+    public PipelineNode read(Element node, Context ctx)
             throws ConfigException {
         try {
-            List<PipelineNode> children = Lists.transform(node.children(),
+            List<PipelinePartNode> children = Lists.transform(node.children(),
                     new NodeTransformer(ctx));
 
-            return new PipelineNodeList(children);
+            return new PipelineNode(children);
         } catch (RuntimeException e) {
             Throwable cause = e.getCause();
             if (cause instanceof ConfigException) {
@@ -58,7 +58,7 @@ public class PipelineReader implements Reader<PipelineNodeList> {
         }
     }
 
-    private PipelineNode process(Element element, Context ctx)
+    private PipelinePartNode process(Element element, Context ctx)
             throws ConfigException {
         if (element.name().equals("node")) {
             return elementReader.read(element, ctx);

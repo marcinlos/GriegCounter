@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
@@ -18,10 +18,10 @@ public class ConfigReader implements Reader<ConfigNode> {
 
     private final Reader<PropertyNode> propertyReader;
 
-    private final Reader<PipelineNodeList> pipelineReader;
+    private final Reader<PipelineNode> pipelineReader;
 
     public ConfigReader(Reader<PropertyNode> propertyReader,
-            Reader<PipelineNodeList> pipelineReader) {
+            Reader<PipelineNode> pipelineReader) {
         this.propertyReader = propertyReader;
         this.pipelineReader = pipelineReader;
     }
@@ -39,7 +39,7 @@ public class ConfigReader implements Reader<ConfigNode> {
         }
         
         Element pipelineNode = root.child("pipeline");
-        PipelineNodeList pipeline = pipelineReader.read(pipelineNode, ctx);
+        PipelineNode pipeline = pipelineReader.read(pipelineNode, ctx);
 
         return new ConfigNode(properties, pipeline);
     }

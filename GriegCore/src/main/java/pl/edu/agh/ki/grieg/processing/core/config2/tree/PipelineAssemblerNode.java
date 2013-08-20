@@ -5,7 +5,7 @@ import pl.edu.agh.ki.grieg.processing.core.config2.PipelineVisitor;
 
 import com.google.common.base.Objects;
 
-public class PipelineAssemblerNode implements PipelineNode {
+public class PipelineAssemblerNode implements PipelinePartNode {
 
     private final String className;
     

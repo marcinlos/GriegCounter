@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableMap;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PrimitiveValueNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
@@ -29,7 +29,7 @@ public class ConfigReaderTest extends ReaderTest {
 
     @Mock private Context context;
     @Mock private Reader<PropertyNode> propertyReader;
-    @Mock private Reader<PipelineNodeList> pipelineReader;
+    @Mock private Reader<PipelineNode> pipelineReader;
     
     private ConfigReader reader;
 
@@ -38,7 +38,7 @@ public class ConfigReaderTest extends ReaderTest {
         reader = new ConfigReader(propertyReader, pipelineReader);
         
         when(pipelineReader.read(any(Element.class), eq(context)))
-                .thenReturn(new PipelineNodeList());
+                .thenReturn(new PipelineNode());
     }
     
     @Test
@@ -84,7 +84,7 @@ public class ConfigReaderTest extends ReaderTest {
         when(propertyReader.read(prop, context)).thenReturn(propertyNode);
 
         ConfigNode config = reader.read(e, context);
-        ConfigNode expected = new ConfigNode(map, new PipelineNodeList());
+        ConfigNode expected = new ConfigNode(map, new PipelineNode());
         assertEquals(expected, config);
     }
 

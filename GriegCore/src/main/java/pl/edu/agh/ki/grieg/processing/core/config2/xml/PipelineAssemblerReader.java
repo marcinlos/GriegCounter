@@ -2,10 +2,10 @@ package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineAssemblerNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelinePartNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
-public class PipelineAssemblerReader implements Reader<PipelineNode> {
+public class PipelineAssemblerReader implements Reader<PipelinePartNode> {
 
     public PipelineAssemblerReader() {
         // empty

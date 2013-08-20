@@ -10,10 +10,10 @@ public class ConfigNode {
     
     private final Map<String, PropertyNode> propertyNodes;
     
-    private final PipelineNodeList pipelineNodes;
+    private final PipelineNode pipelineNodes;
 
     public ConfigNode(Map<String, PropertyNode> propertyNodes,
-            PipelineNodeList pipelineNodes) {
+            PipelineNode pipelineNodes) {
         this.propertyNodes = checkNotNull(propertyNodes);
         this.pipelineNodes = checkNotNull(pipelineNodes);
     }
@@ -22,7 +22,7 @@ public class ConfigNode {
         return propertyNodes;
     }
     
-    public PipelineNodeList getPipelineNodes() {
+    public PipelineNode getPipelineNodes() {
         return pipelineNodes;
     }
 

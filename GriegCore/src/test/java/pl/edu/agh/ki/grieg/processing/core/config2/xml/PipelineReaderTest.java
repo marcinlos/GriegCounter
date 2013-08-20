@@ -12,8 +12,8 @@ import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineAssemblerNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineElementNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNodeList;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelinePartNode;
 import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
@@ -22,7 +22,7 @@ public class PipelineReaderTest extends ReaderTest {
 
     private PipelineReader reader;
 
-    private PipelineNode[] nodes = {
+    private PipelinePartNode[] nodes = {
             new PipelineElementNode("segmenter",
                     "pl.edu.agh.ki.grieg.analysis.Segmenter", "ROOT"),
             new PipelineElementNode("compressor",
@@ -39,14 +39,14 @@ public class PipelineReaderTest extends ReaderTest {
 
     @Before
     public void setup() throws XmlException {
-        Reader<PipelineNode> elementReader = new PipelineElementReader();
-        Reader<PipelineNode> assemblerReader = new PipelineAssemblerReader();
+        Reader<PipelinePartNode> elementReader = new PipelineElementReader();
+        Reader<PipelinePartNode> assemblerReader = new PipelineAssemblerReader();
         reader = new PipelineReader(elementReader, assemblerReader);
     }
 
     @Test
     public void pipelineIsOk() throws Exception {
-        PipelineNodeList node = new PipelineNodeList(nodes);
+        PipelineNode node = new PipelineNode(nodes);
         assertEquals(node, reader.read(pipeline, ctx));
     }
 
