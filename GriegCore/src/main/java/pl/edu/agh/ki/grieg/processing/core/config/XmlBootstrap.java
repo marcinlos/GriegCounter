@@ -162,7 +162,7 @@ public class XmlBootstrap extends AbstractBootstrap {
      */
     private void loadProperties() throws ConfigException {
         logger().trace("Interpreting properties");
-        Properties properties = config.buildProperties(ctx);
+        Properties properties = config.buildProperties();
         setProperties(properties);
     }
 
@@ -171,7 +171,7 @@ public class XmlBootstrap extends AbstractBootstrap {
      */
     private void buildAssembler() throws ConfigException {
         logger().info("Searching for pipeline assembler");
-        PipelineAssembler assembler = config.createAssembler(ctx);
+        PipelineAssembler assembler = config.createAssembler();
         logger().info("Created pipeline assembler");
         setPipelineAssembler(assembler);
     }

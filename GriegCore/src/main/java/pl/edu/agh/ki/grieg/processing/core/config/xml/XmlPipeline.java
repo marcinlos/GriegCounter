@@ -6,21 +6,20 @@ import javax.xml.bind.annotation.XmlType;
 
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
-import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 
 @XmlType
 public class XmlPipeline implements AssemblerDefinition {
-    
-    @XmlElements({ 
-        @XmlElement(name = "assembler", type = XmlClassAssemblerDefinition.class) 
+
+    @XmlElements({
+        @XmlElement(name = "assembler",
+                type = XmlClassAssemblerDefinition.class)
     })
     private AssemblerDefinition assembler;
 
     @Override
-    public PipelineAssembler createAssembler(Context ctx)
-            throws ConfigException {
-        return assembler.createAssembler(ctx);
+    public PipelineAssembler createAssembler() throws ConfigException {
+        return assembler.createAssembler();
     }
 
 }

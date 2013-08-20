@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
-import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
 import pl.edu.agh.ki.grieg.util.Properties;
@@ -23,14 +22,13 @@ public class XmlConfig implements PropertiesDefinition, AssemblerDefinition {
     private XmlPipeline pipeline;
 
     @Override
-    public Properties buildProperties(Context ctx) throws ConfigException {
-        return properties.buildProperties(ctx);
+    public Properties buildProperties() throws ConfigException {
+        return properties.buildProperties();
     }
 
     @Override
-    public PipelineAssembler createAssembler(Context ctx)
-            throws ConfigException {
-        return pipeline.createAssembler(ctx);
+    public PipelineAssembler createAssembler() throws ConfigException {
+        return pipeline.createAssembler();
     }
 
 }

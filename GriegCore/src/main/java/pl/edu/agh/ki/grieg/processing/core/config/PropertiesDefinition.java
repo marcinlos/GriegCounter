@@ -14,13 +14,11 @@ public interface PropertiesDefinition {
      * Creates {@link Properties} object based on the property list it
      * represents.
      * 
-     * @param ctx
-     *            Bootstrap creation context
      * @return {@code Properties} object containing properties from the list
      * @throws ConfigException
      *             If the configuration element is invalid or cannot be
      *             interpreted
      */
-    Properties buildProperties(Context ctx) throws ConfigException;
+    Properties buildProperties() throws ConfigException;
 
 }

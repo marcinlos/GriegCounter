@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
-import pl.edu.agh.ki.grieg.processing.core.config.Context;
 import pl.edu.agh.ki.grieg.processing.core.config.ConversionException;
 import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
 import pl.edu.agh.ki.grieg.util.Properties;
@@ -40,7 +39,7 @@ public class XmlPropertyList implements PropertiesDefinition {
     private List<Element> custom = Lists.newArrayList();
 
     @Override
-    public Properties buildProperties(Context ctx) throws ConfigException {
+    public Properties buildProperties() throws ConfigException {
         Properties properties = new PropertyMap();
         for (XmlProperty<?> property : propertyList) {
             String name = property.getName();

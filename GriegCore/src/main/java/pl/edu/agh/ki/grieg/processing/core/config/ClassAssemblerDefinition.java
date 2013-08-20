@@ -40,8 +40,7 @@ public abstract class ClassAssemblerDefinition implements AssemblerDefinition {
      * Using reflection it invokes appropriate constructor of the class.
      */
     @Override
-    public PipelineAssembler createAssembler(Context ctx)
-            throws ConfigException {
+    public PipelineAssembler createAssembler() throws ConfigException {
         try {
             String name = className();
             logger.info("Using class {} as the pipeline assembler", name);

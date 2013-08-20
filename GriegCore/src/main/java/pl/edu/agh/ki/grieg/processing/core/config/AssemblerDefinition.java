@@ -16,6 +16,6 @@ public interface AssemblerDefinition {
      * 
      * @return {@link PipelineAssembler} implementation
      */
-    PipelineAssembler createAssembler(Context ctx) throws ConfigException;
+    PipelineAssembler createAssembler() throws ConfigException;
 
 }
