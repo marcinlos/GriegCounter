@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigReader.NS;
 
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
@@ -46,7 +46,7 @@ public class ConfigReaderTest extends ReaderTest {
         Element e = new Element(NS, "root").add(new Element(NS, "pipeline"));
         
         ConfigNode config = reader.read(e, context);
-        assertThat(config.getPropertyNodes().keySet(), empty());
+        assertThat(config.getPropertyNodes(), empty());
         assertThat(config.getPipelineNodes().getElements(), empty());
         verify(pipelineReader).read(any(Element.class), eq(context));
         verifyNoMoreInteractions(pipelineReader, propertyReader);
@@ -58,7 +58,7 @@ public class ConfigReaderTest extends ReaderTest {
                 .add(new Element(NS, "properties"))
                 .add(new Element(NS, "pipeline"));
         ConfigNode config = reader.read(e, context);
-        assertThat(config.getPropertyNodes().keySet(), empty());
+        assertThat(config.getPropertyNodes(), empty());
         assertThat(config.getPipelineNodes().getElements(), empty());
         verify(pipelineReader).read(any(Element.class), eq(context));
         verifyNoMoreInteractions(pipelineReader, propertyReader);
@@ -77,9 +77,8 @@ public class ConfigReaderTest extends ReaderTest {
 
         PrimitiveValueNode value = new PrimitiveValueNode("1234", int.class);
         PropertyNode propertyNode = new PropertyNode("someProp", value);
-        Map<String, PropertyNode> map = ImmutableMap
-                .<String, PropertyNode> builder()
-                .put("someProp", propertyNode)
+        List<PropertyNode> map = ImmutableList.<PropertyNode> builder()
+                .add(propertyNode)
                 .build();
         when(propertyReader.read(prop, context)).thenReturn(propertyNode);
 

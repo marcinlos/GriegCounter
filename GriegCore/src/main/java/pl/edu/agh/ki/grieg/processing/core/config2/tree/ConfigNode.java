@@ -2,26 +2,26 @@ package pl.edu.agh.ki.grieg.processing.core.config2.tree;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Map;
+import java.util.List;
 
 import com.google.common.base.Objects;
 
 public class ConfigNode {
-    
-    private final Map<String, PropertyNode> propertyNodes;
-    
+
+    private final List<PropertyNode> propertyNodes;
+
     private final PipelineNode pipelineNodes;
 
-    public ConfigNode(Map<String, PropertyNode> propertyNodes,
+    public ConfigNode(List<PropertyNode> propertyNodes,
             PipelineNode pipelineNodes) {
         this.propertyNodes = checkNotNull(propertyNodes);
         this.pipelineNodes = checkNotNull(pipelineNodes);
     }
-    
-    public Map<String, PropertyNode> getPropertyNodes() {
+
+    public List<PropertyNode> getPropertyNodes() {
         return propertyNodes;
     }
-    
+
     public PipelineNode getPipelineNodes() {
         return pipelineNodes;
     }
@@ -36,12 +36,12 @@ public class ConfigNode {
             return false;
         }
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(propertyNodes, pipelineNodes);
     }
-    
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
@@ -49,5 +49,5 @@ public class ConfigNode {
                 .add("pipeline", pipelineNodes)
                 .toString();
     }
-    
+
 }

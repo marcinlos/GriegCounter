@@ -26,7 +26,7 @@ public class ConfigEvaluator {
 
     public Config evaluate(ConfigNode node) throws ConfigException {
         PropertyCollector collector = new PropertyCollector(evaluator, handler);
-        collector.consume(node.getPropertyNodes().values());
+        collector.consume(node.getPropertyNodes());
         Properties properties = PropertyMap.copyOf(collector.getProperties());
         
         return new Config(new AssemblerDefinition() {

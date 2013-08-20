@@ -1,9 +1,10 @@
 package pl.edu.agh.ki.grieg.processing.core.config2;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableList;
 
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
@@ -38,13 +39,20 @@ public class ConfigEvaluatorTest {
 
     @Test
     public void canProcessEmptyConfig() throws Exception {
-        Map<String, PropertyNode> propertyNodes = Maps.newHashMap();
+        List<PropertyNode> propertyNodes = ImmutableList.of();
         PipelineNode pipeline = new PipelineNode();
         
         ConfigNode node = new ConfigNode(propertyNodes, pipeline);
         Config config = configEvaluator.evaluate(node);
 //        assertEquals(assembler, config.createAssembler());
         assertTrue(config.buildProperties().isEmpty());
+        verifyZeroInteractions(handler);
+    }
+    
+    
+    @Test
+    public void canProcessConfigWithProperties() throws Exception {
+        
     }
 
 }

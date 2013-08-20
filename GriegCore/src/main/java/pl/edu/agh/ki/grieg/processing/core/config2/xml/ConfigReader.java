@@ -1,8 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
-import java.util.Map;
-
-import com.google.common.collect.Maps;
+import java.util.List;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
@@ -10,6 +8,8 @@ import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PropertyNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
+
+import com.google.common.collect.Lists;
 
 public class ConfigReader implements Reader<ConfigNode> {
 
@@ -29,12 +29,12 @@ public class ConfigReader implements Reader<ConfigNode> {
     @Override
     public ConfigNode read(Element root, Context ctx) throws ConfigException {
 
-        Map<String, PropertyNode> properties = Maps.newHashMap();
+        List<PropertyNode> properties = Lists.newArrayList();
         Element propertiesNode = root.child("properties");
         if (propertiesNode != null) {
             for (Element node : propertiesNode.children()) {
                 PropertyNode prop = propertyReader.read(node, ctx);
-                properties.put(prop.getName(), prop);
+                properties.add(prop);
             }
         }
         
