@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigReader.NS;
+import static pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigTreeReader.NS;
 
 import java.util.List;
 
@@ -31,11 +31,11 @@ public class ConfigReaderTest extends ReaderTest {
     @Mock private Reader<PropertyNode> propertyReader;
     @Mock private Reader<PipelineNode> pipelineReader;
     
-    private ConfigReader reader;
+    private ConfigTreeReader reader;
 
     @Before
     public void setup() throws ConfigException {
-        reader = new ConfigReader(propertyReader, pipelineReader);
+        reader = new ConfigTreeReader(propertyReader, pipelineReader);
         
         when(pipelineReader.read(any(Element.class), eq(context)))
                 .thenReturn(new PipelineNode());

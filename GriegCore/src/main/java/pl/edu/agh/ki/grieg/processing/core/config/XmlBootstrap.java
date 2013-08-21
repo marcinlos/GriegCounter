@@ -18,21 +18,14 @@ import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config2.Config;
 import pl.edu.agh.ki.grieg.processing.core.config2.ConfigEvaluator;
 import pl.edu.agh.ki.grieg.processing.core.config2.ConfigEvaluatorBuilder;
-import pl.edu.agh.ki.grieg.processing.core.config2.ContentHandler;
-import pl.edu.agh.ki.grieg.processing.core.config2.ContentHandlerProvider;
-import pl.edu.agh.ki.grieg.processing.core.config2.DefaultEvaluator;
-import pl.edu.agh.ki.grieg.processing.core.config2.ErrorCollector;
-import pl.edu.agh.ki.grieg.processing.core.config2.PipelineEvaluator;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
-import pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigReader;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigTreeReader;
 import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineAssemblerReader;
 import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineElementReader;
 import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineReader;
 import pl.edu.agh.ki.grieg.processing.core.config2.xml.PropertyReader;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Resources;
-import pl.edu.agh.ki.grieg.util.converters.Converter;
-import pl.edu.agh.ki.grieg.util.converters.ConverterMap;
 import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.XmlParser;
 import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
@@ -120,7 +113,7 @@ public class XmlBootstrap extends AbstractBootstrap {
                     .useClasspathSchema(SCHEMA)
                     .create();
             Element root = new DomConverter().convert(parser.parse(input));
-            ConfigReader reader = createConfigReader();
+            ConfigTreeReader reader = createConfigReader();
             ConfigNode node = reader.read(root, null);
 
             ConfigEvaluator evaluator = new ConfigEvaluatorBuilder().build();
@@ -131,12 +124,12 @@ public class XmlBootstrap extends AbstractBootstrap {
         }
     }
     
-    public static ConfigReader createConfigReader() {
+    public static ConfigTreeReader createConfigReader() {
         PropertyReader propertyReader = new PropertyReader();
         PipelineReader pipelineReader = new PipelineReader(
                 new PipelineElementReader(), 
                 new PipelineAssemblerReader());
-        return new ConfigReader(propertyReader, pipelineReader);
+        return new ConfigTreeReader(propertyReader, pipelineReader);
     }
 
     private void printConfigContent() {

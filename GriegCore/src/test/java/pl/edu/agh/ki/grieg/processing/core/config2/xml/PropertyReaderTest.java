@@ -32,7 +32,7 @@ public class PropertyReaderTest {
 
     private static final String XMLNS_DECL =
             "xmlns:xsi=\"" + XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI +
-                    "\" xmlns=\"" + ConfigReader.NS + "\"";
+                    "\" xmlns=\"" + ConfigTreeReader.NS + "\"";
 
     private static XmlParser parser;
 
@@ -141,10 +141,10 @@ public class PropertyReaderTest {
             String ATTR_XMLNS = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
 
             Element node = e.getNode();
-            Element xmlNode = new Element(ConfigReader.NS, "random-garbage")
+            Element xmlNode = new Element(ConfigTreeReader.NS, "random-garbage")
                     .add(new Attribute(ATTR_XMLNS, "xsi").val(XMLNS))
                     .add(new Attribute(ATTR_XMLNS, "xmlns")
-                            .val(ConfigReader.NS));
+                            .val(ConfigTreeReader.NS));
             assertEquals(xmlNode, node);
             assertThat(e.getMessage(), containsString(node.toString()));
         }

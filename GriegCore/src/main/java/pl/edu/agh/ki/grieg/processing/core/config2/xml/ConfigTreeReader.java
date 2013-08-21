@@ -11,7 +11,7 @@ import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 import com.google.common.collect.Lists;
 
-public class ConfigReader implements Reader<ConfigNode> {
+public class ConfigTreeReader implements Reader<ConfigNode> {
 
     public static final String NS =
             "https://case.iisg.agh.edu.pl/confluence/display/prpj13kpGriegCounter";
@@ -20,7 +20,7 @@ public class ConfigReader implements Reader<ConfigNode> {
 
     private final Reader<PipelineNode> pipelineReader;
 
-    public ConfigReader(Reader<PropertyNode> propertyReader,
+    public ConfigTreeReader(Reader<PropertyNode> propertyReader,
             Reader<PipelineNode> pipelineReader) {
         this.propertyReader = propertyReader;
         this.pipelineReader = pipelineReader;

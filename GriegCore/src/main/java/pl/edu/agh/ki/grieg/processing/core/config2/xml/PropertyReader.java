@@ -30,7 +30,7 @@ public class PropertyReader implements Reader<PropertyNode> {
             throws ConfigException {
         String nodeName = node.name();
         String value = node.val();
-        if (node.ns().equals(ConfigReader.NS)) {
+        if (node.ns().equals(ConfigTreeReader.NS)) {
             Class<?> type = Reflection.primitiveForName(nodeName);
             if (type != null) {
                 return new PrimitiveValueNode(value, type);
