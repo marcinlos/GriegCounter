@@ -25,7 +25,7 @@ import pl.edu.agh.ki.grieg.util.xml.dom.Attribute;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConfigReaderTest extends ReaderTest {
+public class ConfigTreeReaderTest extends ReaderTest {
 
     @Mock private Context context;
     @Mock private Reader<PropertyNode> propertyReader;
