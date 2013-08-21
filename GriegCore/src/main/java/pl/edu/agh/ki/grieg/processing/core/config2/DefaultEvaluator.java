@@ -4,6 +4,12 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.ValueNode;
 import pl.edu.agh.ki.grieg.util.converters.Converter;
 
+/**
+ * Default implementation of {@link Evaluator} interface. For each requested
+ * evaluation creates new visitor and visits the node using it.
+ * 
+ * @author los
+ */
 public class DefaultEvaluator implements Evaluator {
 
     private final Converter converter;

@@ -37,7 +37,7 @@ public class ConfigReader implements Reader<ConfigNode> {
                 properties.add(prop);
             }
         }
-        
+
         Element pipelineNode = root.child("pipeline");
         PipelineNode pipeline = pipelineReader.read(pipelineNode, ctx);
 

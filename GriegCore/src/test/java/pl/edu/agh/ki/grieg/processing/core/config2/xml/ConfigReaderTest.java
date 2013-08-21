@@ -86,5 +86,5 @@ public class ConfigReaderTest extends ReaderTest {
         ConfigNode expected = new ConfigNode(map, new PipelineNode());
         assertEquals(expected, config);
     }
-
+    
 }

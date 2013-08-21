@@ -60,8 +60,6 @@ public class XmlBootstrap extends AbstractBootstrap {
     /** Config object */
     private Config config;
 
-    /** Context kept throughout the configuration interpretation */
-    private Context ctx = null;
     /**
      * Initializes the bootstrap objet using specified {@link InputStream} as
      * the configuration source.
@@ -122,36 +120,23 @@ public class XmlBootstrap extends AbstractBootstrap {
                     .useClasspathSchema(SCHEMA)
                     .create();
             Element root = new DomConverter().convert(parser.parse(input));
-            ConfigReader reader = createReader();
+            ConfigReader reader = createConfigReader();
             ConfigNode node = reader.read(root, null);
-            
-            Converter converter = ConverterMap.newMap();
-            ContentHandlerProvider handlers = new ContentHandlerProvider() {
-                @Override
-                public ContentHandler<?> forQualifier(String qualifier) {
-                    return null;
-                }
-            };
 
-            ConfigEvaluator evaluator = new ConfigEvaluatorBuilder()
-                    .setPipelineEvaluator(new PipelineEvaluator())
-                    .setErrorHandler(new ErrorCollector())
-                    .setEvaluator(new DefaultEvaluator(converter, handlers))
-                    .build();
+            ConfigEvaluator evaluator = new ConfigEvaluatorBuilder().build();
             config = evaluator.evaluate(node);
             
         } catch (XmlException e) {
             throw new ResourceNotFoundException(SCHEMA, e);
         }
     }
-
-    private ConfigReader createReader() {
+    
+    public static ConfigReader createConfigReader() {
         PropertyReader propertyReader = new PropertyReader();
-        PipelineElementReader elementReader = new PipelineElementReader();
-        PipelineAssemblerReader assemblerReader = new PipelineAssemblerReader();
-        PipelineReader pipelineReader = new PipelineReader(elementReader, assemblerReader);
-        ConfigReader reader = new ConfigReader(propertyReader, pipelineReader);
-        return reader;
+        PipelineReader pipelineReader = new PipelineReader(
+                new PipelineElementReader(), 
+                new PipelineAssemblerReader());
+        return new ConfigReader(propertyReader, pipelineReader);
     }
 
     private void printConfigContent() {
