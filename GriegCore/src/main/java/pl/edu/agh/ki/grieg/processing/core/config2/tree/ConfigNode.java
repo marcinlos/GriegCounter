@@ -22,7 +22,7 @@ public class ConfigNode {
         return propertyNodes;
     }
 
-    public PipelineNode getPipelineNodes() {
+    public PipelineNode getPipelineNode() {
         return pipelineNodes;
     }
 

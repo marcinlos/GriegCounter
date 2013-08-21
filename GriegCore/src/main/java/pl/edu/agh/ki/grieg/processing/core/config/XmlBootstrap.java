@@ -4,13 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -19,9 +15,29 @@ import org.xml.sax.SAXException;
 import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfig;
+import pl.edu.agh.ki.grieg.processing.core.config2.Config;
+import pl.edu.agh.ki.grieg.processing.core.config2.ConfigEvaluator;
+import pl.edu.agh.ki.grieg.processing.core.config2.ConfigEvaluatorBuilder;
+import pl.edu.agh.ki.grieg.processing.core.config2.ContentHandler;
+import pl.edu.agh.ki.grieg.processing.core.config2.ContentHandlerProvider;
+import pl.edu.agh.ki.grieg.processing.core.config2.DefaultEvaluator;
+import pl.edu.agh.ki.grieg.processing.core.config2.ErrorCollector;
+import pl.edu.agh.ki.grieg.processing.core.config2.PipelineEvaluator;
+import pl.edu.agh.ki.grieg.processing.core.config2.tree.ConfigNode;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.ConfigReader;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineAssemblerReader;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineElementReader;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.PipelineReader;
+import pl.edu.agh.ki.grieg.processing.core.config2.xml.PropertyReader;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Resources;
+import pl.edu.agh.ki.grieg.util.converters.Converter;
+import pl.edu.agh.ki.grieg.util.converters.ConverterMap;
+import pl.edu.agh.ki.grieg.util.xml.XmlException;
+import pl.edu.agh.ki.grieg.util.xml.XmlParser;
+import pl.edu.agh.ki.grieg.util.xml.XmlParserBuilder;
+import pl.edu.agh.ki.grieg.util.xml.dom.DomConverter;
+import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 import com.google.common.io.Closeables;
 
@@ -39,10 +55,10 @@ import com.google.common.io.Closeables;
 public class XmlBootstrap extends AbstractBootstrap {
 
     /** Classpath-relative schema path */
-    private static final String SCHEMA = "jaxb/config.xsd";
+    private static final String SCHEMA = "config.xsd";
 
     /** Config object */
-    private XmlConfig config;
+    private Config config;
 
     /** Context kept throughout the configuration interpretation */
     private Context ctx = null;
@@ -86,40 +102,75 @@ public class XmlBootstrap extends AbstractBootstrap {
      *             If the configuration cannot be read or interpreted
      */
     protected void init(InputStream input) throws ConfigException {
+//        try {
+//            logger().debug("Creating JAXB unrmashaller");
+//            JAXBContext context = JAXBContext.newInstance(XmlConfig.class);
+//            Unmarshaller unmarshaller = context.createUnmarshaller();
+//            Schema schema = loadSchema(SCHEMA);
+//            unmarshaller.setSchema(schema);
+//            logger().debug("Attempting to parse the XML");
+//            config = (XmlConfig) unmarshaller.unmarshal(input);
+//            printConfigContent();
+//            logger().debug("Sucessfully parsed XML");
+//        } catch (JAXBException e) {
+//            throw new ConfigException(e);
+//        } catch (SAXException e) {
+//            throw new ConfigException(e);
+//        }
         try {
-            logger().debug("Creating JAXB unrmashaller");
-            JAXBContext context = JAXBContext.newInstance(XmlConfig.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            Schema schema = loadSchema(SCHEMA);
-            unmarshaller.setSchema(schema);
-            logger().debug("Attempting to parse the XML");
-            config = (XmlConfig) unmarshaller.unmarshal(input);
-            printConfigContent();
-            logger().debug("Sucessfully parsed XML");
-        } catch (JAXBException e) {
-            throw new ConfigException(e);
-        } catch (SAXException e) {
-            throw new ConfigException(e);
+            XmlParser parser = new XmlParserBuilder()
+                    .useClasspathSchema(SCHEMA)
+                    .create();
+            Element root = new DomConverter().convert(parser.parse(input));
+            ConfigReader reader = createReader();
+            ConfigNode node = reader.read(root, null);
+            
+            Converter converter = ConverterMap.newMap();
+            ContentHandlerProvider handlers = new ContentHandlerProvider() {
+                @Override
+                public ContentHandler<?> forQualifier(String qualifier) {
+                    return null;
+                }
+            };
+
+            ConfigEvaluator evaluator = new ConfigEvaluatorBuilder()
+                    .setPipelineEvaluator(new PipelineEvaluator())
+                    .setErrorHandler(new ErrorCollector())
+                    .setEvaluator(new DefaultEvaluator(converter, handlers))
+                    .build();
+            config = evaluator.evaluate(node);
+            
+        } catch (XmlException e) {
+            throw new ResourceNotFoundException(SCHEMA, e);
         }
     }
 
+    private ConfigReader createReader() {
+        PropertyReader propertyReader = new PropertyReader();
+        PipelineElementReader elementReader = new PipelineElementReader();
+        PipelineAssemblerReader assemblerReader = new PipelineAssemblerReader();
+        PipelineReader pipelineReader = new PipelineReader(elementReader, assemblerReader);
+        ConfigReader reader = new ConfigReader(propertyReader, pipelineReader);
+        return reader;
+    }
+
     private void printConfigContent() {
-        for (Field field : XmlConfig.class.getFields()) {
-            try {
-                Object val = field.get(config);
-                logger().trace("   config.{} = {}", field.getName(), val);
-            } catch (IllegalArgumentException e) {
-                logger().error("Config object probably of invalid type: {}",
-                        config.getClass());
-            } catch (IllegalAccessException e) {
-                logger().trace("Not allowed to read config.{}", field.getName());
-            }
-        }
+//        for (Field field : XmlConfig.class.getFields()) {
+//            try {
+//                Object val = field.get(config);
+//                logger().trace("   config.{} = {}", field.getName(), val);
+//            } catch (IllegalArgumentException e) {
+//                logger().error("Config object probably of invalid type: {}",
+//                        config.getClass());
+//            } catch (IllegalAccessException e) {
+//                logger().trace("Not allowed to read config.{}", field.getName());
+//            }
+//        }
     }
 
     /**
      * Loads and compiles the XML schema describing configuration file format.
-     * 
+     *
      * @param path
      *            Classpath-relative path of the schema file
      * @return Compiled {@link Schema} object

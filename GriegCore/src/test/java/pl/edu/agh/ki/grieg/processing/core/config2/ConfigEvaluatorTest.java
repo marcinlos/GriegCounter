@@ -33,12 +33,15 @@ public class ConfigEvaluatorTest {
     @Mock private PipelineAssembler assembler;
     @Mock private Evaluator evaluator;
     @Mock private ErrorHandler handler;
+    @Mock private PipelineEvaluator pipelineEvaluator;
     
     @InjectMocks private ConfigEvaluator configEvaluator;
     
     @Before
     public void setup() throws ConfigException {
         when(assemblerDefinition.createAssembler()).thenReturn(assembler);
+        when(pipelineEvaluator.evaluate(any(PipelineNode.class)))
+                .thenReturn(assemblerDefinition);
     }
 
     @Test
@@ -48,7 +51,7 @@ public class ConfigEvaluatorTest {
         
         ConfigNode node = new ConfigNode(propertyNodes, pipeline);
         Config config = configEvaluator.evaluate(node);
-//        assertEquals(assembler, config.createAssembler());
+        assertEquals(assembler, config.createAssembler());
         assertTrue(config.buildProperties().isEmpty());
         verifyZeroInteractions(handler);
     }

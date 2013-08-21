@@ -154,8 +154,7 @@ public class EvaluatingVisitor implements ValueVisitor {
      */
     private void convert(String literal, Class<?> clazz) throws ValueException {
         try {
-            Class<?> type = Reflection.wrap(clazz);
-            value = converter.convert(literal, TypeToken.of(type));
+            value = converter.convert(literal, TypeToken.of(clazz));
         } catch (ConversionException e) {
             throw new ValueException("Conversion failure", e);
         }

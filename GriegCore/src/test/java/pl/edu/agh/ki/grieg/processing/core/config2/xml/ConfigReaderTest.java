@@ -47,7 +47,7 @@ public class ConfigReaderTest extends ReaderTest {
         
         ConfigNode config = reader.read(e, context);
         assertThat(config.getPropertyNodes(), empty());
-        assertThat(config.getPipelineNodes().getElements(), empty());
+        assertThat(config.getPipelineNode().getElements(), empty());
         verify(pipelineReader).read(any(Element.class), eq(context));
         verifyNoMoreInteractions(pipelineReader, propertyReader);
     }
@@ -59,7 +59,7 @@ public class ConfigReaderTest extends ReaderTest {
                 .add(new Element(NS, "pipeline"));
         ConfigNode config = reader.read(e, context);
         assertThat(config.getPropertyNodes(), empty());
-        assertThat(config.getPipelineNodes().getElements(), empty());
+        assertThat(config.getPipelineNode().getElements(), empty());
         verify(pipelineReader).read(any(Element.class), eq(context));
         verifyNoMoreInteractions(pipelineReader, propertyReader);
     }

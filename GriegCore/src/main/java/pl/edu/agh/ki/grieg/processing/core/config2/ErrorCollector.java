@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
  * 
  * @author los
  */
-class ErrorCollector implements ErrorHandler {
+public class ErrorCollector implements ErrorHandler {
 
     /** List of exceptions */
     private final List<Throwable> exceptions = Lists.newArrayList();
