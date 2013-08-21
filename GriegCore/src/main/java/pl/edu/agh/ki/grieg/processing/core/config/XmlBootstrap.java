@@ -8,7 +8,6 @@ import java.net.URL;
 
 import org.w3c.dom.Document;
 
-import pl.edu.agh.ki.grieg.processing.core.config.evaluator.Config;
 import pl.edu.agh.ki.grieg.processing.core.config.evaluator.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.tree.ConfigNode;
 import pl.edu.agh.ki.grieg.processing.core.config.xml.ConfigTreeReader;
