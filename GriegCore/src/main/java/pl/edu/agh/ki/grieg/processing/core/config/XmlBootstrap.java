@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.XMLConstants;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
-import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
 import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.AbstractBootstrap;
@@ -93,77 +89,44 @@ public class XmlBootstrap extends AbstractBootstrap {
      *             If the configuration cannot be read or interpreted
      */
     protected void init(InputStream input) throws ConfigException {
-//        try {
-//            logger().debug("Creating JAXB unrmashaller");
-//            JAXBContext context = JAXBContext.newInstance(XmlConfig.class);
-//            Unmarshaller unmarshaller = context.createUnmarshaller();
-//            Schema schema = loadSchema(SCHEMA);
-//            unmarshaller.setSchema(schema);
-//            logger().debug("Attempting to parse the XML");
-//            config = (XmlConfig) unmarshaller.unmarshal(input);
-//            printConfigContent();
-//            logger().debug("Sucessfully parsed XML");
-//        } catch (JAXBException e) {
-//            throw new ConfigException(e);
-//        } catch (SAXException e) {
-//            throw new ConfigException(e);
-//        }
         try {
+            logger().debug("Configuring XML parser");
+            
+            logger().info("Loading schema file {} from the classpath", SCHEMA);
+            URL url = Resources.get(SCHEMA);
+            logger().trace("Schema url: {}", url);
+            
             XmlParser parser = new XmlParserBuilder()
-                    .useClasspathSchema(SCHEMA)
+                    .useSchema(url)
                     .create();
-            Element root = new DomConverter().convert(parser.parse(input));
+
+            logger().debug("Parsing the configuration document");
+            Document doc = parser.parse(input);
+
+            logger().debug("Converting DOM tree to simpler form");
+            Element root = new DomConverter().convert(doc);
             ConfigTreeReader reader = createConfigReader();
             ConfigNode node = reader.read(root, null);
 
-            ConfigEvaluator evaluator = new ConfigEvaluatorBuilder().build();
+            logger().debug("Creating config evaluator");
+            ConfigEvaluator evaluator = new ConfigEvaluatorBuilder()
+                    .build();
+
+            logger().debug("Evaluating configuration...");
             config = evaluator.evaluate(node);
-            
+            logger().debug("Configuration evaluated");
         } catch (XmlException e) {
             throw new ResourceNotFoundException(SCHEMA, e);
         }
     }
-    
-    public static ConfigTreeReader createConfigReader() {
+
+    public ConfigTreeReader createConfigReader() {
+        logger().debug("Creating XML confiuration tree reader");
         PropertyReader propertyReader = new PropertyReader();
         PipelineReader pipelineReader = new PipelineReader(
-                new PipelineElementReader(), 
+                new PipelineElementReader(),
                 new PipelineAssemblerReader());
         return new ConfigTreeReader(propertyReader, pipelineReader);
-    }
-
-    private void printConfigContent() {
-//        for (Field field : XmlConfig.class.getFields()) {
-//            try {
-//                Object val = field.get(config);
-//                logger().trace("   config.{} = {}", field.getName(), val);
-//            } catch (IllegalArgumentException e) {
-//                logger().error("Config object probably of invalid type: {}",
-//                        config.getClass());
-//            } catch (IllegalAccessException e) {
-//                logger().trace("Not allowed to read config.{}", field.getName());
-//            }
-//        }
-    }
-
-    /**
-     * Loads and compiles the XML schema describing configuration file format.
-     *
-     * @param path
-     *            Classpath-relative path of the schema file
-     * @return Compiled {@link Schema} object
-     * @throws SAXException
-     *             If the schema cannot be correctly parsed
-     */
-    private Schema loadSchema(String path) throws SAXException {
-        logger().info("Loading schema file {} from the classpath", path);
-        URL url = Resources.get(path);
-        logger().trace("Schema url: {}", url);
-        String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-        SchemaFactory factory = SchemaFactory.newInstance(language);
-        Schema schema = factory.newSchema(url);
-        logger().debug("Schema loaded and compiled");
-        return schema;
     }
 
     /**
