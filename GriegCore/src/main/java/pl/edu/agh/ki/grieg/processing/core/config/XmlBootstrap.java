@@ -81,9 +81,9 @@ public class XmlBootstrap extends ConfigBasedBootstrap {
      * @throws ConfigException
      *             If the configuration cannot be read or interpreted
      */
-    protected Config init(InputStream input) throws ConfigException {
+    protected void init(InputStream input) throws ConfigException {
         ConfigNode node = readConfigTree(input);
-        return buildConfig(node);
+        config = buildConfig(node);
     }
 
     private ConfigNode readConfigTree(InputStream input) throws ConfigException {

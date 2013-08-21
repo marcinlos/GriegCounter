@@ -22,7 +22,7 @@ import pl.edu.agh.ki.grieg.util.Properties;
 public class ConfigBasedBootstrap extends AbstractBootstrap {
 
     /** Config object */
-    private Config config;
+    protected Config config;
 
     /**
      * For use of subclasses, to avoid problems with resource cleanup when the
