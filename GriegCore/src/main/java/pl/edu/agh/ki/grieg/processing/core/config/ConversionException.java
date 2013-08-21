@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config;
 
-import pl.edu.agh.ki.grieg.processing.core.config2.ValueException;
+import pl.edu.agh.ki.grieg.processing.core.config.evaluator.ValueException;
 
 
 /**
