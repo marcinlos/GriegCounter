@@ -13,12 +13,12 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.common.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public final class FloatSuccess extends
+public final class FloatSuccessTest extends
         ConversionSuccessTestBase<Float> {
 
     private static final float DELTA = 1e-6f;
 
-    public FloatSuccess(String string, float value) {
+    public FloatSuccessTest(String string, float value) {
         super(string, value);
     }
 

@@ -13,10 +13,10 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.common.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public final class IntSuccess extends
+public final class IntSuccessTest extends
         ConversionSuccessTestBase<Integer> {
 
-    public IntSuccess(String string, int value) {
+    public IntSuccessTest(String string, int value) {
         super(string, value);
     }
 

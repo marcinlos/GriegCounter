@@ -10,26 +10,27 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.common.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public final class IntFailure extends ConversionFailureTestBase {
+public final class FloatFailureTest extends ConversionFailureTestBase {
 
     private final String string;
 
-    public IntFailure(String string) {
+    public FloatFailureTest(String string) {
         this.string = string;
     }
 
     private static final String[] data = {
-        "--1", "dfsdf", "1324fd", "df332", "abd", "0x343", "#34"
+        "--1", "dfsdf", "1324fd", "df332", "1,0", "0,5", ",0", "1,", 
+        "1.ds", "1..834"
     };
 
     @Parameters
     public static List<Object[]> params() {
         return prepare(data);
     }
+    
 
     @Test(expected = ConversionException.class)
     public void canParsePrimitives() throws Exception {
-        map.convert(string, TypeToken.of(int.class));
-        
+        map.convert(string, TypeToken.of(float.class));
     }
 }
