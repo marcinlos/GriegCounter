@@ -69,7 +69,8 @@ public final class Reflection {
     public static <T> T create(Class<T> clazz, Object... args)
             throws ReflectionException {
         try {
-            Constructor<T> ctor = clazz.getConstructor(toClassArray(args));
+            Class<?>[] types = toClassArray(args);
+            Constructor<T> ctor = clazz.getDeclaredConstructor(types);
             return ctor.newInstance(args);
         } catch (InstantiationException e) {
             throw new ReflectionException(e);
