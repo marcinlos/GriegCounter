@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config2.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelinePartNode;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;

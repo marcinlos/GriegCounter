@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.processing.core.config.xml;
+package pl.edu.agh.ki.grieg.processing.core.config2;
 
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 

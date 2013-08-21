@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config2.xml;
 
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config2.XmlConfigException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
 
 public class InvalidNodeException extends XmlConfigException {

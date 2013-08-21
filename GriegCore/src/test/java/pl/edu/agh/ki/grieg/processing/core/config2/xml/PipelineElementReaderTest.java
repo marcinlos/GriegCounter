@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import pl.edu.agh.ki.grieg.processing.core.config.Context;
-import pl.edu.agh.ki.grieg.processing.core.config.xml.XmlConfigException;
+import pl.edu.agh.ki.grieg.processing.core.config2.XmlConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config2.tree.PipelineElementNode;
 import pl.edu.agh.ki.grieg.util.xml.XmlException;
 import pl.edu.agh.ki.grieg.util.xml.dom.Element;
