@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.chart.swing.demo;
+package pl.edu.agh.ki.grieg.widgets.swing.demo;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import pl.edu.agh.ki.grieg.chart.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.util.Point;
+import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 
 import com.google.common.collect.Lists;
 

@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.chart.swing;
+package pl.edu.agh.ki.grieg.widgets.swing;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

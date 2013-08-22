@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.chart.swing.demo;
+package pl.edu.agh.ki.grieg.widgets.swing.demo;
 
 import java.util.List;
 import java.util.Random;
