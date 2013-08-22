@@ -9,10 +9,10 @@ import pl.edu.agh.ki.grieg.features.FeaturesListener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.model.SimpleModel;
-import pl.edu.agh.ki.grieg.util.ProgressAdapter;
+import pl.edu.agh.ki.grieg.util.ProgressListener;
 
-public class FeatureExtractionModel extends ProgressAdapter implements
-        FeaturesListener {
+public class FeatureExtractionModel implements FeaturesListener,
+        ProgressListener {
 
     private static final Logger logger = LoggerFactory
             .getLogger(FeatureExtractionModel.class);
@@ -39,6 +39,21 @@ public class FeatureExtractionModel extends ProgressAdapter implements
 
     public Model<Float> getModel() {
         return model;
+    }
+
+    @Override
+    public void started() {
+        model.update(0.0f);
+    }
+
+    @Override
+    public void finished() {
+        model.update(1.0f);
+    }
+
+    @Override
+    public void failed(Exception e) {
+        // empty
     }
 
 }

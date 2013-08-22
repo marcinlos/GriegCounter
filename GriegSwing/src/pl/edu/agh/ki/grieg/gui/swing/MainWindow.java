@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.gui.swing;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,7 @@ import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
+import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
 
 public class MainWindow extends JFrame {
 
@@ -46,6 +48,7 @@ public class MainWindow extends JFrame {
     private final Controller controller;
 
     private final ChannelsChart waveView;
+    private final ProgressBar progressBar;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -61,7 +64,7 @@ public class MainWindow extends JFrame {
         settings = settingsManager.readSettings();
 
         waveView = new ChannelsChart(model.getChild("wave"), 1, 2);
-        
+
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new Listener<Float>() {
                     @Override
@@ -74,6 +77,9 @@ public class MainWindow extends JFrame {
                         });
                     }
                 });
+
+        progressBar = new ProgressBar(model.getChild("preanalysis_progress",
+                Float.class));
 
         logger.info("Creating window");
         setupUI();
@@ -153,6 +159,7 @@ public class MainWindow extends JFrame {
 
     private void setupLayout() {
         add(waveView);
+        add(progressBar.swingPanel(), BorderLayout.PAGE_END);
     }
 
     private class ClosingListener extends WindowAdapter {
