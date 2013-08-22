@@ -126,7 +126,7 @@ public class AudioModel extends WaveObserver {
         super.failed(e);
     }
 
-    public Model<?> getChartModel() {
+    public Model<?> getModel() {
         return model;
     }
 

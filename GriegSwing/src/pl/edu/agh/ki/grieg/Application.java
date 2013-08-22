@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.gui.swing.Controller;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioFile;
@@ -18,10 +20,12 @@ import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
+import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
+import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
     
 
 public class Application implements Controller {
@@ -44,9 +48,20 @@ public class Application implements Controller {
 
         procFactory = bootstrap.createFactory();
         
+        final FeatureExtractionModel extractionModel = 
+                new FeatureExtractionModel(TimeUnit.MILLISECONDS, 100);
+        procFactory.addListener(new ProcessingAdapter() {
+            @Override
+            public void beforePreAnalysis(ExtractionContext ctx) {
+                ctx.addFeaturesListener(extractionModel);
+                ctx.addProgressListener(extractionModel);
+            }
+        });
+        modelRoot.addModel("preanalysis_progress", extractionModel.getModel());
+        
         AudioModel model = new AudioModel();
         procFactory.addListener(model);
-        modelRoot.addModel("wave", model.getChartModel());
+        modelRoot.addModel("wave", model.getModel());
         
         CompositeModel<?> loader = Models.container();
         FileLoader fileLoader = procFactory.getFileLoader();
