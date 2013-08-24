@@ -1,8 +1,10 @@
 package pl.edu.agh.ki.grieg.decoder.discovery;
 
-import java.util.List;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Immutable structure representing single parser description, consisting of
@@ -11,13 +13,13 @@ import com.google.common.collect.ImmutableList;
  * 
  * @author los
  */
-public class ParserDefinition {
+final class ParserDefinition {
 
     /** Name of the factory class */
     private final String className;
 
     /** Extensions of supported formats */
-    private final List<String> extensions;
+    private final Set<String> extensions;
 
     /**
      * Creates new {@link ParserDefinition} from specified factory class and
@@ -29,8 +31,8 @@ public class ParserDefinition {
      *            Sequence of extensions
      */
     public ParserDefinition(String className, Iterable<String> extensions) {
-        this.className = className;
-        this.extensions = ImmutableList.copyOf(extensions);
+        this.className = checkNotNull(className);
+        this.extensions = ImmutableSet.copyOf(extensions);
     }
 
     /**
@@ -43,8 +45,19 @@ public class ParserDefinition {
     /**
      * @return Extensions of supported formats
      */
-    public List<String> getExtensions() {
+    public Iterable<String> getExtensions() {
         return extensions;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ParserDefinition) {
+            ParserDefinition other = (ParserDefinition) o;
+            return className.equals(other.className) 
+                    && extensions.equals(other.extensions);
+        } else {
+            return false;
+        }
     }
 
 }
