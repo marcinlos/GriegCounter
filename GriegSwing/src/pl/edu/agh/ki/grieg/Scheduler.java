@@ -1,8 +1,11 @@
 package pl.edu.agh.ki.grieg;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,34 +17,30 @@ public class Scheduler {
 
     private static final Logger logger = LoggerFactory
             .getLogger(Scheduler.class);
+    
+    private final Deque<Future<?>> taskQueue;
 
     private final ExecutorService executor;
     private final ErrorHandler errorHandler;
 
 
     public Scheduler(ErrorHandler errorHandler) {
+        this.taskQueue = new ArrayDeque<>();
         this.executor = Executors.newSingleThreadExecutor();
         this.errorHandler = errorHandler;
     }
 
     public void enqueue(Runnable action) {
-        executor.execute(action);
+        Future<?> handler = executor.submit(action);
+        taskQueue.add(handler);
     }
     
     public void asyncPreAnalysis(Processor proc) {
-        enqueue(preAnalysisTask(proc));
+        enqueue(new PreAnalysis(proc));
     }
     
     public void asyncAnalysis(Processor proc) {
-        enqueue(analysisTask(proc));
-    }
-
-    private Runnable preAnalysisTask(Processor proc) {
-        return new PreAnalysis(proc);
-    }
-
-    private Runnable analysisTask(Processor proc) {
-        return new Analysis(proc);
+        enqueue(new Analysis(proc));
     }
 
     private final class PreAnalysis implements Runnable {

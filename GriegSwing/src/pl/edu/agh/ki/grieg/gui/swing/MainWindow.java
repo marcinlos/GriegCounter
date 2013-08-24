@@ -14,18 +14,17 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
+import pl.edu.agh.ki.grieg.widgets.swing.TitleBarPercentDisplay;
 
 public class MainWindow extends JFrame {
 
@@ -66,17 +65,7 @@ public class MainWindow extends JFrame {
         waveView = new ChannelsChart(model.getChild("wave"), 1, 2);
 
         model.getChild("preanalysis_progress", Float.class)
-                .addListener(new Listener<Float>() {
-                    @Override
-                    public void update(final Float data) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                MainWindow.this.setTitle(data.toString());
-                            }
-                        });
-                    }
-                });
+                .addListener(new TitleBarPercentDisplay(this));
 
         progressBar = new ProgressBar(model.getChild("preanalysis_progress",
                 Float.class));
