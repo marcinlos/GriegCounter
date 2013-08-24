@@ -28,6 +28,8 @@
  * converters, it is an ambiguity and an exception is thrown. There is no notion
  * of specialization, shadowing etc, each type must be supported by precisely
  * one converter.
+ * 
+ * @author los
  */
 package pl.edu.agh.ki.grieg.util.converters;
 
