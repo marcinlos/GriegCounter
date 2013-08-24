@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
-import pl.edu.agh.ki.grieg.gui.swing.Controller;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.model.CompositeModel;

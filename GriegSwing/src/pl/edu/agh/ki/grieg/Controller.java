@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.gui.swing;
+package pl.edu.agh.ki.grieg;
 
 import java.io.File;
 

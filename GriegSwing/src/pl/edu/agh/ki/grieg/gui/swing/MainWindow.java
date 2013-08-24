@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.Controller;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
