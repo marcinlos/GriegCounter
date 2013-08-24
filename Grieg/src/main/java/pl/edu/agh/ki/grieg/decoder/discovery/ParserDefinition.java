@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Set;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -58,6 +59,19 @@ final class ParserDefinition {
         } else {
             return false;
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(className, extensions);
+    }
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("class", className)
+                .add("for", extensions)
+                .toString();
     }
 
 }
