@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
@@ -20,16 +19,6 @@ import com.google.common.io.Closeables;
  * @author los
  */
 public class WavFileParser extends AbstractAudioFormatParser {
-
-    private static final Iterable<String> EXTS = Arrays.asList("wav");
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<String> extensions() {
-        return EXTS;
-    }
 
     /**
      * {@inheritDoc}

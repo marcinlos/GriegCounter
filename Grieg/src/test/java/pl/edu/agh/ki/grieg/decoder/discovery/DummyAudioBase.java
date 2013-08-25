@@ -17,11 +17,6 @@ import pl.edu.agh.ki.grieg.io.AudioStream;
 public class DummyAudioBase implements AudioFormatParser {
 
     @Override
-    public Iterable<String> extensions() {
-        return null;
-    }
-
-    @Override
     public AudioStream openStream(InputStream stream) throws DecodeException,
             IOException {
         return null;

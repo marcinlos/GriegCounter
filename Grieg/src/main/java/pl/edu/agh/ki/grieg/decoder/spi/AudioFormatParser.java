@@ -18,12 +18,6 @@ import pl.edu.agh.ki.grieg.util.ProgressListener;
 public interface AudioFormatParser {
 
     /**
-     * 
-     * @return Sequence of extensions commonly used by the supported formats
-     */
-    Iterable<String> extensions();
-
-    /**
      * Opens a stream of audio data.
      * 
      * @param stream
