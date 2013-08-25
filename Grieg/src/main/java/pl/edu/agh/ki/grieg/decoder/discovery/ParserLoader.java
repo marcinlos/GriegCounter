@@ -222,7 +222,8 @@ public class ParserLoader implements Iterable<ParserEntry> {
 				AudioFormatParser formatParser = Reflection.create(className);
 				return new ParserEntry(formatParser, definition.getExtensions());
 			} catch (ReflectionException e) {
-				throw new RuntimeException(e);
+				Exception error = new ParserDiscoveryException(e);
+				throw new RuntimeException(error);
 			}
 		}
 

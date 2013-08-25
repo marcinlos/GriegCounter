@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar" sourcepath="lib/gson-2.2.4-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Libs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ParserMp3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ParserWav"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

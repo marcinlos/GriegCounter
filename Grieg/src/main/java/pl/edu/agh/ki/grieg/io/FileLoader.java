@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Iterator;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,9 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.decoder.DecoderManager;
 import pl.edu.agh.ki.grieg.decoder.NoSuitableDecoderException;
-import pl.edu.agh.ki.grieg.decoder.builtin.mp3.Mp3Parser;
-import pl.edu.agh.ki.grieg.decoder.builtin.wav.WavFileParser;
+import pl.edu.agh.ki.grieg.decoder.discovery.ParserDiscoveryException;
+import pl.edu.agh.ki.grieg.decoder.discovery.ParserEntry;
+import pl.edu.agh.ki.grieg.decoder.discovery.ParserLoader;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
+import pl.edu.agh.ki.grieg.util.Resources;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
@@ -30,6 +30,8 @@ public class FileLoader {
 
     private static final Logger logger = LoggerFactory
             .getLogger(FileLoader.class);
+    
+    private static final String CONFIG_PATH = "META-INF/parsers";
 
     /** Root decoder manager, ancestor of all the managers */
     private static final DecoderManager root;
@@ -41,62 +43,55 @@ public class FileLoader {
         logger.info("Initializing file loader system");
         root = new DecoderManager();
 
-        logger.info("Loading builtin providers...");
-        loadBuiltinProviders();
-
-        logger.info("Loading custom providers...");
+        logger.info("Loading providers...");
         loadCustomProviders();
 
         logDetails();
         logger.info("File loader system initialization completed");
-    }
-    
-    /**
-     * Loads builtin parsers, should probably disappear in the future.
-     */
-    private static void loadBuiltinProviders() {
-        root.register(new WavFileParser());
-        root.register(new Mp3Parser());
     }
 
     /**
      * Finds providers using thread-context classloader.
      */
     private static void loadCustomProviders() {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = Resources.contextClassLoader();
         logger.debug("Using context classloader: {}", cl);
 
-        Iterator<AudioFormatParser> iter = providersIter(cl);
+        Iterator<ParserEntry> iter = providersIter(cl);
         int found = 0, registered = 0;
         while (true) {
             try {
                 if (iter.hasNext()) {
-                    AudioFormatParser parser = iter.next();
-                    root.register(parser);
+                	ParserEntry entry = iter.next();
+                	root.register(entry.getParser(), entry.getExtensions());
                     ++registered;
                 } else {
                     break;
                 }
-            } catch (ServiceConfigurationError e) {
-                logger.warn("Error in audio parser configuration", e);
+            } catch (RuntimeException e) {
+            	Throwable cause = e.getCause();
+            	if (cause instanceof ParserDiscoveryException) {
+            		logger.warn("Error in audio parser configuration", cause);
+            	} else {
+            		throw e;
+            	}
             }
         }
         logCustomSummary(found, registered);
     }
 
     /**
-     * Creates a lazy iterator over the available providers, using jdk spi
-     * mechanism ({@link ServiceLoader}).
+     * Creates a lazy iterator over the available providers, using custom SPI
+     * mechanism.
      * 
      * @param cl
      *            Classloader to be used
      * @return Iterator
      */
-    private static Iterator<AudioFormatParser> providersIter(ClassLoader cl) {
-        return ServiceLoader
-                .load(AudioFormatParser.class, cl)
-                .iterator();
+    private static Iterator<ParserEntry> providersIter(ClassLoader cl) {
+    	return new ParserLoader(CONFIG_PATH, cl).iterator();
     }
+
 
     /**
      * Logs a brief summary showing how many parsers were attempted to use, and

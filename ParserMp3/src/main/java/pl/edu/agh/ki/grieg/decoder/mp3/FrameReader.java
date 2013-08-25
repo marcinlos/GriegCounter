@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.decoder.builtin.mp3;
+package pl.edu.agh.ki.grieg.decoder.mp3;
 
 import java.io.InputStream;
 import java.util.Iterator;

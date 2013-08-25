@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.decoder.builtin.wav;
+package pl.edu.agh.ki.grieg.decoder.wav;
 
 /**
  * Header of a WAV file contained in the RIFF. Provides information about the

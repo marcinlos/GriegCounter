@@ -13,5 +13,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JavaSoundOutput"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="cpsuite-1.2.6.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ParserMp3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ParserWav"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

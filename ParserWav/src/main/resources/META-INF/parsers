@@ -1,0 +1,2 @@
+@class: pl.edu.agh.ki.grieg.decoder.wav.WavFileParser
+@extensions: wav
