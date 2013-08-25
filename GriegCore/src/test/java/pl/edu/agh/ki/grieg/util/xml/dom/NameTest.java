@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.util.xml.dom;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
@@ -39,13 +40,13 @@ public class NameTest {
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
         
-        assertNotEquals(a, c);
-        assertNotEquals(b, c);
-        assertNotEquals(c, d);
-        assertNotEquals(a, d);
-        assertNotEquals(b, d);
+        assertThat(a, is(not(c)));
+        assertThat(b, is(not(c)));
+        assertThat(c, is(not(d)));
+        assertThat(a, is(not(d)));
+        assertThat(b, is(not(d)));
         
-        assertNotEquals(a, NS + ":node");
+        assertThat(a, is(not((Object) (NS + ":node"))));
     }
 
 }

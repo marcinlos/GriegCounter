@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.util.converters;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -59,10 +60,10 @@ public class TypesTest {
     @Test
     public void typeMatchersHaveValueSemantics() {
         assertEquals(intMatcher, otherIntMatcher);
-        assertNotEquals(intMatcher, subIntMatcher);
+        assertThat(intMatcher, is(not(subIntMatcher)));
         
-        assertNotEquals(subListMatcher, listMatcher);
-        assertNotEquals(listMatcher, arrayListMatcher);
+        assertThat(subListMatcher, is(not(listMatcher)));
+        assertThat(listMatcher, is(not(arrayListMatcher)));
     }
 
 }

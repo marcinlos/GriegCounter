@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.util.xml.dom;
 
-import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -67,15 +67,15 @@ public class DomTest {
         
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(a, c);
-        assertNotEquals(b, c);
-        assertNotEquals(a, "class");
-        assertNotEquals(c, c.qname());
+        assertThat(a, is(not(c)));
+        assertThat(b, is(not(c)));
+        assertThat(a, is(not((Object) "class")));
+        assertThat(c, is(not((Object) c.qname())));
         
         a.val("blue");
         b.val("red");
         
-        assertNotEquals(a, b);
+        assertThat(a, is(not(b)));
     }
     
     @Test
@@ -179,12 +179,12 @@ public class DomTest {
         Element equal = new Element(NS, "root").add(a).add(b).add(c).add(d);
         equal.val("some value");
         
-        assertNotEquals(element, "whatevah");
-        assertNotEquals(element, otherNs);
-        assertNotEquals(element, otherName);
-        assertNotEquals(element, otherVal);
-        assertNotEquals(element, otherAttrs);
-        assertNotEquals(element, otherChildren);
+        assertThat(element, is(not((Object) "whatevah")));
+        assertThat(element, is(not(otherNs)));
+        assertThat(element, is(not(otherName)));
+        assertThat(element, is(not(otherVal)));
+        assertThat(element, is(not(otherAttrs)));
+        assertThat(element, is(not(otherChildren)));
         assertEquals(element, equal);
         assertEquals(element.hashCode(), equal.hashCode());
     }

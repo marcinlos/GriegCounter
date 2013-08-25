@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioException;
-import pl.edu.agh.ki.grieg.model.model.CompositeModel;
-import pl.edu.agh.ki.grieg.model.model.Model;
-import pl.edu.agh.ki.grieg.model.model.Models;
+import pl.edu.agh.ki.grieg.model.CompositeModel;
+import pl.edu.agh.ki.grieg.model.Model;
+import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
-import pl.edu.agh.ki.grieg.processing.util.Reflection;
+import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.Point;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -56,7 +56,7 @@ public class GriegMain extends RoboActivity {
         AudioModel model = new AudioModel();
         factory.addListener(model);
         
-        Model<?> m = model.getChartModel();
+        Model<?> m = model.getModel();
         modelRoot.addModel("wave", m);
         
         Class<? extends List<Point>> clazz = Reflection.castClass(List.class);
