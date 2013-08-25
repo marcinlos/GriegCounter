@@ -7,9 +7,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.ReflectionException;
@@ -17,19 +14,20 @@ import pl.edu.agh.ki.grieg.util.Resources;
 
 public class ParserLoader implements Iterable<ParserEntry> {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(ParserLoader.class);
-
     private final String configPath;
 
     private final ClassLoader classLoader;
 
     private final ProviderFileParser parser;
+    
+    public ParserLoader(String configPath, ClassLoader classLoader) {
+        this.configPath = configPath;
+        this.classLoader = classLoader;
+        this.parser = new ProviderFileParser();
+    }
 
     public ParserLoader(String configPath) {
-        this.configPath = configPath;
-        this.classLoader = Resources.contextClassLoader();
-        this.parser = new ProviderFileParser();
+        this(configPath, Resources.contextClassLoader());
     }
 
     @Override
@@ -81,9 +79,8 @@ public class ParserLoader implements Iterable<ParserEntry> {
                 return false;
             }
             URL url = configFiles.nextElement();
-            InputStream stream;
             try {
-                stream = url.openStream();
+                InputStream stream = url.openStream();
                 definitions = parser.parse(stream).iterator();
                 return true;
             } catch (IOException e) {
