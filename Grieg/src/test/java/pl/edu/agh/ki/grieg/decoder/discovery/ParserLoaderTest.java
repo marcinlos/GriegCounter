@@ -3,9 +3,7 @@ package pl.edu.agh.ki.grieg.decoder.discovery;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -81,6 +79,17 @@ public class ParserLoaderTest {
         it.next();
         it.next();
     }
+    
+    @Test(expected = ParserDiscoveryException.class)
+    public void cannotLoadInvalid() throws Throwable {
+        loader = new ParserLoader("parsers/invalid");
+        try {
+            loader.iterator().next();
+        } catch (RuntimeException e) {
+            throw e.getCause();
+        }
+    }
+    
 
     private Set<Class<?>> getClasses(Iterable<ParserEntry> entries) {
         Set<Class<?>> classes = Sets.newHashSet();
