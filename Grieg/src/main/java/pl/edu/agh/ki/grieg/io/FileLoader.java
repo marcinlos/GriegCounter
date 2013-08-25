@@ -31,7 +31,7 @@ public class FileLoader {
     private static final Logger logger = LoggerFactory
             .getLogger(FileLoader.class);
     
-    private static final String CONFIG_PATH = "META-INF/parsers";
+    private static final String CONFIG_PATH = "pl.edu.agh.ki.grieg/parsers";
 
     /** Root decoder manager, ancestor of all the managers */
     private static final DecoderManager root;
@@ -76,6 +76,7 @@ public class FileLoader {
             		throw e;
             	}
             }
+            ++ found;
         }
         logCustomSummary(found, registered);
     }

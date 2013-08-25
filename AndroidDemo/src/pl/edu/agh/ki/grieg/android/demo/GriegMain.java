@@ -65,20 +65,18 @@ public class GriegMain extends RoboActivity {
         leftChannel.setModel(leftSerie);
         rightChannel.setModel(rightSerie);
 
-        startProcessing();
+        try {
+        	startProcessing();
+        } catch (Exception e) {
+        	logger.error("Error", e);
+        }
     }
 
-    private void startProcessing() {
-        try {
-            final Processor proc = factory.newFileProcessor(new File(BACH));
-            proc.openFile();
-            enqueue(new PreAnalysis(proc));
-            enqueue(new Analysis(proc));
-        } catch (AudioException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void startProcessing() throws AudioException, IOException {
+        final Processor proc = factory.newFileProcessor(new File(BACH));
+        proc.openFile();
+        enqueue(new PreAnalysis(proc));
+        enqueue(new Analysis(proc));
     }
     
     private void enqueue(Runnable action) {
