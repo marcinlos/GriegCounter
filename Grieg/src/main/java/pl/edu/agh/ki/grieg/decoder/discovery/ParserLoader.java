@@ -95,12 +95,26 @@ public class ParserLoader implements Iterable<ParserEntry> {
 	 */
 	private final class ParserIterator implements Iterator<ParserEntry> {
 
+		/** Sequence of URLs of found config files */
 		private final Enumeration<URL> configFiles;
 
+		/**
+		 * Iterator over the parser definitions found in the last parsed file
+		 */
 		private Iterator<ParserDefinition> definitions;
 
+		/**
+		 * Whether the next definition has been found, needed since the
+		 * {@link #hasNext()} needs to find it if it has not yet been found
+		 */
 		private boolean foundNext = false;
 
+		/**
+		 * Creates new lazy iterator.
+		 * 
+		 * @throws ParserDiscoveryException
+		 *             If an IO error occured during searching for config files
+		 */
 		public ParserIterator() throws ParserDiscoveryException {
 			try {
 				this.configFiles = classLoader.getResources(configPath);
@@ -109,12 +123,28 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * <p>
+		 * Determines the next definition if necessary.
+		 */
 		@Override
 		public boolean hasNext() {
 			findNextIfNeeded();
 			return foundNext;
 		}
 
+		/**
+		 * Determines the next parser definition, taking the next definition
+		 * from the currently traversed file or moving to the next one if
+		 * necessary.
+		 * 
+		 * @return {@code true} if the next definition exists, {@code false}
+		 *         otherwise
+		 * @throws ParserDiscoveryException
+		 *             If processing the config file fails
+		 */
 		private boolean findNext() throws ParserDiscoveryException {
 			if (definitions != null && definitions.hasNext()) {
 				return true;
@@ -128,6 +158,14 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * Opens and parses the next config file found on the classpath.
+		 * 
+		 * @return {@code true} if there was another file, {@code false} if the
+		 *         previous one was the last
+		 * @throws ParserDiscoveryException
+		 *             If an error occurs during file processing
+		 */
 		private boolean openNextFile() throws ParserDiscoveryException {
 			if (!configFiles.hasMoreElements()) {
 				return false;
@@ -142,6 +180,10 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * If the next definition has not been determined yet, it attempts to do
+		 * it.
+		 */
 		private void findNextIfNeeded() {
 			if (!foundNext) {
 				try {
@@ -152,6 +194,12 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * <p>
+		 * Instantiates the parser described by the next definition.
+		 */
 		@Override
 		public ParserEntry next() {
 			findNextIfNeeded();
@@ -163,6 +211,10 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * Instantiates {@link AudioFormatParser} based on the next available
+		 * definition.
+		 */
 		private ParserEntry createNextEntry() {
 			ParserDefinition definition = definitions.next();
 			String className = definition.getClassName();
@@ -174,6 +226,10 @@ public class ParserLoader implements Iterable<ParserEntry> {
 			}
 		}
 
+		/**
+		 * Always throws {@link UnsupportedOperationException} for this iterator
+		 * implementation.
+		 */
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException(
