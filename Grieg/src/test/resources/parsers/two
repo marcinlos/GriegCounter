@@ -1,0 +1,5 @@
+@class: pl.edu.agh.ki.grieg.decoder.discovery.DummyAudio2
+@extensions: mp3 ogg
+
+@class: pl.edu.agh.ki.grieg.decoder.discovery.DummyAudio3
+@extensions: mp3
