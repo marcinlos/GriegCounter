@@ -18,7 +18,7 @@ public class Segmenter extends AbstractEnumeratee<float[][], float[][]> {
     private int index = 0;
 
     /**
-     * Creates new compressor for specified number of channel, gathering
+     * Creates new segmenter for specified number of channel, gathering
      * specified amount of samples per each output
      * 
      * @param channels

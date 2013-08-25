@@ -9,6 +9,8 @@ import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.Range;
+import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
+import pl.edu.agh.ki.grieg.util.iteratee.State;
 
 /**
  * Default {@link PipelineAssembler} implementation. Creates few basic
@@ -65,9 +67,22 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         
         Skipper skipper = new Skipper(packetSize);
         
-        pipeline.as("skipper")
+        pipeline.as("skipperek")
                 .connect(skipper, float[][].class, float[].class)
                 .toRoot(); 
+        pipeline.as("skipper")
+        .connect(new AbstractEnumeratee<float[], float[]>() {
+
+			@Override
+			public State step(float[] item) {
+				float[] my = new float[item.length];
+				for(int i=0;i<item.length;i++){
+					my[i] = item[i]+0.5f;
+				}
+				pushChunk(my);
+				return State.Cont;
+			}
+		}, float[].class,float[].class).to("skipperek");
         
     }
 

@@ -86,7 +86,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     @Override
     public void beforeAnalysis(Pipeline<float[][]> pipeline) {
-        pipeline.connect(this, float[].class).to("skipper");
+        pipeline.connect(this, float[].class).to("skipperek");
     }
 
     protected abstract void sampleCountMissing();

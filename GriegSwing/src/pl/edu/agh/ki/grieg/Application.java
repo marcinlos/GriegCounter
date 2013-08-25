@@ -20,6 +20,7 @@ import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
+import pl.edu.agh.ki.grieg.processing.model.DupaModel;
 import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
     
 
@@ -57,6 +58,10 @@ public class Application implements Controller, ErrorHandler {
         AudioModel model = new AudioModel();
         procFactory.addListener(model);
         modelRoot.addModel("wave", model.getModel());
+        
+        DupaModel modell = new DupaModel("dupa");
+        procFactory.addListener(modell);
+        modelRoot.addModel("dupee", modell);
         
         CompositeModel<?> loader = Models.container();
         FileLoader fileLoader = procFactory.getFileLoader();

@@ -3,6 +3,8 @@ package pl.edu.agh.ki.grieg.gui.swing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -24,6 +26,7 @@ import pl.edu.agh.ki.grieg.Controller;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
+import pl.edu.agh.ki.grieg.widgets.swing.LabelView;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
 import pl.edu.agh.ki.grieg.widgets.swing.TitleBarPercentDisplay;
 
@@ -54,6 +57,8 @@ public class MainWindow extends JFrame {
     private JMenu fileMenu;
     private JMenu presetMenu;
 
+	private LabelView labelView;
+
     public MainWindow(Model<?> model, Controller controller, String label) {
         super(label);
         this.model = model;
@@ -64,6 +69,9 @@ public class MainWindow extends JFrame {
         settings = settingsManager.readSettings();
 
         waveView = new ChannelsChart(model.getChild("wave"), 1, 2);
+        
+        labelView = new LabelView(model.getChild("dupee",String.class));
+        
 
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));
@@ -150,6 +158,7 @@ public class MainWindow extends JFrame {
     private void setupLayout() {
         add(waveView);
         add(progressBar.swingPanel(), BorderLayout.PAGE_END);
+        add(labelView, BorderLayout.PAGE_START);
     }
 
     private class ClosingListener extends WindowAdapter {
