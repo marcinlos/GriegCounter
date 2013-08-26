@@ -6,7 +6,7 @@ import java.util.List;
 
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.util.Point;
+import pl.edu.agh.ki.grieg.util.math.Point;
 
 public class LineChart extends LineChartView implements
         Listener<List<Point>> {

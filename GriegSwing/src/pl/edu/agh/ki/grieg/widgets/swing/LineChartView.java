@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import pl.edu.agh.ki.grieg.util.Point;
-import pl.edu.agh.ki.grieg.util.PointI;
+import pl.edu.agh.ki.grieg.util.math.Point;
+import pl.edu.agh.ki.grieg.util.math.PointI;
 
 public class LineChartView extends SwingCanvas {
 

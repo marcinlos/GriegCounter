@@ -7,7 +7,7 @@ import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Range;
+import pl.edu.agh.ki.grieg.util.math.Range;
 import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**

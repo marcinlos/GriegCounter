@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.util.Point;
 import pl.edu.agh.ki.grieg.util.Reflection;
+import pl.edu.agh.ki.grieg.util.math.Point;
 
 public class ChannelsChart extends JPanel {
 

@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
-import pl.edu.agh.ki.grieg.util.Point;
+import pl.edu.agh.ki.grieg.util.math.Point;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 
 import com.google.common.collect.Lists;

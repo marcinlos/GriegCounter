@@ -3,7 +3,6 @@ package pl.edu.agh.ki.grieg.util.properties;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
 
 /**
  * Static utilities for dealing with heterogenous map keys.
