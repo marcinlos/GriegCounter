@@ -18,7 +18,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public <T> Object put(Key<T> key, T value) {
-        return put(key.name, value);
+        return put(key.getName(), value);
     }
 
     /**
@@ -36,7 +36,7 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public <T> T get(Key<T> key) {
-        return get(key.name, key.type);
+        return get(key.getName(), key.getType());
     }
 
     /**
@@ -262,8 +262,8 @@ public abstract class AbstractProperties implements Properties {
      */
     @Override
     public <T> boolean contains(Key<T> key) {
-        Object o = get(key.name);
-        return key.type.isInstance(o);
+        Object o = get(key.getName());
+        return key.getType().isInstance(o);
     }
 
     /**
@@ -288,7 +288,7 @@ public abstract class AbstractProperties implements Properties {
     @Override
     public <T> T remove(Key<T> key) {
         T value = get(key);
-        remove(key.name);
+        remove(key.getName());
         return value;
     }
 

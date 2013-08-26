@@ -57,7 +57,7 @@ public class ExtractionContext {
     
     public void requestFeatures(Key<?>... features) {
         for (Key<?> feature : features) {
-            requested.add(feature.name);
+            requested.add(feature.getName());
         }
     }
     
@@ -66,7 +66,7 @@ public class ExtractionContext {
     }
     
     public boolean isFeatureNeeded(Key<?> feature) {
-        return requested.contains(feature.name);
+        return requested.contains(feature.getName());
     }
     
     public boolean shouldCompute(String feature) {
@@ -74,7 +74,7 @@ public class ExtractionContext {
     }
     
     public boolean shouldCompute(Key<?> feature) {
-        String name = feature.name;
+        String name = feature.getName();
         return requested.contains(name) && ! hasFeature(feature);
     }
     
@@ -151,7 +151,7 @@ public class ExtractionContext {
     
     public <T> void setFeature(Key<T> key, T value) {
         features.put(key, value);
-        signalFeature(key.name, value);
+        signalFeature(key.getName(), value);
     }
     
     public Properties getFeatures() {
