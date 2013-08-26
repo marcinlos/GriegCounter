@@ -12,7 +12,9 @@ public interface ResourceResolver {
 
 	/**
 	 * Resolves specified resource name and returns its location. In case the
-	 * resource cannot be found, returns {@code null}.
+	 * resource cannot be found, returns {@code null}. Resource names ending
+	 * with forward slash ("/") are interpreted as directory names. In
+	 * particular, empty string is interpreted as the resource tree root.
 	 * 
 	 * @param name
 	 *            Name of the resource

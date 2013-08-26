@@ -8,6 +8,7 @@ import java.util.Iterator;
 import pl.edu.agh.ki.grieg.util.Resources;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 
 /**
@@ -36,7 +37,7 @@ public class ClassLoaderResolver implements ResourceResolver {
 	 *            Classloader used to resolver resource names
 	 */
 	public ClassLoaderResolver(ClassLoader classLoader) {
-		this.classLoader = classLoader;
+		this.classLoader = Preconditions.checkNotNull(classLoader);
 	}
 
 	/**
