@@ -3,6 +3,7 @@ package pl.edu.agh.ki.grieg.processing.pipeline;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +29,11 @@ import com.google.common.collect.Maps;
  * interface:
  * 
  * <pre>
- * pipeline.as(&quot;segmenter&quot;)
- *         .connect(segmenter, float[][].class, float[][].class)
- *         .toRoot();
+ * pipeline.as(&quot;segmenter&quot;).connect(segmenter, float[][].class, float[][].class)
+ * 		.toRoot();
  * 
- * pipeline.as(&quot;compressor&quot;)
- *         .connect(compressor, float[][].class, Range[].class)
- *         .to(&quot;segmenter&quot;);
+ * pipeline.as(&quot;compressor&quot;).connect(compressor, float[][].class, Range[].class)
+ * 		.to(&quot;segmenter&quot;);
  * </pre>
  * 
  * @author los
@@ -43,196 +42,260 @@ import com.google.common.collect.Maps;
  *            Type of the input data
  */
 public class Pipeline<T> implements Iteratee<T> {
-    
-    private static final Logger logger = LoggerFactory.getLogger(Pipeline.class);
 
-    /** Root of the tree */
-    private final Transform<T, T> root;
+	private static final Logger logger = LoggerFactory
+			.getLogger(Pipeline.class);
 
-    /** name -> node */
-    private final Map<String, Node> nodes = Maps.newHashMap();
+	/** Root of the tree */
+	private final Transform<T, T> root;
 
-    /**
-     * Creates new {@link Pipeline} object with specified input type
-     * 
-     * @param input
-     *            {@code Class} object of the input type
-     */
-    public Pipeline(Class<T> input) {
-        Enumeratee<T, T> forwarder = Iteratees.forwarder();
-        this.root = Nodes.make(forwarder, input, input);
-    }
+	/** Mapping name -> node */
+	private final Map<String, Node> nodes = Maps.newHashMap();
 
-    /**
-     * Creates new {@link Pipeline} object with the specified input type
-     * 
-     * @param input
-     *            {@code Class} object of the input type
-     * @return {@link Pipeline} object
-     */
-    public static <T> Pipeline<T> make(Class<T> input) {
-        return new Pipeline<T>(input);
-    }
+	/**
+	 * Creates new {@link Pipeline} object with specified root input type.
+	 * 
+	 * @param input
+	 *            {@code Class} object of the input type
+	 */
+	public Pipeline(Class<T> input) {
+		Enumeratee<T, T> forwarder = Iteratees.forwarder();
+		this.root = Nodes.make(forwarder, input, input);
+	}
 
-    /**
-     * Checks in runtime whether specified sink can be connected to the output
-     * of specified source (whether the types are compatible).
-     */
-    private static boolean compatible(Source<?> source, Sink<?> sink) {
-        Class<?> sourceOutput = source.getOutputType();
-        Class<?> sinkInput = sink.getInputType();
-        return sinkInput.isAssignableFrom(sourceOutput);
-    }
+	/**
+	 * Creates new {@link Pipeline} object with the specified input type.
+	 * 
+	 * @param input
+	 *            {@code Class} object of the input type
+	 * @return {@link Pipeline} object
+	 */
+	public static <T> Pipeline<T> make(Class<T> input) {
+		return new Pipeline<T>(input);
+	}
 
-    /**
-     * Casts unspecified sink to universal ({@code Object}-consuming) sink.
-     * Unsafe, but called only when it is certain it is correct.
-     * 
-     * @param sink
-     *            Sink to downcast
-     * @return Universal sink
-     */
-    @SuppressWarnings("unchecked")
-    private static Iteratee<Object> universal(Iteratee<?> sink) {
-        return (Iteratee<Object>) sink;
-    }
+	/**
+	 * Checks in runtime whether specified sink can be connected to the output
+	 * of specified source (whether the types are compatible). It is done in
+	 * typesafe manner, using available type information from both nodes.
+	 * 
+	 * @param source
+	 *            Source node
+	 * @param sink
+	 *            Sink node
+	 * @return {@code true} if it is possible to connect {@code sink} to the
+	 *         {@code source}, {@code false} otherwise
+	 */
+	private static boolean compatible(Source<?> source, Sink<?> sink) {
+		Class<?> sourceOutput = source.getOutputType();
+		Class<?> sinkInput = sink.getInputType();
+		return sinkInput.isAssignableFrom(sourceOutput);
+	}
 
-    /**
-     * Connects specified nodes, if possible.
-     * 
-     * @param sink
-     *            Node accepting data
-     * @param source
-     *            Node generating data
-     */
-    private void connect(Sink<?> sink, Source<?> source) {
-        if (compatible(source, sink)) {
-            Enumerator<?> src = source.getSource();
-            Iteratee<?> dst = sink.getSink();
-            src.connect(universal(dst));
-        }
-    }
+	/**
+	 * Casts unspecified sink to universal ({@code Object}-consuming) sink.
+	 * Unsafe, but called only when it is certain it is correct.
+	 * 
+	 * @param sink
+	 *            Sink to downcast
+	 * @return Universal sink
+	 */
+	@SuppressWarnings("unchecked")
+	private static Iteratee<Object> universal(Iteratee<?> sink) {
+		return (Iteratee<Object>) sink;
+	}
 
-    private Source<?> getSourceNode(String name) {
-        Node node = nodes.get(name);
-        if (node instanceof Source<?>) {
-            return (Source<?>) node;
-        } else if (node == null) {
-            throw new RuntimeException("Specified source does not exist");
-        } else {
-            String clazz = node.getClass().getName();
-            throw new IllegalArgumentException("Specified node is not a "
-                    + "source (" + clazz + ")");
-        }
-    }
+	/**
+	 * Tries to connects input of {@code sink} to the output of {@code source}.
+	 * If it is possible - types match - nodes are connected.
+	 * 
+	 * @param sink
+	 *            Node accepting data
+	 * @param source
+	 *            Node generating data
+	 */
+	private void connect(Sink<?> sink, Source<?> source) {
+		if (compatible(source, sink)) {
+			Enumerator<?> src = source.getSource();
+			Iteratee<?> dst = sink.getSink();
+			src.connect(universal(dst));
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    public <S> Enumerator<S> getSource(String name, Class<? extends S> clazz) {
-        Source<?> node = getSourceNode(name);
-        Class<?> out = node.getOutputType();
-        if (clazz.isAssignableFrom(out)) {
-            return (Enumerator<S>) node.getSource();
-        } else {
-            String pattern = "Type mismatch: source emits %s, %s required";
-            throw new IllegalArgumentException(String.format(pattern,
-                    out.getName(), clazz.getName()));
-        }
-    }
+	/**
+	 * Retrieves node with specified name as the source node, if possible. If
+	 * there is no such node, {@link NoSuchElementException} is thrown. If there
+	 * is, but it is not the source node, {@link IllegalArgumentException} is
+	 * thrown.
+	 * 
+	 * @param name
+	 *            Name of the node to retrieve
+	 * @return Source node with the specified name
+	 */
+	private Source<?> getSourceNode(String name) {
+		Node node = nodes.get(name);
+		if (node instanceof Source<?>) {
+			return (Source<?>) node;
+		} else if (node == null) {
+			throw new NoSuchElementException("Specified source does not exist");
+		} else {
+			String clazz = node.getClass().getName();
+			throw new IllegalArgumentException("Specified node is not a "
+					+ "source (" + clazz + ")");
+		}
+	}
 
-    public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
-        return new Connect(Nodes.make(sink, clazz));
-    }
+	/**
+	 * Retrieves enumerator previously registered with the specified name, and
+	 * checks whether it can be used as an enumerator of the specified type. If
+	 * there is no such enumerator, {@link NoSuchElementException} is thrown. If
+	 * there is, but the specified type does not match the actual one,
+	 * {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param name
+	 *            Name of the enumerator to retrieve
+	 * @param clazz
+	 *            Type of the values retrieved enumerator is expected to produce
+	 * @return Enumerator producing values of the specified type
+	 */
+	@SuppressWarnings("unchecked")
+	public <S> Enumerator<S> getSource(String name, Class<? extends S> clazz) {
+		Source<?> node = getSourceNode(checkNotNull(name));
+		Class<?> out = node.getOutputType();
+		if (clazz.isAssignableFrom(out)) {
+			return (Enumerator<S>) node.getSource();
+		} else {
+			String pattern = "Type mismatch: source emits %s, %s required";
+			throw new IllegalArgumentException(String.format(pattern,
+					out.getName(), clazz.getName()));
+		}
+	}
 
-    public <S, R> Connect connect(Enumeratee<? super S, ? extends R> transform,
-            Class<S> input, Class<R> output) {
-        return new Connect(Nodes.make(transform, input, output));
-    }
+	/**
+	 * Begins the process of connecting the specified {@link Iteratee} to some
+	 * output of the pipeline. This call is the first in the chained, "fluent"
+	 * invocation.
+	 * 
+	 * @param sink
+	 *            Node to connect to pipeline
+	 * @param clazz
+	 *            Type of the new node's input
+	 * @return Inner DSL-implementing object
+	 */
+	public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
+		return new Connect(Nodes.make(sink, clazz));
+	}
 
-    public Named as(String name) {
-        return new Named(name);
-    }
+	/**
+	 * Begins the process of connecting the specified {@link Enumeratee} to some
+	 * output of the pipeline. This call is the first in the chained, "fluent"
+	 * invocation.
+	 * 
+	 * @param transform
+	 *            Content transformer
+	 * @param input
+	 *            Input type of the new node
+	 * @param output
+	 *            Output type of the new node
+	 * @return Inner DSL-implementing object
+	 */
+	public <S, R> Connect connect(Enumeratee<? super S, ? extends R> transform,
+			Class<S> input, Class<R> output) {
+		return new Connect(Nodes.make(transform, input, output));
+	}
 
-    public class Named {
-        private final String name;
+	/**
+	 * Establishes the name by which the node will known to the pipeline.
+	 * 
+	 * @param name
+	 *            Name to register node with
+	 * @return {@code this}
+	 */
+	public Named as(String name) {
+		return new Named(name);
+	}
 
-        private Named(String name) {
-            checkNotNull(name, "Null name");
-            this.name = name;
-        }
+	public class Named {
+		private final String name;
 
-        public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
-            return new Connect(name, Nodes.make(sink, clazz));
-        }
+		private Named(String name) {
+			checkNotNull(name, "Null name");
+			this.name = name;
+		}
 
-        public <S, R> Connect connect(
-                Enumeratee<? super S, ? extends R> transform, Class<S> input,
-                Class<R> output) {
-            return new Connect(name, Nodes.make(transform, input, output));
-        }
-    }
+		public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) {
+			return new Connect(name, Nodes.make(sink, clazz));
+		}
 
-    public class Connect {
+		public <S, R> Connect connect(
+				Enumeratee<? super S, ? extends R> transform, Class<S> input,
+				Class<R> output) {
+			return new Connect(name, Nodes.make(transform, input, output));
+		}
+	}
 
-        private final String name;
-        private final Sink<?> sink;
+	public class Connect {
 
-        private Connect(String name, Sink<?> sink) {
-            this.name = name;
-            this.sink = sink;
-        }
+		private final String name;
+		private final Sink<?> sink;
 
-        private Connect(Sink<?> sink) {
-            this(null, sink);
-        }
+		private Connect(String name, Sink<?> sink) {
+			this.name = name;
+			this.sink = sink;
+		}
 
-        private Pipeline<T> to(Source<?> source) {
-            connect(sink, source);
-            if (name != null) {
-                nodes.put(name, sink);
-            }
-            return Pipeline.this;
-        }
+		private Connect(Sink<?> sink) {
+			this(null, sink);
+		}
 
-        /**
-         * Connects the node to the source
-         */
-        public Pipeline<T> toRoot() {
-            return to(root);
-        }
+		private Pipeline<T> to(Source<?> source) {
+			connect(sink, source);
+			if (name != null) {
+				nodes.put(name, sink);
+			}
+			return Pipeline.this;
+		}
 
-        /**
-         * Connects the node to some named node
-         * 
-         * @param source
-         *            Name of the node to connect to
-         */
-        public Pipeline<T> to(String source) {
-            return to(getSourceNode(source));
-        }
-    }
+		/**
+		 * Connects the node to the source
+		 */
+		public Pipeline<T> toRoot() {
+			return to(root);
+		}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public State step(T item) {
-        return root.getSink().step(item);
-    }
+		/**
+		 * Connects the node to some named node
+		 * 
+		 * @param source
+		 *            Name of the node to connect to
+		 */
+		public Pipeline<T> to(String source) {
+			return to(getSourceNode(source));
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void finished() {
-        root.getSink().finished();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public State step(T item) {
+		return root.getSink().step(item);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void failed(Throwable e) {
-        root.getSink().failed(e);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void finished() {
+		root.getSink().finished();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void failed(Throwable e) {
+		root.getSink().failed(e);
+	}
 
 }
