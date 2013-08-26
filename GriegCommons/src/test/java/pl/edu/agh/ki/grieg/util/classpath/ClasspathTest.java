@@ -16,56 +16,56 @@ import com.google.common.collect.Sets;
 
 public class ClasspathTest {
 
-	protected ClassLoader systemLoader;
-	protected ClassLoader manyLoader;
-	protected ClassLoader contextLoader;
+    protected ClassLoader systemLoader;
+    protected ClassLoader manyLoader;
+    protected ClassLoader contextLoader;
 
-	public ClasspathTest() {
-		super();
-	}
+    public ClasspathTest() {
+        super();
+    }
 
-	@Before
-	public void setup() throws IOException {
-		systemLoader = ClassLoader.getSystemClassLoader();
-		URL[] urls = subdirs(systemLoader.getResources("org.example"));
-		manyLoader = new URLClassLoader(urls, systemLoader.getParent());
-		saveContextClassloader();
+    @Before
+    public void setup() throws IOException {
+        systemLoader = ClassLoader.getSystemClassLoader();
+        URL[] urls = subdirs(systemLoader.getResources("org.example"));
+        manyLoader = new URLClassLoader(urls, systemLoader.getParent());
+        saveContextClassloader();
 
-	}
+    }
 
-	@Before
-	public void saveContextClassloader() {
-		contextLoader = Thread.currentThread().getContextClassLoader();
-	}
+    @Before
+    public void saveContextClassloader() {
+        contextLoader = Thread.currentThread().getContextClassLoader();
+    }
 
-	@After
-	public void restoreContextClassloader() {
-		Thread.currentThread().setContextClassLoader(contextLoader);
-	}
+    @After
+    public void restoreContextClassloader() {
+        Thread.currentThread().setContextClassLoader(contextLoader);
+    }
 
-	protected URL[] subdirs(Enumeration<URL> urls) {
-		Set<URL> entries = Sets.newLinkedHashSet();
-		while (urls.hasMoreElements()) {
-			URL root = urls.nextElement();
-			File dir = new File(root.getFile());
-			if (dir.isDirectory()) {
-				for (File child : dir.listFiles(isDir)) {
-					try {
-						entries.add(child.toURI().toURL());
-					} catch (MalformedURLException e) {
-						// don't care
-					}
-				}
-			}
-		}
-		return entries.toArray(new URL[0]);
-	}
-	
-	final FileFilter isDir = new FileFilter() {
-		@Override
-		public boolean accept(File pathname) {
-			return pathname.exists() && pathname.isDirectory();
-		}
-	};
+    protected URL[] subdirs(Enumeration<URL> urls) {
+        Set<URL> entries = Sets.newLinkedHashSet();
+        while (urls.hasMoreElements()) {
+            URL root = urls.nextElement();
+            File dir = new File(root.getFile());
+            if (dir.isDirectory()) {
+                for (File child : dir.listFiles(isDir)) {
+                    try {
+                        entries.add(child.toURI().toURL());
+                    } catch (MalformedURLException e) {
+                        // don't care
+                    }
+                }
+            }
+        }
+        return entries.toArray(new URL[0]);
+    }
+
+    final FileFilter isDir = new FileFilter() {
+        @Override
+        public boolean accept(File pathname) {
+            return pathname.exists() && pathname.isDirectory();
+        }
+    };
 
 }

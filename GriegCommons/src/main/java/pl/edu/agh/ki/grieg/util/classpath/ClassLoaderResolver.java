@@ -19,53 +19,53 @@ import com.google.common.collect.Iterators;
  */
 public class ClassLoaderResolver implements ResourceResolver {
 
-	/** Classloader used to lookup resources */
-	private final ClassLoader classLoader;
+    /** Classloader used to lookup resources */
+    private final ClassLoader classLoader;
 
-	/**
-	 * Creates new {@link ClassLoaderResolver} using current thread's context
-	 * classloader.
-	 */
-	public ClassLoaderResolver() {
-		this(Resources.contextClassLoader());
-	}
+    /**
+     * Creates new {@link ClassLoaderResolver} using current thread's context
+     * classloader.
+     */
+    public ClassLoaderResolver() {
+        this(Resources.contextClassLoader());
+    }
 
-	/**
-	 * Creates new {@link ClassLoaderResolver} using specified classloader.
-	 * 
-	 * @param classLoader
-	 *            Classloader used to resolver resource names
-	 */
-	public ClassLoaderResolver(ClassLoader classLoader) {
-		this.classLoader = Preconditions.checkNotNull(classLoader);
-	}
+    /**
+     * Creates new {@link ClassLoaderResolver} using specified classloader.
+     * 
+     * @param classLoader
+     *            Classloader used to resolver resource names
+     */
+    public ClassLoaderResolver(ClassLoader classLoader) {
+        this.classLoader = Preconditions.checkNotNull(classLoader);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public URL getResource(String name) {
-		return classLoader.getResource(name);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL getResource(String name) {
+        return classLoader.getResource(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Iterator<URL> getResources(String name) {
-		try {
-			Enumeration<URL> urls = classLoader.getResources(name);
-			return Iterators.forEnumeration(urls);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("cl", classLoader)
-				.toString();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<URL> getResources(String name) {
+        try {
+            Enumeration<URL> urls = classLoader.getResources(name);
+            return Iterators.forEnumeration(urls);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("cl", classLoader)
+                .toString();
+    }
 
 }
