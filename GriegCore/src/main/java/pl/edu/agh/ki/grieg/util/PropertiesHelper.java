@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.util;
 
 import java.util.Map.Entry;
 
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 public final class PropertiesHelper {
 

@@ -9,8 +9,8 @@ import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.tree.ConfigNode;
 import pl.edu.agh.ki.grieg.processing.core.config.tree.PipelineNode;
 import pl.edu.agh.ki.grieg.processing.core.config.tree.PropertyNode;
-import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.PropertyMap;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
+import pl.edu.agh.ki.grieg.util.properties.PropertyMap;
 
 /**
  * Top-level class evaluating the whole configuration tree and transforming it

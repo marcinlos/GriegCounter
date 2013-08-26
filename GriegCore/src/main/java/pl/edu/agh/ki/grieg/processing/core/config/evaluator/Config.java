@@ -5,7 +5,7 @@ import pl.edu.agh.ki.grieg.processing.core.PipelineAssembler;
 import pl.edu.agh.ki.grieg.processing.core.config.AssemblerDefinition;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.core.config.PropertiesDefinition;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Class representing complete, fully evaluated configuration.

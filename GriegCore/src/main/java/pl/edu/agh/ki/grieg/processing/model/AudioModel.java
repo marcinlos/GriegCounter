@@ -13,8 +13,8 @@ import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.model.SimpleModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Point;
-import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

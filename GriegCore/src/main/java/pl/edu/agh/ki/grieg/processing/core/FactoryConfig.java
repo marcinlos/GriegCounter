@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.io.FileLoader;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Simple structure containing configuration required by the

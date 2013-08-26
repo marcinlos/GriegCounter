@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core.config;
 
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Configuration element representing the property list. Can build the

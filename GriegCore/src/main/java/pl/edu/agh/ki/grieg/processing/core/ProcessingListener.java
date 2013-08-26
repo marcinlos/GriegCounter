@@ -3,7 +3,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Interface for receiving notifications about important events of the

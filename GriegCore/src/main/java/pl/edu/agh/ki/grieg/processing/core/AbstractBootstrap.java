@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.FileLoader;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Abstract base class facilitating creation of {@link Bootstrap}

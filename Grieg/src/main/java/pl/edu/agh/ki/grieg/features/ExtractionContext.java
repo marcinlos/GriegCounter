@@ -3,10 +3,10 @@ package pl.edu.agh.ki.grieg.features;
 import java.util.Collections;
 import java.util.Set;
 
-import pl.edu.agh.ki.grieg.util.Key;
 import pl.edu.agh.ki.grieg.util.ProgressListener;
-import pl.edu.agh.ki.grieg.util.Properties;
-import pl.edu.agh.ki.grieg.util.PropertyMap;
+import pl.edu.agh.ki.grieg.util.properties.Key;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
+import pl.edu.agh.ki.grieg.util.properties.PropertyMap;
 
 import com.google.common.collect.Sets;
 

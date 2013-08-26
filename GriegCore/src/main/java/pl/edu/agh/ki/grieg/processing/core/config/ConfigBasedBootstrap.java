@@ -8,7 +8,7 @@ import pl.edu.agh.ki.grieg.processing.core.config.evaluator.Config;
 import pl.edu.agh.ki.grieg.processing.core.config.evaluator.ConfigEvaluator;
 import pl.edu.agh.ki.grieg.processing.core.config.evaluator.ConfigEvaluatorBuilder;
 import pl.edu.agh.ki.grieg.processing.core.config.tree.ConfigNode;
-import pl.edu.agh.ki.grieg.util.Properties;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Abstract base class for {@link Bootstrap} implementations using standard

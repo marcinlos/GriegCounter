@@ -9,9 +9,9 @@ import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.Properties;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 public abstract class WaveObserver extends ProcessingAdapter implements
         Iteratee<float[]> {

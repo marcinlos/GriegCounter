@@ -1,8 +1,8 @@
 package pl.edu.agh.ki.grieg.features;
 
-import static pl.edu.agh.ki.grieg.util.Keys.make;
+import static pl.edu.agh.ki.grieg.util.properties.Keys.make;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.util.Key;
+import pl.edu.agh.ki.grieg.util.properties.Key;
 
 /**
  * Container for static {@link Key}s of commonly used audio file properties.
