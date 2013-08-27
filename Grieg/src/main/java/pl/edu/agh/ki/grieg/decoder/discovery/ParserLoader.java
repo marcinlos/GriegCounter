@@ -3,14 +3,19 @@ package pl.edu.agh.ki.grieg.decoder.discovery;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.ReflectionException;
-import pl.edu.agh.ki.grieg.util.Resources;
+import pl.edu.agh.ki.grieg.util.classpath.ClasspathException;
+import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
+import pl.edu.agh.ki.grieg.util.classpath.ResourceResolver;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
 
 /**
  * Provides a way to lazily iterate over all the discovered audio parsers.
@@ -39,204 +44,225 @@ import pl.edu.agh.ki.grieg.util.Resources;
  */
 public class ParserLoader implements Iterable<ParserEntry> {
 
-	/** Classpath-relative path of the traversed files */
-	private final String configPath;
+    /** Classpath-relative path of the traversed files */
+    private final String configPath;
 
-	/** Classloader used to find the files */
-	private final ClassLoader classLoader;
+    /** Classloader used to find the files */
+    // private final ClassLoader classLoader;
 
-	/** Parser used to parse the config files */
-	private final ProviderFileParser parser;
+    private final ClasspathScanner scanner;
 
-	/**
-	 * Creates new {@link ParserLoader} examining all the files matching
-	 * {@code configPath} at the classpath, found with the speified classloader.
-	 * 
-	 * @param configPath
-	 *            Path of the config files
-	 * @param classLoader
-	 *            Classloader used to find the config files
-	 */
-	public ParserLoader(String configPath, ClassLoader classLoader) {
-		this.configPath = configPath;
-		this.classLoader = classLoader;
-		this.parser = new ProviderFileParser();
-	}
+    private final ResourceResolver resolver;
 
-	/**
-	 * Creates new {@link ParserLoader} examining all the files matching
-	 * {@code configPath} at the classpath, found using this thread's context
-	 * classloader.
-	 * 
-	 * @param configPath
-	 *            Path of the config files
-	 */
-	public ParserLoader(String configPath) {
-		this(configPath, Resources.contextClassLoader());
-	}
+    /** Parser used to parse the config files */
+    private final ProviderFileParser parser;
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * <p>
-	 * Returns lazy iterator over parsers found in the configuration files.
-	 */
-	@Override
-	public Iterator<ParserEntry> iterator() {
-		try {
-			return new ParserIterator();
-		} catch (ParserDiscoveryException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    /**
+     * Creates new {@link ParserLoader} examining all the files matching
+     * {@code configPath} at the classpath, found with the speified classloader.
+     * 
+     * @param configPath
+     *            Path of the config files
+     * @param classLoader
+     *            Classloader used to find the config files
+     */
+    // public ParserLoader(String configPath, ClassLoader classLoader) {
+    // this.configPath = configPath;
+    // this.classLoader = classLoader;
+    // this.parser = new ProviderFileParser();
+    // }
 
-	/**
-	 * Implementation of the lazy iterator.
-	 */
-	private final class ParserIterator implements Iterator<ParserEntry> {
+    public ParserLoader(String configPath, ClasspathScanner scanner) {
+        this.configPath = configPath;
+        this.scanner = scanner;
+        this.resolver = scanner.getResolver();
+        this.parser = new ProviderFileParser();
+    }
 
-		/** Sequence of URLs of found config files */
-		private final Enumeration<URL> configFiles;
+    /**
+     * Creates new {@link ParserLoader} examining all the files matching
+     * {@code configPath} at the classpath, found using the
+     * {@link ClasspathScanner} with default dependencies.
+     * 
+     * @param configPath
+     *            Path of the config files
+     */
+    public ParserLoader(String configPath) {
+        this(configPath, new ClasspathScanner());
+    }
 
-		/**
-		 * Iterator over the parser definitions found in the last parsed file
-		 */
-		private Iterator<ParserDefinition> definitions;
+    private final class StringToUrls implements Function<String, Iterator<URL>> {
+        @Override
+        public Iterator<URL> apply(String input) {
+            return resolver.getResources(input);
+        }
 
-		/**
-		 * Whether the next definition has been found, needed since the
-		 * {@link #hasNext()} needs to find it if it has not yet been found
-		 */
-		private boolean foundNext = false;
+    }
 
-		/**
-		 * Creates new lazy iterator.
-		 * 
-		 * @throws ParserDiscoveryException
-		 *             If an IO error occured during searching for config files
-		 */
-		public ParserIterator() throws ParserDiscoveryException {
-			try {
-				this.configFiles = classLoader.getResources(configPath);
-			} catch (IOException e) {
-				throw new ParserDiscoveryException(e);
-			}
-		}
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Returns lazy iterator over parsers found in the configuration files.
+     */
+    @Override
+    public Iterator<ParserEntry> iterator() {
+        try {
+            return new ParserIterator();
+        } catch (ParserDiscoveryException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * <p>
-		 * Determines the next definition if necessary.
-		 */
-		@Override
-		public boolean hasNext() {
-			findNextIfNeeded();
-			return foundNext;
-		}
+    /**
+     * Implementation of the lazy iterator.
+     */
+    private final class ParserIterator implements Iterator<ParserEntry> {
 
-		/**
-		 * Determines the next parser definition, taking the next definition
-		 * from the currently traversed file or moving to the next one if
-		 * necessary.
-		 * 
-		 * @return {@code true} if the next definition exists, {@code false}
-		 *         otherwise
-		 * @throws ParserDiscoveryException
-		 *             If processing the config file fails
-		 */
-		private boolean findNext() throws ParserDiscoveryException {
-			if (definitions != null && definitions.hasNext()) {
-				return true;
-			} else {
-				while (openNextFile()) {
-					if (definitions.hasNext()) {
-						return true;
-					}
-				}
-				return false;
-			}
-		}
+        /** Sequence of URLs of found config files */
+        private final Iterator<URL> configFiles;
 
-		/**
-		 * Opens and parses the next config file found on the classpath.
-		 * 
-		 * @return {@code true} if there was another file, {@code false} if the
-		 *         previous one was the last
-		 * @throws ParserDiscoveryException
-		 *             If an error occurs during file processing
-		 */
-		private boolean openNextFile() throws ParserDiscoveryException {
-			if (!configFiles.hasMoreElements()) {
-				return false;
-			}
-			URL url = configFiles.nextElement();
-			try {
-				InputStream stream = url.openStream();
-				definitions = parser.parse(stream).iterator();
-				return true;
-			} catch (IOException e) {
-				throw new ParserDiscoveryException(e);
-			}
-		}
+        /**
+         * Iterator over the parser definitions found in the last parsed file
+         */
+        private Iterator<ParserDefinition> definitions;
 
-		/**
-		 * If the next definition has not been determined yet, it attempts to do
-		 * it.
-		 */
-		private void findNextIfNeeded() {
-			if (!foundNext) {
-				try {
-					foundNext = findNext();
-				} catch (ParserDiscoveryException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
+        /**
+         * Whether the next definition has been found, needed since the
+         * {@link #hasNext()} needs to find it if it has not yet been found
+         */
+        private boolean foundNext = false;
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * <p>
-		 * Instantiates the parser described by the next definition.
-		 */
-		@Override
-		public ParserEntry next() {
-			findNextIfNeeded();
-			if (!foundNext) {
-				throw new NoSuchElementException();
-			} else {
-				foundNext = false;
-				return createNextEntry();
-			}
-		}
+        /**
+         * Creates new lazy iterator.
+         */
+        public ParserIterator() throws ParserDiscoveryException {
+            try {
+                Set<String> names = scanner.getEntries(configPath);
+                this.configFiles = Iterators.concat(mapToUrls(names));
+            } catch (ClasspathException e) {
+                throw new ParserDiscoveryException(e);
+            }
+        }
 
-		/**
-		 * Instantiates {@link AudioFormatParser} based on the next available
-		 * definition.
-		 */
-		private ParserEntry createNextEntry() {
-			ParserDefinition definition = definitions.next();
-			String className = definition.getClassName();
-			try {
-				AudioFormatParser formatParser = Reflection.create(className);
-				return new ParserEntry(formatParser, definition.getExtensions());
-			} catch (ReflectionException e) {
-				Exception error = new ParserDiscoveryException(e);
-				throw new RuntimeException(error);
-			}
-		}
+        private Iterator<Iterator<URL>> mapToUrls(Set<String> names) {
+            return Iterators.transform(names.iterator(), new StringToUrls());
+        }
 
-		/**
-		 * Always throws {@link UnsupportedOperationException} for this iterator
-		 * implementation.
-		 */
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException(
-					"ParserIterator does not support removal");
-		}
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Determines the next definition if necessary.
+         */
+        @Override
+        public boolean hasNext() {
+            findNextIfNeeded();
+            return foundNext;
+        }
 
-	}
+        /**
+         * Determines the next parser definition, taking the next definition
+         * from the currently traversed file or moving to the next one if
+         * necessary.
+         * 
+         * @return {@code true} if the next definition exists, {@code false}
+         *         otherwise
+         * @throws ParserDiscoveryException
+         *             If processing the config file fails
+         */
+        private boolean findNext() throws ParserDiscoveryException {
+            if (definitions != null && definitions.hasNext()) {
+                return true;
+            } else {
+                while (openNextFile()) {
+                    if (definitions.hasNext()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /**
+         * Opens and parses the next config file found on the classpath.
+         * 
+         * @return {@code true} if there was another file, {@code false} if the
+         *         previous one was the last
+         * @throws ParserDiscoveryException
+         *             If an error occurs during file processing
+         */
+        private boolean openNextFile() throws ParserDiscoveryException {
+            if (!configFiles.hasNext()) {
+                return false;
+            }
+            URL url = configFiles.next();
+            try {
+                InputStream stream = url.openStream();
+                definitions = parser.parse(stream).iterator();
+                return true;
+            } catch (IOException e) {
+                throw new ParserDiscoveryException(e);
+            }
+        }
+
+        /**
+         * If the next definition has not been determined yet, it attempts to do
+         * it.
+         */
+        private void findNextIfNeeded() {
+            if (!foundNext) {
+                try {
+                    foundNext = findNext();
+                } catch (ParserDiscoveryException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Instantiates the parser described by the next definition.
+         */
+        @Override
+        public ParserEntry next() {
+            findNextIfNeeded();
+            if (!foundNext) {
+                throw new NoSuchElementException();
+            } else {
+                foundNext = false;
+                return createNextEntry();
+            }
+        }
+
+        /**
+         * Instantiates {@link AudioFormatParser} based on the next available
+         * definition.
+         */
+        private ParserEntry createNextEntry() {
+            ParserDefinition definition = definitions.next();
+            String className = definition.getClassName();
+            try {
+                AudioFormatParser formatParser = Reflection.create(className);
+                return new ParserEntry(formatParser, definition.getExtensions());
+            } catch (ReflectionException e) {
+                Exception error = new ParserDiscoveryException(e);
+                throw new RuntimeException(error);
+            }
+        }
+
+        /**
+         * Always throws {@link UnsupportedOperationException} for this iterator
+         * implementation.
+         */
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException(
+                    "ParserIterator does not support removal");
+        }
+
+    }
 
 }

@@ -17,6 +17,7 @@ import pl.edu.agh.ki.grieg.decoder.discovery.ParserEntry;
 import pl.edu.agh.ki.grieg.decoder.discovery.ParserLoader;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.util.Resources;
+import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
@@ -30,8 +31,8 @@ public class FileLoader {
 
     private static final Logger logger = LoggerFactory
             .getLogger(FileLoader.class);
-    
-    private static final String CONFIG_PATH = "pl.edu.agh.ki.grieg/parsers";
+
+    private static final String CONFIG_PATH = "pl.edu.agh.ki.grieg/parsers/";
 
     /** Root decoder manager, ancestor of all the managers */
     private static final DecoderManager root;
@@ -56,27 +57,28 @@ public class FileLoader {
     private static void loadCustomProviders() {
         ClassLoader cl = Resources.contextClassLoader();
         logger.debug("Using context classloader: {}", cl);
-
-        Iterator<ParserEntry> iter = providersIter(cl);
+        
+        Iterator<ParserEntry> iter = providersIter(new ClasspathScanner());
+        
         int found = 0, registered = 0;
         while (true) {
             try {
                 if (iter.hasNext()) {
-                	ParserEntry entry = iter.next();
-                	root.register(entry.getParser(), entry.getExtensions());
+                    ParserEntry entry = iter.next();
+                    root.register(entry.getParser(), entry.getExtensions());
                     ++registered;
                 } else {
                     break;
                 }
             } catch (RuntimeException e) {
-            	Throwable cause = e.getCause();
-            	if (cause instanceof ParserDiscoveryException) {
-            		logger.warn("Error in audio parser configuration", cause);
-            	} else {
-            		throw e;
-            	}
+                Throwable cause = e.getCause();
+                if (cause instanceof ParserDiscoveryException) {
+                    logger.warn("Error in audio parser configuration", cause);
+                } else {
+                    throw e;
+                }
             }
-            ++ found;
+            ++found;
         }
         logCustomSummary(found, registered);
     }
@@ -85,20 +87,20 @@ public class FileLoader {
      * Creates a lazy iterator over the available providers, using custom SPI
      * mechanism.
      * 
-     * @param cl
-     *            Classloader to be used
+     * @param scanner
+     *            Classpath scanner to be used to find parser descriptors
      * @return Iterator
      */
-    private static Iterator<ParserEntry> providersIter(ClassLoader cl) {
-    	return new ParserLoader(CONFIG_PATH, cl).iterator();
+    private static Iterator<ParserEntry> providersIter(ClasspathScanner scanner) {
+        return new ParserLoader(CONFIG_PATH, scanner).iterator();
     }
-
 
     /**
      * Logs a brief summary showing how many parsers were attempted to use, and
      * which of them were further successfully instantiated.
      * 
-     * @param found Number of successfulyy loaded implementation 
+     * @param found
+     *            Number of successfulyy loaded implementation
      * @param registered
      */
     private static void logCustomSummary(int found, int registered) {
@@ -178,7 +180,7 @@ public class FileLoader {
             Closeables.close(stream, true);
         }
     }
-    
+
     /**
      * @return Decoder manager used by this file loader
      */

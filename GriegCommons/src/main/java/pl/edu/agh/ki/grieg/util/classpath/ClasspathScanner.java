@@ -36,6 +36,25 @@ public class ClasspathScanner {
         this.resolver = checkNotNull(resolver);
         this.handlers = checkNotNull(handlers);
     }
+    
+    /**
+     * Creates new {@link ClasspathScanner} using classloader-based resource
+     * resolver backed by the thread's contex classloader, and default
+     * protocol handler provider.
+     * 
+     * @see ClassLoaderResolver
+     * @see DefaultProtocolHandlerProvider
+     */
+    public ClasspathScanner() {
+        this(new ClassLoaderResolver(), new DefaultProtocolHandlerProvider());
+    }
+
+    /**
+     * @return Resource resolver used by this scanner
+     */
+    public ResourceResolver getResolver() {
+        return resolver;
+    }
 
     /**
      * Searches the classpath for files matching the specified pattern. If the

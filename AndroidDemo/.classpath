@@ -10,5 +10,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegCore"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegGfx"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/GriegPlayback"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserMp3"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserWav"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
