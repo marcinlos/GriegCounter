@@ -31,6 +31,7 @@ public class ApkResourceResolver implements ResourceResolver {
     /** Jar URL and classpath name separator */
     private static final String JAR_SEPARATOR = "!/";
 
+    /** File containing preprocessed classes, always exists */
     private static final String DEX = "classes.dex";
 
     /** Location of the application .apk file */

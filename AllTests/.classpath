@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="cpsuite-1.2.6.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserMp3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserWav"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AndroidDemo"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
