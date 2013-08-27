@@ -1,5 +1,10 @@
 package pl.edu.agh.ki.grieg.util.classpath;
 
+/**
+ * Thrown to indicate problems during classpath search.
+ * 
+ * @author los
+ */
 public class ClasspathException extends Exception {
 
     public ClasspathException() {
