@@ -47,11 +47,10 @@ public class ParserLoader implements Iterable<ParserEntry> {
     /** Classpath-relative path of the traversed files */
     private final String configPath;
 
-    /** Classloader used to find the files */
-    // private final ClassLoader classLoader;
-
+    /** Classpath scanner used to find the files */
     private final ClasspathScanner scanner;
 
+    /** Resource resolver obtained from the scanner */
     private final ResourceResolver resolver;
 
     /** Parser used to parse the config files */
@@ -59,19 +58,14 @@ public class ParserLoader implements Iterable<ParserEntry> {
 
     /**
      * Creates new {@link ParserLoader} examining all the files matching
-     * {@code configPath} at the classpath, found with the speified classloader.
+     * {@code configPath} at the classpath, found with the specified classpath
+     * scanner.
      * 
      * @param configPath
      *            Path of the config files
-     * @param classLoader
-     *            Classloader used to find the config files
+     * @param scanner
+     *            Classpath scanner used to find the config files
      */
-    // public ParserLoader(String configPath, ClassLoader classLoader) {
-    // this.configPath = configPath;
-    // this.classLoader = classLoader;
-    // this.parser = new ProviderFileParser();
-    // }
-
     public ParserLoader(String configPath, ClasspathScanner scanner) {
         this.configPath = configPath;
         this.scanner = scanner;
@@ -91,12 +85,20 @@ public class ParserLoader implements Iterable<ParserEntry> {
         this(configPath, new ClasspathScanner());
     }
 
-    private final class StringToUrls implements Function<String, Iterator<URL>> {
+    /**
+     * Maps Strings to sequences of URLs, obtained by resolving these strings
+     * with the resolver obtained from the classpath scanner specified in outer
+     * class' constructor.
+     */
+    final class StringToUrls implements Function<String, Iterator<URL>> {
+        
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Iterator<URL> apply(String input) {
             return resolver.getResources(input);
         }
-
     }
 
     /**
@@ -139,14 +141,23 @@ public class ParserLoader implements Iterable<ParserEntry> {
         public ParserIterator() throws ParserDiscoveryException {
             try {
                 Set<String> names = scanner.getEntries(configPath);
-                this.configFiles = Iterators.concat(mapToUrls(names));
+                this.configFiles = mapToUrls(names.iterator());
             } catch (ClasspathException e) {
                 throw new ParserDiscoveryException(e);
             }
         }
 
-        private Iterator<Iterator<URL>> mapToUrls(Set<String> names) {
-            return Iterators.transform(names.iterator(), new StringToUrls());
+        /**
+         * Transforms specified sequence of strings into the sequence of URLs,
+         * using resolver instance obtained from the scanner.
+         * 
+         * @param iter
+         *            String sequence
+         * @return Iterator over URLs coming from resolving the strings
+         */
+        private Iterator<URL> mapToUrls(Iterator<String> iter) {
+            StringToUrls mapping = new StringToUrls();
+            return Iterators.concat(Iterators.transform(iter, mapping));
         }
 
         /**
@@ -259,8 +270,8 @@ public class ParserLoader implements Iterable<ParserEntry> {
          */
         @Override
         public void remove() {
-            throw new UnsupportedOperationException(
-                    "ParserIterator does not support removal");
+            String msg = "ParserIterator does not support removal";
+            throw new UnsupportedOperationException(msg);
         }
 
     }

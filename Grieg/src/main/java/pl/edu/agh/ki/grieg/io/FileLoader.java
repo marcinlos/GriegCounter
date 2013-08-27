@@ -16,7 +16,6 @@ import pl.edu.agh.ki.grieg.decoder.discovery.ParserDiscoveryException;
 import pl.edu.agh.ki.grieg.decoder.discovery.ParserEntry;
 import pl.edu.agh.ki.grieg.decoder.discovery.ParserLoader;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
-import pl.edu.agh.ki.grieg.util.Resources;
 import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
 
 import com.google.common.io.Closeables;
@@ -35,37 +34,54 @@ public class FileLoader {
     private static final String CONFIG_PATH = "pl.edu.agh.ki.grieg/parsers/";
 
     /** Root decoder manager, ancestor of all the managers */
-    private static final DecoderManager root;
+    // private static final DecoderManager root;
 
     /** Collection of audio parsers */
-    private final DecoderManager decoders = new DecoderManager(root);
+    private final DecoderManager decoders;
 
-    static {
+    /**
+     * Creates new {@link FileLoader} that discovers parser configuration using
+     * specified classpath scanner.
+     * 
+     * @param scanner
+     *            Classpath scanner to find configuration files
+     * @see ClasspathScanner
+     */
+    public FileLoader(ClasspathScanner scanner) {
         logger.info("Initializing file loader system");
-        root = new DecoderManager();
+        decoders = new DecoderManager();
 
         logger.info("Loading providers...");
-        loadCustomProviders();
+        loadCustomProviders(new ClasspathScanner());
 
         logDetails();
         logger.info("File loader system initialization completed");
     }
 
     /**
+     * Creates new {@link FileLoader} that uses default {@link ClasspathScanner}
+     * to discover parser configuration.
+     * 
+     * @see ClasspathScanner
+     */
+    public FileLoader() {
+        this(new ClasspathScanner());
+    }
+
+    /**
      * Finds providers using thread-context classloader.
      */
-    private static void loadCustomProviders() {
-        ClassLoader cl = Resources.contextClassLoader();
-        logger.debug("Using context classloader: {}", cl);
-        
-        Iterator<ParserEntry> iter = providersIter(new ClasspathScanner());
-        
+    private void loadCustomProviders(ClasspathScanner scanner) {
+        logger.debug("Using scanner: {}", scanner);
+
+        Iterator<ParserEntry> iter = providersIter(scanner);
+
         int found = 0, registered = 0;
         while (true) {
             try {
                 if (iter.hasNext()) {
                     ParserEntry entry = iter.next();
-                    root.register(entry.getParser(), entry.getExtensions());
+                    register(entry);
                     ++registered;
                 } else {
                     break;
@@ -81,6 +97,17 @@ public class FileLoader {
             ++found;
         }
         logCustomSummary(found, registered);
+    }
+
+    /**
+     * Registers parser specified by the given entry with this loader's
+     * {@link DecoderManager} instance.
+     * 
+     * @param entry
+     *            Parser entry to register
+     */
+    private void register(ParserEntry entry) {
+        decoders.register(entry.getParser(), entry.getExtensions());
     }
 
     /**
@@ -117,15 +144,15 @@ public class FileLoader {
     /**
      * Outputs summary of found & loaded audio parsers
      */
-    private static void logDetails() {
-        Set<String> extensions = root.getKnownExtensions();
-        int parserCount = root.getAllDecoders().size();
+    private void logDetails() {
+        Set<String> extensions = decoders.getKnownExtensions();
+        int parserCount = decoders.getAllDecoders().size();
         int extCount = extensions.size();
         logger.debug("Found {} parsers for {} formats", parserCount, extCount);
         if (logger.isTraceEnabled()) {
             logger.trace("Parsers:");
             for (String ext : extensions) {
-                logger.trace("{} -> {}", ext, root.getByExtension(ext));
+                logger.trace("{} -> {}", ext, decoders.getByExtension(ext));
             }
         }
     }
