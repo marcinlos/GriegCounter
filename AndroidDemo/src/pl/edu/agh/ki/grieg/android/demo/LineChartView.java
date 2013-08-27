@@ -6,7 +6,7 @@ import java.util.List;
 
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.util.Point;
+import pl.edu.agh.ki.grieg.util.math.Point;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
