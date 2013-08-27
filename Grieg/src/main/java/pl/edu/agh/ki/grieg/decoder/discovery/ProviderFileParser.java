@@ -49,7 +49,7 @@ class ProviderFileParser {
      *             If there is an error during reading the data
      */
     public Set<ParserDefinition> parse(InputStream in) throws ParsingException {
-        Scanner input = new Scanner(in);
+        Scanner input = new Scanner(in, Charsets.UTF_8.name());
         return new Parser(input).parse();
     }
 

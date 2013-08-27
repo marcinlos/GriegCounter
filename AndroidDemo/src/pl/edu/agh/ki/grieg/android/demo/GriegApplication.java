@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
-import pl.edu.agh.ki.grieg.processing.core.DefaultAnalyzerBootstrap;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import android.app.Application;
@@ -29,7 +28,7 @@ public class GriegApplication extends Application {
     
     private void initFactory() throws ConfigException {
         // Bootstrap bootstrap = new XmlClasspathBootstrap("grieg-config.xml");
-        Bootstrap bootstrap = new DefaultAnalyzerBootstrap();
+        Bootstrap bootstrap = new DefaultAndroidBootstrap();
         factory = bootstrap.createFactory();
     }
     

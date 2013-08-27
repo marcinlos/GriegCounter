@@ -17,7 +17,6 @@ import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
 import pl.edu.agh.ki.grieg.util.Reflection;
-import pl.edu.agh.ki.grieg.util.Resources;
 import pl.edu.agh.ki.grieg.util.math.Point;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -74,7 +73,6 @@ public class GriegMain extends RoboActivity {
     }
 
     private void startProcessing() throws AudioException, IOException {
-        logger.debug("Location: " + Resources.get("config.xsd"));
         final Processor proc = factory.newFileProcessor(new File(BACH));
         proc.openFile();
         enqueue(new PreAnalysis(proc));

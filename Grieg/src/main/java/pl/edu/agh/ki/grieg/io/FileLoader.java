@@ -52,7 +52,7 @@ public class FileLoader {
         decoders = new DecoderManager();
 
         logger.info("Loading providers...");
-        loadCustomProviders(new ClasspathScanner());
+        loadCustomProviders(scanner);
 
         logDetails();
         logger.info("File loader system initialization completed");
