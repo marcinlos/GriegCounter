@@ -59,16 +59,16 @@ public class Processor {
     /** Audio file being processed */
     private AudioFile audioFile;
 
-    private volatile State state = State.INITIAL;
+//    private volatile State state = State.INITIAL;
 
-    private static enum State {
-        INITIAL,
-        OPENED,
-        DURING_PREANALYSIS,
-        AFTER_PREANALYSIS,
-        DURING_PROCESSING,
-        DONE;
-    }
+//    private static enum State {
+//        INITIAL,
+//        OPENED,
+//        DURING_PREANALYSIS,
+//        AFTER_PREANALYSIS,
+//        DURING_PROCESSING,
+//        DONE;
+//    }
 
     public Processor(File file, FileLoader loader, PipelineAssembler assembler,
             Properties config) {

@@ -4,12 +4,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Vector;
 
 import org.junit.Test;
 
@@ -18,9 +16,7 @@ import pl.edu.agh.ki.grieg.util.Resources;
 import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
 import pl.edu.agh.ki.grieg.util.classpath.ResourceResolver;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
