@@ -24,7 +24,7 @@ public class SwingCanvas extends AbstractCanvas {
         // empty
     }
 
-    public SwingCanvas(float width, float height) {
+    public SwingCanvas(double width, double height) {
         super(width, height);
     }
     

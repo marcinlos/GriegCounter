@@ -11,7 +11,7 @@ public interface Canvas {
     /**
      * @return Width of the canvas in the virtual coordinate system
      */
-    float getWidth();
+    double getWidth();
 
     /**
      * Sets the width of the canvas in its virtual coordinate system. Causes
@@ -20,12 +20,12 @@ public interface Canvas {
      * @param width
      *            New width of the canvas
      */
-    void setWidth(float width);
+    void setWidth(double width);
 
     /**
      * @return Height of the canvas in the virtual coordinate system. 
      */
-    float getHeight();
+    double getHeight();
 
     /**
      * Sets the height of the canvas in its virtual coordinate system. Causes
@@ -34,7 +34,7 @@ public interface Canvas {
      * @param height
      *            New height of the canvas
      */
-    void setHeight(float height);
+    void setHeight(double height);
 
     /**
      * Sets the size of the canvas in its virtual coordinate system.Causes
@@ -45,7 +45,7 @@ public interface Canvas {
      * @param height
      *            New height of the canvas
      */
-    void setSize(float width, float height);
+    void setSize(double width, double height);
 
     /**
      * Forces repainting the canvas contents

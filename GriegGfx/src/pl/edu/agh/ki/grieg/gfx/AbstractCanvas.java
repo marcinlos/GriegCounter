@@ -7,10 +7,10 @@ import pl.edu.agh.ki.grieg.util.math.PointI;
 public abstract class AbstractCanvas implements Canvas {
 
     /** Virtual width of the canvas */
-    private float width;
+    private double width;
 
     /** Virtual height of the canvas */
-    private float height;
+    private double height;
 
     /**
      * Creates new {@code 1 x 1} canvas.
@@ -27,7 +27,9 @@ public abstract class AbstractCanvas implements Canvas {
      * @param height
      *            Height of the canvas
      */
-    public AbstractCanvas(float width, float height) {
+    public AbstractCanvas(double width, double height) {
+        checkArgument(width > 0, "Width %f must be positive", width);
+        checkArgument(width > 0, "Height %f must be positive", height);
         this.width = width;
         this.height = height;
     }
@@ -36,7 +38,7 @@ public abstract class AbstractCanvas implements Canvas {
      * {@inheritDoc}
      */
     @Override
-    public float getWidth() {
+    public double getWidth() {
         return width;
     }
 
@@ -44,7 +46,7 @@ public abstract class AbstractCanvas implements Canvas {
      * {@inheritDoc}
      */
     @Override
-    public void setWidth(float width) {
+    public void setWidth(double width) {
         doSetWidth(width);
         refresh();
     }
@@ -52,8 +54,8 @@ public abstract class AbstractCanvas implements Canvas {
     /**
      * Sets width without refreshing the content
      */
-    private void doSetWidth(float width) {
-        checkArgument(width > 0, "Width %s must be positive", width);
+    private void doSetWidth(double width) {
+        checkArgument(width > 0, "Width %f must be positive", width);
         this.width = width;
     }
 
@@ -61,12 +63,12 @@ public abstract class AbstractCanvas implements Canvas {
      * {@inheritDoc}
      */
     @Override
-    public float getHeight() {
+    public double getHeight() {
         return height;
     }
 
     @Override
-    public void setHeight(float height) {
+    public void setHeight(double height) {
         doSetHeight(height);
         refresh();
     }
@@ -74,8 +76,8 @@ public abstract class AbstractCanvas implements Canvas {
     /**
      * Sets height without refreshing the content
      */
-    private void doSetHeight(float height) {
-        checkArgument(height > 0, "Height %s must be positive", height);
+    private void doSetHeight(double height) {
+        checkArgument(height > 0, "Height %f must be positive", height);
         this.height = height;
     }
 
@@ -83,7 +85,7 @@ public abstract class AbstractCanvas implements Canvas {
      * {@inheritDoc}
      */
     @Override
-    public void setSize(float width, float height) {
+    public void setSize(double width, double height) {
         doSetWidth(width);
         doSetHeight(height);
         refresh();
@@ -122,10 +124,10 @@ public abstract class AbstractCanvas implements Canvas {
      *            Ordinate of the point
      * @return Point in screen coordinates
      */
-    protected PointI toScreen(float x, float y) {
+    protected PointI toScreen(double x, double y) {
         int sw = getScreenWidth();
         int sh = getScreenHeight();
-        float invy = height - y;
+        double invy = height - y;
         int screenx = (int) (x * sw / width);
         int screeny = (int) (invy * sh / height);
         return new PointI(screenx, screeny);

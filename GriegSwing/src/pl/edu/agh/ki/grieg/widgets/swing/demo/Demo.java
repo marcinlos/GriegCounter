@@ -44,7 +44,7 @@ public class Demo extends JFrame {
         chart.addModel("left", leftSerie);
         chart.addModel("right", rightSerie);
 
-        chartView = new ChannelsChart(chart, 1.0f, 0.5f);
+        chartView = new ChannelsChart(chart, 1.0f, 0.0f, 0.5f);
 
         executor = Executors.newFixedThreadPool(2);
     }

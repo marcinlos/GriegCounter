@@ -16,11 +16,14 @@ import pl.edu.agh.ki.grieg.util.math.PointI;
 public class LineChartView extends SwingCanvas {
 
     private List<Point> data;
+    
+    private float min;
 
     private final JPanel p = swingPanel();
 
-    public LineChartView(float width, float height) {
-        super(width, height);
+    public LineChartView(double width, double min, double max) {
+        super(width, max - min);
+        this.min = (float) min;
         setupUI();
     }
 
@@ -50,12 +53,16 @@ public class LineChartView extends SwingCanvas {
     }
 
     private void drawLines(Graphics2D graphics) {
-        for (int i = 1; i < data.size(); ++i) {
-            Point a = data.get(i - 1), b = data.get(i);
-            Point aa = new Point(a.x, a.y + 1);
-            Point bb = new Point(b.x, b.y + 1);
-            PointI p = toScreen(aa), q = toScreen(bb);
-            graphics.drawLine(p.x, p.y, q.x, q.y);
+        int n = data.size();
+        int[] xs = new int[n];
+        int[] ys = new int[n];
+        for (int i = 0; i < n; ++ i) {
+            Point p = data.get(i);
+            Point lowered = new Point(p.x, p.y - min);
+            PointI transformed = toScreen(lowered);
+            xs[i] = transformed.x;
+            ys[i] = transformed.y;
         }
+        graphics.drawPolyline(xs, ys, n);
     }
 }

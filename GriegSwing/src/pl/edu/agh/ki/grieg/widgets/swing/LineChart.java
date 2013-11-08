@@ -11,8 +11,9 @@ import pl.edu.agh.ki.grieg.util.math.Point;
 public class LineChart extends LineChartView implements
         Listener<List<Point>> {
 
-    public LineChart(Model<List<Point>> serie, float width, float height) {
-        super(width, height);
+    public LineChart(Model<List<Point>> serie, double width, double min,
+            double max) {
+        super(width, min, max);
         checkNotNull(serie);
         serie.addListener(this);
         setData(serie.getData());

@@ -15,7 +15,7 @@ public class ChannelsChart extends JPanel {
     private final LineChart left;
     private final LineChart right;
 
-    public ChannelsChart(Model<?> model, float width, float height) {
+    public ChannelsChart(Model<?> model, double width, double min, double max) {
         setBackground(Color.black);
         setLayout(new MigLayout("fill"));
 
@@ -23,8 +23,8 @@ public class ChannelsChart extends JPanel {
         Model<List<Point>> leftSerie = model.getChild("left", clazz);
         Model<List<Point>> rightSerie = model.getChild("right", clazz);
 
-        left = new LineChart(leftSerie, width, height);
-        right = new LineChart(rightSerie, width, height);
+        left = new LineChart(leftSerie, width, min, max);
+        right = new LineChart(rightSerie, width, min, max);
         add(left.swingPanel(), "w 100%, h 50%, wrap");
         add(right.swingPanel(), "w 100%, h 50%");
     }

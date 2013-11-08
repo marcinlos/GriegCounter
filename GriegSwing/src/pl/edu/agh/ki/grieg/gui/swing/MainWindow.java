@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -48,6 +49,7 @@ public class MainWindow extends JFrame {
     private final Controller controller;
 
     private final ChannelsChart waveView;
+    private final ChannelsChart powerChart;
     private final ProgressBar progressBar;
 
     private JMenuBar menuBar;
@@ -63,7 +65,8 @@ public class MainWindow extends JFrame {
         settingsManager = new SettingsManager(CONFIG_FILE);
         settings = settingsManager.readSettings();
 
-        waveView = new ChannelsChart(model.getChild("wave"), 1, 2);
+        waveView = new ChannelsChart(model.getChild("wave"), 1, -1, 1);
+        powerChart = new ChannelsChart(model.getChild("power"), 1, -0.2, 1);
 
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));
@@ -148,7 +151,9 @@ public class MainWindow extends JFrame {
     }
 
     private void setupLayout() {
+        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         add(waveView);
+        add(powerChart);
         add(progressBar.swingPanel(), BorderLayout.PAGE_END);
     }
 

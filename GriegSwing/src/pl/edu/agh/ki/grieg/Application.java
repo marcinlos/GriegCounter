@@ -21,6 +21,7 @@ import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
 import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
+import pl.edu.agh.ki.grieg.processing.model.WaveFunctionModel;
     
 
 public class Application implements Controller, ErrorHandler {
@@ -57,6 +58,10 @@ public class Application implements Controller, ErrorHandler {
         AudioModel model = new AudioModel();
         procFactory.addListener(model);
         modelRoot.addModel("wave", model.getModel());
+        
+        WaveFunctionModel powerModel = new WaveFunctionModel("power");
+        procFactory.addListener(powerModel);
+        modelRoot.addModel("power", powerModel.getModel());
         
         CompositeModel<?> loader = Models.container();
         FileLoader fileLoader = procFactory.getFileLoader();

@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
+import pl.edu.agh.ki.grieg.analysis.Power;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
 import pl.edu.agh.ki.grieg.analysis.Skipper;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
@@ -68,6 +69,12 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         pipeline.as("skipper")
                 .connect(skipper, float[][].class, float[].class)
                 .toRoot(); 
+        
+        Power power = new Power();
+        
+        pipeline.as("power")
+                .connect(power, float[][].class, float[].class)
+                .to("segmenter");
         
     }
 
