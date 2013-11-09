@@ -1,5 +1,7 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
+import pl.edu.agh.ki.grieg.analysis.ChannelMultiplexer;
+import pl.edu.agh.ki.grieg.analysis.FFT;
 import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
@@ -40,7 +42,7 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         SoundFormat format = audio.get(AudioFeatures.FORMAT);
         int channels = format.getChannels();
 
-        int resolution = config.getInt("resolution", 99);
+        int resolution = config.getInt("resolution", DEFAULT_RESOLUTION);
         int chunkSize = config.getInt("chunk-size", DEFAULT_CHUNK_SIZE);
         int hopSize = config.getInt("hop-size", DEFAULT_HOP_SIZE);
         
@@ -75,6 +77,22 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         pipeline.as("power")
                 .connect(power, float[][].class, float[].class)
                 .to("segmenter");
+        
+        FFT fft = new FFT();
+        
+        pipeline.as("fft")
+                .connect(fft, float[][].class, float[][].class)
+                .to("hamming");
+        
+        ChannelMultiplexer fftReal = new ChannelMultiplexer(0);
+        pipeline.as("fft_real")
+                .connect(fftReal, float[][].class, float[].class)
+                .to("fft");
+        
+        ChannelMultiplexer fftImag = new ChannelMultiplexer(1);
+        pipeline.as("fft_imag")
+                .connect(fftImag, float[][].class, float[].class)
+                .to("fft");
         
     }
 
