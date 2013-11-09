@@ -7,7 +7,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Libs"/>
 	<classpathentry kind="lib" path="/Libs/lib/hamcrest-all-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/jtransforms-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jtransforms-2.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/Libs/lib/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
