@@ -52,8 +52,16 @@ class TrackPlayback implements Controllable, Enumerator<float[][]> {
      */
     @Override
     public void start() throws AudioException, IOException {
-        output.start();
+        startOutput();
         source.start();
+    }
+    
+    /**
+     * Starts the audio output, without enabling the source. It may be useful
+     * if the source is to be enabled externally.
+     */
+    public void startOutput() {
+        output.start();
     }
 
     /**

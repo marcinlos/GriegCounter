@@ -286,15 +286,16 @@ public class Player {
      * @throws PlaybackException
      *             If a problem with playback occurs
      */
-    private void prepare(SampleEnumerator source) throws PlaybackException {
+    public void prepare(SampleEnumerator source) throws PlaybackException {
         AudioOutput output = Outputs.boundTo(outputFactory, source);
         currentPlayback = new TrackPlayback(output, source);
         int sampleRate = source.getFormat().getSampleRate();
         ProgressNotifier notifier = new ProgressNotifier(sampleRate, notifyRate);
         notifier.connect(progressForwarder);
         currentPlayback.connect(notifier);
+        currentPlayback.startOutput();
     }
-
+    
     /**
      * Starts playing using currently set audio source in its internal thread.
      */
