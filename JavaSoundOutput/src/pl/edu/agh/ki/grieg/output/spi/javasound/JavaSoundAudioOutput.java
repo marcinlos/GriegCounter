@@ -19,6 +19,8 @@ import pl.edu.agh.ki.grieg.playback.output.Abstract16BitSignedPCMAudioOutput;
  */
 public class JavaSoundAudioOutput extends Abstract16BitSignedPCMAudioOutput {
 
+    public static final int BUFFER_SIZE = 2000;
+    
     /** Output buffer */
     private SourceDataLine line;
 
@@ -36,7 +38,7 @@ public class JavaSoundAudioOutput extends Abstract16BitSignedPCMAudioOutput {
             AudioFormat fmt = toJavaFormat(format);
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt);
             line = (SourceDataLine) AudioSystem.getLine(info);
-            line.open(fmt);
+            line.open(fmt, BUFFER_SIZE * 2 * format.channels);
         } catch (LineUnavailableException e) {
             throw new PlaybackException(e);
         }
