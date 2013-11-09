@@ -2,6 +2,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.properties.Properties;
 
@@ -54,8 +55,10 @@ public interface ProcessingListener {
      * 
      * @param pipeline
      *            Structure defining the data flow
+     * @param source
+     *            Source of the audio data
      */
-    void beforeAnalysis(Pipeline<float[][]> pipeline);
+    void beforeAnalysis(Pipeline<float[][]> pipeline, SampleEnumerator source);
 
     /**
      * Invoked after the main phase of sound analysis has been completed.

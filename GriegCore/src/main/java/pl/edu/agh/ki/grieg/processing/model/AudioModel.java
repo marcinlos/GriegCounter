@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
@@ -29,15 +30,15 @@ public class AudioModel extends WaveObserver {
 
     private final SimpleModel<List<Point>> leftSerie;
     private final SimpleModel<List<Point>> rightSerie;
-    
+
     private final List<SimpleModel<List<Point>>> series;
-    
+
     private final CompositeModel<?> model;
 
     {
         leftData = Lists.newArrayList();
         rightData = Lists.newArrayList();
-        
+
         leftSerie = Models.simple(leftData);
         rightSerie = Models.simple(rightData);
 
@@ -76,8 +77,9 @@ public class AudioModel extends WaveObserver {
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
-        super.beforeAnalysis(pipeline);
+    public void beforeAnalysis(Pipeline<float[][]> pipeline,
+            SampleEnumerator source) {
+        super.beforeAnalysis(pipeline, source);
         logger.trace("Processing has started");
     }
 

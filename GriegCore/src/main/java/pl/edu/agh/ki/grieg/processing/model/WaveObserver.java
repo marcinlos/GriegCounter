@@ -7,6 +7,7 @@ import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
@@ -26,7 +27,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     private long totalSampleCount;
 
     private int rangeCount;
-    
+
     private int resolution;
 
     protected AudioFile file() {
@@ -48,7 +49,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     protected int rangeCount() {
         return rangeCount;
     }
-    
+
     protected int resolution() {
         return resolution;
     }
@@ -66,7 +67,7 @@ public abstract class WaveObserver extends ProcessingAdapter implements
 
     @Override
     public void beforePreAnalysis(ExtractionContext ctx) {
-        
+
         logger.debug("Before pre-analysis, requesting SAMPLES and FORMAT");
         ctx.requestFeatures(AudioFeatures.SAMPLES, AudioFeatures.FORMAT);
     }
@@ -85,7 +86,8 @@ public abstract class WaveObserver extends ProcessingAdapter implements
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+    public void beforeAnalysis(Pipeline<float[][]> pipeline,
+            SampleEnumerator source) {
         pipeline.connect(this, float[].class).to("skipper");
     }
 

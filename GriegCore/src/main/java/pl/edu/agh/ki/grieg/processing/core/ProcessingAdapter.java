@@ -2,6 +2,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.properties.Properties;
 
@@ -41,7 +42,8 @@ public class ProcessingAdapter implements ProcessingListener {
      * {@inheritDoc}
      */
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+    public void beforeAnalysis(Pipeline<float[][]> pipeline,
+            SampleEnumerator source) {
         // empty
     }
 

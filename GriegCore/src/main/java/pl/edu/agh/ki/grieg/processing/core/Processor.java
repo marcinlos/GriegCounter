@@ -59,16 +59,16 @@ public class Processor {
     /** Audio file being processed */
     private AudioFile audioFile;
 
-//    private volatile State state = State.INITIAL;
+    // private volatile State state = State.INITIAL;
 
-//    private static enum State {
-//        INITIAL,
-//        OPENED,
-//        DURING_PREANALYSIS,
-//        AFTER_PREANALYSIS,
-//        DURING_PROCESSING,
-//        DONE;
-//    }
+    // private static enum State {
+    // INITIAL,
+    // OPENED,
+    // DURING_PREANALYSIS,
+    // AFTER_PREANALYSIS,
+    // DURING_PROCESSING,
+    // DONE;
+    // }
 
     public Processor(File file, FileLoader loader, PipelineAssembler assembler,
             Properties config) {
@@ -182,7 +182,7 @@ public class Processor {
             SampleEnumerator source = audioFile.openSource();
             source.connect(pipeline);
             logger.debug("Audio source created");
-            signalBeforeAnalysis(pipeline);
+            signalBeforeAnalysis(pipeline, source);
             logger.debug("Activating audio source");
             source.start();
             logger.info("Main analysis has been completed");
@@ -303,12 +303,15 @@ public class Processor {
      * 
      * @param pipeline
      *            Processing pipeline
+     * @param source
+     *            Source of the audio data
      */
-    private void signalBeforeAnalysis(Pipeline<float[][]> pipeline) {
+    private void signalBeforeAnalysis(Pipeline<float[][]> pipeline,
+            SampleEnumerator source) {
         logger.trace("Notifying {} listener(s) about the beginning of "
                 + "analysis", listeners.size());
         for (ProcessingListener listener : listeners) {
-            listener.beforeAnalysis(pipeline);
+            listener.beforeAnalysis(pipeline, source);
         }
         logger.trace("All the listeners have been notified");
     }

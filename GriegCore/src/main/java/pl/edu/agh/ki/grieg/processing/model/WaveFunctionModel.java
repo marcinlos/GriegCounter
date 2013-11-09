@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.io.AudioFile;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
@@ -77,7 +78,8 @@ public class WaveFunctionModel extends ProcessingAdapter implements
     }
 
     @Override
-    public void beforeAnalysis(Pipeline<float[][]> pipeline) {
+    public void beforeAnalysis(Pipeline<float[][]> pipeline,
+            SampleEnumerator source) {
         pipeline.connect(this, float[].class).to(sourceName);
     }
 
