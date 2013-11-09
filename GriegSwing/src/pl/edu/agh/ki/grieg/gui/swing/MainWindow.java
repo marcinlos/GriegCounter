@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -26,6 +27,7 @@ import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
+import pl.edu.agh.ki.grieg.widgets.swing.SpectrumPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.TitleBarPercentDisplay;
 
 public class MainWindow extends JFrame {
@@ -50,6 +52,7 @@ public class MainWindow extends JFrame {
 
     private final ChannelsChart waveView;
     private final ChannelsChart powerChart;
+    private final SpectrumPanel spectrumPanel;
     private final ProgressBar progressBar;
 
     private JMenuBar menuBar;
@@ -65,9 +68,12 @@ public class MainWindow extends JFrame {
         settingsManager = new SettingsManager(CONFIG_FILE);
         settings = settingsManager.readSettings();
 
-        waveView = new ChannelsChart(model.getChild("wave"), 1, -1, 1);
-        powerChart = new ChannelsChart(model.getChild("power"), 1, -0.2, 1);
+        waveView = new ChannelsChart("Wave", model.getChild("wave"), 1, -1, 1);
+        powerChart = new ChannelsChart("Power", model.getChild("power"), 1, -0.2, 1);
 
+        
+        spectrumPanel = new SpectrumPanel((Model<float[]>) model.getChild("fft"));
+        
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));
 
@@ -151,9 +157,14 @@ public class MainWindow extends JFrame {
     }
 
     private void setupLayout() {
-        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
-        add(waveView);
-        add(powerChart);
+        
+        JPanel charts = new JPanel();
+        charts.setLayout(new BoxLayout(charts, BoxLayout.PAGE_AXIS));
+        charts.add(waveView);
+        charts.add(powerChart);
+        charts.add(spectrumPanel.swingPanel());
+        
+        add(charts);
         add(progressBar.swingPanel(), BorderLayout.PAGE_END);
     }
 
