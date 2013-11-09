@@ -17,12 +17,11 @@ public class Scheduler {
 
     private static final Logger logger = LoggerFactory
             .getLogger(Scheduler.class);
-    
+
     private final Deque<Future<?>> taskQueue;
 
     private final ExecutorService executor;
     private final ErrorHandler errorHandler;
-
 
     public Scheduler(ErrorHandler errorHandler) {
         this.taskQueue = new ArrayDeque<>();
@@ -34,11 +33,11 @@ public class Scheduler {
         Future<?> handler = executor.submit(action);
         taskQueue.add(handler);
     }
-    
+
     public void asyncPreAnalysis(Processor proc) {
         enqueue(new PreAnalysis(proc));
     }
-    
+
     public void asyncAnalysis(Processor proc) {
         enqueue(new Analysis(proc));
     }
@@ -79,11 +78,8 @@ public class Scheduler {
                 logger.info("Beginning audio analysis");
                 proc.analyze();
                 logger.info("Audio analysis finished");
-            } catch (AudioException e) {
-                errorHandler.equals(e);
-                logger.error("Error during the main analysis phase", e);
-            } catch (IOException e) {
-                errorHandler.equals(e);
+            } catch (Exception e) {
+                errorHandler.error(e);
                 logger.error("Error during the main analysis phase", e);
             }
         }

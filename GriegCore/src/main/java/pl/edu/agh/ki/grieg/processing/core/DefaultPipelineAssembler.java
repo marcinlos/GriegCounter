@@ -4,6 +4,7 @@ import pl.edu.agh.ki.grieg.analysis.ChannelMultiplexer;
 import pl.edu.agh.ki.grieg.analysis.FFT;
 import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
+import pl.edu.agh.ki.grieg.analysis.PowerSpectrum;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
 import pl.edu.agh.ki.grieg.analysis.Skipper;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
@@ -92,6 +93,11 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         ChannelMultiplexer fftImag = new ChannelMultiplexer(1);
         pipeline.as("fft_imag")
                 .connect(fftImag, float[][].class, float[].class)
+                .to("fft");
+        
+        PowerSpectrum powerSpectrum = new PowerSpectrum();
+        pipeline.as("power_spectrum")
+                .connect(powerSpectrum, float[][].class, float[].class)
                 .to("fft");
         
     }

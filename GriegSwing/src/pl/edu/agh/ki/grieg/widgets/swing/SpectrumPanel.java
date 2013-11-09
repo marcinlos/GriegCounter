@@ -12,9 +12,12 @@ import pl.edu.agh.ki.grieg.model.Model;
 public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
 
     private float[] data;
-    
-    private double min = - 10;
-    private double max = 30;
+
+    private double min = -100;
+    private double max = 60;
+
+    int count = 0;
+    int redraws = 0;
 
     public SpectrumPanel(Model<float[]> source) {
         JPanel p = swingPanel();
@@ -28,8 +31,12 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
         this.data = data.clone();
         refresh();
     }
-    
-    private int calcY(float value) {
+
+    private static double dB(double val) {
+        return 10 * Math.log10(val);
+    }
+
+    private int calcY(double value) {
         int h = getScreenHeight();
         double y = (value - min) / (max - min);
         return (int) (h * (1 - y));
@@ -38,14 +45,17 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
     @Override
     protected void paint(Graphics2D graphics) {
         if (data != null) {
-            double w = 1.0 / data.length;
-            
+            int N = data.length / 2;
+            double binSize = 1.0 / N;
+
             graphics.setColor(Color.green);
-            for (int i = 0; i < data.length; ++ i) {
-                double x = w * i;
-                
+            for (int i = 0; i < N; ++i) {
+                double x = binSize * i;
+
+                double dB = dB(data[i]);
+
                 int xpos = (int) (x * getScreenWidth());
-                int ypos = calcY(data[i]); 
+                int ypos = calcY(dB);
                 graphics.drawLine(xpos, getScreenHeight(), xpos, ypos);
             }
         }

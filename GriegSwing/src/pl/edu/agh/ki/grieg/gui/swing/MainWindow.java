@@ -72,7 +72,7 @@ public class MainWindow extends JFrame {
         powerChart = new ChannelsChart("Power", model.getChild("power"), 1, -0.2, 1);
 
         
-        spectrumPanel = new SpectrumPanel((Model<float[]>) model.getChild("fft"));
+        spectrumPanel = new SpectrumPanel((Model<float[]>) model.getChild("power_spectrum"));
         
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));

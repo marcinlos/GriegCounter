@@ -118,6 +118,12 @@ public class Pipeline<T> implements Iteratee<T> {
 			Enumerator<?> src = source.getSource();
 			Iteratee<?> dst = sink.getSink();
 			src.connect(universal(dst));
+		} else {
+		    Class<?> input = sink.getInputType();
+		    Class<?> output = source.getOutputType();
+		    String fmt = "Trying to connect incompatible elements (%s <- %s)";
+		    String msg = String.format(fmt, input, output);
+		    throw new IllegalStateException(msg);
 		}
 	}
 
