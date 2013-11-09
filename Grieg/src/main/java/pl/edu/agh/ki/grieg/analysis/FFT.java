@@ -2,222 +2,76 @@ package pl.edu.agh.ki.grieg.analysis;
 
 import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
+import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
 
+/**
+ * Enumeratee computing FFT of first channel of input data. Output consists of
+ * real and imaginary parts, organized as
+ * 
+ * <pre>
+ * float out[2][size] = { real, imag }
+ * </pre>
+ * 
+ * @author los
+ */
 public class FFT extends AbstractEnumeratee<float[][], float[][]> {
 
+    /** Size of the input data */
+    private int size;
+    /** FFT implementation for specified size */
+    private FloatFFT_1D fft;
+
+    /*
+     * Buffers - for input data (jtransforms needs 2x the size to store result
+     * parts), and for output - real and imaginary part
+     */
+    private float[] a;
+    private float[] real;
+    private float[] imag;
+
+    /** To forward two parts as 2 x size array */
+    private float[][] arrays = new float[2][];
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public State step(float[][] item) {
         float[] data = item[0];
-        fft(data, data.length, true);
-        float[] real = calculateReal(data, data.length);
-        float[] imag = calculateImaginary(data, data.length);
-        pushChunk(new float[][] { real, imag });
+
+        if (data.length != size) {
+            rebuild(data.length);
+        }
+
+        System.arraycopy(data, 0, a, 0, size);
+        fft.complexForward(a);
+
+        for (int i = 0; i < size; ++i) {
+            real[i] = a[2 * i];
+            imag[i] = a[2 * i + 1];
+
+            // upper part of the array must be zero!
+            a[2 * i] = a[2 * i + 1] = 0;
+        }
+        pushChunk(arrays);
         return State.Cont;
     }
 
     /**
-     * The frequency corresponding to a specific bin
+     * Creates internal structures before first invocation and after input size
+     * changes.
      * 
-     * @param samplingFrequency
-     *            The Sampling Frequency of the AudioContext
-     * @param blockSize
-     *            The size of the block analysed
-     * @param binNumber
-     */
-    public static float binFrequency(float samplingFrequency, int blockSize,
-            float binNumber)
-    {
-        return binNumber * samplingFrequency / blockSize;
-    }
-
-    /**
-     * Returns the average bin number corresponding to a particular frequency.
-     * Note: This function returns a float. Take the Math.round() of the
-     * returned value to get an integral bin number.
-     * 
-     * @param samplingFrequency
-     *            The Sampling Frequency of the AudioContext
-     * @param blockSize
-     *            The size of the fft block
-     * @param freq
-     *            The frequency
-     */
-
-    public static float binNumber(float samplingFrequency, int blockSize,
-            float freq)
-    {
-        return blockSize * freq / samplingFrequency;
-    }
-
-    /**
-     * The nyquist frequency for this samplingFrequency
-     * 
-     * @params samplingFrequency the sample
-     */
-    public static float nyquist(float samplingFrequency)
-    {
-        return samplingFrequency / 2;
-    }
-    
-    /*
-     * All of the code below this line is taken from Holger Crysandt's MPEG7AudioEnc project.
-     * See http://mpeg7audioenc.sourceforge.net/copyright.html for license and copyright.
-     */
-
-    /**
-     * Gets the real part from the complex spectrum.
-     * 
-     * @param spectrum
-     *            complex spectrum.
-     * @param length
-     *            length of data to use.
-     * 
-     * @return real part of given length of complex spectrum.
-     */
-    protected static float[] calculateReal(float[] spectrum, int length) {
-        float[] real = new float[length];
-        real[0] = spectrum[0];
-        real[real.length / 2] = spectrum[1];
-        for (int i = 1, j = real.length - 1; i < j; ++i, --j)
-            real[j] = real[i] = spectrum[2 * i];
-        return real;
-    }
-
-    /**
-     * Gets the imaginary part from the complex spectrum.
-     * 
-     * @param spectrum
-     *            complex spectrum.
-     * @param length
-     *            length of data to use.
-     * 
-     * @return imaginary part of given length of complex spectrum.
-     */
-    protected static float[] calculateImaginary(float[] spectrum, int length) {
-        float[] imag = new float[length];
-        for (int i = 1, j = imag.length - 1; i < j; ++i, --j)
-            imag[i] = -(imag[j] = spectrum[2 * i + 1]);
-        return imag;
-    }
-
-    /**
-     * Perform FFT on data with given length, regular or inverse.
-     * 
-     * @param data
-     *            the data
      * @param n
-     *            the length
-     * @param isign
-     *            true for regular, false for inverse.
+     *            Size of the input data that is to be handled
      */
-    protected static void fft(float[] data, int n, boolean isign) {
-        float c1 = 0.5f;
-        float c2, h1r, h1i, h2r, h2i;
-        double wr, wi, wpr, wpi, wtemp;
-        double theta = 3.141592653589793 / (n >> 1);
-        if (isign) {
-            c2 = -.5f;
-            four1(data, n >> 1, true);
-        } else {
-            c2 = .5f;
-            theta = -theta;
-        }
-        wtemp = Math.sin(.5 * theta);
-        wpr = -2. * wtemp * wtemp;
-        wpi = Math.sin(theta);
-        wr = 1. + wpr;
-        wi = wpi;
-        int np3 = n + 3;
-        for (int i = 2, imax = n >> 2, i1, i2, i3, i4; i <= imax; ++i) {
-            /** @TODO this can be optimized */
-            i4 = 1 + (i3 = np3 - (i2 = 1 + (i1 = i + i - 1)));
-            --i4;
-            --i2;
-            --i3;
-            --i1;
-            h1i = c1 * (data[i2] - data[i4]);
-            h2r = -c2 * (data[i2] + data[i4]);
-            h1r = c1 * (data[i1] + data[i3]);
-            h2i = c2 * (data[i1] - data[i3]);
-            data[i1] = (float) (h1r + wr * h2r - wi * h2i);
-            data[i2] = (float) (h1i + wr * h2i + wi * h2r);
-            data[i3] = (float) (h1r - wr * h2r + wi * h2i);
-            data[i4] = (float) (-h1i + wr * h2i + wi * h2r);
-            wr = (wtemp = wr) * wpr - wi * wpi + wr;
-            wi = wi * wpr + wtemp * wpi + wi;
-        }
-        if (isign) {
-            float tmp = data[0];
-            data[0] += data[1];
-            data[1] = tmp - data[1];
-        } else {
-            float tmp = data[0];
-            data[0] = c1 * (tmp + data[1]);
-            data[1] = c1 * (tmp - data[1]);
-            four1(data, n >> 1, false);
-        }
-    }
-
-    /**
-     * four1 algorithm.
-     * 
-     * @param data
-     *            the data.
-     * @param nn
-     *            the nn.
-     * @param isign
-     *            regular or inverse.
-     */
-    private static void four1(float data[], int nn, boolean isign) {
-        int n, mmax, istep;
-        double wtemp, wr, wpr, wpi, wi, theta;
-        float tempr, tempi;
-
-        n = nn << 1;
-        for (int i = 1, j = 1; i < n; i += 2) {
-            if (j > i) {
-                // SWAP(data[j], data[i]);
-                float swap = data[j - 1];
-                data[j - 1] = data[i - 1];
-                data[i - 1] = swap;
-                // SWAP(data[j+1], data[i+1]);
-                swap = data[j];
-                data[j] = data[i];
-                data[i] = swap;
-            }
-            int m = n >> 1;
-            while (m >= 2 && j > m) {
-                j -= m;
-                m >>= 1;
-            }
-            j += m;
-        }
-        mmax = 2;
-        while (n > mmax) {
-            istep = mmax << 1;
-            theta = 6.28318530717959 / mmax;
-            if (!isign)
-                theta = -theta;
-            wtemp = Math.sin(0.5 * theta);
-            wpr = -2.0 * wtemp * wtemp;
-            wpi = Math.sin(theta);
-            wr = 1.0;
-            wi = 0.0;
-            for (int m = 1; m < mmax; m += 2) {
-                for (int i = m; i <= n; i += istep) {
-                    int j = i + mmax;
-                    tempr = (float) (wr * data[j - 1] - wi * data[j]);
-                    tempi = (float) (wr * data[j] + wi * data[j - 1]);
-                    data[j - 1] = data[i - 1] - tempr;
-                    data[j] = data[i] - tempi;
-                    data[i - 1] += tempr;
-                    data[i] += tempi;
-                }
-                wr = (wtemp = wr) * wpr - wi * wpi + wr;
-                wi = wi * wpr + wtemp * wpi + wi;
-            }
-            mmax = istep;
-        }
+    private void rebuild(int n) {
+        a = new float[2 * n];
+        fft = new FloatFFT_1D(n);
+        size = n;
+        real = new float[n];
+        imag = new float[n];
+        arrays[0] = real;
+        arrays[1] = imag;
     }
 
 }
