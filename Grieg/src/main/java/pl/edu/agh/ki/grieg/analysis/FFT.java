@@ -43,15 +43,15 @@ public class FFT extends AbstractEnumeratee<float[][], float[][]> {
             rebuild(data.length);
         }
 
-        System.arraycopy(data, 0, a, 0, size);
+        for (int i = 0; i < size; ++i) {
+            a[2 * i] = data[i];
+            a[2 * i + 1] = 0;
+        }
         fft.complexForward(a);
 
         for (int i = 0; i < size; ++i) {
             real[i] = a[2 * i];
             imag[i] = a[2 * i + 1];
-
-            // upper part of the array must be zero!
-            a[2 * i] = a[2 * i + 1] = 0;
         }
         pushChunk(arrays);
         return State.Cont;
