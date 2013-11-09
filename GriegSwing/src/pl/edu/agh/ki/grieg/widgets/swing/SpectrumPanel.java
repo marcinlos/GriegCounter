@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
+import pl.edu.agh.ki.grieg.swing.util.Utils;
 
 public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
 
@@ -32,10 +33,6 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
         refresh();
     }
 
-    private static double dB(double val) {
-        return 10 * Math.log10(val);
-    }
-
     private int calcY(double value) {
         int h = getScreenHeight();
         double y = (value - min) / (max - min);
@@ -45,14 +42,25 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
     @Override
     protected void paint(Graphics2D graphics) {
         if (data != null) {
-            int N = data.length / 2;
-            double binSize = 1.0 / N;
+            double samplingFrequency = 44100;
+            int N = data.length;
+            int K = N / 2 - 1;
+            double binWidth = 1.0 / K;
+            double freqBinSize = samplingFrequency / N;
+            double perHertz = binWidth / freqBinSize;
+            
+            graphics.setColor(Color.white);
+            for (int i = 0; i < samplingFrequency / 2; ++ i) {
+                double x = i * 1000 * perHertz;
+                int xpos = (int) (x * getScreenWidth());
+                graphics.drawLine(xpos, getScreenHeight(), xpos, 0);
+            }
 
             graphics.setColor(Color.green);
-            for (int i = 0; i < N; ++i) {
-                double x = binSize * i;
+            for (int i = 0; i < K; ++i) {
+                double x = binWidth * i;
 
-                double dB = dB(data[i]);
+                double dB = Utils.clamp(Utils.dB(data[i]*data[i]), min, max);
 
                 int xpos = (int) (x * getScreenWidth());
                 int ypos = calcY(dB);

@@ -6,7 +6,7 @@ public class Utils {
         // non-instantiable
     }
     
-    public static float db(float x) {
+    public static float dB(float x) {
         return 10 * (float) Math.log10(x);
     }
     
