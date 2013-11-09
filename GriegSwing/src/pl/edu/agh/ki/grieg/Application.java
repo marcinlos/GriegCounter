@@ -8,11 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
-import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.FileLoader;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
+import pl.edu.agh.ki.grieg.playback.PlaybackException;
 import pl.edu.agh.ki.grieg.playback.Player;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
@@ -21,7 +22,9 @@ import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
 import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
+import pl.edu.agh.ki.grieg.processing.model.IterateeWrapper;
 import pl.edu.agh.ki.grieg.processing.model.WaveFunctionModel;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
     
 
 public class Application implements Controller, ErrorHandler {
@@ -63,6 +66,21 @@ public class Application implements Controller, ErrorHandler {
         procFactory.addListener(powerModel);
         modelRoot.addModel("power", powerModel.getModel());
         
+        
+        final IterateeWrapper<float[]> fftModel = IterateeWrapper.of(float[].class);
+        procFactory.addListener(new ProcessingAdapter() {
+            @Override
+            public void beforeAnalysis(Pipeline<float[][]> pipeline, SampleEnumerator source) {
+                pipeline.connect(fftModel, float[].class).to("fft_real");
+                try {
+                    player.prepare(source);
+                } catch (PlaybackException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        modelRoot.addModel("fft", fftModel.getModel());
+        
         CompositeModel<?> loader = Models.container();
         FileLoader fileLoader = procFactory.getFileLoader();
         Set<String> extensions = fileLoader.getKnownExtensions();
@@ -94,9 +112,9 @@ public class Application implements Controller, ErrorHandler {
             scheduler.asyncPreAnalysis(proc);
             scheduler.asyncAnalysis(proc);
 
-            AudioFile audio = proc.getFile();
-            logger.info("Playing...");
-            player.play(audio);
+//            AudioFile audio = proc.getFile();
+//            logger.info("Playing...");
+//            player.play(audio);
         } catch (Exception e) {
             error(e);
         }
