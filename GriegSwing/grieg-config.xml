@@ -7,7 +7,7 @@
 
   <properties>
     <int name="resolution">10000</int>
-    <int name="chunk-size">2048</int>
+    <int name="chunk-size">16384</int>
     <int name="hop-size">441</int>
   </properties>
 
