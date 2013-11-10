@@ -27,6 +27,7 @@ import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
+import pl.edu.agh.ki.grieg.widgets.swing.SpectrumBars;
 import pl.edu.agh.ki.grieg.widgets.swing.SpectrumPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.TitleBarPercentDisplay;
 
@@ -36,7 +37,7 @@ public class MainWindow extends JFrame {
             .getLogger(MainWindow.class);
 
     private static final int WIDTH = 450;
-    private static final int HEIGHT = 500;
+    private static final int HEIGHT = 600;
 
     private static final String CWDIR = "user.dir";
     private static final File CONFIG_FILE = new File("settings");
@@ -53,6 +54,7 @@ public class MainWindow extends JFrame {
     private final ChannelsChart waveView;
     private final ChannelsChart powerChart;
     private final SpectrumPanel spectrumPanel;
+    private final SpectrumBars spectrumBars;
     private final ProgressBar progressBar;
 
     private JMenuBar menuBar;
@@ -72,8 +74,9 @@ public class MainWindow extends JFrame {
         powerChart = new ChannelsChart("Power", model.getChild("power"), 1, -0.2, 1);
 
         
-        Model<float[]> powerSpectrum = model.getChild("fft", float[].class);
+        Model<float[]> powerSpectrum = model.getChild("power_spectrum", float[].class);
         spectrumPanel = new SpectrumPanel(powerSpectrum);
+        spectrumBars = new SpectrumBars(powerSpectrum);
         
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));
@@ -164,9 +167,11 @@ public class MainWindow extends JFrame {
         charts.add(waveView);
         charts.add(powerChart);
         charts.add(spectrumPanel.swingPanel());
+        charts.add(spectrumBars.swingPanel());
         
         add(charts);
         add(progressBar.swingPanel(), BorderLayout.PAGE_END);
+        pack();
     }
 
     private class ClosingListener extends WindowAdapter {
