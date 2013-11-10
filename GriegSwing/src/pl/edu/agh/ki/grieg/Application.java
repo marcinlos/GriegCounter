@@ -49,13 +49,6 @@ public class Application implements Controller, ErrorHandler {
 
         final FeatureExtractionModel extractionModel =
                 new FeatureExtractionModel(TimeUnit.MILLISECONDS, 20);
-        procFactory.addListener(new ProcessingAdapter() {
-            @Override
-            public void beforePreAnalysis(ExtractionContext ctx) {
-                ctx.addFeaturesListener(extractionModel);
-                ctx.addProgressListener(extractionModel);
-            }
-        });
         modelRoot.addModel("preanalysis_progress", extractionModel.getModel());
 
         AudioModel model = new AudioModel();
@@ -74,7 +67,21 @@ public class Application implements Controller, ErrorHandler {
         connect(powerSpectrumModel, float[].class, "power_spectrum");
         modelRoot.addModel("power_spectrum", powerSpectrumModel.getModel());
         
+
+        CompositeModel<?> loader = Models.container();
+        FileLoader fileLoader = procFactory.getFileLoader();
+        Set<String> extensions = fileLoader.getKnownExtensions();
+        loader.addModel("extensions", Models.simple(extensions));
+        modelRoot.addModel("loader", loader);
+
         procFactory.addListener(new ProcessingAdapter() {
+            
+            @Override
+            public void beforePreAnalysis(ExtractionContext ctx) {
+                ctx.addFeaturesListener(extractionModel);
+                ctx.addProgressListener(extractionModel);
+            }
+            
             @Override
             public void beforeAnalysis(Pipeline<float[][]> pipeline,
                     SampleEnumerator source) {
@@ -85,12 +92,6 @@ public class Application implements Controller, ErrorHandler {
                 }
             }
         });
-
-        CompositeModel<?> loader = Models.container();
-        FileLoader fileLoader = procFactory.getFileLoader();
-        Set<String> extensions = fileLoader.getKnownExtensions();
-        loader.addModel("extensions", Models.simple(extensions));
-        modelRoot.addModel("loader", loader);
     }
 
     private <T> void connect(final Iteratee<? super T> it,
