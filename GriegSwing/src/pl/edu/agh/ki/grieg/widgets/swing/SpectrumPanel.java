@@ -14,8 +14,8 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
 
     private float[] data;
 
-    private double min = -100;
-    private double max = 60;
+    private double min = -140;
+    private double max = 120;
 
     int count = 0;
     int redraws = 0;
