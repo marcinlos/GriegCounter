@@ -56,12 +56,13 @@ public class LineChartView extends SwingCanvas {
         int n = data.size();
         int[] xs = new int[n];
         int[] ys = new int[n];
-        for (int i = 0; i < n; ++ i) {
-            Point p = data.get(i);
+        int i = 0;
+        for (Point p : data) {
             Point lowered = new Point(p.x, p.y - min);
             PointI transformed = toScreen(lowered);
             xs[i] = transformed.x;
             ys[i] = transformed.y;
+            ++ i;
         }
         graphics.drawPolyline(xs, ys, n);
     }

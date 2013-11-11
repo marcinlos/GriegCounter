@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
             .getLogger(MainWindow.class);
 
     private static final int WIDTH = 450;
-    private static final int HEIGHT = 600;
+    private static final int HEIGHT = 700;
 
     private static final String CWDIR = "user.dir";
     private static final File CONFIG_FILE = new File("settings");
@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
     private final Controller controller;
 
     private final ChannelsChart waveView;
+    private final ChannelsChart waveWindowView;
     private final ChannelsChart powerChart;
     private final SpectrumPanel spectrumPanel;
     private final SpectrumBars spectrumBars;
@@ -70,14 +71,17 @@ public class MainWindow extends JFrame {
         settingsManager = new SettingsManager(CONFIG_FILE);
         settings = settingsManager.readSettings();
 
-        waveView = new ChannelsChart("Wave", model.getChild("wave"), 1, -1, 1);
-        powerChart = new ChannelsChart("Power", model.getChild("power"), 1, -0.2, 1);
+        waveView = new ChannelsChart("Wave", model.getChild("wave.amplitude"), 1, -1, 1);
 
-        
-        Model<float[]> powerSpectrum = model.getChild("power_spectrum", float[].class);
+        waveWindowView = new ChannelsChart("Wave (sliding window)", 
+                model.getChild("wave.window.wide"), 1, -1, 1);
+
+        powerChart = new ChannelsChart("Power", model.getChild("wave.power"), 1, -0.2, 1);
+
+        Model<float[]> powerSpectrum = model.getChild("wave.fft.power", float[].class);
         spectrumPanel = new SpectrumPanel(powerSpectrum);
         spectrumBars = new SpectrumBars(powerSpectrum);
-        
+
         model.getChild("preanalysis_progress", Float.class)
                 .addListener(new TitleBarPercentDisplay(this));
 
@@ -107,7 +111,7 @@ public class MainWindow extends JFrame {
     }
 
     private FileFilter buildAudioFileFilter() {
-        Set<String> extensions = $("loader.extensions", STRING_SET);
+        Set<String> extensions = $("sys.loader.extensions", STRING_SET);
         logger.debug("Building file filter, found extensions: {}", extensions);
         String[] extArray = extensions.toArray(new String[0]);
         return new FileNameExtensionFilter("Audio", extArray);
@@ -163,12 +167,14 @@ public class MainWindow extends JFrame {
     private void setupLayout() {
         JPanel charts = new JPanel();
         charts.setLayout(new BoxLayout(charts, BoxLayout.PAGE_AXIS));
-        
+
         charts.add(waveView);
         charts.add(powerChart);
+        charts.add(waveWindowView);
+
         charts.add(spectrumPanel.swingPanel());
         charts.add(spectrumBars.swingPanel());
-        
+
         add(charts);
         add(progressBar.swingPanel(), BorderLayout.PAGE_END);
         pack();

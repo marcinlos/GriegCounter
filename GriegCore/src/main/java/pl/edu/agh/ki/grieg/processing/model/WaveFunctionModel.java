@@ -20,8 +20,7 @@ import pl.edu.agh.ki.grieg.util.properties.Properties;
 import com.google.common.collect.Lists;
 
 public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
-        implements
-        Iteratee<float[]>, ProcessingListener {
+        implements Iteratee<float[]>, ProcessingListener {
 
     private final Logger logger = LoggerFactory
             .getLogger(WaveFunctionModel.class);
@@ -96,10 +95,6 @@ public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
         reset();
     }
 
-    protected void reset() {
-        rangeCount = 0;
-    }
-
     @Override
     public void beforePreAnalysis(ExtractionContext ctx) {
         // empty
@@ -113,6 +108,17 @@ public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
     @Override
     public void afterAnalysis() {
         // empty
+    }
+
+    protected void reset() {
+        rangeCount = 0;
+        for (Model<List<Point>> serie : series) {
+            List<Point> data = serie.getData();
+            synchronized (data) {
+                data.clear();
+            }
+        }
+        update();
     }
 
 }

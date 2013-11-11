@@ -24,6 +24,7 @@ import pl.edu.agh.ki.grieg.processing.model.AudioModel;
 import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
 import pl.edu.agh.ki.grieg.processing.model.IterateeWrapper;
 import pl.edu.agh.ki.grieg.processing.model.WaveFunctionModel;
+import pl.edu.agh.ki.grieg.processing.model.WaveWindowModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
@@ -51,28 +52,50 @@ public class Application implements Controller, ErrorHandler {
                 new FeatureExtractionModel(TimeUnit.MILLISECONDS, 20);
         modelRoot.addModel("preanalysis_progress", extractionModel.getModel());
 
+        CompositeModel<?> waveModel = Models.container();
+        modelRoot.addModel("wave", waveModel);
+        
         AudioModel model = new AudioModel();
         procFactory.addListener(model);
-        modelRoot.addModel("wave", model.getModel());
+        waveModel.addModel("amplitude", model.getModel());
 
         WaveFunctionModel powerModel = new WaveFunctionModel("power");
         procFactory.addListener(powerModel);
-        modelRoot.addModel("power", powerModel.getModel());
+        waveModel.addModel("power", powerModel.getModel());
+        
+        
+        CompositeModel<?> waveWindows = Models.container();
+        waveModel.addModel("window", waveWindows);
+        
+        WaveWindowModel waveWindow = new WaveWindowModel(3000);
+        procFactory.addListener(waveWindow);
+        waveWindows.addModel("narrow", waveWindow.getModel());
+        
+        WaveWindowModel wideWaveWindow = new WaveWindowModel(30000);
+        procFactory.addListener(wideWaveWindow);
+        waveWindows.addModel("wide", wideWaveWindow.getModel());
+        
 
-        IterateeWrapper<float[]> fftModel = IterateeWrapper.of(float[].class);
-        connect(fftModel, float[].class, "fft_real");
-        modelRoot.addModel("fft", fftModel.getModel());
+        CompositeModel<?> fftModel = Models.container();
+        waveModel.addModel("fft", fftModel);
+        
+        IterateeWrapper<float[]> fftReal = IterateeWrapper.of(float[].class);
+        connect(fftReal, float[].class, "fft_real");
+        fftModel.addModel("real", fftReal.getModel());
 
         IterateeWrapper<float[]> powerSpectrumModel = IterateeWrapper.of(float[].class);
         connect(powerSpectrumModel, float[].class, "power_spectrum");
-        modelRoot.addModel("power_spectrum", powerSpectrumModel.getModel());
+        fftModel.addModel("power", powerSpectrumModel.getModel());
         
-
+        CompositeModel<?> systemModel = Models.container();
+        modelRoot.addModel("sys", systemModel);
+        
         CompositeModel<?> loader = Models.container();
+        systemModel.addModel("loader", loader);
+
         FileLoader fileLoader = procFactory.getFileLoader();
         Set<String> extensions = fileLoader.getKnownExtensions();
         loader.addModel("extensions", Models.simple(extensions));
-        modelRoot.addModel("loader", loader);
 
         procFactory.addListener(new ProcessingAdapter() {
             
