@@ -17,6 +17,7 @@ import pl.edu.agh.ki.grieg.io.AudioStream;
 class Mp3Stream implements AudioStream {
 
     private short[] sampleBuffer;
+    private int sampleBufferLength;
     private short sampleOffset;
 
     private Bitstream bitstream;
@@ -32,7 +33,7 @@ class Mp3Stream implements AudioStream {
     }
 
     private boolean hasSomeBuffered() {
-        return sampleBuffer != null && sampleOffset < sampleBuffer.length - 1;
+        return sampleBuffer != null && sampleOffset < sampleBufferLength - 1;
     }
 
     private boolean decodeNext() throws DecodeException, IOException {
@@ -61,6 +62,7 @@ class Mp3Stream implements AudioStream {
                 format = MetaExtractor.extractFormat(samples);
             }
             sampleBuffer = samples.getBuffer();
+            sampleBufferLength = samples.getBufferLength();
             sampleOffset = 0;
             bitstream.closeFrame();
             return true;
@@ -94,7 +96,7 @@ class Mp3Stream implements AudioStream {
     }
 
     private int writeToBuffer(float[][] buffer, int offset) {
-        int buffered = sampleBuffer.length - sampleOffset;
+        int buffered = sampleBufferLength - sampleOffset;
         int channels = getFormat().channels;
         int n = Math.min(buffered / channels, buffer[0].length - offset);
         for (int i = 0; i < n; ++i) {
