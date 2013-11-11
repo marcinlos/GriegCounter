@@ -29,7 +29,7 @@ public class LineChartView extends SwingCanvas {
 
     private void setupUI() {
         p.setBackground(Color.black);
-        p.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
+        p.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
     }
 
     public void setData(List<Point> data) {

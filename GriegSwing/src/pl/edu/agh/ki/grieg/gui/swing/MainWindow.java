@@ -161,9 +161,9 @@ public class MainWindow extends JFrame {
     }
 
     private void setupLayout() {
-        
         JPanel charts = new JPanel();
         charts.setLayout(new BoxLayout(charts, BoxLayout.PAGE_AXIS));
+        
         charts.add(waveView);
         charts.add(powerChart);
         charts.add(spectrumPanel.swingPanel());

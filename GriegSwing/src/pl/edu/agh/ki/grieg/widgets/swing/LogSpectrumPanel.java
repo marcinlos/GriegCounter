@@ -10,17 +10,14 @@ import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.swing.util.Utils;
 
-public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
+public class LogSpectrumPanel extends SwingCanvas implements Listener<float[]> {
 
     private float[] data;
 
-    private double min = -100;
+    private double min = -40;
     private double max = 60;
 
-    int count = 0;
-    int redraws = 0;
-
-    public SpectrumPanel(Model<float[]> source) {
+    public LogSpectrumPanel(Model<float[]> source) {
         JPanel p = swingPanel();
         p.setBackground(Color.black);
         source.addListener(this);
@@ -39,34 +36,45 @@ public class SpectrumPanel extends SwingCanvas implements Listener<float[]> {
         return (int) (h * (1 - y));
     }
 
+    private double minFreq = 20;
+
+    double logFreq(double frequency) {
+        return Math.log10(frequency / minFreq);
+    }
+    
     @Override
     protected void paint(Graphics2D graphics) {
         if (data != null) {
             double samplingFrequency = 44100;
+            double nyquist = samplingFrequency / 2;
             int N = data.length;
             int K = N / 2 - 1;
-            double binWidth = 1.0 / K;
             double freqBinSize = samplingFrequency / N;
-            double perHertz = binWidth / freqBinSize;
-            
-            graphics.setColor(Color.darkGray);
-            for (int i = 0; i < samplingFrequency / 2; ++ i) {
-                double x = i * 1000 * perHertz;
-                int xpos = (int) (x * getScreenWidth());
-                graphics.drawLine(xpos, getScreenHeight(), xpos, 0);
+
+            int screenWidth = getScreenWidth();
+            int screenHeight = getScreenHeight();
+
+            graphics.setColor(Color.white);
+            double xmax = logFreq(nyquist);
+
+            for (double f = minFreq; f < nyquist; f *= 2) {
+                double x = logFreq(f) / xmax;
+                int xpos = (int) (x * screenWidth);
+                graphics.drawLine(xpos, screenHeight, xpos, 0);
             }
 
             graphics.setColor(Color.green);
-            for (int i = 0; i < K; ++i) {
-                double x = binWidth * i;
+            for (int i = 1; i < K; ++i) {
+                double f = i * freqBinSize;
+                double x = logFreq(f) / xmax;
 
                 double dB = Utils.clamp(Utils.dB(data[i]), min, max);
 
-                int xpos = (int) (x * getScreenWidth());
+                int xpos = (int) (x * screenWidth);
                 int ypos = calcY(dB);
-                graphics.drawLine(xpos, getScreenHeight(), xpos, ypos);
+                graphics.drawLine(xpos, screenHeight, xpos, ypos);
             }
+
         }
     }
-
 }
