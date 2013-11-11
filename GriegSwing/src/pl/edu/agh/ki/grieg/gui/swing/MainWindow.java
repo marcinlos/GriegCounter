@@ -192,7 +192,7 @@ public class MainWindow extends JFrame {
         spectra.setLayout(new BoxLayout(spectra, BoxLayout.PAGE_AXIS));
         
         min = new Dimension(300, 120);
-        pref = new Dimension(300, 120);
+        pref = new Dimension(450, 120);
         
         spectra.add(withSize(logSpectrumPanel.swingPanel(), min, pref));
         spectra.add(withSize(spectrumBars.swingPanel(), min, pref));

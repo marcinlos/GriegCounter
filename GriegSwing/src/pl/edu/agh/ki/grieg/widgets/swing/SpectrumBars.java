@@ -48,9 +48,12 @@ public class SpectrumBars extends SwingCanvas implements Listener<float[]> {
 
             graphics.setColor(Color.green);
             double xscale = screenWidth / (double) barCount;
-            int width = (int) (0.9 * screenWidth / barCount);
+            
             for (int i = 0; i < barCount; ++i) {
                 int xpos = (int) (i * xscale);
+                int xnext = (int) ((i + 1) * xscale);
+                int width = xnext - xpos - 1;
+                
                 double y = (bars[i] - min) / (max - min);
                 int ypos = (int) ((1 - y) * screenHeight);
                 graphics.fillRect(xpos, ypos, width, screenHeight - ypos);
