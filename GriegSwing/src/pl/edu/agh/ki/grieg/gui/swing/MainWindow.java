@@ -29,6 +29,7 @@ import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
 import pl.edu.agh.ki.grieg.widgets.swing.LogSpectrumPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
+import pl.edu.agh.ki.grieg.widgets.swing.SpectrogramPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.SpectrumBars;
 import pl.edu.agh.ki.grieg.widgets.swing.SpectrumPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.TitleBarPercentDisplay;
@@ -57,6 +58,7 @@ public class MainWindow extends JFrame {
     private final SpectrumPanel spectrumPanel;
     private final LogSpectrumPanel logSpectrumPanel;
     private final SpectrumBars spectrumBars;
+    private final SpectrogramPanel spectrogramPanel;
     private final ProgressBar progressBar;
 
     private JMenuBar menuBar;
@@ -85,6 +87,7 @@ public class MainWindow extends JFrame {
         spectrumPanel = new SpectrumPanel(powerSpectrum);
         logSpectrumPanel = new LogSpectrumPanel(powerSpectrum);
         spectrumBars = new SpectrumBars(powerSpectrum);
+        spectrogramPanel = new SpectrogramPanel();
 
         Model<Float> progressModel = model.getChild("preanalysis.progress", Float.class); 
         
@@ -174,7 +177,11 @@ public class MainWindow extends JFrame {
 
     private void setupLayout() {
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+        
+        JPanel innerPanel = new JPanel();
+        mainPanel.add(innerPanel);
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.LINE_AXIS));
         
         JPanel charts = new JPanel();
         charts.setLayout(new BoxLayout(charts, BoxLayout.PAGE_AXIS));
@@ -186,7 +193,9 @@ public class MainWindow extends JFrame {
         charts.add(withSize(powerChart, min, pref));
         charts.add(withSize(waveWindowWideView, min, pref));
         charts.add(withSize(waveWindowNarrowView, min, pref));
-        
+
+        min = new Dimension(300, 120);
+        pref = new Dimension(450, 120);
         
         JPanel spectra = new JPanel();
         spectra.setLayout(new BoxLayout(spectra, BoxLayout.PAGE_AXIS));
@@ -194,14 +203,18 @@ public class MainWindow extends JFrame {
         min = new Dimension(300, 120);
         pref = new Dimension(450, 120);
         
-        spectra.add(withSize(logSpectrumPanel.swingPanel(), min, pref));
-        spectra.add(withSize(spectrumBars.swingPanel(), min, pref));
+        spectra.add(withSize(spectrumPanel, min, pref));
+        spectra.add(withSize(logSpectrumPanel, min, pref));
+        spectra.add(withSize(spectrumBars, min, pref));
 
-        mainPanel.add(charts);
-        mainPanel.add(spectra);
+        innerPanel.add(charts);
+        innerPanel.add(spectra);
 
-        add(mainPanel);
+        min = new Dimension(400, 200);
+        pref = new Dimension(500, 200);
+        mainPanel.add(withSize(spectrogramPanel, min, pref));
         
+        add(mainPanel);
         add(progressBar, BorderLayout.PAGE_END);
     }
 

@@ -1,58 +1,67 @@
 package pl.edu.agh.ki.grieg.widgets.swing;
 
+import static pl.edu.agh.ki.grieg.swing.util.Utils.clamp;
+import static pl.edu.agh.ki.grieg.swing.util.Utils.dB;
+
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.swing.util.Utils;
 
-public class LogSpectrumPanel extends SwingCanvas implements Listener<float[]> {
+public class LogSpectrumPanel extends JPanel implements Listener<float[]> {
 
     private float[] data;
 
     private double min = -40;
     private double max = 60;
+    
+    private double samplingFrequency = 44100;
 
     public LogSpectrumPanel(Model<float[]> source) {
-        JPanel p = swingPanel();
-        p.setBackground(Color.black);
+        setBackground(Color.black);
         source.addListener(this);
-        p.setPreferredSize(new Dimension(100, 150));
+        setPreferredSize(new Dimension(100, 150));
     }
 
     @Override
     public void update(float[] data) {
         this.data = data.clone();
-        refresh();
+        repaint();
     }
 
     private int calcY(double value) {
-        int h = getScreenHeight();
+        int h = getHeight();
         double y = (value - min) / (max - min);
         return (int) (h * (1 - y));
     }
 
     private double minFreq = 20;
 
-    double logFreq(double frequency) {
+    private double logFreq(double frequency) {
         return Math.log10(frequency / minFreq);
     }
     
+    public void setSamplingFrequency(double frequency) {
+        this.samplingFrequency = frequency;
+    }
+    
     @Override
-    protected void paint(Graphics2D graphics) {
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         if (data != null) {
-            double samplingFrequency = 44100;
+            Graphics2D graphics = (Graphics2D) g;
             double nyquist = samplingFrequency / 2;
             int N = data.length;
             int K = N / 2 - 1;
             double freqBinSize = samplingFrequency / N;
 
-            int screenWidth = getScreenWidth();
-            int screenHeight = getScreenHeight();
+            int screenWidth = getWidth();
+            int screenHeight = getHeight();
 
             graphics.setColor(Color.white);
             double xmax = logFreq(nyquist);
@@ -62,7 +71,7 @@ public class LogSpectrumPanel extends SwingCanvas implements Listener<float[]> {
                 double f = i * freqBinSize;
                 double x = logFreq(f) / xmax;
 
-                double dB = Utils.clamp(Utils.dB(data[i]), min, max);
+                double dB = clamp(dB(data[i]), min, max);
 
                 int xpos = (int) (x * screenWidth);
                 int ypos = calcY(dB);

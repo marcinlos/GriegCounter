@@ -28,6 +28,7 @@ public class ProgressBarView extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D graphics = (Graphics2D) g;
         graphics.setColor(Color.green);
         
