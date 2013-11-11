@@ -5,24 +5,23 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioFile;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
-import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.model.Models;
-import pl.edu.agh.ki.grieg.model.SimpleModel;
-import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
+import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
+import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 import pl.edu.agh.ki.grieg.util.math.Point;
 import pl.edu.agh.ki.grieg.util.properties.Properties;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-public class WaveFunctionModel extends ProcessingAdapter implements
-        Iteratee<float[]> {
+public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
+        implements
+        Iteratee<float[]>, ProcessingListener {
 
     private final Logger logger = LoggerFactory
             .getLogger(WaveFunctionModel.class);
@@ -32,24 +31,9 @@ public class WaveFunctionModel extends ProcessingAdapter implements
     private final List<Point> leftData;
     private final List<Point> rightData;
 
-    private final SimpleModel<List<Point>> leftSerie;
-    private final SimpleModel<List<Point>> rightSerie;
-
-    private final List<SimpleModel<List<Point>>> series;
-
-    private final CompositeModel<?> model;
-
     {
         leftData = Lists.newArrayList();
         rightData = Lists.newArrayList();
-
-        leftSerie = Models.simple(leftData);
-        rightSerie = Models.simple(rightData);
-
-        series = ImmutableList.of(leftSerie, rightSerie);
-        model = Models.container();
-        model.addModel("left", leftSerie);
-        model.addModel("right", rightSerie);
     }
 
     private int resolution;
@@ -57,7 +41,10 @@ public class WaveFunctionModel extends ProcessingAdapter implements
     private final String sourceName;
 
     public WaveFunctionModel(String sourceName) {
+        super(Reflection.<List<Point>> castClass(List.class));
         this.sourceName = sourceName;
+        leftSerie.update(leftData);
+        rightSerie.update(rightData);
     }
 
     protected Logger logger() {
@@ -99,12 +86,6 @@ public class WaveFunctionModel extends ProcessingAdapter implements
         return State.Cont;
     }
 
-    protected void update() {
-        for (SimpleModel<List<Point>> serie : series) {
-            serie.update();
-        }
-    }
-
     @Override
     public void finished() {
         reset();
@@ -119,7 +100,19 @@ public class WaveFunctionModel extends ProcessingAdapter implements
         rangeCount = 0;
     }
 
-    public Model<?> getModel() {
-        return model;
+    @Override
+    public void beforePreAnalysis(ExtractionContext ctx) {
+        // empty
     }
+
+    @Override
+    public void afterPreAnalysis(Properties results) {
+        // empty
+    }
+
+    @Override
+    public void afterAnalysis() {
+        // empty
+    }
+
 }
