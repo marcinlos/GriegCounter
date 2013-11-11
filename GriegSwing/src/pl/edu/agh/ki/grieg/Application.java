@@ -48,9 +48,12 @@ public class Application implements Controller, ErrorHandler {
 
         procFactory = bootstrap.createFactory();
 
+        CompositeModel<?> preanalysis = Models.container();
+        modelRoot.addModel("preanalysis", preanalysis);
+        
         final FeatureExtractionModel extractionModel =
                 new FeatureExtractionModel(TimeUnit.MILLISECONDS, 20);
-        modelRoot.addModel("preanalysis_progress", extractionModel.getModel());
+        preanalysis.addModel("progress", extractionModel.getModel());
 
         CompositeModel<?> waveModel = Models.container();
         modelRoot.addModel("wave", waveModel);

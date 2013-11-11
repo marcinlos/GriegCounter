@@ -57,12 +57,6 @@ public class LogSpectrumPanel extends SwingCanvas implements Listener<float[]> {
             graphics.setColor(Color.white);
             double xmax = logFreq(nyquist);
 
-            for (double f = minFreq; f < nyquist; f *= 2) {
-                double x = logFreq(f) / xmax;
-                int xpos = (int) (x * screenWidth);
-                graphics.drawLine(xpos, screenHeight, xpos, 0);
-            }
-
             graphics.setColor(Color.green);
             for (int i = 1; i < K; ++i) {
                 double f = i * freqBinSize;

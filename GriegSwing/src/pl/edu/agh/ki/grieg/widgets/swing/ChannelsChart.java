@@ -29,11 +29,10 @@ public class ChannelsChart extends JPanel {
         left = new LineChart(leftSerie, width, min, max);
         right = new LineChart(rightSerie, width, min, max);
 
-        
         JLabel label = new JLabel(title);
         label.setForeground(Color.green);
         add(label, BorderLayout.PAGE_START);
-        
+
         JPanel charts = new JPanel(new MigLayout("fill"));
         charts.setBackground(Color.black);
         add(charts);

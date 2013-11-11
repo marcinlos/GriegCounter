@@ -1,16 +1,15 @@
 package pl.edu.agh.ki.grieg.widgets.swing;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-public class ProgressBarView extends SwingCanvas {
+public class ProgressBarView extends JPanel {
 
-    private final JPanel p = swingPanel();
-    
     private float value = 0.0f;
     
     public ProgressBarView() {
@@ -18,21 +17,22 @@ public class ProgressBarView extends SwingCanvas {
     }
     
     private void setupUI() {
-        p.setBackground(Color.black);
-        p.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
+        setBackground(Color.black);
+        setBorder(BorderFactory.createLineBorder(Color.gray, 1));
     }
 
     public void setData(float value) {
         this.value = value;
-        refresh();
+        repaint();
     }
 
     @Override
-    protected void paint(Graphics2D graphics) {
+    protected void paintComponent(Graphics g) {
+        Graphics2D graphics = (Graphics2D) g;
         graphics.setColor(Color.green);
         
-        int w = getScreenWidth();
-        int h = getScreenHeight();
+        int w = getWidth();
+        int h = getHeight();
         
         int rw = (int) (w * value);
 

@@ -2,6 +2,7 @@ package pl.edu.agh.ki.grieg.gui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -26,6 +27,7 @@ import pl.edu.agh.ki.grieg.Controller;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.widgets.swing.ChannelsChart;
+import pl.edu.agh.ki.grieg.widgets.swing.LogSpectrumPanel;
 import pl.edu.agh.ki.grieg.widgets.swing.ProgressBar;
 import pl.edu.agh.ki.grieg.widgets.swing.SpectrumBars;
 import pl.edu.agh.ki.grieg.widgets.swing.SpectrumPanel;
@@ -35,9 +37,6 @@ public class MainWindow extends JFrame {
 
     private static final Logger logger = LoggerFactory
             .getLogger(MainWindow.class);
-
-    private static final int WIDTH = 450;
-    private static final int HEIGHT = 700;
 
     private static final String CWDIR = "user.dir";
     private static final File CONFIG_FILE = new File("settings");
@@ -52,9 +51,11 @@ public class MainWindow extends JFrame {
     private final Controller controller;
 
     private final ChannelsChart waveView;
-    private final ChannelsChart waveWindowView;
+    private final ChannelsChart waveWindowWideView;
+    private final ChannelsChart waveWindowNarrowView;
     private final ChannelsChart powerChart;
     private final SpectrumPanel spectrumPanel;
+    private final LogSpectrumPanel logSpectrumPanel;
     private final SpectrumBars spectrumBars;
     private final ProgressBar progressBar;
 
@@ -73,20 +74,22 @@ public class MainWindow extends JFrame {
 
         waveView = new ChannelsChart("Wave", model.getChild("wave.amplitude"), 1, -1, 1);
 
-        waveWindowView = new ChannelsChart("Wave (sliding window)", 
+        waveWindowNarrowView = new ChannelsChart("Window (narrow)", 
+                model.getChild("wave.window.narrow"), 1, -1, 1);
+        waveWindowWideView = new ChannelsChart("Window (wide)", 
                 model.getChild("wave.window.wide"), 1, -1, 1);
 
         powerChart = new ChannelsChart("Power", model.getChild("wave.power"), 1, -0.2, 1);
 
         Model<float[]> powerSpectrum = model.getChild("wave.fft.power", float[].class);
         spectrumPanel = new SpectrumPanel(powerSpectrum);
+        logSpectrumPanel = new LogSpectrumPanel(powerSpectrum);
         spectrumBars = new SpectrumBars(powerSpectrum);
 
-        model.getChild("preanalysis_progress", Float.class)
-                .addListener(new TitleBarPercentDisplay(this));
-
-        progressBar = new ProgressBar(model.getChild("preanalysis_progress",
-                Float.class));
+        Model<Float> progressModel = model.getChild("preanalysis.progress", Float.class); 
+        
+        progressModel.addListener(new TitleBarPercentDisplay(this));
+        progressBar = new ProgressBar(progressModel);
 
         logger.info("Creating window");
         setupUI();
@@ -130,7 +133,6 @@ public class MainWindow extends JFrame {
 
     private void setupPosition() {
         setLocationByPlatform(true);
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
     private void setupMenu() {
@@ -163,21 +165,44 @@ public class MainWindow extends JFrame {
             }
         });
     }
+    
+    private Component withSize(Component c, Dimension min, Dimension pref) {
+        c.setMinimumSize(min);
+        c.setPreferredSize(pref);
+        return c;
+    }
 
     private void setupLayout() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
+        
         JPanel charts = new JPanel();
         charts.setLayout(new BoxLayout(charts, BoxLayout.PAGE_AXIS));
+        
+        Dimension min = new Dimension(300, 100);
+        Dimension pref = new Dimension(500, 130);
 
-        charts.add(waveView);
-        charts.add(powerChart);
-        charts.add(waveWindowView);
+        charts.add(withSize(waveView, min, pref));
+        charts.add(withSize(powerChart, min, pref));
+        charts.add(withSize(waveWindowWideView, min, pref));
+        charts.add(withSize(waveWindowNarrowView, min, pref));
+        
+        
+        JPanel spectra = new JPanel();
+        spectra.setLayout(new BoxLayout(spectra, BoxLayout.PAGE_AXIS));
+        
+        min = new Dimension(300, 120);
+        pref = new Dimension(300, 120);
+        
+        spectra.add(withSize(logSpectrumPanel.swingPanel(), min, pref));
+        spectra.add(withSize(spectrumBars.swingPanel(), min, pref));
 
-        charts.add(spectrumPanel.swingPanel());
-        charts.add(spectrumBars.swingPanel());
+        mainPanel.add(charts);
+        mainPanel.add(spectra);
 
-        add(charts);
-        add(progressBar.swingPanel(), BorderLayout.PAGE_END);
-        pack();
+        add(mainPanel);
+        
+        add(progressBar, BorderLayout.PAGE_END);
     }
 
     private class ClosingListener extends WindowAdapter {

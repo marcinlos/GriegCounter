@@ -10,7 +10,7 @@ public class ProgressBar extends ProgressBarView implements Listener<Float> {
         checkNotNull(serie);
         serie.addListener(this);
         setData(serie.getData());
-        refresh();
+        repaint();
     }
 
     @Override

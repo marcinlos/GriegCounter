@@ -56,6 +56,7 @@ public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
 
     @Override
     public void fileOpened(AudioFile file, Properties config) {
+        clear();
         resolution = config.getInt("resolution");
     }
 
@@ -112,6 +113,9 @@ public class WaveFunctionModel extends AbstractChannelModel<List<Point>>
 
     protected void reset() {
         rangeCount = 0;
+    }
+
+    private void clear() {
         for (Model<List<Point>> serie : series) {
             List<Point> data = serie.getData();
             synchronized (data) {
