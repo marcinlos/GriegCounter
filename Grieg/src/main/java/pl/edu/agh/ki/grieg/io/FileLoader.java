@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -106,8 +107,35 @@ public class FileLoader {
      * @param entry
      *            Parser entry to register
      */
-    private void register(ParserEntry entry) {
+    public void register(ParserEntry entry) {
         decoders.register(entry.getParser(), entry.getExtensions());
+    }
+
+    /**
+     * Registers parser specified as the audio format parser object and array of
+     * supported extensions.
+     * 
+     * @param parser
+     *            Parser object
+     * @param extensions
+     *            Array of supported extensions
+     */
+    public void register(AudioFormatParser parser, String... extensions) {
+        register(parser, Arrays.asList(extensions));
+    }
+
+    /**
+     * Registers parser specified as the audio format parser object and list of
+     * supported extensions, given as iterable yielding strings.
+     * 
+     * @param parser
+     *            Parser object
+     * @param extensions
+     *            List of supported extensions
+     */
+    public void register(AudioFormatParser parser, Iterable<String> extensions) {
+        ParserEntry entry = new ParserEntry(parser, extensions);
+        register(entry);
     }
 
     /**
