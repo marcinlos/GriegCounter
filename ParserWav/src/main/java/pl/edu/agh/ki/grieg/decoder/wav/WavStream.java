@@ -33,14 +33,32 @@ class WavStream implements AudioStream {
     private static final PCMReader PCM8 = new PCMReader() {
         @Override
         public float readSample(DataInput stream) throws IOException {
-            return PCM.fromUnsignedByte(stream.readUnsignedByte());
+            return PCM.fromU8(stream.readUnsignedByte());
         }
     };
 
     private static final PCMReader PCM16 = new PCMReader() {
         @Override
         public float readSample(DataInput stream) throws IOException {
-            return PCM.fromSignedShort(stream.readShort());
+            return PCM.fromS16(stream.readShort());
+        }
+    };
+    
+    private static final PCMReader PCM24 = new PCMReader() {
+        @Override
+        public float readSample(DataInput stream) throws IOException {
+            int c = stream.readUnsignedByte();
+            int b = stream.readUnsignedByte();
+            int a = stream.readByte();
+            int value = (a << 16) | (b << 8) | c;
+            return PCM.fromS24(value);
+        }
+    };
+    
+    private static final PCMReader PCM32 = new PCMReader() {
+        @Override
+        public float readSample(DataInput stream) throws IOException {
+            return PCM.fromS32(stream.readInt());
         }
     };
 
@@ -81,9 +99,13 @@ class WavStream implements AudioStream {
             return PCM8;
         case 16:
             return PCM16;
+        case 32:
+            return PCM32;
+        case 24:
+            return PCM24;
         default:
             throw new DecodeException("Sorry, cannot open " + depth
-                    + "-bit file, only 8- and 16-bit sound is currently "
+                    + "-bit file, only 8, 16, 24 and 32-bit sound is currently "
                     + "supported");
         }
     }

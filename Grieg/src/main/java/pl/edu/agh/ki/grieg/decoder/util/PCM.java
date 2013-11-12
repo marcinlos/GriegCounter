@@ -9,6 +9,8 @@ public class PCM {
 
     private static final float MAX_BYTE = Byte.MAX_VALUE;
     private static final float MAX_SHORT = Short.MAX_VALUE;
+    private static final float MAX_24 = 0x7FFFFF;
+    private static final float MAX_32 = Integer.MAX_VALUE;
 
     private PCM() {
         // non-instantiable
@@ -21,7 +23,7 @@ public class PCM {
      *            Unsigned byte representing a sample
      * @return Float representing the same sample
      */
-    public static float fromUnsignedByte(int b) {
+    public static float fromU8(int b) {
         return (b + Byte.MIN_VALUE) / MAX_BYTE;
     }
 
@@ -32,8 +34,30 @@ public class PCM {
      *            Signed short representing a sample
      * @return Float representing the same sample
      */
-    public static float fromSignedShort(int s) {
+    public static float fromS16(int s) {
         return s / MAX_SHORT;
+    }
+    
+    /**
+     * Converts a 24-bit signed sample to float.
+     * 
+     * @param s
+     *            Signed int representing a sample
+     * @return Float representing the same sample
+     */
+    public static float fromS24(int s) {
+        return s / MAX_24;
+    }
+    
+    /**
+     * Converts a 32-bit signed sample to float.
+     * 
+     * @param s
+     *            Signed int representing a sample
+     * @return Float representing the same sample
+     */
+    public static float fromS32(int s) {
+        return s / MAX_32;
     }
 
     /**

@@ -102,7 +102,7 @@ class Mp3Stream implements AudioStream {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < channels; ++j) {
                 buffer[j][offset + i] = PCM
-                        .fromSignedShort(sampleBuffer[sampleOffset++]);
+                        .fromS16(sampleBuffer[sampleOffset++]);
             }
         }
         return n;
