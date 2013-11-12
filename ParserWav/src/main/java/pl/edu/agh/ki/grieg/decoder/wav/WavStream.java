@@ -14,7 +14,6 @@ import pl.edu.agh.ki.grieg.decoder.riff.RiffParser;
 import pl.edu.agh.ki.grieg.decoder.util.PCM;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.AudioStream;
-import pl.edu.agh.ki.grieg.util.NotImplementedException;
 
 import com.google.common.io.LittleEndianDataInputStream;
 
@@ -76,14 +75,14 @@ class WavStream implements AudioStream {
         return new AudioDetails(length, sampleCount, format);
     }
 
-    private PCMReader chooseConverter(int depth) {
+    private PCMReader chooseConverter(int depth) throws DecodeException {
         switch (depth) {
         case 8:
             return PCM8;
         case 16:
             return PCM16;
         default:
-            throw new NotImplementedException("Sorry, cannot open " + depth
+            throw new DecodeException("Sorry, cannot open " + depth
                     + "-bit file, only 8- and 16-bit sound is currently "
                     + "supported");
         }

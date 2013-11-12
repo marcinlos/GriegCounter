@@ -26,12 +26,13 @@ public final class Dialogs {
      * @param e
      *            Exception to present
      */
-    public static void showError(Component parent, Throwable e) {
+    static void showError(Component parent, Throwable e) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         writer.println("Application encountered an error.\n");
         writer.println("Reason:");
         writer.println(e);
+        e.printStackTrace(System.err);
         JOptionPane.showMessageDialog(parent, stringWriter, "Error",
                 JOptionPane.ERROR_MESSAGE);
     }

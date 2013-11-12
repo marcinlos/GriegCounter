@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg;
 
-interface ErrorHandler {
+public interface ErrorHandler {
     
     void error(Throwable e);
 

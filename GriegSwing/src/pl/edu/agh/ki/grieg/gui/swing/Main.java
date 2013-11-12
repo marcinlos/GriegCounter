@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.Application;
+import pl.edu.agh.ki.grieg.ErrorHandler;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.processing.core.Bootstrap;
 import pl.edu.agh.ki.grieg.processing.core.config.ConfigException;
@@ -16,10 +17,16 @@ public class Main implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
+    private static final ErrorHandler handler = new ErrorHandler() {
+        @Override
+        public void error(Throwable e) {
+            Dialogs.showError(e);
+        }
+    };
 
     private void init() throws ConfigException {
         Bootstrap bootstrap = new XmlFileSystemBootstrap("grieg-config.xml");
-        Application app = new Application(bootstrap);
+        Application app = new Application(bootstrap, handler);
         Model<?> model = app.getModelRoot();
         MainWindow window = new MainWindow(model, app, "GriegCounter");
         window.pack();

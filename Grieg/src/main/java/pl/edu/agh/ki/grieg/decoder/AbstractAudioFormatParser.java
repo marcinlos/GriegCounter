@@ -3,6 +3,9 @@ package pl.edu.agh.ki.grieg.decoder;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 
 /**
@@ -14,6 +17,8 @@ import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
  * @author los
  */
 public abstract class AbstractAudioFormatParser implements AudioFormatParser {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * {@inheritDoc}
@@ -28,6 +33,7 @@ public abstract class AbstractAudioFormatParser implements AudioFormatParser {
             openStream(stream);
             return true;
         } catch (DecodeException e) {
+            logger.debug("File not readable", e);
             return false;
         }
     }

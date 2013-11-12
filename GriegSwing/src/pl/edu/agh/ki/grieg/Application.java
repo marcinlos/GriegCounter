@@ -28,7 +28,7 @@ import pl.edu.agh.ki.grieg.processing.model.WaveWindowModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
-public class Application implements Controller, ErrorHandler {
+public class Application implements Controller{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,14 +37,18 @@ public class Application implements Controller, ErrorHandler {
     protected final Scheduler scheduler;
     protected final Player player;
     protected final ProcessorFactory procFactory;
+    
+    protected final ErrorHandler errorHandler;
 
     {
-        scheduler = new Scheduler(this);
         player = new Player();
         modelRoot = Models.container();
     }
 
-    public Application(Bootstrap bootstrap) throws ConfigException {
+    public Application(Bootstrap bootstrap, ErrorHandler errorHandler) throws ConfigException {
+        
+        this.errorHandler = errorHandler;
+        this.scheduler = new Scheduler(errorHandler);
 
         procFactory = bootstrap.createFactory();
 
@@ -131,11 +135,6 @@ public class Application implements Controller, ErrorHandler {
         });
     }
 
-    @Override
-    public void error(Throwable e) {
-        logger.error("Error", e);
-    }
-
     protected Player player() {
         return player;
     }
@@ -159,7 +158,7 @@ public class Application implements Controller, ErrorHandler {
             // logger.info("Playing...");
             // player.play(audio);
         } catch (Exception e) {
-            error(e);
+            errorHandler.error(e);
         }
     }
 
