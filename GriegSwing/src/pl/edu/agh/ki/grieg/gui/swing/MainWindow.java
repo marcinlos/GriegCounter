@@ -87,7 +87,7 @@ public class MainWindow extends JFrame {
         spectrumPanel = new SpectrumPanel(powerSpectrum);
         logSpectrumPanel = new LogSpectrumPanel(powerSpectrum);
         spectrumBars = new SpectrumBars(powerSpectrum);
-        spectrogramPanel = new SpectrogramPanel();
+        spectrogramPanel = new SpectrogramPanel(powerSpectrum);
 
         Model<Float> progressModel = model.getChild("preanalysis.progress", Float.class); 
         
