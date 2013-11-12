@@ -12,5 +12,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserMp3"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserWav"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Grieg"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserOgg"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
