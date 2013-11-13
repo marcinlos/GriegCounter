@@ -28,6 +28,9 @@ public final class AudioFeatures {
     /** Format of the audio sound */
     public static final Key<SoundFormat> FORMAT = make("format",
             SoundFormat.class);
+    
+    /** Bitrate */
+    public static final Key<Integer> BITRATE = make("bitrate", Integer.class);
 
     /** Author */
     public static final Key<String> AUTHOR = make("author", String.class);

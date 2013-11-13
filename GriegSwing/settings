@@ -1,5 +1,6 @@
 {
-    directory : "/media/los/Data/muzyka/Klasyczna/",
+    //directory : "/media/los/Data/muzyka/Klasyczna/",
+    directory : "/home/los/studia/inz/samples/",
     files : [
         "/media/los/Data/muzyka/Klasyczna/Bach/Inventions/Invention no. 8 (F major).mp3",
         "/media/los/Data/muzyka/Klasyczna/Beethoven/Op. 109 (PS no. 30 in E major)/Piano Sonata no.30 in E major op.109 - II- Prestissimo.mp3",

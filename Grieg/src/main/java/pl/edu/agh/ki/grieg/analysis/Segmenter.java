@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.grieg.analysis;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
@@ -27,6 +28,8 @@ public class Segmenter extends AbstractEnumeratee<float[][], float[][]> {
      *            How much samples should be processed before
      */
     public Segmenter(int channels, int packetSize) {
+        checkArgument(channels > 0, "channels = %s", channels);
+        checkArgument(packetSize > 0, "packetSize = %s", packetSize);
         this.channels = channels;
         this.packetSize = packetSize;
         this.buffer = new float[channels][packetSize];

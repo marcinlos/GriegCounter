@@ -47,7 +47,7 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
         int chunkSize = config.getInt("chunk-size", DEFAULT_CHUNK_SIZE);
         int hopSize = config.getInt("hop-size", DEFAULT_HOP_SIZE);
         
-        int packetSize = (int) (length / resolution);
+        int packetSize = Math.max((int) (length / resolution), 1);
         
         Segmenter segmenter = new Segmenter(channels, packetSize);
         
