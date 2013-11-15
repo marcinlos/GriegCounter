@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.agh.ki.grieg.android.misc.FolderPicker;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
@@ -20,10 +21,13 @@ import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.math.Point;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
-public class GriegMain extends RoboActivity {
+public class GriegMain extends RoboActivity implements OnClickListener {
     
     private static final Logger logger = LoggerFactory.getLogger(GriegMain.class);
     
@@ -40,7 +44,7 @@ public class GriegMain extends RoboActivity {
     
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     
-    private static final String BACH = "/data/user/Invention no. 8 (F major).mp3";
+    private String BACH = "/data/user/Alright.mp3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +69,14 @@ public class GriegMain extends RoboActivity {
         leftChannel.setModel(leftSerie);
         rightChannel.setModel(rightSerie);
 
+        
+        /*
         try {
         	startProcessing();
         } catch (Exception e) {
         	logger.error("Error", e);
-        }
+        }*/
+        
     }
 
     private void startProcessing() throws AudioException, IOException {
@@ -132,5 +139,28 @@ public class GriegMain extends RoboActivity {
     private GriegApplication getGrieg() {
         return (GriegApplication) getApplication(); 
     }
+    
+    public void openFile(View v){
+    	FolderPicker p = new FolderPicker(this, this, 0, true);
+    	p.show();
+    }
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		FolderPicker picker = (FolderPicker) dialog;
+		if(which == DialogInterface.BUTTON_POSITIVE){
+			picker.dismiss();
+			BACH = picker.getPath();
+			logger.error(BACH);
+			try {
+	        	startProcessing();
+	        } catch (Exception e) {
+	        	logger.error("Error", e);
+	        }
+			
+		}
+		
+		
+	}
 
 }
