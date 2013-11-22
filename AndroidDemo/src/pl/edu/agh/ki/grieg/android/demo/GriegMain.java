@@ -17,6 +17,7 @@ import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
+import pl.edu.agh.ki.grieg.processing.model.WaveWindowModel;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.math.Point;
 import roboguice.activity.RoboActivity;
@@ -26,6 +27,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 
 public class GriegMain extends RoboActivity implements OnClickListener {
     
@@ -39,6 +42,16 @@ public class GriegMain extends RoboActivity implements OnClickListener {
     @InjectView(R.id.rightChannel)
     private LineChartView rightChannel;
     
+    @InjectView(R.id.narrow_wave)
+    private LineChartView narrow;
+    
+    @InjectView(R.id.wide_wave)
+    private LineChartView wide;
+    
+    WaveWindowModel waveWindow;
+    
+    WaveWindowModel wideWaveWindow;
+    
     private CompositeModel<?> modelRoot;
     
     
@@ -50,6 +63,33 @@ public class GriegMain extends RoboActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grieg_main);
+        
+        //TABS//
+        TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
+        tabHost.setup();
+
+        TabSpec spec1=tabHost.newTabSpec("Tab 1");
+        spec1.setContent(R.id.LinearLayout1);
+        spec1.setIndicator("Tab 1");
+
+        TabSpec spec2=tabHost.newTabSpec("Tab 2");
+        spec2.setIndicator("Tab 2");
+        spec2.setContent(R.id.tab2);
+        
+
+        TabSpec spec3=tabHost.newTabSpec("Tab 3");
+        spec3.setIndicator("Tab 3");
+        spec3.setContent(R.id.tab3);
+
+        tabHost.addTab(spec1);
+        tabHost.addTab(spec2);
+        tabHost.addTab(spec3);
+        
+        tabHost.setCurrentTab(0);
+        tabHost.setCurrentTab(1);
+        tabHost.setCurrentTab(2);
+        tabHost.setCurrentTab(0);
+        //ENDTABS//
         
         logger.debug("GriegMain activity created");
         
@@ -68,6 +108,22 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         Model<List<Point>> rightSerie = m.getChild("right", clazz);
         leftChannel.setModel(leftSerie);
         rightChannel.setModel(rightSerie);
+        
+        
+        CompositeModel<?> waveWindows = Models.container();
+        modelRoot.addModel("window", waveWindows);
+        
+        waveWindow = new WaveWindowModel(3000);
+        factory.addListener(waveWindow);
+        waveWindows.addModel("narrow", waveWindow.getModel());
+        Model<List<Point>> castTmp = (Model<List<Point>>) waveWindow.getModel().getChild("left", clazz);
+        narrow.setModel(castTmp);
+        
+        wideWaveWindow = new WaveWindowModel(30000);
+        factory.addListener(wideWaveWindow);
+        waveWindows.addModel("wide", wideWaveWindow.getModel());
+        castTmp = (Model<List<Point>>) wideWaveWindow.getModel().getChild("left", clazz);
+        wide.setModel(castTmp);
 
         
         /*
@@ -78,8 +134,9 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         }*/
         
     }
+    
 
-    private void startProcessing() throws AudioException, IOException {
+	private void startProcessing() throws AudioException, IOException {
         final Processor proc = factory.newFileProcessor(new File(BACH));
         proc.openFile();
         enqueue(new PreAnalysis(proc));
@@ -131,7 +188,9 @@ public class GriegMain extends RoboActivity implements OnClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+    	
+        // Inflate the menu; this adds items to the action bar if it is present
+    	
         getMenuInflater().inflate(R.menu.grieg_main, menu);
         return true;
     }
