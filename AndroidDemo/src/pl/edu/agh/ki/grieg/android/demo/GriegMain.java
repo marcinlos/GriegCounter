@@ -69,7 +69,7 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         tabHost.setup();
 
         TabSpec spec1=tabHost.newTabSpec("Tab 1");
-        spec1.setContent(R.id.LinearLayout1);
+        spec1.setContent(R.id.tab3);
         spec1.setIndicator("Tab 1");
 
         TabSpec spec2=tabHost.newTabSpec("Tab 2");
@@ -79,7 +79,7 @@ public class GriegMain extends RoboActivity implements OnClickListener {
 
         TabSpec spec3=tabHost.newTabSpec("Tab 3");
         spec3.setIndicator("Tab 3");
-        spec3.setContent(R.id.tab3);
+        spec3.setContent(R.id.LinearLayout1);
 
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
