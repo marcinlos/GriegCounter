@@ -69,7 +69,7 @@ public class LineChartView extends View implements Listener<List<Point>> {
     }
 
     public Point toScreen(Point p) {
-    	float y = p.y;
+    	float y = viewHeight- p.y*2;
     	if(!scaleChanged)
     		y = 0.5f * (1 - p.y);
         int screenx = (int) (p.x * viewWidth);
