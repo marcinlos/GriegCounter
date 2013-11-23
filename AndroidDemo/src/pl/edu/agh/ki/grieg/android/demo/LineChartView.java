@@ -40,10 +40,6 @@ public class LineChartView extends View implements Listener<List<Point>> {
         setData(model.getData());
     }
 
-    public void clearData() {
-        setData(null);
-    }
-
     private Paint makePaint() {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(Color.GREEN);
@@ -52,6 +48,7 @@ public class LineChartView extends View implements Listener<List<Point>> {
 
     @Override
     public void onSizeChanged(int w, int h, int ow, int oh) {
+    	super.onSizeChanged(w,h,ow,oh);
         viewWidth = w;
         viewHeight = h;
     }

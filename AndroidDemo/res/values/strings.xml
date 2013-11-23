@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="wave_chart_desc">Wave chart</string>
-    <string name="wide_narrow_desc">Wave chart</string>
+    <string name="wide_narrow_desc">Close-up on wave</string>
 	<string name="pick_file">Pick File</string>
 	<string name="pick_folder">Pick Folder</string>
 

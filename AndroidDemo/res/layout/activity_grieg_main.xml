@@ -91,7 +91,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="100px"
                 android:text="Choose file to open" />
-            
+
             <Button
                 android:id="@+id/open_file"
                 android:layout_width="match_parent"
@@ -100,6 +100,64 @@
                 android:layout_margin="20dp"
                 android:onClick="openFile"
                 android:text="Open File" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab4"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60px" >
+
+            <TextView
+                android:id="@+id/TextView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="POWER" >
+
+                <requestFocus />
+            </TextView>
+
+            <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                android:id="@+id/power_left"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="0.3" />
+
+            <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                android:id="@+id/power_right"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="0.3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60px" >
+
+            <TextView
+                android:id="@+id/TextView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="SPECTRUM" >
+
+                <requestFocus />
+            </TextView>
+
+            <pl.edu.agh.ki.grieg.android.demo.SpectrumView
+                android:id="@+id/spectrum"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="0.3" />
+
         </LinearLayout>
     </FrameLayout>
 

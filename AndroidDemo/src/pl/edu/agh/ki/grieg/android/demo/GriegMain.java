@@ -5,20 +5,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.android.misc.FolderPicker;
+import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioException;
+import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
+import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
+import pl.edu.agh.ki.grieg.processing.model.FeatureExtractionModel;
+import pl.edu.agh.ki.grieg.processing.model.IterateeWrapper;
+import pl.edu.agh.ki.grieg.processing.model.WaveFunctionModel;
 import pl.edu.agh.ki.grieg.processing.model.WaveWindowModel;
+import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Reflection;
+import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.math.Point;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -37,16 +46,25 @@ public class GriegMain extends RoboActivity implements OnClickListener {
     private ProcessorFactory factory;
     
     @InjectView(R.id.leftChannel)
-    private LineChartView leftChannel;
+    private LineChartView waveLeftChannel;
 
     @InjectView(R.id.rightChannel)
-    private LineChartView rightChannel;
+    private LineChartView waveRightChannel;
     
     @InjectView(R.id.narrow_wave)
     private LineChartView narrow;
     
     @InjectView(R.id.wide_wave)
     private LineChartView wide;
+    
+    @InjectView(R.id.power_left)
+    private LineChartView power_left;
+    
+    @InjectView(R.id.power_right)
+    private LineChartView power_right;
+    
+    @InjectView(R.id.spectrum)
+    private SpectrumView spectrum;
     
     WaveWindowModel waveWindow;
     
@@ -76,14 +94,23 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         spec2.setIndicator("Tab 2");
         spec2.setContent(R.id.tab2);
         
-
         TabSpec spec3=tabHost.newTabSpec("Tab 3");
         spec3.setIndicator("Tab 3");
         spec3.setContent(R.id.LinearLayout1);
+        
+        TabSpec spec4=tabHost.newTabSpec("Tab 4");
+        spec4.setIndicator("Tab 4");
+        spec4.setContent(R.id.tab4);
+        
+        TabSpec spec5=tabHost.newTabSpec("Tab 5");
+        spec5.setIndicator("Tab 5");
+        spec5.setContent(R.id.tab5);
 
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
         tabHost.addTab(spec3);
+        tabHost.addTab(spec4);
+        tabHost.addTab(spec5);
         
         tabHost.setCurrentTab(0);
         tabHost.setCurrentTab(1);
@@ -95,35 +122,17 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         
         factory = getGrieg().getFactory();
         
+        
         modelRoot = Models.container();
-        
-        AudioModel model = new AudioModel();
-        factory.addListener(model);
-        
-        Model<?> m = model.getModel();
-        modelRoot.addModel("wave", m);
-        
+        createModels();
         Class<? extends List<Point>> clazz = Reflection.castClass(List.class);
-        Model<List<Point>> leftSerie = m.getChild("left", clazz);
-        Model<List<Point>> rightSerie = m.getChild("right", clazz);
-        leftChannel.setModel(leftSerie);
-        rightChannel.setModel(rightSerie);
-        
-        
-        CompositeModel<?> waveWindows = Models.container();
-        modelRoot.addModel("window", waveWindows);
-        
-        waveWindow = new WaveWindowModel(3000);
-        factory.addListener(waveWindow);
-        waveWindows.addModel("narrow", waveWindow.getModel());
-        Model<List<Point>> castTmp = (Model<List<Point>>) waveWindow.getModel().getChild("left", clazz);
-        narrow.setModel(castTmp);
-        
-        wideWaveWindow = new WaveWindowModel(30000);
-        factory.addListener(wideWaveWindow);
-        waveWindows.addModel("wide", wideWaveWindow.getModel());
-        castTmp = (Model<List<Point>>) wideWaveWindow.getModel().getChild("left", clazz);
-        wide.setModel(castTmp);
+        waveLeftChannel.setModel(modelRoot.getChild("wave.left", clazz));
+        waveRightChannel.setModel(modelRoot.getChild("wave.right", clazz));
+        narrow.setModel(modelRoot.getChild("window.narrow.left", clazz));
+        wide.setModel(modelRoot.getChild("window.wide.left", clazz));
+        power_left.setModel(modelRoot.getChild("power.left", clazz));
+        power_right.setModel(modelRoot.getChild("power.right", clazz));
+        spectrum.setModel(modelRoot.getChild("fft.power", float[].class));
 
         
         /*
@@ -133,6 +142,67 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         	logger.error("Error", e);
         }*/
         
+    }
+    
+    private void createModels(){
+    	AudioModel model = new AudioModel();
+        factory.addListener(model);
+        
+        Model<?> m = model.getModel();
+        modelRoot.addModel("wave", m);
+        
+        
+        CompositeModel<?> waveWindows = Models.container();
+        modelRoot.addModel("window", waveWindows);
+        
+        waveWindow = new WaveWindowModel(3000);
+        factory.addListener(waveWindow);
+        waveWindows.addModel("narrow", waveWindow.getModel());
+        
+        wideWaveWindow = new WaveWindowModel(30000);
+        factory.addListener(wideWaveWindow);
+        waveWindows.addModel("wide", wideWaveWindow.getModel());
+        
+        WaveFunctionModel powerModel = new WaveFunctionModel("power");
+        factory.addListener(powerModel);
+        modelRoot.addModel("power", powerModel.getModel());
+        
+        CompositeModel<?> fftModel = Models.container();
+        modelRoot.addModel("fft", fftModel);
+        
+        IterateeWrapper<float[]> powerSpectrumModel = IterateeWrapper.of(float[].class);
+        connect(powerSpectrumModel, float[].class, "power_spectrum");
+        fftModel.addModel("power", powerSpectrumModel.getModel());
+        
+        
+        
+        CompositeModel<?> preanalysis = Models.container();
+        modelRoot.addModel("preanalysis", preanalysis);
+        
+        final FeatureExtractionModel extractionModel =
+                new FeatureExtractionModel(TimeUnit.MILLISECONDS, 20);
+        preanalysis.addModel("progress", extractionModel.getModel());
+        
+        factory.addListener(new ProcessingAdapter() {
+          
+            @Override
+            public void beforePreAnalysis(ExtractionContext ctx) {
+                ctx.addFeaturesListener(extractionModel);
+                ctx.addProgressListener(extractionModel);
+            }
+        });
+
+    }
+    
+    private <T> void connect(final Iteratee<? super T> it,
+            final Class<T> clazz, final String input) {
+        factory.addListener(new ProcessingAdapter() {
+            @Override
+            public void beforeAnalysis(Pipeline<float[][]> pipeline,
+                    SampleEnumerator source) {
+                pipeline.connect(it, clazz).to(input);
+            }
+        });
     }
     
 
