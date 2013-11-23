@@ -131,7 +131,9 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         narrow.setModel(modelRoot.getChild("window.narrow.left", clazz));
         wide.setModel(modelRoot.getChild("window.wide.left", clazz));
         power_left.setModel(modelRoot.getChild("power.left", clazz));
+        power_left.setZeroToOneScale();
         power_right.setModel(modelRoot.getChild("power.right", clazz));
+        power_right.setZeroToOneScale();
         spectrum.setModel(modelRoot.getChild("fft.power", float[].class));
 
         
