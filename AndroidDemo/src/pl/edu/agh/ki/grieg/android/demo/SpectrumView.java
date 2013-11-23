@@ -91,7 +91,7 @@ public class SpectrumView extends View implements Listener<float[]> {
 
             double y = (bars[i] - min) / (max - min);
             int ypos = (int) ((1 - y) * viewHeight);
-            canvas.drawRect(xpos, ypos, xpos+width-1, viewHeight - ypos-1, paint);
+            canvas.drawRect(xpos, ypos, xpos+width-1, viewHeight, paint);
             //graphics.fillRect(xpos, ypos, width, viewHeight - ypos);
             //The left and right edges of the rectangle are at x and x + width - 1. The top and bottom edges are at y and y + height - 1. 
         }
