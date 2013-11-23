@@ -46,6 +46,7 @@ public class SpectrumView extends View implements Listener<float[]> {
 
 	@Override
 	public void update(float[] data) {
+		this.data = data.clone();
 		postInvalidate();
 	}
 	

@@ -17,6 +17,7 @@ import android.view.View;
 public class LineChartView extends View implements Listener<List<Point>> {
 
     private final Paint paint;
+    private boolean scaleChanged = false;
 
     private List<Point> data;
 
@@ -27,6 +28,10 @@ public class LineChartView extends View implements Listener<List<Point>> {
         super(context, attributes);
         this.paint = makePaint();
         setBackgroundColor(Color.BLACK);
+    }
+    
+    public void setZeroToOneScale(){
+    	scaleChanged = true;
     }
 
     public void setData(List<Point> data) {
@@ -64,7 +69,9 @@ public class LineChartView extends View implements Listener<List<Point>> {
     }
 
     public Point toScreen(Point p) {
-        float y = 0.5f * (1 - p.y);
+    	float y = p.y;
+    	if(!scaleChanged)
+    		y = 0.5f * (1 - p.y);
         int screenx = (int) (p.x * viewWidth);
         int screeny = (int) (y * viewHeight);
         return new Point(screenx, screeny);
