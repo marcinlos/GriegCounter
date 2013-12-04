@@ -8,6 +8,8 @@ import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
 import pl.edu.agh.ki.grieg.util.classpath.DefaultProtocolHandlerProvider;
 import pl.edu.agh.ki.grieg.util.classpath.ProtocolHandlerProvider;
 import pl.edu.agh.ki.grieg.util.classpath.ResourceResolver;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
+import pl.edu.agh.ki.grieg.util.properties.PropertyMap;
 
 /**
  * Subclass of {@link DefaultBootstrap}, uses custom classpath scanner to create
@@ -31,6 +33,16 @@ public class DefaultAndroidBootstrap extends DefaultBootstrap {
         ClasspathScanner scanner = new ClasspathScanner(resolver, handlers);
         FileLoader loader = new FileLoader(scanner);
         setLoader(loader);
+    }
+    
+    @Override
+    protected void prepareConfig() {
+        logger().info("Creating arbitrary configuration");
+        Properties config = new PropertyMap();
+        config.putInt("resolution", 10000);
+        config.putInt("chunk-size", 16384);
+        config.putInt("hop-size", 4410);
+        setProperties(config);
     }
 
 }

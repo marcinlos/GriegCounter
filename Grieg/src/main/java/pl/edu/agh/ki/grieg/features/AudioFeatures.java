@@ -31,6 +31,12 @@ public final class AudioFeatures {
     
     /** Bitrate */
     public static final Key<Integer> BITRATE = make("bitrate", Integer.class);
+    
+    /** Depth */
+    public static final Key<Integer> DEPTH = make("depth", Integer.class);
+    
+    /** Is VBR? */
+    public static final Key<Boolean> VBR = make("vbr", Boolean.class);
 
     /** Author */
     public static final Key<String> AUTHOR = make("author", String.class);
