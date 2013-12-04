@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry kind="lib" path="/Libs/lib/guava-14.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/guava-14.0.1.jar" sourcepath="/home/los/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DecoderUtils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

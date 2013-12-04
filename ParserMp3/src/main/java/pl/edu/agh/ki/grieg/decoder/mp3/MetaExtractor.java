@@ -11,6 +11,7 @@ import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.decoder.util.JAudioTaggerMetaExtractor;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 

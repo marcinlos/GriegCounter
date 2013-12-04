@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Grieg"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Libs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DecoderUtils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

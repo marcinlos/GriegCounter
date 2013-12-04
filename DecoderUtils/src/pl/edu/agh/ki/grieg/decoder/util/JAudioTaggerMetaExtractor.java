@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.decoder.mp3;
+package pl.edu.agh.ki.grieg.decoder.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,13 +50,14 @@ public class JAudioTaggerMetaExtractor {
             String encoding = header.getEncodingType();
             ctx.setFeature("encoding", encoding);
 
-            for (Iterator<TagField> it = tag.getFields(); it.hasNext();) {
-                TagField field = it.next();
-                String key = "jtg_" + field.getId();
-                String value = field.toString();
-                ctx.setFeature(key, value);
+            if (tag != null) {
+                for (Iterator<TagField> it = tag.getFields(); it.hasNext();) {
+                    TagField field = it.next();
+                    String key = "jtg_" + field.getId();
+                    String value = field.toString();
+                    ctx.setFeature(key, value);
+                }
             }
-
         } catch (CannotReadException e) {
             throw new DecodeException(e);
         } catch (IOException e) {
