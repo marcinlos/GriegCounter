@@ -158,31 +158,31 @@ public class ExtractionContext {
         return features;
     }
     
-    public void signalFeature(String name, Object value) {
+    private void signalFeature(String name, Object value) {
         for (FeaturesListener listener : featureListeners) {
             listener.extracted(name, value);
         }
     }
     
-    public void signalStart() {
+    public void beginExtraction() {
         for (ProgressListener listener : progressListeners) {
             listener.started();
         }
     }
     
-    public void signalProgress(float progress) {
+    public void progress(float progress) {
         for (ProgressListener listener : progressListeners) {
             listener.progress(progress);
         }
     }
     
-    public void signalFinish() {
+    public void endExtraction() {
         for (ProgressListener listener : progressListeners) {
             listener.finished();
         }
     }
     
-    public void signalFailure(Exception e) {
+    public void failure(Exception e) {
         for (ProgressListener listener : progressListeners) {
             listener.failed(e);
         }

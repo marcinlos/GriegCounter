@@ -50,6 +50,10 @@ public interface AudioFormatParser {
      * requested features, nor is it constrained to provide only these.
      * 
      * <p>
+     * Implementations should not call explicitly {@code context}'s
+     * {@code signalStart()} and {@code signalFinish()} methods.
+     * 
+     * <p>
      * Two kinds of listeners are associated with the feature extraction
      * process:
      * <ul>

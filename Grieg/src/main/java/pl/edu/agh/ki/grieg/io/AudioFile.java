@@ -7,6 +7,7 @@ import java.io.IOException;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
+import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 import com.google.common.base.Objects;
 
@@ -109,7 +110,26 @@ public class AudioFile {
      */
     public void extractFeatures(ExtractionContext context)
             throws DecodeException, IOException {
+        context.beginExtraction();
         parser.extractFeatures(file, context);
+        context.endExtraction();
+    }
+
+    /**
+     * Attempts to determine features of the audio file that are by default
+     * computed by the audio parser suitable for this file, i.e. does not
+     * specify which features to compute.
+     * 
+     * @return Computed features
+     * @throws DecodeException
+     *             If the data contained in the file cannot be properly decoded
+     * @throws IOException
+     *             If an IO error occurs
+     */
+    public Properties extractFeatures() throws DecodeException, IOException {
+        ExtractionContext context = new ExtractionContext();
+        extractFeatures(context);
+        return context.getFeatures();
     }
 
     @Override

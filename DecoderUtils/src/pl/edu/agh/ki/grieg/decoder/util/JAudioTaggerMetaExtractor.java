@@ -99,7 +99,7 @@ public class JAudioTaggerMetaExtractor {
         ctx.setFeature(AudioFeatures.VBR, vbr);
 
         String encoding = header.getEncodingType();
-        ctx.setFeature("encoding", encoding);
+        ctx.setFeature(AudioFeatures.ENCODING, encoding);
     }
 
     private void extractRest(Tag tag) throws UnsupportedEncodingException {
@@ -125,9 +125,9 @@ public class JAudioTaggerMetaExtractor {
         try {
             new JAudioTaggerMetaExtractor(file, context).run();
         } catch (IOException e) {
-            context.signalFailure(e);
+            context.failure(e);
         } catch (DecodeException e) {
-            context.signalFailure(e);
+            context.failure(e);
         }
     }
 

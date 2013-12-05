@@ -30,18 +30,16 @@ class MetaExtractor {
     }
 
     public void extract() throws DecodeException, IOException {
-        ctx.signalStart();
         try {
             JAudioTaggerMetaExtractor.processSignalExceptions(file, ctx);
             if (ctx.shouldCompute(AudioFeatures.SAMPLES)) {
                 determineLength();
             }
-            ctx.signalFinish();
         } catch (DecodeException e) {
-            ctx.signalFailure(e);
+            ctx.failure(e);
             throw e;
         } catch (IOException e) {
-            ctx.signalFailure(e);
+            ctx.failure(e);
             throw e;
         }
     }
@@ -71,7 +69,7 @@ class MetaExtractor {
                 first = false;
                 reader.closeFrame();
                 long read = stream.getCount();
-                ctx.signalProgress((float) read / fileLength);
+                ctx.progress((float) read / fileLength);
             }
             ctx.setFeature(AudioFeatures.SAMPLES, count);
         } catch (DecoderException e) {

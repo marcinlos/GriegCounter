@@ -32,6 +32,9 @@ public final class AudioFeatures {
     /** Bitrate */
     public static final Key<Integer> BITRATE = make("bitrate", int.class);
     
+    /** Encoding - e.g. mp3 */
+    public static final Key<String> ENCODING = make("encoding", String.class);
+    
     /** Depth */
     public static final Key<Integer> DEPTH = make("depth", int.class);
     
