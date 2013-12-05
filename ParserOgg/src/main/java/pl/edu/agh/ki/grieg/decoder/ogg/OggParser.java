@@ -26,7 +26,7 @@ public class OggParser extends AbstractAudioFormatParser {
     public void extractFeatures(File file, ExtractionContext context)
             throws IOException, DecodeException {
         try {
-            JAudioTaggerMetaExtractor.process(file, context);
+            JAudioTaggerMetaExtractor.processSignalExceptions(file, context);
             VorbisFile vorbis = new VorbisFile(file.getPath());
             
             int n = 0;

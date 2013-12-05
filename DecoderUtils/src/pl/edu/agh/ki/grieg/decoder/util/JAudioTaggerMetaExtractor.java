@@ -117,6 +117,18 @@ public class JAudioTaggerMetaExtractor {
     public static void process(File file, ExtractionContext context)
             throws DecodeException, IOException {
         new JAudioTaggerMetaExtractor(file, context).run();
+
+    }
+
+    public static void processSignalExceptions(File file,
+            ExtractionContext context) {
+        try {
+            new JAudioTaggerMetaExtractor(file, context).run();
+        } catch (IOException e) {
+            context.signalFailure(e);
+        } catch (DecodeException e) {
+            context.signalFailure(e);
+        }
     }
 
 }

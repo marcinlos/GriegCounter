@@ -32,7 +32,7 @@ class MetaExtractor {
     public void extract() throws DecodeException, IOException {
         ctx.signalStart();
         try {
-            JAudioTaggerMetaExtractor.process(file, ctx);
+            JAudioTaggerMetaExtractor.processSignalExceptions(file, ctx);
             if (ctx.shouldCompute(AudioFeatures.SAMPLES)) {
                 determineLength();
             }

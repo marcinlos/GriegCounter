@@ -19,6 +19,8 @@ import pl.edu.agh.ki.grieg.decoder.discovery.ParserLoader;
 import pl.edu.agh.ki.grieg.decoder.spi.AudioFormatParser;
 import pl.edu.agh.ki.grieg.util.classpath.ClasspathScanner;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
@@ -221,7 +223,7 @@ public class FileLoader {
         try {
             stream = new FileInputStream(file);
             final FileChannel channel = stream.getChannel();
-            for (AudioFormatParser parser : decoders.getByExtension(file)) {
+            for (AudioFormatParser parser : parsersToTry(file)) {
                 if (parser.readable(stream)) {
                     return parser;
                 } else {
@@ -234,6 +236,22 @@ public class FileLoader {
         } finally {
             Closeables.close(stream, true);
         }
+    }
+
+    /**
+     * Creates a sequence of audio decoders to try for a specified file, based
+     * on the file extension - first, parsers that match the specified
+     * extension (if any), then all the remaining parsers in arbitrary order.
+     * 
+     * @param file
+     *            File to construct decoder sequence for
+     * @return {@link Iterable} of decoders
+     */
+    private Iterable<AudioFormatParser> parsersToTry(File file) {
+        Set<AudioFormatParser> matching = decoders.getByExtension(file);
+        Set<AudioFormatParser> all = Sets.newHashSet(decoders.getAllDecoders());
+        all.removeAll(matching);
+        return Iterables.concat(matching, all);
     }
 
     /**

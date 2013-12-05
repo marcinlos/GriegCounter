@@ -45,7 +45,7 @@ public class WavFileParser extends AbstractAudioFormatParser {
     @Override
     public void extractFeatures(File file, ExtractionContext context)
             throws IOException, DecodeException {
-        JAudioTaggerMetaExtractor.process(file, context);
+        JAudioTaggerMetaExtractor.processSignalExceptions(file, context);
         AudioDetails details = getDetails(file);
         context.setFeature(AudioFeatures.SAMPLES, details.getSampleCount());
         context.setFeature(AudioFeatures.DURATION, details.getLength());

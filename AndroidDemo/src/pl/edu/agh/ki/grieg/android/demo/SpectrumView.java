@@ -1,13 +1,9 @@
 package pl.edu.agh.ki.grieg.android.demo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.SpectrumBinsCalculator;
-import pl.edu.agh.ki.grieg.util.math.Point;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
