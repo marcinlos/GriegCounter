@@ -5,5 +5,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Grieg"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaudiotagger-2.2.0-20130321.142353-1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GriegCore"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Libs"/>
+	<classpathentry kind="lib" path="/Libs/lib/guava-14.0.1.jar" sourcepath="/home/los/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

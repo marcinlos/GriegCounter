@@ -60,15 +60,4 @@ public class PCM {
         return s / MAX_32;
     }
 
-    /**
-     * Converts a float sample to 16-bit signed one.
-     * 
-     * @param a
-     *            Float representing a sample
-     * @return 16-bit signed integer representing the same sample
-     */
-    public static final short toSignedShort(float a) {
-        return (short) (a * Short.MAX_VALUE);
-    }
-
 }

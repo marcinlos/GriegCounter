@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.decoder.util.JAudioTaggerMetaExtractor;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 
@@ -44,6 +45,7 @@ public class WavFileParser extends AbstractAudioFormatParser {
     @Override
     public void extractFeatures(File file, ExtractionContext context)
             throws IOException, DecodeException {
+        JAudioTaggerMetaExtractor.process(file, context);
         AudioDetails details = getDetails(file);
         context.setFeature(AudioFeatures.SAMPLES, details.getSampleCount());
         context.setFeature(AudioFeatures.DURATION, details.getLength());

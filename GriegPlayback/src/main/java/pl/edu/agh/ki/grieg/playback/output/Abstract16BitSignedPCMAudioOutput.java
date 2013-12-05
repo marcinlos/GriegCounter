@@ -5,7 +5,6 @@ import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
 import pl.edu.agh.ki.grieg.data.SoundFormat;
-import pl.edu.agh.ki.grieg.decoder.util.PCM;
 
 /**
  * Abstract base class for outputs that perform conversion of input floating
@@ -19,6 +18,17 @@ public abstract class Abstract16BitSignedPCMAudioOutput extends
 
     public Abstract16BitSignedPCMAudioOutput(SoundFormat format) {
         super(format);
+    }
+    
+    /**
+     * Converts a float sample to 16-bit signed one.
+     * 
+     * @param a
+     *            Float representing a sample
+     * @return 16-bit signed integer representing the same sample
+     */
+    private static final short toSignedShort(float a) {
+        return (short) (a * Short.MAX_VALUE);
     }
 
     /**
@@ -39,7 +49,7 @@ public abstract class Abstract16BitSignedPCMAudioOutput extends
                 .order(ByteOrder.BIG_ENDIAN).asShortBuffer();
         for (int i = 0; i < length; ++i) {
             for (int j = 0; j < channels; ++j) {
-                shorts.put(PCM.toSignedShort(data[j][offset + i]));
+                shorts.put(toSignedShort(data[j][offset + i]));
             }
         }
         return buffer;

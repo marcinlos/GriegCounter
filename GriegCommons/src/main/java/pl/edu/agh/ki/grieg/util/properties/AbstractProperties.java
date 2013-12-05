@@ -2,8 +2,11 @@ package pl.edu.agh.ki.grieg.util.properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import pl.edu.agh.ki.grieg.util.Reflection;
 
 /**
  * Abstract implementation of the {@link Properties}, requiring the implementor
@@ -45,7 +48,7 @@ public abstract class AbstractProperties implements Properties {
     @Override
     public <T> T get(String name, Class<T> type) {
         Object o = get(name);
-        return type.cast(o);
+        return Reflection.wrap(type).cast(o);
     }
 
     /**

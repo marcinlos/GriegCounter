@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Grieg"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry kind="lib" path="/Libs/lib/slf4j-api-1.7.5.jar" sourcepath="/Libs/lib/slf4j-api-1.7.5-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DecoderUtils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

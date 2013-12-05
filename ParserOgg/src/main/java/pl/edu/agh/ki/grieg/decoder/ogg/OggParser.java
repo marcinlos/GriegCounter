@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import pl.edu.agh.ki.grieg.decoder.AbstractAudioFormatParser;
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
+import pl.edu.agh.ki.grieg.decoder.util.JAudioTaggerMetaExtractor;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 
@@ -25,6 +26,7 @@ public class OggParser extends AbstractAudioFormatParser {
     public void extractFeatures(File file, ExtractionContext context)
             throws IOException, DecodeException {
         try {
+            JAudioTaggerMetaExtractor.process(file, context);
             VorbisFile vorbis = new VorbisFile(file.getPath());
             
             int n = 0;
