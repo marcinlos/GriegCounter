@@ -13,7 +13,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserWav"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Grieg"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ParserOgg"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DecoderUtils"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DecoderUtils"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
