@@ -120,7 +120,7 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         
         logger.debug("GriegMain activity created");
         
-        factory = getGrieg().getFactory();
+        factory = getGrieg().getFullFactory();
         
         
         modelRoot = Models.container();

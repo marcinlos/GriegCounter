@@ -14,30 +14,45 @@ public class GriegApplication extends Application {
     private static final Logger logger = LoggerFactory
             .getLogger(GriegApplication.class);
     
-    private ProcessorFactory factory;
+    private ProcessorFactory fullFactory;
+    private ProcessorFactory offlineFactory;
 
     @Override
     public void onCreate() {
         super.onCreate();
         logger.info("Initializing the factory");
         try {
-            initFactory();
+            initFullFactory();
+            initSimpleFactory();
         } catch (ConfigException e) {
             logger.error("Failed to initialize the processor factory", e);
         }
     }
     
-    private void initFactory() throws ConfigException {
-        // Bootstrap bootstrap = new XmlClasspathBootstrap("grieg-config.xml");
-        Bootstrap bootstrap = new DefaultAndroidBootstrap();
-        factory = bootstrap.createFactory();
+    private void initSimpleFactory() throws ConfigException {
+    	Bootstrap bootstrap = new SimpleAndroidBootstrap();
+    	offlineFactory = bootstrap.createFactory();
         String[] rozszerzenia = new String[1];
         rozszerzenia[0] = "mp3";
-        factory.getFileLoader().register(new Mp3Parser(), rozszerzenia);
+        offlineFactory.getFileLoader().register(new Mp3Parser(), rozszerzenia);
+		
+	}
+
+	private void initFullFactory() throws ConfigException {
+        // Bootstrap bootstrap = new XmlClasspathBootstrap("grieg-config.xml");
+        Bootstrap bootstrap = new DefaultAndroidBootstrap();
+        fullFactory = bootstrap.createFactory();
+        String[] rozszerzenia = new String[1];
+        rozszerzenia[0] = "mp3";
+        fullFactory.getFileLoader().register(new Mp3Parser(), rozszerzenia);
     }
     
-    public ProcessorFactory getFactory() {
-        return factory;
+    public ProcessorFactory getFullFactory() {
+        return fullFactory;
+    }
+    
+    public ProcessorFactory getOfflineFactory() {
+        return offlineFactory;
     }
     
 }
