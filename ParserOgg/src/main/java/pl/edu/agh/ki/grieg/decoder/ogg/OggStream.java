@@ -19,7 +19,7 @@ import com.jcraft.jorbis.Comment;
 import com.jcraft.jorbis.DspState;
 import com.jcraft.jorbis.Info;
 
-public class OggStream implements AudioStream {
+class OggStream implements AudioStream {
 
     private static final int BUFFER_SIZE = 4096;
 

@@ -29,7 +29,7 @@ public interface AudioStream extends Closeable {
      * @param bffer
      *            Buffer to which the samples shall be written
      * 
-     * @return Number of samples actually read..
+     * @return Number of samples actually read.
      * 
      * @throws AudioException
      *             In case of an error during reading input
