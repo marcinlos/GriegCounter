@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="GriegPlayback" default="create-jar">
+
+  <property name="output.file" value="grieg-playback.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

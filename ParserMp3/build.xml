@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="ParserMp3" default="create-jar">
+
+  <property name="output.file" value="parser-mp3.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

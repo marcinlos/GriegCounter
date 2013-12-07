@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="ParserWav" default="create-jar">
+
+  <property name="output.file" value="parser-wav.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

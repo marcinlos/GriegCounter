@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<project name="commons" basedir="." default="create-jar">
+
+  <property name="classes" value="classes" />
+  <property name="output.dir" value="../build/dist" />
+  
+  <target name="create-output-directory">
+    <mkdir dir="${output.dir}" />
+  </target>
+  
+  <target name="create-classes-directory">
+    <mkdir dir="${classes}" />
+  </target>
+  
+  <path id="classpath">
+    <fileset dir="lib" includes="**/*.jar" erroronmissingdir="false" />
+    <fileset dir="../build/dist" includes="*.jar" />
+    <fileset dir="../Libs/lib" includes="*.jar" />
+  </path>
+  
+  <target name="compile" depends="create-classes-directory">
+    <javac 
+      srcdir="src/main/java" 
+      destdir="${classes}"
+      source="1.6"
+      target="1.6"
+      classpathref="classpath"
+      includeantruntime="false">
+    </javac>
+  </target>
+  
+  <fileset id="classes" dir="${classes}" includes="**/*.class"/>
+  <fileset id="resources" dir="src/main/resources" includes="**/*" 
+    erroronmissingdir="false" />
+  
+  <target name="create-jar" depends="compile,create-output-directory">
+    <jar jarfile="${output.dir}/${output.file}">
+      <fileset refid="classes" />
+      <fileset refid="resources" />
+    </jar>
+  </target>
+  
+  <target name="clean">
+    <delete includeemptydirs="true">
+      <fileset dir="${classes}" includes="**/*"/>
+      <filename name="${output.dir}/${output.file}" />
+    </delete>
+  </target>
+  
+</project>

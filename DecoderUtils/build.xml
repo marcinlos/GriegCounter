@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="DecoderUtils" default="create-jar">
+
+  <property name="output.file" value="decoder-utils.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="Grieg" default="create-jar">
+
+  <property name="output.file" value="grieg.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

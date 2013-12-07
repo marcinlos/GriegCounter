@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<project name="grieg-all" basedir="." default="build-all">
+
+  <filelist id="projects" dir="..">
+    <file name="GriegCommons" />
+    <file name="Grieg" />
+    <file name="GriegPlayback" />
+    <file name="GriegCore" />
+    <file name="DecoderUtils" />
+
+    <file name="ParserWav" />
+    <file name="ParserMp3" />
+    <file name="ParserOgg" />
+
+    <file name="JavaSoundOutput" />
+    <file name="DummyOutput" />
+  </filelist>
+
+  <target name="build-all">
+    <subant>
+      <filelist refid="projects" />
+    </subant>
+  </target>
+  
+  <target name="clean-all">
+    <subant target="clean" antfile="build.xml">
+      <filelist refid="projects" />
+    </subant>
+  </target>
+
+</project>

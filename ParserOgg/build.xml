@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="ParserOgg" default="create-jar">
+
+  <property name="output.file" value="parser-ogg.jar" />
+  <import file="../build/commons.xml" />
+
+</project>

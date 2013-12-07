@@ -1,8 +1,6 @@
 <?xml version="1.0" ?>
 <project name="DummyOutput" default="create-jar">
 
-  <property name="output.dir" value="target" />
-
   <property name="pkg" value="pl.edu.agh.ki.grieg.output.spi" />
   <property name="service" value="${pkg}.OutputFactory" />
 
@@ -10,24 +8,17 @@
   <property name="impl" value="${pkg}.dummy.DummyOutputFactory" />
   <property name="output.file" value="dummy-output-provider.jar" />
 
+  <import file="../build/commons.xml" />
 
-  <target name="create-output-directory">
-    <mkdir dir="${output.dir}" />
-  </target>
-
-  <target name="create-jar" depends="create-output-directory">
-    <jar jarfile="${output.dir}/${output.file}" basedir="bin" includes="**/*.class">
+  <target name="create-jar" depends="compile,create-output-directory">
+    <jar jarfile="${output.dir}/${output.file}">
       <service type="${service}">
         <!-- Sequence of providers -->
         <provider classname="${impl}" />
       </service>
+      <fileset refid="classes" />
+      <fileset refid="resources" />
     </jar>
-  </target>
-
-  <target name="clean">
-    <delete>
-      <fileset dir="${output.dir}" includes="*.jar" />
-    </delete>
   </target>
 
 </project>
