@@ -1,8 +1,16 @@
 <?xml version="1.0" ?>
 <project name="commons" basedir="." default="create-jar">
 
+  <property name="lib" value="lib" />
   <property name="classes" value="classes" />
-  <property name="output.dir" value="../build/dist" />
+  <property name="src" value="src/main/java" />
+  
+  <property name="output.dir" value="target" />
+  <property name="jar.file" value="${output.dir}/${output.file}" />
+  
+  <property name="build.dir" value="../build" />
+  <property name="dist.dir" value="${build.dir}/dist" />
+  <property name="dist.lib" value="${build.dir}/lib" />
   
   <target name="create-output-directory">
     <mkdir dir="${output.dir}" />
@@ -20,7 +28,7 @@
   
   <target name="compile" depends="create-classes-directory">
     <javac 
-      srcdir="src/main/java" 
+      srcdir="${src}" 
       destdir="${classes}"
       source="1.6"
       target="1.6"
@@ -34,16 +42,30 @@
     erroronmissingdir="false" />
   
   <target name="create-jar" depends="compile,create-output-directory">
-    <jar jarfile="${output.dir}/${output.file}">
+    <jar jarfile="${jar.file}">
       <fileset refid="classes" />
       <fileset refid="resources" />
     </jar>
   </target>
   
+  <target name="copy-jar-to-dist" depends="create-jar">
+    <copy todir="${dist.dir}">
+      <fileset dir="${output.dir}" includes="*.jar" />
+    </copy>
+  </target>
+  
+  <target name="copy-libs-to-dist">
+    <copy todir="${dist.lib}">
+      <fileset dir="${lib}" includes="*.jar" erroronmissingdir="false" />
+    </copy>
+  </target>
+  
+  <target name="copy-all-to-dist" depends="copy-jar-to-dist,copy-libs-to-dist" />
+  
   <target name="clean">
     <delete includeemptydirs="true">
-      <fileset dir="${classes}" includes="**/*"/>
-      <filename name="${output.dir}/${output.file}" />
+      <fileset dir="." includes="${classes}/" />
+      <fileset dir="." includes="${output.dir}/" />
     </delete>
   </target>
   

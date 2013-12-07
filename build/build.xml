@@ -16,13 +16,23 @@
     <file name="DummyOutput" />
   </filelist>
 
-  <target name="build-all">
-    <subant>
+  <target name="build-all" depends="copy-libs">
+    <subant target="copy-all-to-dist">
       <filelist refid="projects" />
     </subant>
   </target>
   
+  <target name="copy-libs">
+    <copy todir="lib">
+      <fileset dir="../Libs/lib" includes="*.jar" />
+    </copy>
+  </target>
+  
   <target name="clean-all">
+    <delete>
+      <fileset dir="dist" includes="*" />
+      <fileset dir="lib" includes="*" />
+    </delete>  
     <subant target="clean" antfile="build.xml">
       <filelist refid="projects" />
     </subant>
