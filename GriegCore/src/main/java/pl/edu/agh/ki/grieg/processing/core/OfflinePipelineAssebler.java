@@ -1,17 +1,11 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import pl.edu.agh.ki.grieg.analysis.ChannelMultiplexer;
-import pl.edu.agh.ki.grieg.analysis.FFT;
-import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
-import pl.edu.agh.ki.grieg.analysis.PowerSpectrum;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
 import pl.edu.agh.ki.grieg.analysis.Skipper;
-import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
-import pl.edu.agh.ki.grieg.util.math.Range;
 import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
@@ -45,8 +39,6 @@ public class OfflinePipelineAssebler implements PipelineAssembler {
         int channels = format.getChannels();
 
         int resolution = config.getInt("resolution", DEFAULT_RESOLUTION);
-        int chunkSize = config.getInt("chunk-size", DEFAULT_CHUNK_SIZE);
-        int hopSize = config.getInt("hop-size", DEFAULT_HOP_SIZE);
         
         int packetSize = Math.max((int) (length / resolution), 1);
         

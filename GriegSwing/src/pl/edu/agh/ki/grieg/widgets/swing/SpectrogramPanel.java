@@ -24,7 +24,7 @@ public class SpectrogramPanel extends JPanel implements Listener<float[]> {
     private double min = -10;
     private double max = 60;
 
-    private final double minFrequency = 20;
+//    private final double minFrequency = 20;
     private double samplingFrequency = 44100;
 
     private int column = 0;
@@ -57,9 +57,9 @@ public class SpectrogramPanel extends JPanel implements Listener<float[]> {
         this.samplingFrequency = frequency;
     }
 
-    private double logFreq(double frequency) {
-        return Math.log10(frequency / minFrequency);
-    }
+//    private double logFreq(double frequency) {
+//        return Math.log10(frequency / minFrequency);
+//    }
 
     private double dB(double a) {
         return 10 * Math.log10(a);

@@ -24,7 +24,8 @@ public interface AudioStream extends Closeable {
      * 0 &lt;= samplesRead &lt;= bufSize
      * </pre>
      * 
-     * where {@code bufSize} is {@code buffer[0].length}
+     * where {@code bufSize} is {@code buffer[0].length}. Returned 0 means there
+     * is no more data in the stream.
      * 
      * @param bffer
      *            Buffer to which the samples shall be written
