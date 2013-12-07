@@ -9,10 +9,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegPlayback"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegCommons"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Libs"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/Libs/testlibs/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="/Libs/testlibs/javassist.jar"/>
 	<classpathentry kind="lib" path="/Libs/testlibs/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="lib" path="/Libs/testlibs/powermock-mockito-1.5.1-full.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

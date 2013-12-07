@@ -9,11 +9,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegPlayback"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GriegSwing"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JavaSoundOutput"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="cpsuite-1.2.6.jar"/>
+	<classpathentry kind="lib" path="/Libs/testlibs/hamcrest-all-1.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserMp3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserWav"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AndroidDemo"/>
-	<classpathentry kind="lib" path="/Libs/testlibs/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
