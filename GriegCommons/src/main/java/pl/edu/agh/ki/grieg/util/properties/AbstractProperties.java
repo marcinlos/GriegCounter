@@ -57,7 +57,8 @@ public abstract class AbstractProperties implements Properties {
     @Override
     public <T> T tryGet(String name, Class<T> type) {
         Object o = get(name);
-        return type.isInstance(o) ? type.cast(o) : null;
+        Class<T> wrapped = Reflection.wrap(type);
+        return wrapped.isInstance(o) ? wrapped.cast(o) : null;
     }
 
     /**
@@ -266,7 +267,8 @@ public abstract class AbstractProperties implements Properties {
     @Override
     public <T> boolean contains(Key<T> key) {
         Object o = get(key.getName());
-        return key.getType().isInstance(o);
+        Class<T> type = Reflection.wrap(key.getType());
+        return type.isInstance(o);
     }
 
     /**

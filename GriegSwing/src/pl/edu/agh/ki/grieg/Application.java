@@ -118,8 +118,13 @@ public class Application implements Controller{
                 try {
                     player.prepare(source);
                 } catch (PlaybackException e) {
-                    e.printStackTrace();
+                    logger.error("Error during playback", e);
                 }
+            }
+
+            @Override
+            public void failed(Throwable e) {
+                logger.error("Error during preanalysis", e);                
             }
         });
     }

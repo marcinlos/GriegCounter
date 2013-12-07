@@ -16,6 +16,8 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.decoder.DecodeException;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
@@ -25,6 +27,9 @@ import pl.edu.agh.ki.grieg.util.converters.ConverterMap;
 import pl.edu.agh.ki.grieg.util.properties.Key;
 
 public class JAudioTaggerMetaExtractor {
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(JAudioTaggerMetaExtractor.class);
 
     private static final ConverterMap converters = ConverterMap.newMap();
 
@@ -79,8 +84,13 @@ public class JAudioTaggerMetaExtractor {
             throws ConversionException {
         if (tag.hasField(field) && !ctx.hasFeature(key)) {
             String strValue = tag.getFirst(field);
-            T value = converters.convert(strValue, key.getType());
-            ctx.setFeature(key, value);
+            try {
+                T value = converters.convert(strValue, key.getType());
+                ctx.setFeature(key, value);
+            } catch (ConversionException e) {
+                logger.warn("Value {} = '{}', but not convertible to {}",
+                        key.getName(), strValue, key.getClass());
+            }
         }
     }
 

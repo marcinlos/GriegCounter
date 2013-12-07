@@ -1,6 +1,5 @@
 package pl.edu.agh.ki.grieg;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.ExecutorService;
@@ -56,10 +55,10 @@ public class Scheduler {
                 proc.preAnalyze();
                 logger.info("Metadata gathered");
             } catch (AudioException e) {
-                errorHandler.equals(e);
+                errorHandler.error(e);
                 logger.error("Error during preliminary analysis", e);
-            } catch (IOException e) {
-                errorHandler.equals(e);
+            } catch (Throwable e) {
+                errorHandler.error(e);
                 logger.error("Error during preliminary analysis", e);
             }
         }
@@ -78,7 +77,8 @@ public class Scheduler {
                 logger.info("Beginning audio analysis");
                 proc.analyze();
                 logger.info("Audio analysis finished");
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                System.out.println(e);
                 errorHandler.error(e);
                 logger.error("Error during the main analysis phase", e);
             }
