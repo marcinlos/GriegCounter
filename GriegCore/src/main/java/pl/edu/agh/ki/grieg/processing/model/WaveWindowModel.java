@@ -3,22 +3,16 @@ package pl.edu.agh.ki.grieg.processing.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
-import pl.edu.agh.ki.grieg.features.ExtractionContext;
-import pl.edu.agh.ki.grieg.io.AudioFile;
-import pl.edu.agh.ki.grieg.io.SampleEnumerator;
 import pl.edu.agh.ki.grieg.model.Model;
-import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
-import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.Reflection;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 import pl.edu.agh.ki.grieg.util.math.Point;
-import pl.edu.agh.ki.grieg.util.properties.Properties;
+
+import com.google.common.collect.Lists;
 
 public class WaveWindowModel extends AbstractChannelModel<List<Point>>
-        implements Iteratee<float[][]>, ProcessingListener {
+        implements Iteratee<float[][]> {
 
     private final LinkedList<Point> leftQueue = Lists.newLinkedList();
     private final LinkedList<Point> rightQueue = Lists.newLinkedList();
@@ -89,32 +83,6 @@ public class WaveWindowModel extends AbstractChannelModel<List<Point>>
     @Override
     public void failed(Throwable e) {
         reset();
-    }
-
-    @Override
-    public void fileOpened(AudioFile file, Properties config) {
-        // empty
-    }
-
-    @Override
-    public void beforePreAnalysis(ExtractionContext ctx) {
-        // empty
-    }
-
-    @Override
-    public void afterPreAnalysis(Properties results) {
-        // empty
-    }
-
-    @Override
-    public void beforeAnalysis(Pipeline<float[][]> pipeline,
-            SampleEnumerator source) {
-        pipeline.connect(this, float[][].class).toRoot();
-    }
-
-    @Override
-    public void afterAnalysis() {
-        // empty
     }
 
 }

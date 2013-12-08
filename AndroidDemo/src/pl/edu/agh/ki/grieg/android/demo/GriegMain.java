@@ -158,11 +158,11 @@ public class GriegMain extends RoboActivity implements OnClickListener {
         modelRoot.addModel("window", waveWindows);
         
         waveWindow = new WaveWindowModel(3000);
-        factory.addListener(waveWindow);
+        connect(waveWindow, float[][].class, "<root>");
         waveWindows.addModel("narrow", waveWindow.getModel());
         
         wideWaveWindow = new WaveWindowModel(30000);
-        factory.addListener(wideWaveWindow);
+        connect(wideWaveWindow, float[][].class, "<root>");
         waveWindows.addModel("wide", wideWaveWindow.getModel());
         
         WaveFunctionModel powerModel = new WaveFunctionModel("power");

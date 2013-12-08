@@ -28,7 +28,7 @@ import pl.edu.agh.ki.grieg.processing.model.WaveWindowModel;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
 import pl.edu.agh.ki.grieg.util.iteratee.Iteratee;
 
-public class Application implements Controller{
+public class Application implements Controller {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,7 +37,7 @@ public class Application implements Controller{
     protected final Scheduler scheduler;
     protected final Player player;
     protected final ProcessorFactory procFactory;
-    
+
     protected final ErrorHandler errorHandler;
 
     {
@@ -45,8 +45,9 @@ public class Application implements Controller{
         modelRoot = Models.container();
     }
 
-    public Application(Bootstrap bootstrap, ErrorHandler errorHandler) throws ConfigException {
-        
+    public Application(Bootstrap bootstrap, ErrorHandler errorHandler)
+            throws ConfigException {
+
         this.errorHandler = errorHandler;
         this.scheduler = new Scheduler(errorHandler);
 
@@ -54,14 +55,14 @@ public class Application implements Controller{
 
         CompositeModel<?> preanalysis = Models.container();
         modelRoot.addModel("preanalysis", preanalysis);
-        
+
         final FeatureExtractionModel extractionModel =
                 new FeatureExtractionModel(TimeUnit.MILLISECONDS, 20);
         preanalysis.addModel("progress", extractionModel.getModel());
 
         CompositeModel<?> waveModel = Models.container();
         modelRoot.addModel("wave", waveModel);
-        
+
         AudioModel model = new AudioModel();
         procFactory.addListener(model);
         waveModel.addModel("amplitude", model.getModel());
@@ -69,34 +70,33 @@ public class Application implements Controller{
         WaveFunctionModel powerModel = new WaveFunctionModel("power");
         procFactory.addListener(powerModel);
         waveModel.addModel("power", powerModel.getModel());
-        
-        
+
         CompositeModel<?> waveWindows = Models.container();
         waveModel.addModel("window", waveWindows);
-        
+
         WaveWindowModel waveWindow = new WaveWindowModel(3000);
-        procFactory.addListener(waveWindow);
+        connect(waveWindow, float[][].class, "<root>");
         waveWindows.addModel("narrow", waveWindow.getModel());
-        
+
         WaveWindowModel wideWaveWindow = new WaveWindowModel(30000);
-        procFactory.addListener(wideWaveWindow);
+        connect(wideWaveWindow, float[][].class, "<root>");
         waveWindows.addModel("wide", wideWaveWindow.getModel());
-        
 
         CompositeModel<?> fftModel = Models.container();
         waveModel.addModel("fft", fftModel);
-        
+
         IterateeWrapper<float[]> fftReal = IterateeWrapper.of(float[].class);
         connect(fftReal, float[].class, "fft_real");
         fftModel.addModel("real", fftReal.getModel());
 
-        IterateeWrapper<float[]> powerSpectrumModel = IterateeWrapper.of(float[].class);
+        IterateeWrapper<float[]> powerSpectrumModel = IterateeWrapper
+                .of(float[].class);
         connect(powerSpectrumModel, float[].class, "power_spectrum");
         fftModel.addModel("power", powerSpectrumModel.getModel());
-        
+
         CompositeModel<?> systemModel = Models.container();
         modelRoot.addModel("sys", systemModel);
-        
+
         CompositeModel<?> loader = Models.container();
         systemModel.addModel("loader", loader);
 
@@ -105,13 +105,13 @@ public class Application implements Controller{
         loader.addModel("extensions", Models.simple(extensions));
 
         procFactory.addListener(new ProcessingAdapter() {
-            
+
             @Override
             public void beforePreAnalysis(ExtractionContext ctx) {
                 ctx.addFeaturesListener(extractionModel);
                 ctx.addProgressListener(extractionModel);
             }
-            
+
             @Override
             public void beforeAnalysis(Pipeline<float[][]> pipeline,
                     SampleEnumerator source) {
@@ -124,7 +124,7 @@ public class Application implements Controller{
 
             @Override
             public void failed(Throwable e) {
-                logger.error("Error during preanalysis", e);                
+                logger.error("Error during preanalysis", e);
             }
         });
     }

@@ -8,12 +8,12 @@ import pl.edu.agh.ki.grieg.util.iteratee.State;
  * 
  * @author los
  */
-public class ChannelMultiplexer extends AbstractEnumeratee<float[][], float[]> {
+public class Multiplexer<T> extends AbstractEnumeratee<T[], T> {
 
     /** Which channel to forward */
     private final int n;
 
-    public ChannelMultiplexer(int n) {
+    public Multiplexer(int n) {
         this.n = n;
     }
 
@@ -21,9 +21,13 @@ public class ChannelMultiplexer extends AbstractEnumeratee<float[][], float[]> {
      * {@inheritDoc}
      */
     @Override
-    public State step(float[][] item) {
+    public State step(T[] item) {
         pushChunk(item[n]);
         return State.Cont;
+    }
+    
+    public static <T> Multiplexer<T> choose(int n) {
+        return new Multiplexer<T>(n);
     }
 
 }

@@ -14,7 +14,7 @@ import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
  * 
  * @author los
  */
-public class FFT extends AbstractEnumeratee<float[][], float[][]> {
+public class FFT extends AbstractEnumeratee<float[], float[][]> {
 
     /** Size of the input data */
     private int size;
@@ -36,8 +36,8 @@ public class FFT extends AbstractEnumeratee<float[][], float[][]> {
      * {@inheritDoc}
      */
     @Override
-    public State step(float[][] item) {
-        float[] data = item[0];
+    public State step(float[] item) {
+        float[] data = item;
 
         if (data.length != size) {
             rebuild(data.length);

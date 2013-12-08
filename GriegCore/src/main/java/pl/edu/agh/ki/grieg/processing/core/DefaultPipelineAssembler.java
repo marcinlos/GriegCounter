@@ -1,6 +1,6 @@
 package pl.edu.agh.ki.grieg.processing.core;
 
-import pl.edu.agh.ki.grieg.analysis.ChannelMultiplexer;
+import pl.edu.agh.ki.grieg.analysis.Multiplexer;
 import pl.edu.agh.ki.grieg.analysis.FFT;
 import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
@@ -79,18 +79,24 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
                 .connect(power, float[][].class, float[].class)
                 .to("segmenter");
         
+        Multiplexer<float[]> hammingLeft = Multiplexer.choose(0);
+        
+        pipeline.as("hamming_left")
+                .connect(hammingLeft, float[][].class, float[].class)
+                .to("hamming");
+        
         FFT fft = new FFT();
         
         pipeline.as("fft")
-                .connect(fft, float[][].class, float[][].class)
-                .to("hamming");
+                .connect(fft, float[].class, float[][].class)
+                .to("hamming_left");
         
-        ChannelMultiplexer fftReal = new ChannelMultiplexer(0);
+        Multiplexer<float[]> fftReal = Multiplexer.choose(0);
         pipeline.as("fft_real")
                 .connect(fftReal, float[][].class, float[].class)
                 .to("fft");
         
-        ChannelMultiplexer fftImag = new ChannelMultiplexer(1);
+        Multiplexer<float[]> fftImag = Multiplexer.choose(1);
         pipeline.as("fft_imag")
                 .connect(fftImag, float[][].class, float[].class)
                 .to("fft");
