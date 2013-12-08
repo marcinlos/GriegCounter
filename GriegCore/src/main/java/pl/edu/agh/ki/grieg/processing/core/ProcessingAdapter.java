@@ -8,7 +8,7 @@ import pl.edu.agh.ki.grieg.util.properties.Properties;
 
 /**
  * Empty implementation of {@link ProcessingListener}, added for convenience of
- * users, who often don'st need all the hooks.
+ * users, who often don't need all the hooks.
  * 
  * @author los
  */
