@@ -4,7 +4,7 @@ import pl.edu.agh.ki.grieg.util.PeriodicTask;
 import pl.edu.agh.ki.grieg.util.iteratee.AbstractEnumeratee;
 import pl.edu.agh.ki.grieg.util.iteratee.State;
 
-public class Skipper extends AbstractEnumeratee<float[][], float[]> {
+public class Sampler extends AbstractEnumeratee<float[][], float[]> {
             
     private float[][] currentData;
     
@@ -12,7 +12,7 @@ public class Skipper extends AbstractEnumeratee<float[][], float[]> {
     
     private final PeriodicTask counter;
 
-    public Skipper(int gapSize) {
+    public Sampler(int gapSize) {
         this.counter = new PeriodicTask(gapSize) {
             @Override
             protected void execute() {

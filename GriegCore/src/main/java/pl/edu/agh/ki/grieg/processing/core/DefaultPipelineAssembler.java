@@ -6,7 +6,7 @@ import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
 import pl.edu.agh.ki.grieg.analysis.PowerSpectrum;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
-import pl.edu.agh.ki.grieg.analysis.Skipper;
+import pl.edu.agh.ki.grieg.analysis.Sampler;
 import pl.edu.agh.ki.grieg.analysis.WaveCompressor;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
@@ -67,7 +67,7 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
                 .connect(hamming, float[][].class, float[][].class)
                 .toRoot();
         
-        Skipper skipper = new Skipper(packetSize);
+        Sampler skipper = new Sampler(packetSize);
         
         pipeline.as("skipper")
                 .connect(skipper, float[][].class, float[].class)

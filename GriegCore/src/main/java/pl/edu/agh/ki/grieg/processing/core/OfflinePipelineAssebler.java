@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.analysis.Power;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
-import pl.edu.agh.ki.grieg.analysis.Skipper;
+import pl.edu.agh.ki.grieg.analysis.Sampler;
 import pl.edu.agh.ki.grieg.data.SoundFormat;
 import pl.edu.agh.ki.grieg.features.AudioFeatures;
 import pl.edu.agh.ki.grieg.processing.pipeline.Pipeline;
@@ -48,7 +48,7 @@ public class OfflinePipelineAssebler implements PipelineAssembler {
                 .connect(segmenter, float[][].class, float[][].class)
                 .toRoot();
         
-        Skipper skipper = new Skipper(packetSize);
+        Sampler skipper = new Sampler(packetSize);
         
         pipeline.as("skipper")
                 .connect(skipper, float[][].class, float[].class)
