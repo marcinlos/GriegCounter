@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.grieg.model.model;
+package pl.edu.agh.ki.grieg.model;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

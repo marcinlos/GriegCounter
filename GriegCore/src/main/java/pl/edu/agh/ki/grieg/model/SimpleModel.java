@@ -12,7 +12,7 @@ import java.util.Map;
  * @param <T>
  *            Type of the underlying data contained by the model
  */
-public class SimpleModel<T> extends AbstractModel<T> {
+public final class SimpleModel<T> extends AbstractModel<T> {
 
     /**
      * Creates a new model for the specified data type.

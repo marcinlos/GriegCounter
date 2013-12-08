@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
  * @param <T>
  *            Type of the underlying data contained by the model
  */
-public class CompositeModel<T> extends AbstractModel<T> {
+public final class CompositeModel<T> extends AbstractModel<T> {
 
     /** Map of child models */
     private final Map<String, Model<?>> models = Maps.newHashMap();

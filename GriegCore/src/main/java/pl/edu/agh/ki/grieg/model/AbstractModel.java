@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
  * @param <T>
  *            Type of the underlying data contained by the model
  */
-public abstract class AbstractModel<T> implements Model<T> {
+abstract class AbstractModel<T> implements Model<T> {
 
     /** Type of the model data */
     private final Class<? extends T> dataType;

@@ -53,10 +53,13 @@ public class Pipeline<T> implements Iteratee<T> {
     private final Map<String, Node> nodes = Maps.newHashMap();
 
     /** Regex describing legal node names */
-    public final String VALID_NAMES = "[a-zA-Z0-9]+([_./-][a-zA-Z0-9]+)*";
+    public static final String VALID_NAMES = "[a-zA-Z0-9]+([_./-][a-zA-Z0-9]+)*";
 
     /** Pattern used for checking potential node names' validity */
-    private final Pattern NAME_PATTERN = Pattern.compile(VALID_NAMES);
+    private static final Pattern NAME_PATTERN = Pattern.compile(VALID_NAMES);
+    
+    /** Name of the root node */
+    public static final String ROOT = "<root>";
 
     /**
      * Creates new {@link Pipeline} object with specified root input type.
@@ -67,7 +70,7 @@ public class Pipeline<T> implements Iteratee<T> {
     public Pipeline(Class<T> input) {
         Enumeratee<T, T> forwarder = Iteratees.forwarder();
         this.root = Nodes.make(forwarder, input, input);
-        nodes.put("<ROOT>", root);
+        nodes.put(ROOT, root);
     }
 
     /**
