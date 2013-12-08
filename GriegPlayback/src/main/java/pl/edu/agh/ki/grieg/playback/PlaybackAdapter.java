@@ -7,7 +7,7 @@ package pl.edu.agh.ki.grieg.playback;
  * 
  * @author los
  */
-public class PlaybackAdapter implements PlaybackListener {
+public abstract class PlaybackAdapter implements PlaybackListener {
 
     /**
      * {@inheritDoc}

@@ -10,7 +10,7 @@ import pl.edu.agh.ki.grieg.util.iteratee.State;
  * 
  * @author los
  */
-public class ProgressNotifier extends AbstractEnumeratee<float[][], Timestamp> {
+class ProgressNotifier extends AbstractEnumeratee<float[][], Timestamp> {
 
     /** Number of samples in a second of audio data */
     private final int sampleRate;
@@ -24,7 +24,7 @@ public class ProgressNotifier extends AbstractEnumeratee<float[][], Timestamp> {
      * @param sampleRate
      *            Number of samples in a second of data
      * @param perSecond
-     *            How often (in 1 minute) are the notifications to be
+     *            How often (in 1 second) are the notifications to be
      *            broadcasted
      */
     public ProgressNotifier(int sampleRate, int perSecond) {
