@@ -17,6 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserWav"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ParserOgg"/>
 	<classpathentry kind="lib" path="lib/miglayout-4.0.jar"/>
-	<classpathentry kind="lib" path="/AntBuild/dist/javasound-output-provider.jar"/>
+	<classpathentry kind="lib" path="/JavaSoundOutput/target/javasound-output-provider.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
