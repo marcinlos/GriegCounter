@@ -1,6 +1,6 @@
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tabHost"
+    android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".DefaultBActivity" >
@@ -8,7 +8,7 @@
     <TabWidget
         android:id="@android:id/tabs"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="60dp" />
 
     <FrameLayout
         android:id="@android:id/tabcontent"
@@ -16,126 +16,191 @@
         android:layout_height="fill_parent" >
 
         <LinearLayout
+            android:id="@+id/tabSpectrum"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60dp" >
+
+            <LinearLayout
+                android:id="@+id/LinearLayout66"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#ffffffff"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/TextView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="SPECTRUM" >
+
+                    <requestFocus />
+                </TextView>
+
+                <pl.edu.agh.ki.grieg.android.demo.SpectrumView
+                    android:id="@+id/spectrum"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabWaveWindow"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60dp" >
+
+            <LinearLayout
+                android:id="@+id/LinearLayout66"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#ffffffff"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/TextView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="@string/wide_narrow_desc" >
+
+                    <requestFocus />
+                </TextView>
+
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/narrow_wave"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
+
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/wide_wave"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/LinearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:paddingTop="60px" >
+            android:paddingTop="60dp" >
 
-            <TextView
-                android:id="@+id/tab1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="@string/wave_chart_desc" >
-
-                <requestFocus />
-            </TextView>
-
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/leftChannel"
+            <LinearLayout
+                android:id="@+id/LinearLayout55"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
+                android:background="#ffffffff"
+                android:orientation="vertical" >
 
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/rightChannel"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
+                <TextView
+                    android:id="@+id/tabWave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="Wave" >
+
+                    <requestFocus />
+                </TextView>
+
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/leftChannel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
+
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/rightChannel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tab2"
+            android:id="@+id/tabPower"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:paddingTop="60px" >
+            android:paddingTop="60dp" >
 
-            <TextView
-                android:id="@+id/TextView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="@string/wide_narrow_desc" >
-
-                <requestFocus />
-            </TextView>
-
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/narrow_wave"
+            <LinearLayout
+                android:id="@+id/LinearLayout66"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
+                android:background="#ffffffff"
+                android:orientation="vertical" >
 
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/wide_wave"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/TextView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="Power" >
 
+                    <requestFocus />
+                </TextView>
 
-        <LinearLayout
-            android:id="@+id/tab4"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:paddingTop="60px" >
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/power_left"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
 
-            <TextView
-                android:id="@+id/TextView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="POWER" >
-
-                <requestFocus />
-            </TextView>
-
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/power_left"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
-
-            <pl.edu.agh.ki.grieg.android.demo.LineChartView
-                android:id="@+id/power_right"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
+                <pl.edu.agh.ki.grieg.android.demo.LineChartView
+                    android:id="@+id/power_right"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.33" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tab5"
+            android:id="@+id/tabMeta"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:paddingTop="60px" >
+            android:paddingTop="60dp" >
 
-            <TextView
-                android:id="@+id/TextView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="SPECTRUM" >
-
-                <requestFocus />
-            </TextView>
-
-            <pl.edu.agh.ki.grieg.android.demo.SpectrumView
-                android:id="@+id/spectrum"
+            <LinearLayout
+                android:id="@+id/LinearLayout66"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="0.3" />
+                android:background="#ffffffff"
+                android:orientation="vertical" >
 
+                <TextView
+                    android:id="@+id/TextView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="Metadata" >
+
+                    <requestFocus />
+                </TextView>
+
+                <TextView
+                    android:id="@+id/Metadata"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="default" >
+
+                    <requestFocus />
+                </TextView>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 
