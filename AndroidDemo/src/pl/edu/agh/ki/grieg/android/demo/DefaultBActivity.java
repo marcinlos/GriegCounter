@@ -223,7 +223,7 @@ public class DefaultBActivity extends RoboActivity {
 					
 					@Override
 					public void progress(float percent) {
-						logger.debug(String.valueOf(percent));
+						//logger.debug(String.valueOf(percent));
 						pd.setProgress((int)(percent*100));
 						
 						
@@ -274,6 +274,10 @@ public class DefaultBActivity extends RoboActivity {
 			} catch (Exception e) {
 				logger.error("Error during preliminary analysis", e);
 			}
+			catch(Throwable t){
+				logger.error("zlee");
+				logger.error("zlee", t);
+			}
 		}
 	}
 
@@ -295,6 +299,7 @@ public class DefaultBActivity extends RoboActivity {
 				logger.error("Error during the main analysis phase", e);
 			}
 			catch(Throwable t){
+				logger.error("zlee");
 				logger.error("zlee", t);
 			}
 		}

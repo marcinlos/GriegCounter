@@ -4,6 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.ki.grieg.model.Listener;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.util.math.Point;
@@ -18,11 +21,13 @@ public class LineChartView extends View implements Listener<List<Point>> {
 
     private final Paint paint;
     private boolean scaleChanged = false;
+    private static final Logger logger = LoggerFactory
+			.getLogger(LineChartView.class);
 
     private List<Point> data;
 
     private float viewWidth;
-    private float viewHeight;
+	private float viewHeight;
 
     public LineChartView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -69,7 +74,7 @@ public class LineChartView extends View implements Listener<List<Point>> {
     }
 
     public Point toScreen(Point p) {
-    	float y = viewHeight- p.y*2;
+    	float y = 1-p.y;
     	if(!scaleChanged)
     		y = 0.5f * (1 - p.y);
         int screenx = (int) (p.x * viewWidth);
