@@ -28,6 +28,12 @@ public class LineChartView extends View implements Listener<List<Point>> {
 
     private float viewWidth;
 	private float viewHeight;
+	
+	public LineChartView(Context context){
+		super(context);
+		this.paint = makePaint();
+        setBackgroundColor(Color.BLACK);
+	}
 
     public LineChartView(Context context, AttributeSet attributes) {
         super(context, attributes);

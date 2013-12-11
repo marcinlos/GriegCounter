@@ -26,6 +26,13 @@ public class SpectrumView extends View implements Listener<float[]> {
     
     private double min = -40;
     private double max = 60;
+    
+    public SpectrumView(Context context) {
+		super(context);
+		this.paint = makePaint();
+		setBackgroundColor(Color.BLACK);
+		// TODO Auto-generated constructor stub
+	}
 
 	public SpectrumView(Context context, AttributeSet attrs) {
 		super(context, attrs);

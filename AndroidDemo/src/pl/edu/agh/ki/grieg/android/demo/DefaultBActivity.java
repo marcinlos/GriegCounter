@@ -1,10 +1,8 @@
 package pl.edu.agh.ki.grieg.android.demo;
 
-import java.awt.TextField;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.ki.grieg.android.misc.Dictionary;
-import pl.edu.agh.ki.grieg.android.misc.FolderPicker;
 import pl.edu.agh.ki.grieg.features.ExtractionContext;
 import pl.edu.agh.ki.grieg.io.AudioException;
 import pl.edu.agh.ki.grieg.io.SampleEnumerator;
@@ -21,7 +18,6 @@ import pl.edu.agh.ki.grieg.model.CompositeModel;
 import pl.edu.agh.ki.grieg.model.Model;
 import pl.edu.agh.ki.grieg.model.Models;
 import pl.edu.agh.ki.grieg.processing.core.ProcessingAdapter;
-import pl.edu.agh.ki.grieg.processing.core.ProcessingListener;
 import pl.edu.agh.ki.grieg.processing.core.Processor;
 import pl.edu.agh.ki.grieg.processing.core.ProcessorFactory;
 import pl.edu.agh.ki.grieg.processing.model.AudioModel;
@@ -41,8 +37,6 @@ import roboguice.activity.RoboTabActivity;
 import roboguice.inject.InjectView;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -51,7 +45,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class DefaultBActivity extends RoboActivity {
+public class DefaultBActivity extends RoboTabActivity {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(GriegMain.class);
@@ -147,8 +141,9 @@ public class DefaultBActivity extends RoboActivity {
 
 	private void createTabs() {
 
-		tabHost = (TabHost) findViewById(android.R.id.tabhost);
-		tabHost.setup();
+		//tabHost = (TabHost) findViewById(android.R.id.tabhost);
+		//tabHost.setup();
+		tabHost = getTabHost();
 		TabSpec wave = tabHost.newTabSpec("Wave");
 		wave.setContent(R.id.tabWave);
 		wave.setIndicator("Wave");
@@ -175,6 +170,7 @@ public class DefaultBActivity extends RoboActivity {
 		tabHost.addTab(metadata);
 
 		if (onlyOffline) {
+			logger.error("lol, wtf");
 			tabHost.getTabWidget().getChildTabViewAt(2)
 					.setVisibility(View.GONE);
 			tabHost.getTabWidget().getChildTabViewAt(3)
@@ -194,9 +190,6 @@ public class DefaultBActivity extends RoboActivity {
 	}
 
 	private void createModels() {
-
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				Dictionary.PREFS.getCaption(), Context.MODE_PRIVATE);
 		if (!onlyOffline) {
 			CompositeModel<?> waveWindows = Models.container();
 			modelRoot.addModel("window", waveWindows);
