@@ -1,0 +1,32 @@
+\documentclass[a4paper]{report}
+
+\usepackage{cmap}             % kopiowanie znaków diaktrycznych
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}          % ładne czcionki
+\usepackage{microtype}
+\usepackage[htt]{hyphenat}
+\usepackage{inconsolata}
+\usepackage[pdftex]{graphicx}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{tikz}
+\usetikzlibrary{shadows,calc}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{hyperref}
+ 
+\usepackage{polski}           % słownik do łamania linii
+\usepackage[polish]{babel} 
+
+\include{settings}
+\include{macros}
+
+\begin{document}
+
+\include{title}
+
+\include{user_doc}
+
+
+\end{document}

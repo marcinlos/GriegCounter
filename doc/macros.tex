@@ -1,0 +1,111 @@
+
+% background color of code boxes
+\definecolor{code-bg}{rgb}{0.92,0.92,0.92}
+
+% style of code box
+\mdfdefinestyle{code}{
+  linewidth=0,
+  roundcorner=3pt,
+  backgroundcolor=code-bg,
+  skipabove=10pt,
+  innerleftmargin=5pt,
+  innerbottommargin=5pt,
+  innerrightmargin=5pt,
+  innertopmargin=5pt,
+}
+
+% deep magic required to create environment using minted inside frame
+% better not touch whitespaces, fancyverb seems kinda picky about it
+\makeatletter
+\newenvironment{java}{%
+  \VerbatimEnvironment
+  \minted@resetoptions
+  \setkeys{minted@opt}{%
+    fontsize=\footnotesize,
+  }
+  \begin{mdframed}[style=code]
+  \begin{VerbatimOut}{\jobname.pyg}%
+}
+{%
+  \end{VerbatimOut}
+  \minted@pygmentize{java}
+  \DeleteFile{\jobname.pyg}
+  \end{mdframed}
+}
+
+
+% background color of note/tip etc. boxes
+\definecolor{notebox-bg}{rgb}{0.9,0.9,1}
+
+% style of note/tip etc. boxes
+\mdfdefinestyle{notebox}{
+  shadow=true,
+  shadowsize=5pt,
+  roundcorner=6pt,
+  %linecolor=blue,
+  backgroundcolor=notebox-bg,
+  leftmargin=10pt,
+  rightmargin=10pt,
+  skipabove=10pt,
+  %skipbelow=15pt, % doesn't work
+  innerleftmargin=1.2cm,
+  innerbottommargin=7pt,
+  innerrightmargin=10pt,
+  innertopmargin=7pt,
+  linewidth=0.7pt,
+}
+
+\newcommand{\PutSideIcon}[1]{
+  \path let \p1 = ( $ (O)!0.5!(P) $ ) in   
+    (\the\dimexpr0.5\mdflength{innerleftmargin}\relax,\y1) coordinate (Q);  
+      \node at (Q)
+    {\includegraphics[width=\the\dimexpr0.6\mdflength{innerleftmargin}\relax]{images/icons/#1}};
+}
+
+\newenvironment{notebox}[1]
+{\begin{mdframed}[style=notebox,singleextra=\PutSideIcon{#1},nobreak=true]\begingroup\footnotesize}
+{\endgroup\end{mdframed}}
+
+\newenvironment{long-notebox}[1]
+{\begin{mdframed}[style=notebox,singleextra=\PutSideIcon{#1}]}
+{\end{mdframed}}
+
+\newenvironment{Tip}
+{\begin{notebox}{tip}}
+{\end{notebox}}
+
+\newenvironment{TipLong}
+{\begin{long-notebox}{tip}}
+{\end{long-notebox}}
+
+\newenvironment{Note}
+{\begin{notebox}{note}}
+{\end{notebox}}
+
+\newenvironment{NoteLong}
+{\begin{long-notebox}{note}}
+{\end{long-notebox}}
+
+\newenvironment{Caution}
+{\begin{notebox}{caution}}
+{\end{notebox}}
+
+\newenvironment{CautionLong}
+{\begin{long-notebox}{caution}}
+{\end{long-notebox}}
+
+\newenvironment{Warning}
+{\begin{notebox}{warning}}
+{\end{notebox}}
+
+\newenvironment{WarningLong}
+{\begin{long-notebox}{warning}}
+{\end{long-notebox}}
+
+\newenvironment{Important}
+{\begin{notebox}{important}}
+{\end{notebox}}
+
+\newenvironment{ImportantLong}
+{\begin{long-notebox}{important}}
+{\end{long-notebox}}
