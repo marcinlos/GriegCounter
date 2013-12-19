@@ -2,115 +2,11 @@
 
 \section{Wstęp}
 
-
 \section{Wczytywanie plików audio}
 
-
-\section{Metadane}
-
-\subsection{Sposób reprezentacji}
-
-Metadane unikalnie identyfikowane są przez nazwę, opisującą znaczenie odpowiadających im wartości.
-Wartości z kolei mogą mieć różne typy: zazwyczaj jest to łańcuch znaków, bądź liczba (najczęściej
-całkowita lub stałoprzecinkowa), jednak nie można także wykluczyć innych typów, jak choćby obrazków,
-reprezentujących okładkę albumu, z którego pochodzi utwór. Stąd, kolekcja metadanych stanowi
-heterogeniczną mapę. Aby umożliwić przechowywanie danych różnego typu i zapewnić rozszerzalność, na
-typy wartości metadanych nie nakładane są żadne ograniczenia.
-
-Do przechowywania takiego odwzorowania wystarczyłaby mapa: \texttt{Map<String, Object>}. Takie
-rozwiązanie ma jednak pewne wady:
-
-\begin{itemize}
-
-  \item brak kontroli typów -- jakkolwiek w ogólności zapewnienie statycznie pełnego bezpieczeństwa
-typów dla heterogenicznych kontenerów jest ze zrozumiałych względów niemożliwe, w wielu praktycznych
-zastosowaniach operujemy na skończonym zbiorze kluczy, którym odpowiadają znane typy (np. można
-założyć, że metadana opisująca tytuł utworu jest łańcuchem znaków), co znacząco poprawia sytuację
-
-  \item niewygodny interfejs -- zwracane wartości muszą być rzutowane na odpowiedni typ, nim możliwe
-jest ich użycie.
-
-\end{itemize}
-
-Standardowym rozwiązaniem obydwu tych problemów dla języka Java jest opisany m. in. w
-\textit{Effective Java} (rozdział 29) idiom \emph{typesafe heterogenous container}, tj. technika
-polegająca na używanie informacji o typie jako części klucza. W implementacji frameworku
-wykorzystana została ta idea, z zachowaniem jednak możliwości odwołania się do metadanej bez podania
-jej typu.
-
-Poniższy diagram przedtstawia strukturę klas użytą w rozwiązaniu zastosowanym we frameworku. Kolejno
-opisane są wszystkie występujące na nim elementy.
-
-\IncludeUML{metadata_storage}{Klasy przechowujące metadane}
-
-\subsubsection{Klucz}
-
-Klucz do heterogenicznej mapy przechowującej metadane \textit{(typ, nazwa)} reprezentowana przez
-klasę \texttt{Key}:
-
-\begin{java}
-public final class Key<T> {
-
-    private final Class<T> type;
-    private final String name;
-
-    // ...
-}
-\end{java}
-
-
-Klucze odpowiadające pewnym najczęściej spotykanym i używanym metadanym zdefiniowane zostały jako
-statyczne, niezmienne pola w klasie \texttt{AudioFeatures}:
-
-\begin{java}
-public final class AudioFeatures {
-
-    /** Duration (in seconds) of the audio */
-    public static final Key<Float> DURATION = make("duration", float.class);
-
-    /** Author */
-    public static final Key<String> AUTHOR = make("author", String.class);
-
-    /** Title */
-    public static final Key<String> TITLE = make("title", String.class);
-
-    /** Album */
-    public static final Key<String> ALBUM = make("album", String.class);
-
-    // ...
-}
-\end{java}
-
-\subsubsection{Mapa}
-
-Klasa reprezentujaca samo odwzorowanie (mapę) składa się z kilku fragmentów. Jednym z założeń było
-umożliwienie dostępu do danych zarówno przy użyciu klucza, jak i samej nazwy (ew. z typem). Aby
-ułatwić korzystanie z mapy, stworzone zostały metody pomocnicze do pobierania i ustawiania wartości
-dla typów podstawowywch. Zawarte są one w interfejsie \texttt{PrimitiveMap}. Najważniejsze, główne
-metody umożliwiające dostęp i manipulowanie zawartością mapy znajdują się w interfejsie
-\texttt{Properties}. Zapewniają one możliwość pobrania z mapy wartości na podstawie klucza
-(\texttt{Key}), nazwy i typu metadanej (w postaci odpowiedniego obiektu \texttt{Class}), lub samej
-nazwy, zapis przy użyciu klucza lub nazwy, a także kilka innych, pomocnych metod:
-
-\begin{itemize}
-  \item pobieranie zbioru nazw dostępnych metadanych przez \texttt{keySet()}
-  \item pobieranie par \texttt{(nazwa, wartość)} przez \texttt{entrySet()} 
-  \item konwersja do mapy $nazwa \to wartość$ przez \texttt{asMap()}
-  \item odczytanie ilości dostępnych metadanych przez \texttt{size()}
-  \item sprawdzenie, czy mapa jest pusta przez \texttt{isEmpty()}
-  \item dopisanie do mapy wszystkich par z innej mapy przez \texttt{addAll(Properties)}
-\end{itemize}
-
-Nietrudno zauważyć, że wszystkie te operacje można efektywnie zaimplementować przy pomocy metody
-\texttt{asMap()} i operacji z Javowego interfejsu \texttt{Map} (zakładając, że \texttt{asMap()}
-działa w czasie stałym - np. zwraca mapę używaną wewnętrznie przez konkretną implementację). Stąd,
-kolejno stworzona została abstrakcyjna klasa \texttt{AbstractProperties}, która dostarcza domyślnych
-implementacji wszystkich metod interfejsu \texttt{Properties} prócz \texttt{asMap()}. Konkretną
-implementacją używaną przez framework jest \texttt{PropertyMap}, która rozszerza
-\texttt{AbstractProperties}, i używa wewnętrznie klasy \texttt{HashMap}.
+\input{metadane}
 
 \section{Drzewo przetwarzania}
-
 
 \section{Odtwarzanie}
 
