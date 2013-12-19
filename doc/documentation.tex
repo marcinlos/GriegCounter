@@ -1,20 +1,26 @@
 \documentclass[a4paper]{report}
 
-\usepackage{cmap}             % kopiowanie znaków diaktrycznych
-\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}          % ładne czcionki
-\usepackage{microtype}
 \usepackage[htt]{hyphenat}
-\usepackage{inconsolata}
+%\usepackage{inconsolata}
+\usepackage[scaled=0.8]{beramono}
+
+\usepackage{cmap}             % kopiowanie znaków diaktrycznych
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+
 \usepackage[pdftex]{graphicx}
-\usepackage{color}
+\usepackage{xcolor}
 \usepackage{minted}
+\usepackage[framemethod=TikZ]{mdframed}
 \usepackage{tikz}
 \usetikzlibrary{shadows,calc}
-\usepackage[framemethod=TikZ]{mdframed}
 
-\usepackage{hyperref}
+\usepackage{float}
+\usepackage{newfloat}
+\usepackage[pdftex]{hyperref}
+\usepackage{bookmark}
  
 \usepackage{polski}           % słownik do łamania linii
 \usepackage[polish]{babel} 
@@ -27,6 +33,6 @@
 \include{title}
 
 \include{user_doc}
-
+\include{tech_doc}
 
 \end{document}

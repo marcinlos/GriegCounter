@@ -2,6 +2,8 @@
 % background color of code boxes
 \definecolor{code-bg}{rgb}{0.92,0.92,0.92}
 
+\usemintedstyle{manni}
+
 % style of code box
 \mdfdefinestyle{code}{
   linewidth=0,
@@ -20,9 +22,7 @@
 \newenvironment{java}{%
   \VerbatimEnvironment
   \minted@resetoptions
-  \setkeys{minted@opt}{%
-    fontsize=\footnotesize,
-  }
+  \setkeys{minted@opt}{fontsize=\footnotesize}
   \begin{mdframed}[style=code]
   \begin{VerbatimOut}{\jobname.pyg}%
 }
@@ -32,7 +32,19 @@
   \DeleteFile{\jobname.pyg}
   \end{mdframed}
 }
+\makeatother
 
+% UML float
+\DeclareFloatingEnvironment[name=Diagram]{uml}
+
+\newcommand{\IncludeUML}[2]{%
+  \begin{uml}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{uml/#1}
+    \caption{#2}
+    \label{uml:#1}
+  \end{uml}
+}
 
 % background color of note/tip etc. boxes
 \definecolor{notebox-bg}{rgb}{0.9,0.9,1}
@@ -42,7 +54,6 @@
   shadow=true,
   shadowsize=5pt,
   roundcorner=6pt,
-  %linecolor=blue,
   backgroundcolor=notebox-bg,
   leftmargin=10pt,
   rightmargin=10pt,
