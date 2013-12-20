@@ -42,8 +42,8 @@ Properties
 /+contains(name: String): boolean/
 /+remove(k: Key&lt;T&gt;): T/
 /+remove(name: String): Object/
-/+keySet(): Set&lt;String&gt;/
-/+entrySet(): Set&lt;Entry&lt;String, Object&gt; &gt;/
+/+keySet(): String [*]/
+/+entrySet(): Entry&lt;String, Object&gt; [*]/
 /+asMap(): Map&lt;String, Object&gt;/
 /+size(): int/
 /+isEmpty(): boolean/
@@ -60,8 +60,8 @@ Properties
     </coordinates>
     <panel_attributes>Key&lt;T&gt;
 --
--type: Class&lt;T&gt;
--name: String</panel_attributes>
+type: Class&lt;T&gt;
+name: String</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

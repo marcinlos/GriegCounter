@@ -113,4 +113,161 @@ implementacją używaną przez framework jest \texttt{PropertyMap}, która rozsz
 \texttt{AbstractProperties}, i używa wewnętrznie klasy \texttt{HashMap}.
 
 
+\section{Interfejs użytkownika frameworku}
 
+Z uwagi na szczególne wymagania dotyczące interaktywności frameworku, wynikające z celu jego
+tworzenia, konieczne było zapewnienie maksymalnej ,,przezroczystości'' procesu.  Większość
+metadanych jest odczytywana natychmiast, bez zauważalnego opóźnienia. Są jednak pewne wyjątki --
+pliki mp3 nie zawierają \textit{explicite} zapisanej ilości próbek w utworze, aby ją poznać
+konieczne jest przejście przez cały plik. W przypadku dużych utworów (np. godzinna symfonia) trwa to
+stosunkowo długo, na tyle, że nie można pozwolić sobie na zwyczajne zablokowanie interfejsu do czasu
+zakończenia operacji.
+
+W związku z wymienionymi wyżej problematycznymi dla użytkownika frameworku aspektami, przy
+projektowaniu interfejsu przyjęte zostały następujące wymagania:
+
+\begin{itemize}
+
+  \item użytkownik musi mieć możliwość określenia, które metadane są mu potrzebne, by uniknąć
+kosztownych obliczeń w przypadku, gdy nie są one konieczne
+
+  \item użytkownik musi mieć możliwość otrzymywania na bieżąco informacji o postępach procesu, np. o
+procencie wykonania, a najlepiej także o kolejno obliczanych metadanych (zamiast czekać do końca
+przetwarzania i dopiero wówczas otrzymać wyniki, można przekazywać mu wyniki inkrementalnie)
+
+  \item (\emph{opcjonalnie}) użytkownik powinien mieć możliwość przekazywania parametrów,
+sterujących przebiegiem procesu ekstrakcji metadanych (np. co zrobić, gdy wymagana metadana nie jest
+dostępna)
+
+\end{itemize}
+
+W ostatecznej wersji frameworku wszystkie 3 wymagania są spełnione (jakkolwiek ostatnia możliwość --
+przekazywanie parametrów -- nie została wykorzystana w stworzonych parserach formatów). Poniższy
+diagram pokazuje jego strukturę, oraz najistotniejsze elementy.
+
+\IncludeUML{metadata_interface}{Interfejs pobierania metadanych (pewne operacje
+z \texttt{ExtractionContext} zostały pominięte, dla zwiększenia czytelności)}
+
+
+Metoda, za pomocą której użytkownik frameworku może rozpocząć proces ekstrakcji metadanych znajduje
+się w klasie \texttt{AudioFile}. Wydaje się to sensowne rozwiązanie, jako, że obiekt
+\texttt{AudioFile} dysponuje wszystkimi potrzebnymi informacjami -- zna ścieżkę pliku, oraz ma
+dostęp do parsera, który potrafi go zinterpretować.
+
+Wspomniana jako jedno z wymagań komunikacja z użytkownikiem (notyfikowanie go o stanie i postępach
+procesu) zrealizowana jest przy użyciu wzorca \emph{Observer} -- klient dostarcza implementacji
+interfejsu, na której w odpowiednich momentach wywołane zostaną stosowne metody. Notyfikacje
+podzielone zostały na dwie kategorie, przekładające się w implementacji na dwa interfejsy
+listenerów:
+
+\begin{itemize}
+
+  \item \texttt{ProgressListener}, który otrzymuje wszelkie informacje o stanie ekstrakcji -- rozpoczęciu, zakończeniu, ewentualnych błędach, szacowanym procencie wykonania
+
+  \item \texttt{FeaturesListener}, który otrzymuje informacje o odczytanych metadanych (nazwa i
+wartość)
+
+\end{itemize}
+
+\begin{Note}
+Mimo swojej nazwy, metoda \texttt{failed} może zostać wywołana wielokrotnie -- błąd w trakcie
+odczytu metadanych nie musi implikować natychmiastowego zakończenia całego procesu.
+\end{Note}
+
+
+Najistotniejszą, choć pasywną, jest klasa \texttt{ExtractionContext}, opisująca precyzyjnie proces
+ekstrakcji. Klasa ta posiada dwa zastosowania:
+
+\begin{itemize}
+  \item Umożliwia użytkownikowi konfiguracji odczytu metadanych. Używając jej metod, użytkownik może
+wybrać potrzebne mu metadane, ustawić parametry procesu, zarejestrować swoje listenery, przez które
+otrzymywać będzie informacje na bieżąco. Po udanej ekstrakcji użytkownik może także uzyskać dostęp
+do metadanych bezpośrednio przez obiekt \texttt{ExtractionContext}, bądź też pobrać z niego obiekt
+\texttt{Properties}.
+
+  \item Umożliwia parserom, realizującym sam proces ekstrakcji, komunikowanie użytkownikowi
+istotnych faktów o jej przebiegu, oraz stanowi miejsce do przechowywania odnajdywanych metadanych.
+
+\end{itemize}
+
+Z tego powodu interfejs udostępniany przez \texttt{ExtractionContext} można podzielić dość wyraźnie
+na dwie części: część interesującą użytkownika frameworku, i część interesującą implementatora
+parserów plików audio. Szczegółowa semantyka poszczególnych metod opisana została w ich javadocu,
+w tym dokumencie zostanie zatem pominięta.
+
+
+\section{Odczyt metadanych z pliku}
+
+Jako, że format metadanych jest zależny od rodzaju pliku, ich odczytywanie jest oddelegowane do
+parserów, potrafiących dany typ pliku odczytać. Udało się jednak znaleźć bibliotekę
+(\emph{JAudioTagger} -- \url{http://www.jthink.net/jaudiotagger/}), która potrafi odczytywać
+metadane z szeregu formatów, w tym ze wszystkich wspieranych bazowo przez framework rodzajów plików
+(wav, mp3, ogg) i oferuje dostęp do nich przez jednorodny interfejs. Pozwoliło to znacząco uprościć
+implementację parserów tych rodzajów plików.  Jakkolwiek niektóre wartości (np. całkowita ilość
+próbek wchodzących w skład utworu) są obliczane osobno, większość pracy wykonuje biblioteka
+\emph{JAudioTagger}. Poszczególne parsery używają jej poprzez nakładkę w postaci klasy
+\texttt{JAudioTaggerMetaExtractor}. Oferuje ona prostszy interfejs, oraz tłumaczy pozyskane przez
+\emph{JAudioTagger} metadane na opisany uprzednio wewnętrzny format frameworku.
+
+
+\begin{java}
+public class JAudioTaggerMetaExtractor {
+
+    public JAudioTaggerMetaExtractor(File file, ExtractionContext context) { ... }
+
+    public void run() throws IOException, DecodeException {
+        try {
+            AudioFile audio = AudioFileIO.read(file);
+            AudioHeader header = audio.getAudioHeader();
+            Tag tag = audio.getTag();
+
+            // tlumaczenie metadanych na format frameworku
+        } catch (...) {
+            // tlumaczenie wyjatkow na wyjatki uzywane przez framework
+        }
+    }
+
+    // ...
+
+    public static void process(File file, ExtractionContext context) throws DecodeException, 
+            IOException {
+        new JAudioTaggerMetaExtractor(file, context).run();
+    }
+
+    public static void processSignalExceptions(File file, ExtractionContext context) {
+        try {
+            new JAudioTaggerMetaExtractor(file, context).run();
+        } catch (IOException e) {
+            context.failure(e);
+        } catch (DecodeException e) {
+            context.failure(e);
+        }
+    }
+}
+\end{java}
+
+
+\texttt{JAudioTaggerMetaExtractor} przyjmuje w konstruktorze ścieżkę pliku dźwiękowego, na jakim ma
+operować, oraz obiekt \texttt{ExtractionContext}, zawierający wszelkie parametry i ,,otoczenie''
+obliczeń. Właściwa ekstrakcja metadanych ma miejsce w metodzie \texttt{run()}, gdzie wczytywany i
+interpretowany jest przy użyciu klas biblioteki \emph{JAudioTagger} plik, a zdobyte informacje są
+następnie przyporządkowywane odpowiednim kluczom z \texttt{AudioFeatures}, i przekazywane do
+otrzymanej w konstruktorze instancji \texttt{ExtractionContext}.
+
+Dla zwiększenia czytelności, \texttt{JAudioTaggerMetaExtractor} udostępnia dwie metody statyczne,
+zamykające w jednym wywołaniu utworzenie obiektu i wywołanie metody \texttt{run()}:
+
+\begin{itemize}
+
+  \item \texttt{process} jedynie tworzy obiekt \texttt{JAudioTaggerMetaExtractor} i wywołuje na nim
+metodę \texttt{run}, wypuszczając na zewnątrz wszelkie ewentualne wyjątki
+
+  \item \texttt{processSignalExceptions} robi to, co \texttt{process}, jednak łapie wszystkie
+wyjątki związane z ekstrakcją metadanych, i przekazuje je do metody \texttt{failure} obiektu
+\texttt{ExtractionContext}, na którym operuje. Nie są one propagowane na zewnątrz metody.
+
+\end{itemize}
+
+Różnica ta staje się istotna, gdy wywołanie jest jedynie częścią procesu pozyskiwania metadanych --
+nawet, jeśli \texttt{JAudioTaggerMetaExtractor} zawiedzie, niektóre inne metadane mogą wciąż zostać
+odczytane przez inne mechanizmy. 

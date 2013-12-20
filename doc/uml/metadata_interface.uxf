@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>40</x>
+      <y>310</y>
+      <w>200</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+ProgressListener
+--
+/+started()/
+/+progress(percent: float)/
+/+finished()/
+/+failed(e: Exception)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>40</x>
+      <y>210</y>
+      <w>300</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+FeaturesListener
+--
+/+extracted(name: String, value: Object)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>40</x>
+      <y>40</y>
+      <w>310</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>AudioFile
+--
+parser: AudioFormatParser
+file: File
+--
++openStream(): AudioStream
++openSource(): SampleEnumerator
++extractFeatures(): Properties
++extractFeatures(ctx: ExtractionContext)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>450</x>
+      <y>40</y>
+      <w>320</w>
+      <h>390</h>
+    </coordinates>
+    <panel_attributes>ExtractionContext
+--
+requested: Set&lt;String&gt;
+config: Properties
+--
++requestFeature(keys: Key&lt;?&gt;...)
++isFeatureNeeded(key: Key&lt;?&gt;): boolean
++shouldCompute(key: Key&lt;?&gt;)
++getComputedFeatures(): Set&lt;String&gt;
++getMissingFeatures(): Set&lt;String&gt;
++addProgressListener(l: ProgressListener)
++addFeaturesListener(l: FeaturesListener)
++hasProperty(key: Key&lt;?&gt;): boolean
++getProperty(key: Key&lt;T&gt;): T
++setProperty(key: Key&lt;T&gt;, value: T)
++hasFeature(key: Key&lt;?&gt;): boolean
++getFeature(key: Key&lt;T&gt;): T
++setFeature(key: Key&lt;T&gt;, value: T)
++getFeatures(): Properties
++beginExtraction()
++progress(percent: float)
++endExtraction()
++failure(e: Exception)
+...
+
+
+
+
+
+
+
+
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>80</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>130;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>310</x>
+      <y>210</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-x
+m2=*</panel_attributes>
+    <additional_attributes>140;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>210</x>
+      <y>340</y>
+      <w>260</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>240;30;30;30</additional_attributes>
+  </element>
+</diagram>
