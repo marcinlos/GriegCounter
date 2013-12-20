@@ -37,12 +37,12 @@
 % UML float
 \DeclareFloatingEnvironment[name=Diagram]{uml}
 
-\newcommand{\IncludeUML}[2]{%
+\newcommand{\IncludeUML}[3][0.9\textwidth]{%
   \begin{uml}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{uml/#1}
-    \caption{#2}
-    \label{uml:#1}
+    \includegraphics[width=#1]{uml/#2}
+    \caption{#3}
+    \label{uml:#2}
   \end{uml}
 }
 

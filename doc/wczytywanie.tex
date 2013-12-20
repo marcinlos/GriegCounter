@@ -1,0 +1,154 @@
+
+\section{Moduł wczytywania plików}
+
+Zanim z plikiem dźwiękowym można zrobić cokolwiek innego, niezbędne jest odczytanie jego zawartości.
+By umożliwić wygodne korzystanie z frameworku, konieczne było dostarczanie abstrakcji ukrywających
+niskopoziomowe detale i różnice pomiędzy poszczególnymi sposobami reprezentacji danych (kodowanie),
+oraz formatami plików (fragmentacja, kompresja itd). 
+
+\subsection{Wewnętrzna reprezentacja danych}
+
+W obliczu istnienia różnych sposobów cyfrowej reprezentacji dźwięku, wygodnym było zdecydować się na
+wybór jednego, spójnego kodowania. Jakkolwiek wymaga to konwersji, która wprowadza pewien narzut, a
+także w pewnym sensie uniemożliwia ,,użycie najlepszego formatu dla danej sytuacji'', to podejście
+takie znacząco upraszcza to późniejsze przetwarzanie, pozwalając implementować je dla jednej
+konkretnej reprezentacji.
+
+Istotną kwestią jest, którego formatu użyć. Najszerzej stosowany, i oferowany przez większość
+bibliotek do obsługi konkretnych formatów, jest \emph{PCM} (Pulse-Code Modulation). Stanowi on zapis
+wartości amplitudy fali dźwiękowej, mierzonej dyskretnie w pewnych odstępach czasu. 
+
+Parametrem fizycznym takiego zapisu jest częstotliwość próbkowania, określająca ile razy wartość
+amplitudy jest mierzona w ciągu sekundy. Częstotliwość próbkowania zazwyczaj mieści się w zakresie
+$8\,kHz - 48\,kHz$ (taki zakres obsługuje standard MP3, płyty CD standardowo zawierają dźwięk
+$44.1\,kHz$).  Wynika to w pewnym stopniu z tw. o próbkowaniu (Whittaker, Nyquist, Kotelnikov,
+Shannon), mówiącym w uproszczeniu, że wierne odtworzenie fali do pewnej maksymalnej częstotliwości
+$M$ wymaga próbkowania z częstotliwością co najmniej $2M$. Zakres pasma słyszalnego dla człowieka
+podawany jest najczęściej jako $20-20000\,Hz$, co mniej więcej odpowiada popularnym $44100\,Hz$
+próbkowania. Zachowanie przebiegu sygnału przy zmianie częstotliwości próbkowania jest operacją dość
+kosztowną i inwazyjną, framework operuje zatem na zapisie fali o częstotliwości próbkowania zgodnej
+z wejściową.
+
+Kolejnym aspektem PCM jest reprezentacja wartości próbek. Logicznie, wartości amplitudy są
+znormalizowane do zakresu $[-1, 1]$. Co do jego kodowania, istnieje kilka popularnych rozwiązań:
+
+\begin{itemize}
+  \item 8/16/24/32-bitowe liczby całkowite ze znakiem (wartość znormalizowaną otrzymuje sie poprzez
+podzielenie przez wartość bezwzględną najmniejszej reprezentowalnej liczby całkowitej) -- zapewniają
+prostotę odczytu i jednorodną precyzję na całym zakresie. Zakres jest nieco niesymetryczny, ze
+względu na sposób kodowania (U2)
+
+  \item 8/16/24/32-bitowe liczby całkowite bez znaku (wartość znormalizowaną otrzymuje się poprzez
+dodanie najmniejszej liczby całkowitej reprezentowalnej na danej ilości bitów w kodzie U2, i
+traktowanie otrzymanej w ten sposób wartości jak w przypadku powyższym) -- sposób niemal identyczny
+z powyższym, takie same wady i zalety
+
+  \item 32/64-bitowe liczby zmiennoprzecinkowe -- symetryczny zakres, brak konieczności konwersji,
+nierównomiernie rozłożona dokładność
+
+\end{itemize}
+
+Jako format wewnętrzny frameworku wybrane została ostatnia opcja -- 32-bitowe liczby
+zmiennoprzecinkowe.  Przemawiało za tym kilka względów:
+
+\begin{itemize}
+  \item liczb zmiennoprzecinkowych można użyć bezpośrednio do obliczeń, zatem przeprowadzając
+konwersję już w momencie odczytu można uniknąć przeprowadzania jej wielokrotnie w dalszej części
+przetwarzania przez różne węzły
+
+  \item najpopularniejsze formaty to liczby całkowite, 16/24-bitowe. Mantysa 32-bitowej liczyb
+zmiennoprzecinkowej w standardzie IEEE-754 posiada 23 bity, zatem na przedziale $[0, 1]$ utrata
+dokładności będzie niewielka bądź żadna
+
+  \item w przypadku nietrywialnych formatów dane wejściowe przejść muszą przez kilka warstw operacji
+(dekompresja, odtwarzanie oryginalnego sygnału itd), a co za tym idzie ewentualna korzyść w
+przypadku, gdy format wejścia byłby zgodny z formatem wewnętrznym frameworku byłaby znikoma
+
+\end{itemize}
+
+Dla uproszczenia konwersji, i zmniejszenia prawdopodobieństwa popełnienia błędu (niskopoziomowa
+manipulacja reprezentacją danych jest na nie podatna), stworzona została klasa pomocnicza.
+
+\begin{java}
+public class PCM {
+
+    private static final float MAX_BYTE = Byte.MAX_VALUE;
+    private static final float MAX_SHORT = Short.MAX_VALUE;
+    private static final float MAX_24 = 0x7FFFFF;
+    private static final float MAX_32 = Integer.MAX_VALUE;
+
+    public static float fromU8(int b) {
+        return (b + Byte.MIN_VALUE) / MAX_BYTE;
+    }
+
+    public static float fromS16(int s) {
+        return s / MAX_SHORT;
+    }
+    
+    public static float fromS24(int s) {
+        return s / MAX_24;
+    }
+    
+    public static float fromS32(int s) {
+        return s / MAX_32;
+    }
+
+}
+\end{java}
+
+Wybór konkretnych funkcji podyktowany jest typami konwersji, które okazały się potrzebne podczas
+implementacji parserów. Pozostałe warianty, jakkolwiek prawdopodobnie okazałyby się potrzebne przy
+tworzeniu dalszych parserów, zostały pominięte.
+
+
+\subsection{Realizacja wczytywania}
+
+
+
+
+\subsection{Zaimplementowane parsery}
+
+Framework wspiera bezpośrednio 3 formaty plików: WAV, MP3 i Vorbis.
+
+\subsubsection{Parser WAV}
+
+Parser formatu WAV i kontenera RIFF, w który zazwyczaj jest opakowany, z uwagi na swoją prostotę
+(brak kompresji i innych przekształceń, dane bezpośrednio w formacie PCM) został napisany
+własnoręcznie, przy użyciu niskopoziomowych narzędzi I/O udostępnianych przez Javę. Jedyny problem,
+jaki się pojawił podczas implementacji, to konieczność odczytu typów prymitywnych zapisanych w
+kolejności \textit{little-endian} -- Java oferuje jedynie obsługę \textit{big-endian}. Dla
+uproszczenia kodu i uniknięcia ręcznej (choć prostej) konwersji, użyta została klasa
+\texttt{LittleEndianDataInputStream} z biblioteki Guava, która stanowi adapter na strumień
+wejściowy, analogiczny do \texttt{DataOutputStream} z JDK.
+
+\IncludeUML{parser_wav}{Struktura parsera plików WAV}
+
+Główną klasę parsera stanowi implementacja interfejsu \texttt{AudioStream} -- \texttt{WavStream},
+zawierający logikę odczytu plików WAV. Używa jako klasy pomocniczej parsera plików RIFF
+(\texttt{RiffParser}). RIFF to format kontenera, wewnątrz którego przechowywane mogą być różne
+rodzaje plików multimedialnych. Składa się on z nagłówk głównego (\texttt{RiffHeader}), oraz pewnej
+ilości fragmentów, tzw. \textit{chunków}, z których każdy posiada własny nagłówek
+(\texttt{ChunkHeader}). Wewnątrz jednego z chunków znajduje się nagłówek opisujący samą zawartość
+audio pliku (\texttt{WavHeader}). Po poznaniu dokładnej reprezentacji danych, \texttt{WavStream}
+może odczytać zawartość pliku, wykorzystując do tego odpowiednią implementację wewnętrznego
+interfejsu \texttt{PCMReader}, którego instancje odpowiadają różnym reprezentacjom PCM
+(8/16/24/32-bitowe liczby całkowite)
+
+\IncludeUML[0.5\textwidth]{pcm_reader}
+{Klasy pomocnicze służące do odczytywania kolejnych próbek z pliku WAV}
+
+\IncludeUML{wav_stream_create}
+{Interakcje między klasami podczas tworzenia obiektu \texttt{WavStream}}
+
+
+\subsubsection{Parser MP3}
+
+Parser formatu MP3 został utworzony w oparciu o bibliotekę
+\emph{JLayer} (\url{http://www.javazoom.net/javalayer/javalayer.html}), zaś parser Vorbis (ogg) z
+użyciem biblioteki \emph{JOrbis} (\url{http://www.jcraft.com/jorbis/}).
+
+Biblioteki użyte zostały do odczytu danych audio. Sposób pozyskania metadanych opisany jest w
+\hyperref[sec:metadane_odczyt]{sekcji \ref*{sec:metadane_odczyt}}.
+
+
+

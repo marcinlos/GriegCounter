@@ -1,5 +1,5 @@
 
-\section{Metadane}
+\section{Moduł odczytu metadane}
 
 \emph{Metadane} to ogół informacji o pliku dźwiękowym nie będących samymi danymi audio. W ich skład
 wchodzą dane zawarte w pliku, takie jak np. tytuł utworu, autor, album, rok wykonania, a także
@@ -162,7 +162,8 @@ listenerów:
 
 \begin{itemize}
 
-  \item \texttt{ProgressListener}, który otrzymuje wszelkie informacje o stanie ekstrakcji -- rozpoczęciu, zakończeniu, ewentualnych błędach, szacowanym procencie wykonania
+  \item \texttt{ProgressListener}, który otrzymuje wszelkie informacje o stanie ekstrakcji --
+    rozpoczęciu, zakończeniu, ewentualnych błędach, szacowanym procencie wykonania
 
   \item \texttt{FeaturesListener}, który otrzymuje informacje o odczytanych metadanych (nazwa i
 wartość)
@@ -195,8 +196,12 @@ na dwie części: część interesującą użytkownika frameworku, i część in
 parserów plików audio. Szczegółowa semantyka poszczególnych metod opisana została w ich javadocu,
 w tym dokumencie zostanie zatem pominięta.
 
+\IncludeUML[\textwidth]{metadata_interface_seq}
+{Interakcje między elementami interfejsu modułu odczytu metadanych}
+
 
 \section{Odczyt metadanych z pliku}
+\label{sec:metadane_odczyt}
 
 Jako, że format metadanych jest zależny od rodzaju pliku, ich odczytywanie jest oddelegowane do
 parserów, potrafiących dany typ pliku odczytać. Udało się jednak znaleźć bibliotekę
@@ -271,3 +276,4 @@ wyjątki związane z ekstrakcją metadanych, i przekazuje je do metody \texttt{f
 Różnica ta staje się istotna, gdy wywołanie jest jedynie częścią procesu pozyskiwania metadanych --
 nawet, jeśli \texttt{JAudioTaggerMetaExtractor} zawiedzie, niektóre inne metadane mogą wciąż zostać
 odczytane przez inne mechanizmy. 
+
