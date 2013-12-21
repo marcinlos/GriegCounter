@@ -340,6 +340,82 @@ CLASSPATH-a: katalogi, oraz pliki \code{.jar}.
 \IncludeUML{classpath_scanner_struct}{Struktura podsystemu przeszukiwania CLASSPATH-a}
 
 
+Opisana wcześniej klasa \code{ParserLoader} do odczytania zawartości katalogu z konfiguracją
+wykorzystuje bezpośrednio \code{ClasspathScanner}. Klasa ta udostępnia metodę zwracającą ścieżki
+względem CLASSPATH-a plików zawartych w podanym folderze. Do ich odnalezienia potrzebuje dwóch
+operacji:
+
+\begin{itemize}
+  
+  \item{konwersji ścieżki na CLASSPATH-ie do URL-a} -- dostarcza jej interfejs
+    \code{ResourceResolver}
+
+  \item{odczytania zawartości katalogu wskazywanego przez pozyskany w ten sposób URL} -- dostarcza
+    jej interfejs \code{URLProtocolHandler}
+
+\end{itemize}
+
+
+\code{ResourceResolver} dostarcza mapowania nazwy zasobu (ścieżki na CLASSPATH-ie) na jego fizyczną
+lokalizację (URL). Zazwyczaj wystarczy do tego wywołanie \code{getResource} na odpowiednim obiekcie
+\code{ClassLoader}-a. Metoda ta zachowuje się jednak nieco inaczej na platformie \emph{Android}, w
+związku z czym potrzebne tam było nieco inne podejście do problemu. Stąd dwie implementacje
+interfejsu \code{ResourceResolver} -- standardowa \code{ClassLoaderResolver}, używająca wewnętrznie
+\code{ClassLoader}-a, oraz \code{ApkResourceResolver} -- specjalna, używana na Androidzie.
+
+\code{ClasspathScanner} rozpoczyna od wywołania na używanej implementacji interfejsu
+\code{ResourceResolver} metody \code{getResource}, podając za argument ścieżkę katalogu do
+przeglądnięcia. W wyniku dostaje listę adresów URL. Dokładna ich postać zależy od charakteru
+elementu CLASSPATH-a, z którego pochodzą. W przypadku zwykłego foleru na dysku, część opisująca
+protokół to \code{file:}, zaś \textit{scheme-specific part} to poprzedzona dwoma ukośnikami ścieżka
+katalogu. W przypadku, gdy URL opisuje element wewnątrz pliku \code{jar}, protokół to \code{jar},
+zaś \textit{scheme-specific part} składa się z dwóch części, połączonych wykrzyknikiem: pierwsza to
+URL pliku \code{jar}, natomiast druga to ścieżka wewnątrz archiwum. 
+
+Sytuacje te wymagają nieco innego potraktowania. W przypadku zwykłego katalogu na dysku,
+do wylistowania zawartości użyć można klasy \code{File} i metody \code{listFiles}. W przypadku pliku
+\code{jar} sprawa jest nieco trudniejsza. Można to zrobić np. w taki sposób:
+
+\begin{java}
+URL url = ...; // URL elementu wewnatrz pliku .jar
+JarURLConnection connection = (JarURLConnection) url.openConnection();
+JarFile jar = connection.getJarFile();
+Enumeration<JarEntry> entries = jar.entries();
+
+while (entries.hasMoreElements()) {
+    JarEntry entry = entries.nextElement();
+    String path = entry.getName();
+    // ...
+}
+\end{java}
+
+\subsubsection{Problem z Androidem}
+
+Rozwiązanie opisane w poprzedniej sekcji napotyka pewien problem na platformie \emph{Android}.
+Metoda \code{ClassLoader.getResource} nie zwraca URL-i katalogów, jedynie zwyczajnych plików. Aby
+obejść to ograniczenie, zastosowany został pewien wybieg. Dzięki hierarchiczności URL, do
+skonstruowania interesującego nas adresu katalogu wystarczy odpowiednio długi jego prefiks --
+konkretnie, taki, który zawiera w całości ścieżkę archiwum \code{.apk}, w którym mieści się
+aplikacja i wszystkie jej zasoby. Jeśli więc udałoby się pobrać URL jakiegokolwiek pliku wewnątrz
+tego archiwum, można by na jego podstawie skonstruować URL katalogu, a następnie wylistować jego
+zawartość używając identycznego API, jak w przypadku plikół \code{.jar} (struktura jest taka sama, a
+platforma \emph{Android} udostępnia potrzebne klasy). W tym celu potrzebny jest plik o znanej
+ścieżce, który zawsze istnieje. Można by sztucznie wprowadzić własny, pusty plik, jednak archiwa
+\code{.apk} zawsze zawierają plik \code{classed.dex}, zawierający spakowane klasy, przekształcone do
+wewnętrznego formatu maszyny wirtualnej \emph{Dalvik}, na której działa Android.
+
+Rozwiąznaie to ma jedno istotne ograniczenie. Jako, że w plikach \code{.apk} nie są bezpośrednio
+przechowywane pliki \code{.class}, jak ma to miejsce w przypadku zwykłych plików \code{.jar}, nie da
+się ich znaleźć przy pomocy tego mechanizmu. Wyklucza to np. skanowanie CLASSPATH-a w stylu Springa,
+który filtruje klasy na podstawie np. adnotacji. 
+
+\begin{Note}
+Android udostępnia mechanizmy, które pozwalają na realizację takiej funkcjonalności (pozwalające
+przeszukać wnętrze pliku \code{classes.dex}), jednak nie zostały one zastosowane we frameworku,
+jako, że nie powstała taka potrzeba.  
+\end{Note}
+
+
 \subsection{Zaimplementowane parsery}
 
 Framework wspiera bezpośrednio 3 formaty plików: WAV, MP3 i Vorbis.
