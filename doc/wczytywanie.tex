@@ -103,8 +103,133 @@ tworzeniu dalszych parserów, zostały pominięte.
 
 \subsection{Realizacja wczytywania}
 
+Spójna reprezentacja danych frameworku pozwala na wyższym poziomie abstrać od formatu pliku, jednak
+istnieć musi także warstwa, która sprowadza wczytane fizycznie dane do owej reprezentacji. Różne
+formaty plików audio wymagają różnego, zazwyczaj zupełnie odrębnego kodu dla zapewnienia ich
+obsługi. Kod za to odpowiedzialny stanowi niejako usługę, z punktu widzenia frameworku i
+korzystającego z niego programisty -- moduł (komponent) odpowiedzialny za obsługę pewnego
+konkretnego rodzaju plików jest czarną skrzynką, dostarczającą pewnego podstawowego zestawu prostych
+operacji, które kolejne warstwy wykorzystują do implementacji bardziej złożonej funkcjonalności.
+
+Istnieje wiele formatów plików dźwiękowych, mniej lub bardziej popularnych. Co więcej, kolejne lata
+przynoszą coraz to nowe rozwiązania. Nie sposób zapewnić \textit{a priori} wsparcia dla wszystkich
+formatów. Stąd, pożądaną, choć nie kluczową cechą podsystemu wczytywania danych audio jest jego
+rozszerzalność -- byłoby dobrze, gdyby framework pozwalał w możliwie prosty i nieinwazyjny (w myśl
+zasady Open-Closed -- ,,otwarty na rozszerzenia, zamknięty na modyfikację'') na wzbogacenie go o
+obsługę nowych formatów.
+
+W świetle powyższych rozważań, uzasadnionym wydaje się skonstruowanie systemu wczytywania w taki
+sposób, by moduły odpowiedzialne za obsługę poszczególnych formatów plików były automatycznie,
+dynamicznie odnajdowane wśród dostępnych klas przez framework. Szczegółowo realizację podsystemu
+odpowiedzialnego za odnajdowanie i ładowanie implementacji parserów opisuje
+\hyperref[sec:odnajdywanie_implementacji]{następna sekcja}.
+
+\begin{Note}
+Od wersji 1.6 Java udostępnia taką funkcjonalność w bibliotece standardowej
+(\texttt{ServiceLoader}), jednak z powodów technicznych nie było możliwe jej wykorzystanie -- patrz
+\ref{sec:dlaczego_nie_service_loader}
+\end{Note}
+
+\bigskip
+
+Poniższy diagram przedstawia poglądowo strukturę podsystemu wczytywania plików. Pewne szczegóły (np.
+metody klas z innego podsystemu) są pominięte, by zwiększyć czytelność.
+
+\IncludeUML{parsers_structure}{Struktura podsystemu wczytywania plików}
+
+Głównym interfejsem usługi obsługiwania formatu pliku, przez który reszta frameworku komunikuje się
+z poszczególnymi modułami jej dostarczającymi, jest \texttt{AudioFormatParser}. Zawiera on minimalny
+zestaw metod dających dostęp do wszystkich interesujących dla frameworku aspektów pliku.
+
+\begin{java}
+public interface AudioFormatParser {
+
+    boolean readable(InputStream stream) throws IOException;
+
+    void extractFeatures(File file, ExtractionContext context) throws IOException, DecodeException;
+
+    AudioStream openStream(InputStream stream) throws DecodeException, IOException;
+
+}
+\end{java}
+
+Metoda \texttt{readable} służy do sprawdzania, czy dana implementacja usługi jest w stanie poprawnie
+zinterpretować dany strumień. \texttt{extractFeatures} służy do odczytu metadanych; szczegółowy opis
+systemu odczytu metadanych znajduje się \hyperref[sec:metadane]{w dalszej części dokumentu}. Metoda
+\texttt{openStream} rozpoczyna odczyt właściwej zawartości pliku (danych audio). Zwraca
+implementację interfejsu \texttt{AudioStream}, opisanego poniżej.
+
+\begin{Note}
+Metoda \texttt{readable} może czytać ze strumienia dowolnie dużo danych. Jeśli więc strumień po
+wywołaniu ma być ponownie użyty, należy własnoręcznie zapewnić, że będzie on czytał od początku
+(jeśli to pożądane, rzecz jasna).  
+\end{Note}
+
+Interfejs \texttt{AudioStream} daje bezpośredni dostęp do danych audio, zawartych w pliku. Działa
+strumieniowo -- przetwarza strumień wejściowy, i na jego podstawie generuje strumień audio w
+opisanym wyżej wewnętrznym formacie frameworku.
+
+\begin{java}
+public interface AudioStream extends Closeable {
+
+    int readSamples(float[][] buffer) throws AudioException, IOException;
+
+    SoundFormat getFormat();
+
+}
+\end{java}
+
+Metoda \texttt{readSamples} przyjmuje dostarczony przez użytkownika bufor -- dwuwymiarową tablicę typu
+\texttt{float}, gdzie pierwszy wymiar określa kanał. W wyniku wywołania fragment buforu (lub jego
+całość) zostaje wypełniony danymi odczytanymi z pliku. Jeśli bufor zawiera więcej kanałów, niż ma
+przetwarzany strumień, nadmiarowe tablice nie zostaną w żaden sposób wypełnione. Jeśli zaś mniej,
+zostaną wypełnione, zaś dane z nadmiarowych kanałów zostaną zignorowane. Metoda \texttt{getFormat}
+zwraca informacje o częstotliwości próbkowania i liczbie kanałów, opakowane w obiekt struktury
+\texttt{SoundFormat}.
+
+Punktem wejścia podsystemu wczytywania plików jest klasa \texttt{FileLoader}. Podczas tworzenia jej
+instancji odnajdywane są dostępne implementacje parserów formatów plików, oraz tworzone są obiekty
+udostępnianych przez nie implementacji interfejsu \texttt{AudioFormatParser}. Szczegółowy opis tego
+procesu znajduje się w \hyperref[sec:odnajdywanie_implementacji]{stosownej sekcji}. Przy pomocy
+metody \texttt{loadFile} załadować można podany jako argument plik audio. W rezultacie zwrócony
+zostanie obiekt \texttt{AudioFile}, reprezentujacy plik wraz z pasującym do niego parserem, przy
+pomocy których implementuje szereg metod, służących użytkownikowi frameworku do wykonywania operacji
+na pliku. \texttt{AudioFile} potrafi również tworzyć obiekty \texttt{SampleEnumerator}, które są
+niezbędne przy przetwarzaniu strumieniowym.
+
+\begin{java}
+public class AudioFile {
+
+    private final File file;
+
+    private final AudioFormatParser parser;
+
+    public AudioFile(File file, AudioFormatParser parser) { ... }
+
+    public File getFile() { ... }
+
+    public AudioFormatParser getParser() { ... }
+
+    public AudioStream openStream() throws IOException, DecodeException { ... }
+
+    public SampleEnumerator openSource(int bufferSize) throws IOException, DecodeException { ... }
+
+    public SampleEnumerator openSource() throws DecodeException, IOException { ... }
+
+    public void extractFeatures(ExtractionContext context) throws DecodeException, 
+            IOException { ...}
+
+    public Properties extractFeatures() throws DecodeException, IOException { ... }
+
+}
+\end{java}
 
 
+\subsection{Odnajdywanie implementacji parserów}
+\label{sec:odnajdywanie_implementacji}
+
+\subsubsection{Dlaczego nie \texttt{ServiceLoader}?}
+\label{sec:dlaczego_nie_service_loader}
 
 \subsection{Zaimplementowane parsery}
 
@@ -118,8 +243,8 @@ własnoręcznie, przy użyciu niskopoziomowych narzędzi I/O udostępnianych prz
 jaki się pojawił podczas implementacji, to konieczność odczytu typów prymitywnych zapisanych w
 kolejności \textit{little-endian} -- Java oferuje jedynie obsługę \textit{big-endian}. Dla
 uproszczenia kodu i uniknięcia ręcznej (choć prostej) konwersji, użyta została klasa
-\texttt{LittleEndianDataInputStream} z biblioteki Guava, która stanowi adapter na strumień
-wejściowy, analogiczny do \texttt{DataOutputStream} z JDK.
+\texttt{LittleEndianDataInputStream} z biblioteki \emph{Guava}, która stanowi adapter na strumień
+wejściowy, analogiczny do \texttt{DataInputStream} z JDK.
 
 \IncludeUML{parser_wav}{Struktura parsera plików WAV}
 
@@ -134,18 +259,19 @@ może odczytać zawartość pliku, wykorzystując do tego odpowiednią implement
 interfejsu \texttt{PCMReader}, którego instancje odpowiadają różnym reprezentacjom PCM
 (8/16/24/32-bitowe liczby całkowite)
 
-\IncludeUML[0.5\textwidth]{pcm_reader}
+\IncludeUML{pcm_reader}
 {Klasy pomocnicze służące do odczytywania kolejnych próbek z pliku WAV}
 
 \IncludeUML{wav_stream_create}
 {Interakcje między klasami podczas tworzenia obiektu \texttt{WavStream}}
 
 
-\subsubsection{Parser MP3}
+\subsubsection{Parsery MP3 i OGG}
 
 Parser formatu MP3 został utworzony w oparciu o bibliotekę
 \emph{JLayer} (\url{http://www.javazoom.net/javalayer/javalayer.html}), zaś parser Vorbis (ogg) z
-użyciem biblioteki \emph{JOrbis} (\url{http://www.jcraft.com/jorbis/}).
+użyciem biblioteki \emph{JOrbis} (\url{http://www.jcraft.com/jorbis/}). Z racji użycia bibliotek
+zewnętrznych ich implementacja jest znacząco prostsza, nie jest zatem szczegółowo tu opisana.
 
 Biblioteki użyte zostały do odczytu danych audio. Sposób pozyskania metadanych opisany jest w
 \hyperref[sec:metadane_odczyt]{sekcji \ref*{sec:metadane_odczyt}}.

@@ -39,7 +39,7 @@
     <coordinates>
       <x>340</x>
       <y>140</y>
-      <w>160</w>
+      <w>170</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>_ctx:ExtractionContext_</panel_attributes>
@@ -222,7 +222,7 @@ extractFeatures(ctx)
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>630</x>
+      <x>640</x>
       <y>20</y>
       <w>130</w>
       <h>30</h>
@@ -233,7 +233,7 @@ extractFeatures(ctx)
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>660</x>
+      <x>670</x>
       <y>20</y>
       <w>50</w>
       <h>290</h>
@@ -280,7 +280,7 @@ Extraction
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>680</x>
+      <x>690</x>
       <y>290</y>
       <w>20</w>
       <h>130</h>
@@ -293,13 +293,13 @@ Extraction
     <coordinates>
       <x>510</x>
       <y>240</y>
-      <w>190</w>
+      <w>200</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 extractFeatures
 </panel_attributes>
-    <additional_attributes>170;50;30;50</additional_attributes>
+    <additional_attributes>180;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
@@ -317,13 +317,13 @@ extractFeatures
     <coordinates>
       <x>390</x>
       <y>270</y>
-      <w>310</w>
+      <w>320</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 setFeature(key, val)
 </panel_attributes>
-    <additional_attributes>30;50;290;50</additional_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -387,13 +387,13 @@ extracted(key, val)
     <coordinates>
       <x>390</x>
       <y>330</y>
-      <w>310</w>
+      <w>320</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 progress(p)
 </panel_attributes>
-    <additional_attributes>30;50;290;50</additional_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -594,7 +594,7 @@ started
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>660</x>
+      <x>670</x>
       <y>390</y>
       <w>50</w>
       <h>120</h>

@@ -4,8 +4,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>30</y>
+      <x>20</x>
+      <y>20</y>
       <w>150</w>
       <h>170</h>
     </coordinates>
@@ -24,8 +24,8 @@ PrimitiveMap
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>320</x>
-      <y>30</y>
+      <x>280</x>
+      <y>20</y>
       <w>310</w>
       <h>320</h>
     </coordinates>
@@ -53,8 +53,8 @@ Properties
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>240</y>
+      <x>20</x>
+      <y>230</y>
       <w>140</w>
       <h>70</h>
     </coordinates>
@@ -67,21 +67,21 @@ name: String</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>150</x>
-      <y>60</y>
-      <w>190</w>
+      <x>140</x>
+      <y>50</y>
+      <w>160</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;170;30</additional_attributes>
+    <additional_attributes>30;30;140;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>350</x>
-      <y>400</y>
+      <x>310</x>
+      <y>380</y>
       <w>250</w>
-      <h>60</h>
+      <h>50</h>
     </coordinates>
     <panel_attributes>/AbstractProperties/
 --
@@ -92,21 +92,21 @@ name: String</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>440</x>
-      <y>320</y>
+      <x>400</x>
+      <y>310</y>
       <w>50</w>
-      <h>100</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;80</additional_attributes>
+    <additional_attributes>30;30;30;70</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>300</x>
-      <y>510</y>
+      <x>260</x>
+      <y>470</y>
       <w>350</w>
-      <h>60</h>
+      <h>50</h>
     </coordinates>
     <panel_attributes>PropertyMap
 --
@@ -116,24 +116,24 @@ copyOf(m: Map&lt;String, Object&gt;): PropertyMap</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>440</x>
-      <y>430</y>
+      <x>400</x>
+      <y>400</y>
       <w>50</w>
-      <h>100</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;80</additional_attributes>
+    <additional_attributes>30;30;30;70</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>140</x>
-      <y>220</y>
-      <w>200</w>
+      <x>130</x>
+      <y>210</y>
+      <w>170</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;use&gt;&gt;</panel_attributes>
-    <additional_attributes>30;50;180;50</additional_attributes>
+    <additional_attributes>30;50;150;50</additional_attributes>
   </element>
 </diagram>
