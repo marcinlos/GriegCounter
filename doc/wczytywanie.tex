@@ -231,6 +231,46 @@ public class AudioFile {
 \subsubsection{Dlaczego nie \code{ServiceLoader}?}
 \label{sec:dlaczego_nie_service_loader}
 
+JDK w wersji 1.6 oferuje mechanizm spełniający postawione wymagania -- klasę \code{ServiceLoader},
+która wyszukuje dynamicznie dostępne implementacje interfejsu na podstawie pewnych plików
+konfiguracyjnych, zawierających o nich informacje. Początkowo planowane było wykorzystanie go,
+jednak w praktyce pojawiła się znacząca trudność, wynikająca z natury sposobu kompilacji i
+rozprowadzania aplikacji przeznaczonych na platformę \emph{Android}.
+
+\code{ServiceLoader} usługę reprezentuje jako interfejs, zaś dostawca usługi to implementacja
+interfejsu. Każda implementacja usługi wymaga rejestracji, poprzez umieszczenie w CLASSPATH pod
+ścieżką \code{/META-INF/services} pliku o nazwie odpowiadającej pełnej nazwie kwalifikowanej usługi
+(interfejsu), zawierającego w kolejnych liniach pełne nazwy klas implementujących go. Kluczowe
+znaczenie ma tutaj fakt, że ścieżka względem CLASSPATH nie identyfikuje pliku \emph{unikalnie}.
+CLASSPATH może mieć wiele korzeni -- w szczególności, każdy wchodzący w jego skład plik \code{.jar}
+stanowi odrębny korzeń CLASSPATH-a. Pozwala to na łatwą realizację idealnie addytywnej
+rozszerzalności, nie wymagającej żadnych zmian w konfiguracji, ani tym bardziej w kodzie pozostałej
+części systemu. Implementacje usług mogą być dostarczane w postaci plików \code{.jar}, z których
+każdy posiada własną wersję pliku \code{/META-INF/services/\textit{interfejs}}, zaś
+\code{ServiceLoader} iteruje przez wszystkie znalezione na CLASSPATH-ie zasoby odpowiadające tej
+ścieżce, i odnajduje w ten sposób pliki wewnątrz dołączonych \code{jar}-ów.
+
+\IncludeUML{service_loader}
+{Możliwa architektura rozszerzalnego systemu opartego o \code{ServiceLoader}}
+
+
+Problem stanowi jednak model kompilacji aplikacji na Androida. W skrócie, jednym z kroków wtępnych
+jest ekstrakcja zawartości wszystkich elementów CLASSPATH-a, i przepakowanie ich w jedno archiwum. W
+wyniku powstaje jeden plik \code{.apk} zawierający całą aplikację wraz ze wszystkimi zależnościami
+(poza tymi dostarczanymi bezpośrednio przez środowisko uruchomieniowe Androida), a co za tym idzie
+-- CLASSPATH staje się drzewem, zamiast lasem, jak to miało miejsce w przypadku, gdy składał się z
+wielu odrębnych \code{jar}-ów. Próba dołączenia do aplikacji Androidowej wielu \code{jar}-ów
+zawierających plik z taką samą ścieżką względem korzenia CLASSPATH-a kończy się błędem kompilacji.
+Dla każdej usługi może zatem istnieć tylko jeden plik \code{/META-INF/services/\textit{interfejs}},
+co uniemożliwia zastosowanie mechanizmu \code{ServiceLoader} do stworzenia rozszerzalnego systemu
+usług nie wymagającego konfiguracji ze strony użytkownika.
+
+\begin{Note}
+  Kompromisem byłoby utrzymywanie jednego pliku \code{/META-INF/services/\emph{interfejs}} na
+  aplikację używającą frameworku, i ręczne dopisywanie do niego dostępnych implementacji.
+\end{Note}
+
+
 \subsection{Zaimplementowane parsery}
 
 Framework wspiera bezpośrednio 3 formaty plików: WAV, MP3 i Vorbis.
