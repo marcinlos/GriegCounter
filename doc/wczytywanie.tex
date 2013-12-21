@@ -270,6 +270,75 @@ usług nie wymagającego konfiguracji ze strony użytkownika.
   aplikację używającą frameworku, i ręczne dopisywanie do niego dostępnych implementacji.
 \end{Note}
 
+\bigskip
+
+W obliczu opisanych wyżej problemów, stworzona została podobna infrastruktura, o tej samej
+podstawowej strukturze i zasadzie działania, unikająca jednak problemów wynikających z wykorzystania
+niedostępnej na platformie \emph{Android} cechy CLASSPATH-a. Zamiast umieszczać konfigurację w
+plikach o tej samej ścieżce, czyniąc nazwę interfejsu nazwą pliku, pliki konfiguracyjne danej usługi
+umieszczane są w pewnym konkretnym \emph{katalogu}. Ich nazwy są dowolne, powinny jednak być
+unikalne. Stąd, sensowną wydaje się konwencja \code{\textit{nazwa\_pakietu}.cfg}.
+
+\begin{Note}
+  W przypadku parserów plików audio pliki konfiguracyjne parserów znajdują się w katalogu
+  \code{pl.edu.agh.ki.grieg/parsers/}. Gdyby chcieć dokonać generalizacji mechanizmu na dowolne
+  usługi, nazwa katalogu byłaby budowana na podstawie nazwy usługi.  
+\end{Note}
+
+
+\subsubsection{Pliki konfiguracyjne}
+
+Pliki konfiguracyjne zawierają dowolną ilość wpisów następującej postaci:
+
+\definecolor{kw}{rgb}{0.2, 0.7, 0.2}
+\newcommand{\keyword}[1]{{\color{kw}\code{\textbf{#1}}}}
+\newcommand{\content}[1]{{\code{\textit{<#1>}}}}
+
+\begin{mdframed}[style=code]
+  \keyword{@class:} \content{pełna nazwa klasy} \\
+  \keyword{@extensions:} \content{oddzielone białymi znakami rozszerzenia}
+\end{mdframed}
+
+Np. plik konfiguracyjny parsera plików MP3 wygląda następująco:
+
+\begin{mdframed}[style=code]
+  \keyword{@class:} \code{pl.edu.agh.ki.grieg.decoder.mp3.Mp3Parser} \\
+  \keyword{@extensions:} \code{mp3}
+\end{mdframed}
+
+Na potrzeby ich interpretacji, stworzony został prosty parser, oparty o wyrażenia regularne i klasę
+\code{Scanner} z JDK.
+
+\IncludeUML{parser_loader_struct}{Struktura podsystemu ładowania parserów}
+
+Klasa \code{FileLoader} deleguje zadanie odnalezienia i stworzenia dostępnych parserów do klasy
+\code{ParserLoader}, która udostępnia je poprzez iterator, znajdujący na żądanie kolejną
+implementację i zwracający ją w postaci struktury \code{ParserEntry}, zawierającej obiekt parsera
+oraz informację o rozszerzeniach obsługiwanych przezeń formatów plików. Aby tego dokonać,
+\code{ParserLoader} znajduje, przy użyciu mechanizmów opisanych szczegółowo w
+\hyperref[sec:skaner_classpath]{osobnej podsekcji}, kolejne pliki konfiguracyjne opisujące
+implementacje usługi, po czym parsuje je przy użyciu klasy \code{ProviderFileParser}. W wyniku
+parsowania otrzymuje listę struktur \code{ParserDefinition}, składających się z nazwy klasy
+implementacji i listy obsługiwanych rozszerzeń. Otrzymane w ten sposób parsery \code{FileLoader}
+przechowuje w obiekcie klasy \code{DecoderManager}. \code{DecoderManager} przechowuje parsery w
+multimapie indeksowanej rozszerzeniami pliku -- każdy parser znajduje się w każdym ze zbiorów
+przyporządkowanym obsługiwanym przez niego rozszerzeniom.
+
+\subsubsection{Przeglądanie CLASSPATH-a}
+\label{sec:skaner_classpath}
+
+Rozwiązanie opiera się na przetwarzaniu plików w określonym katalogu na CLASSPATH-ie. Istnieje
+jednak pewien problem -- jakkolwiek biblioteka standardowa Javy pozwala uzyskać dostęp do plików o
+konkretnej ścieżce (poprzez \code{Classloader.getResource}), nie udostępnia sama w sobie
+funkcjonalności przeglądania CLASSPATH-a. Możliwe jest natomiast uzyskanie URL-a konkretnego
+katalogu. Na podstawie protokołu i ścieżki próbować można uzyskać dostęp do wskazywanego przez niego
+zasobu innymi sposobami (np. przez system plików). Rozwiązanie to nie jest idealne; obsługuje
+jedynie niektóre protokoły, w żaden sposób nie współgra też z niestandardowymi classloaderami.
+Stanowi jednak dość skuteczną heurystykę, i obsługuje poprawnie najpopularniejsze elementy
+CLASSPATH-a: katalogi, oraz pliki \code{.jar}.
+
+\IncludeUML{classpath_scanner_struct}{Struktura podsystemu przeszukiwania CLASSPATH-a}
+
 
 \subsection{Zaimplementowane parsery}
 
