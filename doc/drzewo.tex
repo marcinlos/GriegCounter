@@ -1,0 +1,107 @@
+
+\section{Moduł przetwarzania dźwięku}
+
+Podstawowym zadaniem frameworku jest przetwarzanie dźwięku, tj. manipulowanie jego wewnętrzną
+reprezentacją, przeprowadzanie na nim różnych operacji, tworzenie w oparciu o niego innych danych,
+przeprowadzanie obliczeń. Istotnym jest zatem dobranie odpowiedniego modelu przeprowadzania takich
+obliczeń, który pozwoli wygodnie i efektywnie pracować z udostępnianym przez moduł wczytywania
+dźwiękiem.
+
+
+\subsection{Kryteria wyboru sposobu przetwarzania}
+
+W pierwszej kolejności należy zastanowić się, jakie cechy i zachowania są pożądane, oraz jakie
+ograniczenia należy nałożyć na poszukiwane rozwiązanie. Poniższa lista stanowi próbę
+usystematyzowania tych rozważań, i zamknięcia ich rezultatów w klarowne, weryfikowalne punkty.
+
+\begin{itemize}
+
+  \item architektura systemu przetwarzania powinna być modularna -- poszczególne przekształcenia
+    (obliczenia) nie powinny być trwale związane z resztą infrastruktury, idealnie byłyby osobnymi,
+    niezależnymi modułami
+
+  \item przekształcenia powinny być komponowalne -- często skomplikowane przekształcenie wyrazić
+    można jako złożenie kilku prostszych. Spojrzenie takie upraszcza implementację, czyni kod
+    bardziej zrozumiałym, poprawia także reużywalność kodu (zestaw niewielkich, ortogonalnych
+    narzędzi sprawdza się w systemach unixowych oraz w programowaniu funkcyjnym)
+
+  \item powinna istnieć możliwość współdzielenia wyników przekształceń -- przy organizacji opisanej
+    w poprzednim podpunkcie może zdarzyć się sytuacja, że dwa różne przekształcenia będą miały część
+    wspólną, przeprowadzającą takie same obliczenia na tych samych danych. Można wówczas uniknąć
+    nadmiarowych obliczeń.
+
+  \item przetwarzanie powinno być strumieniowe -- zdekompresowane pliki muzyczne są stosunkowo duże,
+    a nawet jeśli przechowywanie ich w całości w pamięci jest możliwe, to zazwyczaj przetwarzane są
+    sekwencyjnie, potrzeba dostępu swobodnego jest rzadka. Przetwarzanie strumieniowe nie umniejsza
+    zatem znacząco możliwości, pozwala zaś obsługiwać pliki dowolnej wielkości w stałej pamięci.
+
+  \item nie powinien przejmować pełnej kontroli nad źródłem -- powinno być możliwe przetwarzanie
+    danych pochodzących np. z mikrofonu w czasie rzeczywistym (bez uprzedniego ich zapisania)
+
+\end{itemize}
+
+
+\subsection{Zastosowane rozwiązanie}
+
+Wybrane rozwiązanie inspirowane jest pracą O. Kiselyova i stworzoną przez niego biblioteką
+\emph{Iteratees}. Stanowią one wynik niezadowolenia z używanego przez bibliotekę standardową języka
+Haskell modelu I/O (,,lazy IO'') i propozycję alternatywnego podejścia do obsługi wejścia\slash
+wyjścia, wolnego od jego wad. Konstrukcja ta, z pewnymi zmianami, wynikającymi w dużej mierze z
+odmienności paradygmatów Haskella i Javy, została użyta we frameworku jako szkielet struktury
+przetwarzania danych audio.
+
+\begin{Note}
+  Nie jest to podejście zupełnie nowe -- biblioteka do przetwarzania dźwięku \emph{Beads}
+  (\url{http://www.beadsproject.net/}) z powodzeniem stosuje podobną konstrukcję, choć trudno
+  zakładać w tym przypadku inspirację pracą Kiselyova.
+\end{Note}
+
+
+Podstawę zastosowanego rozwiązania stanowi struktura drzewiasta, w której moduły odpowiedzialne za
+konkretne przekształcenia strumienia wejściowego danych (nazywane dalej \emph{jednostkami
+przetwarzania}), produkowanego przez moduł wczytywania plików, są liśćmi bądź węzłami wewnętrznymi.
+Każdy z nich jest obiektem implementującym pewien interfejs.  Każda jednostka przetwarzania posiada
+wejście określonego typu, oraz opcjonalnie wyjście -- przyjmuje strumień wejściowy, i w wyniku jego
+przetwarzania mogą produkować własny strumień wyjściowy, który konsumować mogą inne jednostki.
+Źródło danych produkuje strumień, którego fragmenty przekazuje do bezpośrednio dołączoncyh
+jednostek. Te z kolei przekazują obliczone przez siebie wartości jednostką podłączonym do nich itd.
+W ten sposób przetworzone dane propagują się przez całą strukturę. Poniższy diagram pokazuje
+przykładowe drzewo.
+
+
+\IncludeUML{tree_example}
+{Przykładowe drzewo przetwarzania. Strzałki wskazują kierunek przepływu danych}
+
+
+Statycznie, jednostki przetwarzania są od siebie zupełnie niezależne -- powiązania tworzone są
+dopiero dynamicznie, podczas łączenia ich w konkretne drzewo przetwarzania. Dzięki temu zachowana
+jest modularność elementów systemu przetwarzania. Możliwość dowolnego łączenia gwarantuje
+komponowalność -- z prostych, reużywalnych przekształceń można swobodnie tworzyć dowolnie
+skomplikowane ciągi.
+
+Strumień przetwarzany jest inkrementalnie -- nie jest konieczne przechowywanie dużej ilości danych w
+pamięci. Źródło jest w pełni autonomiczne -- jest jedynym elementem aktywnym całej struktury,
+inicjuje wszelkie akcje, jakie w niej zachodzą. Pozostałe elementy drzewa nie są w żaden sposób
+świadome jego istnienia i natury. Dzięki tej niezależności możliwe jest użycie jako źródła dowolnego
+generatora danych, niezależnie od tego, w jaki sposób, w jakich odstępach czasu itd. produkuje dane.
+Może być to prosty generator czytający kolejne fragmenty pliku audio, lub mikrofon, zbierający w
+czasie rzeczywistym dźwięki z otoczenia i przekazujący je do analizy.
+
+\begin{Note}
+  Jakkolwiek system został zaprojektowany z myślą o takiej funkcjonalności, nie została ona
+  ostatecznie zrealizowana.
+\end{Note}
+
+
+\subsection{Implementacja}
+
+
+\subsection{Tworzenie drzewa}
+
+
+\subsection{Współpraca z modułem wczytywania danych}
+
+
+\subsection{Gotowe jednostki przetwarzania}
+
+

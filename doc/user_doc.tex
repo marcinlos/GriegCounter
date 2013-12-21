@@ -604,7 +604,7 @@ pipeline.as("foo").connect(sink, float[][].class).toRoot();
 
 \begin{Note}
 Dokładne wyrażenie regularne opisujące format poprawnych nazw węzłów określa stała
-\code{Pipeline.VALID\_NAMES}, które wynosi \\ \code{[a-zA-Z0-9]\}([\_./-][a-zA-Z0-9])*}
+\code{Pipeline.VALID\_NAMES}, które wynosi \\ \code{[a-zA-Z0-9]([\_./-][a-zA-Z0-9])*}
 \end{Note}
 
 Zbudowane drzewo należy dołączyć do kompatybilnego źródła danych (\code{Enumerator}a). Jako, że
