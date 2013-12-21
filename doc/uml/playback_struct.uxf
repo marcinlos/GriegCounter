@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>600</x>
+      <y>60</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Timestamp
+--
+samples: long
+millis: long</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>550</x>
+      <y>380</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Iteratee&lt;float[][]&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>440</x>
+      <y>450</y>
+      <w>270</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+AudioOutput
+--
+/start()/
+/write(data: float[][])/
+/write(data: float[][], off: int, len: int)/
+/close()/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>590</x>
+      <y>380</y>
+      <w>50</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;70</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>490</y>
+      <w>330</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+OutputFactory
+--
+/newOutput(fmt: SoundFormat): AudioOutput/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>20</x>
+      <y>20</y>
+      <w>280</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Player
+--
+currentPlayback: TrackPlayback
+--
++addListener(l: PlaybackListener)
++removeListener(l: PlaybackListener)
++pause()
++resue()
++stop()
++shutdown()
++shutdown(n: long, unit: TimeUnit)
++play(file: AudioFile)
++play(src: SampleEnumerator)
++prepare(src: SampleEnumerator)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>380</x>
+      <y>20</y>
+      <w>170</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+PlaybackListener
+--
+/started()/
+/paused()/
+/resumed()/
+/stopped()/
+/moved(t: Timestamp)/
+/failed(e: Exception)/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>310</y>
+      <w>350</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Outputs
+--
+_-loader: ServiceLoader&lt;OutputFactory&gt;_
+_-factories: Set&lt;OutputFactory&gt;_
+--
+_+getFactory(): OutputFactory_
+_+newOutput(fmt: SoundFormat): AudioOutput_</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>90</x>
+      <y>220</y>
+      <w>128</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>70;90;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>140</x>
+      <y>390</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=   1
+m2=   1</panel_attributes>
+    <additional_attributes>30;100;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>310</x>
+      <y>470</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;create&gt;&gt;</panel_attributes>
+    <additional_attributes>130;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>520</x>
+      <y>60</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>80;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>440</x>
+      <y>200</y>
+      <w>210</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>TrackPlayback
+--
+output: AudioOutput
+source: SampleEnumerator
+--
++start()
++startOutput()
++pause()
++resume()
++stop()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>270</x>
+      <y>50</y>
+      <w>130</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>110;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>480</x>
+      <y>330</y>
+      <w>50</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=   1
+m2=  1</panel_attributes>
+    <additional_attributes>30;120;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>270</x>
+      <y>200</y>
+      <w>190</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>170;30;30;30</additional_attributes>
+  </element>
+</diagram>

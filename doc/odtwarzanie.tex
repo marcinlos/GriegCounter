@@ -1,0 +1,80 @@
+
+\section{Odtwarzanie}
+
+Jedną z często wykonywanych operacji na pliku dźwiękowym jest jego odtworzenie. Na potrzeby
+aplikacji (a także, by umożliwić łatwe sprawdzenie, czy parser danego formatu poprawnie dekoduje
+pliki w nim zapisane), framework udostępnia taką funkcjonalność.
+
+Biblioteka standardowa Javy -- w szczególności, \emph{Java Sound API} -- udostępniają taką
+funkcjonalność poprzez stosunkowo niskopoziomowe klasy, przyjmujące surowe dane w formacie PCM.
+Niestety, pakiet \texttt{javax.sound} jest niedostępny na platformie \emph{Android}. Aby zapewnić
+działanie na obydwu platformach (JDK i \emph{Android}) konieczne jest albo znalezienie osobnej
+biblioteki, albo stworzenie własnego podsystemu, udostępniającego jedno spójne API, realizujące je w
+zależności od platformy bądź to przy użyciu \emph{Java Sound}, bądź to umożliwiających to klas
+platformy \emph{Android}.
+
+Implementacja podsystemu poszła krok dalej -- odtwarzanie dźwięku z punktu widzenia frameworku jest
+dynamicznie odnajdowaną usługą, udostępnianą poprzez dobrze zdefiniowane SPI (\textit{Service
+Provider Interface}). Framework sam decyduje o użytej implementacji, bazując na informacjach o
+dostępnych klasach w czasie wykonania. Dzięki temu zbędne jest jawne wskazywanie implementacji --
+dostępna będzie zawsze tylko jedna z nich, w zależności od platformy, na jakiej uruchamiana jest
+aplikacja korzystająca z biblioteki, a framework sam ją odnajdzie. Dzięki takiemu rozwiązaniu moduł
+odtwarzania jest rozszerzalny -- by zapewnić jego działanie na nowej platformie, na której nie jest
+dostępne ani \emph{Java Sound API}, ani klasy Androida, wystarczy stworzyć implementację dla tej
+konkretnej platformy, i zapewnić, by była dostępna w czasie wykonania.
+
+\begin{Caution}
+Jakkolwiek najprawdopodobniej nie ma po temu szczególnych przeszkód, wersja na Androida nie została
+ostatecznie zaimplementowana. Dostępna jest jedynie wersja bazująca na \emph{Java Sound API},
+działająca na platformach wspierających tę część JDK.
+\end{Caution}
+
+\bigskip
+
+Poniższy diagram przedstawia ogólny zarys wewnętrznej struktury modułu odpowiedzialnego za
+odtwarzanie.
+
+\IncludeUML{playback_struct}{Struktura modułu odtwarzania}
+
+
+Samo odtwarzanie dźwięku -- interakcja ze specyficznym dla platformy API umożliwiającym przekazanie
+dźwięku, który ma zostać odtworzony -- to zadanie implementacji interfejsu \texttt{AudioOutput}.
+Udostępnia on dwie wersje metody \texttt{write}: obydwie przyjmują bufor z danymi w formacie PCM,
+które mają zostać odtworzone, przy czym wersja jednoargumentowa odtwarza całą zawartość bufora, zaś
+druga jedynie fragmentu określonego przez offset początku i ilość próbek. Ponadto,
+\texttt{AudioOutput} jest \texttt{Iteratee}. W poprawnej implementacji przekazanie do niego danych
+poprzez metodę \texttt{step} powinno mieć taki sam efekt, jak wywołanie na nich \texttt{write}.
+Framework udostępnia częściową implementację -- \texttt{AbstractAudioOutput}, która m. in. zapewnia
+takie zachowanie.
+
+Obiekty \texttt{AudioOutput} tworzone są przez instancje klasy \texttt{OutputFactory}, której metoda
+\texttt{newOutput} na podstawie przekazanego formatu dźwięku (częstotliwość próbkowania, ilość
+kanałów) tworzy odpowiednio skonfigurowane wyjście. Przez ten interfejs reszta frameworku komunikuje
+się z dostarczycielem usługi odtwarzania. Implementacje odnajdywane i instancjonowane są poprzez
+wspomniany wcześnej, dostępny od wersji 1.6 mechanizm \emph{Service Loader}. Dzieje się to w
+inicjalizatorze statycznym klasy \texttt{Outputs}, która zapamiętuje pierwszego dostawcę usługi
+odtwarzania, i udostępnia jego funkcjonalność poprzez metody \texttt{getFactory} i
+\texttt{newOutput}.
+
+\begin{Note}
+W przeciwieństwie do przypadku parserów, które z natury nie wykluczają się wzajemnie i koegzystują w
+ramach jednej instancji aplikacji bez przeszkód, w stosunku do implementacji usługi odtwarzania
+dźwięku przyjęte zostało założenie, że w danym uruchomieniu wykorzystywana będzie tylko jedna. Na
+chwilę obecną nie wydaje się to specjalnie dotkliwe ograniczenie, zważywszy, że framework udostępnia
+obecnie tylko jedną implementację. Założenie to umożliwia wykorzystanie mechanizmu \emph{Service
+Loader} na Androidzie, jako, że opisany uprzednio problem dotyczy jedynie przypadku, gdzie w jednym
+uruchomieniu odnalezione musi być wiele implementacji usługi.
+\end{Note}
+
+Klasy te wykorzystywane są przez klasę \texttt{Player}, która udostępnia wysokopoziomowy, wygodny
+interfejs odtwarzania, w postaci przeciążonych metod \texttt{play}, oraz metod umożliwiających
+kontrolę trwającego odtwarzania: \texttt{pause}, \texttt{resume}, \texttt{stop}. Zaimplementowane są
+one jako wywołania odpowiadających im metod z klasy \texttt{SampleEnumerator}, używanej wewnętrznie
+przez klasę \texttt{Player}. Odtwarzanie domyślnie przebiega w osobnym wątku, prywatnym dla obiektu
+\texttt{Player}. Aby zakończyć pracę maszyny wirtualnej, należy zakończyć uprzednio wątki używane
+przez \texttt{Player}a. Służą do tego metody \texttt{shutdown}. Działają tak, jak analogicznie
+nazwane metody interfejsu \texttt{ExecutorService} z JDK.
+
+Możliwe jest również, zamiast otwierania pliku i czytania jego zawartości w ossobnym wątku,
+podpięcie odtwarzacza pod istniejący obiekt klasy \texttt{SampleEnumerator}. W ten sposób osiągnąć
+można synchronizację pomiędzy odtwarzaniem, a resztą przetwarzania.

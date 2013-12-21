@@ -97,7 +97,7 @@ name: String</panel_attributes>
       <w>50</w>
       <h>90</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;30;70</additional_attributes>
   </element>
   <element>

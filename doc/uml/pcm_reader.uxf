@@ -67,7 +67,7 @@ PCMReader
       <w>90</w>
       <h>110</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>70;30;30;90</additional_attributes>
   </element>
   <element>
@@ -78,7 +78,7 @@ PCMReader
       <w>90</w>
       <h>110</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;70;90</additional_attributes>
   </element>
   <element>
@@ -89,7 +89,7 @@ PCMReader
       <w>70</w>
       <h>150</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>50;30;30;130</additional_attributes>
   </element>
   <element>
@@ -100,7 +100,7 @@ PCMReader
       <w>80</w>
       <h>150</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;60;130</additional_attributes>
   </element>
 </diagram>

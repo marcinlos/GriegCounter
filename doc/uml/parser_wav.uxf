@@ -53,7 +53,7 @@ format: SoundFormat</panel_attributes>
       <w>44</w>
       <h>89</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>27;27;27;72</additional_attributes>
   </element>
   <element>
@@ -140,7 +140,7 @@ getDetails(): AudioDetails</panel_attributes>
       <w>44</w>
       <h>107</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>27;27;27;90</additional_attributes>
   </element>
   <element>
