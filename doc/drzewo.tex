@@ -95,6 +95,56 @@ czasie rzeczywistym dźwięki z otoczenia i przekazujący je do analizy.
 
 \subsection{Implementacja}
 
+\IncludeUML{iteratee_struct}{Główne klasy rdzenia modułu przetwarzania}
+
+\code{Enumerator} to źródło danych, producent strumienia. Umożliwia podłączenie i odłączenie ujść
+danych. Wytworzone kawałki strumienia przekazuje do wszystkich przyłączonych obecnie ujść (obiektów
+\code{Iteratee}) poprzez ich metodę \code{step}. W zależności od zwróconej przez nią wartości
+zatrzymuje ujście (\code{State.Cont}), bądź je odłącza (\code{State.Done}). Jego implementacja jest
+prosta, acz musi zawierać kilka metod, które praktycznie w każdym przypadku będą takie same, dlatego
+framework udostępnia i używa wewnętrznie abstrakcyjnej klasy bazowej \code{AbstractEnumerator},
+która zarządza ujściami, a także udostępnia metody pozwalające rozszerzającym ją klasom zwięźle
+komunikować się z podłączonymi ujściami:
+
+\begin{itemize}
+
+  \item \code{pushChunk(T value)} przekazuje dołączonym ujściom wartość \code{value} (fragment
+    strumienia danych), oraz obsługuje wartości zwracane przez \code{step}
+
+  \item \code{signalFailure(Throwable e)} dla każdego przyłączonego ujścia wywołuje \code{failed},
+    podając \code{e} jako argument
+
+  \item \code{signalEndOfStream} wywołuje \code{finished} dla każdego przyłączonego ujścia
+
+\end{itemize}
+
+Dzięki temu, klasy rozszerzające \code{AbstractEnumerator} nie muszą implementować żadnej
+funkcjonalności operującej bezpośrednio na dołączonych ujściach, co pozwala oddzielić ich faktyczną
+rolę od detali implementacji interfejsu \code{Enumerator}, a także oszczędza powtarzania
+identycznego boilerplate'u dla każdej klasy.
+
+
+\code{Iteratee} to ujście danych, konsument strumienia. Może być przyłączony do źródła danych
+(\code{Enumeratee}). Dane do konsumpcji przyjmuje poprzez metodę \code{step}, przyjmującej kolejne
+fragmenty strumienia. Metoda \code{Step} zwraca wartość wyliczeniową \code{Step}, która pozwala
+obiektowi zakomunikować swój stan i zamiary do źródła: \code{State.Cont} oznacza, że konsument nie
+skończył jeszcze przetwarzania, i czeka na kolejną porcję danych, zaś \code{State.Done} oznacza, że
+konsumpcja dobiegła końca, i obiekt nie chce już otrzymywać kolejnych ewentualnych fragmentów
+strumienia, w wyniku czego powinien zostać odłączony od źródła. Podobnie jak w przypadku
+\code{Enumerator}-a, istnieje abstrakcyjna klasa bazowa \code{AbstractEnumerator}, która dostarcza
+puste implementacje metod \code{finished} i \code{failed}, jak również rzuca wyjątek, jeśli
+\code{step} zostanie wywołany po tym, jak \code{Iteratee} zadeklaruje, że nie chce otrzymywać
+kolejnych danych. Jest ona mniej przydatna niż \code{AbstractEnumerator}, nie została z tego względu
+przedstawiona na diagramie.
+
+
+\code{Enumeratee} to przekształcenie danych, połączenie źródła i ujścia; element ten otrzymuje na
+wejściu fragmenty pewnego strumienia, konsumuje go, i na jego podstawie produkuje nowy strumień.
+Istotne jest, że nowy strumień nie musi być w żaden sposób powiązany ze starym -- może być innego
+typu, a przekazywanie jego fragmentów nie musi w żaden sposób być zsynchronizowane z fragmentami
+strumienia wejściowego. 
+
+
 
 \subsection{Tworzenie drzewa}
 
