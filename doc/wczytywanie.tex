@@ -125,8 +125,8 @@ odpowiedzialnego za odnajdowanie i ładowanie implementacji parserów opisuje
 \hyperref[sec:odnajdywanie_implementacji]{następna sekcja}.
 
 \begin{Note}
-Od wersji 1.6 Java udostępnia taką funkcjonalność w bibliotece standardowej
-(\texttt{ServiceLoader}), jednak z powodów technicznych nie było możliwe jej wykorzystanie -- patrz
+Od wersji 1.6 Java udostępnia taką funkcjonalność w bibliotece standardowej (\code{ServiceLoader}),
+jednak z powodów technicznych nie było możliwe jej wykorzystanie -- patrz
 \ref{sec:dlaczego_nie_service_loader}
 \end{Note}
 
@@ -138,7 +138,7 @@ metody klas z innego podsystemu) są pominięte, by zwiększyć czytelność.
 \IncludeUML{parsers_structure}{Struktura podsystemu wczytywania plików}
 
 Głównym interfejsem usługi obsługiwania formatu pliku, przez który reszta frameworku komunikuje się
-z poszczególnymi modułami jej dostarczającymi, jest \texttt{AudioFormatParser}. Zawiera on minimalny
+z poszczególnymi modułami jej dostarczającymi, jest \code{AudioFormatParser}. Zawiera on minimalny
 zestaw metod dających dostęp do wszystkich interesujących dla frameworku aspektów pliku.
 
 \begin{java}
@@ -153,19 +153,19 @@ public interface AudioFormatParser {
 }
 \end{java}
 
-Metoda \texttt{readable} służy do sprawdzania, czy dana implementacja usługi jest w stanie poprawnie
-zinterpretować dany strumień. \texttt{extractFeatures} służy do odczytu metadanych; szczegółowy opis
+Metoda \code{readable} służy do sprawdzania, czy dana implementacja usługi jest w stanie poprawnie
+zinterpretować dany strumień. \code{extractFeatures} służy do odczytu metadanych; szczegółowy opis
 systemu odczytu metadanych znajduje się \hyperref[sec:metadane]{w dalszej części dokumentu}. Metoda
-\texttt{openStream} rozpoczyna odczyt właściwej zawartości pliku (danych audio). Zwraca
-implementację interfejsu \texttt{AudioStream}, opisanego poniżej.
+\code{openStream} rozpoczyna odczyt właściwej zawartości pliku (danych audio). Zwraca implementację
+interfejsu \code{AudioStream}, opisanego poniżej.
 
 \begin{Note}
-Metoda \texttt{readable} może czytać ze strumienia dowolnie dużo danych. Jeśli więc strumień po
+Metoda \code{readable} może czytać ze strumienia dowolnie dużo danych. Jeśli więc strumień po
 wywołaniu ma być ponownie użyty, należy własnoręcznie zapewnić, że będzie on czytał od początku
 (jeśli to pożądane, rzecz jasna).  
 \end{Note}
 
-Interfejs \texttt{AudioStream} daje bezpośredni dostęp do danych audio, zawartych w pliku. Działa
+Interfejs \code{AudioStream} daje bezpośredni dostęp do danych audio, zawartych w pliku. Działa
 strumieniowo -- przetwarza strumień wejściowy, i na jego podstawie generuje strumień audio w
 opisanym wyżej wewnętrznym formacie frameworku.
 
@@ -179,22 +179,22 @@ public interface AudioStream extends Closeable {
 }
 \end{java}
 
-Metoda \texttt{readSamples} przyjmuje dostarczony przez użytkownika bufor -- dwuwymiarową tablicę typu
-\texttt{float}, gdzie pierwszy wymiar określa kanał. W wyniku wywołania fragment buforu (lub jego
+Metoda \code{readSamples} przyjmuje dostarczony przez użytkownika bufor -- dwuwymiarową tablicę typu
+\code{float}, gdzie pierwszy wymiar określa kanał. W wyniku wywołania fragment buforu (lub jego
 całość) zostaje wypełniony danymi odczytanymi z pliku. Jeśli bufor zawiera więcej kanałów, niż ma
 przetwarzany strumień, nadmiarowe tablice nie zostaną w żaden sposób wypełnione. Jeśli zaś mniej,
-zostaną wypełnione, zaś dane z nadmiarowych kanałów zostaną zignorowane. Metoda \texttt{getFormat}
+zostaną wypełnione, zaś dane z nadmiarowych kanałów zostaną zignorowane. Metoda \code{getFormat}
 zwraca informacje o częstotliwości próbkowania i liczbie kanałów, opakowane w obiekt struktury
-\texttt{SoundFormat}.
+\code{SoundFormat}.
 
-Punktem wejścia podsystemu wczytywania plików jest klasa \texttt{FileLoader}. Podczas tworzenia jej
+Punktem wejścia podsystemu wczytywania plików jest klasa \code{FileLoader}. Podczas tworzenia jej
 instancji odnajdywane są dostępne implementacje parserów formatów plików, oraz tworzone są obiekty
-udostępnianych przez nie implementacji interfejsu \texttt{AudioFormatParser}. Szczegółowy opis tego
+udostępnianych przez nie implementacji interfejsu \code{AudioFormatParser}. Szczegółowy opis tego
 procesu znajduje się w \hyperref[sec:odnajdywanie_implementacji]{stosownej sekcji}. Przy pomocy
-metody \texttt{loadFile} załadować można podany jako argument plik audio. W rezultacie zwrócony
-zostanie obiekt \texttt{AudioFile}, reprezentujacy plik wraz z pasującym do niego parserem, przy
+metody \code{loadFile} załadować można podany jako argument plik audio. W rezultacie zwrócony
+zostanie obiekt \code{AudioFile}, reprezentujacy plik wraz z pasującym do niego parserem, przy
 pomocy których implementuje szereg metod, służących użytkownikowi frameworku do wykonywania operacji
-na pliku. \texttt{AudioFile} potrafi również tworzyć obiekty \texttt{SampleEnumerator}, które są
+na pliku. \code{AudioFile} potrafi również tworzyć obiekty \code{SampleEnumerator}, które są
 niezbędne przy przetwarzaniu strumieniowym.
 
 \begin{java}
@@ -228,7 +228,7 @@ public class AudioFile {
 \subsection{Odnajdywanie implementacji parserów}
 \label{sec:odnajdywanie_implementacji}
 
-\subsubsection{Dlaczego nie \texttt{ServiceLoader}?}
+\subsubsection{Dlaczego nie \code{ServiceLoader}?}
 \label{sec:dlaczego_nie_service_loader}
 
 \subsection{Zaimplementowane parsery}
@@ -243,27 +243,27 @@ własnoręcznie, przy użyciu niskopoziomowych narzędzi I/O udostępnianych prz
 jaki się pojawił podczas implementacji, to konieczność odczytu typów prymitywnych zapisanych w
 kolejności \textit{little-endian} -- Java oferuje jedynie obsługę \textit{big-endian}. Dla
 uproszczenia kodu i uniknięcia ręcznej (choć prostej) konwersji, użyta została klasa
-\texttt{LittleEndianDataInputStream} z biblioteki \emph{Guava}, która stanowi adapter na strumień
-wejściowy, analogiczny do \texttt{DataInputStream} z JDK.
+\code{LittleEndianDataInputStream} z biblioteki \emph{Guava}, która stanowi adapter na strumień
+wejściowy, analogiczny do \code{DataInputStream} z JDK.
 
 \IncludeUML{parser_wav}{Struktura parsera plików WAV}
 
-Główną klasę parsera stanowi implementacja interfejsu \texttt{AudioStream} -- \texttt{WavStream},
+Główną klasę parsera stanowi implementacja interfejsu \code{AudioStream} -- \code{WavStream},
 zawierający logikę odczytu plików WAV. Używa jako klasy pomocniczej parsera plików RIFF
-(\texttt{RiffParser}). RIFF to format kontenera, wewnątrz którego przechowywane mogą być różne
-rodzaje plików multimedialnych. Składa się on z nagłówk głównego (\texttt{RiffHeader}), oraz pewnej
-ilości fragmentów, tzw. \textit{chunków}, z których każdy posiada własny nagłówek
-(\texttt{ChunkHeader}). Wewnątrz jednego z chunków znajduje się nagłówek opisujący samą zawartość
-audio pliku (\texttt{WavHeader}). Po poznaniu dokładnej reprezentacji danych, \texttt{WavStream}
-może odczytać zawartość pliku, wykorzystując do tego odpowiednią implementację wewnętrznego
-interfejsu \texttt{PCMReader}, którego instancje odpowiadają różnym reprezentacjom PCM
-(8/16/24/32-bitowe liczby całkowite)
+(\code{RiffParser}). RIFF to format kontenera, wewnątrz którego przechowywane mogą być różne rodzaje
+plików multimedialnych. Składa się on z nagłówk głównego (\code{RiffHeader}), oraz pewnej ilości
+fragmentów, tzw. \textit{chunków}, z których każdy posiada własny nagłówek (\code{ChunkHeader}).
+Wewnątrz jednego z chunków znajduje się nagłówek opisujący samą zawartość audio pliku
+(\code{WavHeader}). Po poznaniu dokładnej reprezentacji danych, \code{WavStream} może odczytać
+zawartość pliku, wykorzystując do tego odpowiednią implementację wewnętrznego interfejsu
+\code{PCMReader}, którego instancje odpowiadają różnym reprezentacjom PCM (8/16/24/32-bitowe liczby
+całkowite)
 
 \IncludeUML{pcm_reader}
 {Klasy pomocnicze służące do odczytywania kolejnych próbek z pliku WAV}
 
 \IncludeUML{wav_stream_create}
-{Interakcje między klasami podczas tworzenia obiektu \texttt{WavStream}}
+{Interakcje między klasami podczas tworzenia obiektu \code{WavStream}}
 
 
 \subsubsection{Parsery MP3 i OGG}

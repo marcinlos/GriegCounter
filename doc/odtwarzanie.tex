@@ -38,23 +38,22 @@ odtwarzanie.
 
 
 Samo odtwarzanie dźwięku -- interakcja ze specyficznym dla platformy API umożliwiającym przekazanie
-dźwięku, który ma zostać odtworzony -- to zadanie implementacji interfejsu \texttt{AudioOutput}.
-Udostępnia on dwie wersje metody \texttt{write}: obydwie przyjmują bufor z danymi w formacie PCM,
+dźwięku, który ma zostać odtworzony -- to zadanie implementacji interfejsu \code{AudioOutput}.
+Udostępnia on dwie wersje metody \code{write}: obydwie przyjmują bufor z danymi w formacie PCM,
 które mają zostać odtworzone, przy czym wersja jednoargumentowa odtwarza całą zawartość bufora, zaś
 druga jedynie fragmentu określonego przez offset początku i ilość próbek. Ponadto,
-\texttt{AudioOutput} jest \texttt{Iteratee}. W poprawnej implementacji przekazanie do niego danych
-poprzez metodę \texttt{step} powinno mieć taki sam efekt, jak wywołanie na nich \texttt{write}.
-Framework udostępnia częściową implementację -- \texttt{AbstractAudioOutput}, która m. in. zapewnia
+\code{AudioOutput} jest \code{Iteratee}. W poprawnej implementacji przekazanie do niego danych
+poprzez metodę \code{step} powinno mieć taki sam efekt, jak wywołanie na nich \code{write}.
+Framework udostępnia częściową implementację -- \code{AbstractAudioOutput}, która m. in. zapewnia
 takie zachowanie.
 
-Obiekty \texttt{AudioOutput} tworzone są przez instancje klasy \texttt{OutputFactory}, której metoda
-\texttt{newOutput} na podstawie przekazanego formatu dźwięku (częstotliwość próbkowania, ilość
+Obiekty \code{AudioOutput} tworzone są przez instancje klasy \code{OutputFactory}, której metoda
+\code{newOutput} na podstawie przekazanego formatu dźwięku (częstotliwość próbkowania, ilość
 kanałów) tworzy odpowiednio skonfigurowane wyjście. Przez ten interfejs reszta frameworku komunikuje
 się z dostarczycielem usługi odtwarzania. Implementacje odnajdywane i instancjonowane są poprzez
 wspomniany wcześnej, dostępny od wersji 1.6 mechanizm \emph{Service Loader}. Dzieje się to w
-inicjalizatorze statycznym klasy \texttt{Outputs}, która zapamiętuje pierwszego dostawcę usługi
-odtwarzania, i udostępnia jego funkcjonalność poprzez metody \texttt{getFactory} i
-\texttt{newOutput}.
+inicjalizatorze statycznym klasy \code{Outputs}, która zapamiętuje pierwszego dostawcę usługi
+odtwarzania, i udostępnia jego funkcjonalność poprzez metody \code{getFactory} i \code{newOutput}.
 
 \begin{Note}
 W przeciwieństwie do parserów, które z natury nie wykluczają się wzajemnie i koegzystują w ramach
@@ -66,47 +65,47 @@ Loader} na Androidzie, jako, że opisany uprzednio problem dotyczy jedynie przyp
 uruchomieniu odnalezione musi być wiele implementacji usługi.  
 \end{Note}
 
-Klasy te wykorzystywane są przez klasę \texttt{Player}, która udostępnia wysokopoziomowy, wygodny
-interfejs odtwarzania, w postaci przeciążonych metod \texttt{play}, oraz metod umożliwiających
-kontrolę trwającego odtwarzania: \texttt{pause}, \texttt{resume}, \texttt{stop}. Aby rozpocząć
-odtwarzanie podanego pliku, \texttt{Player} tworzy przy użyciu klasy \texttt{Outputs} odpowiednią
-instancję \texttt{AudioOutput}, a następnie podpina ją do źródła danych -- uzyskanego przez
-wywołanie \texttt{openSource} obiektu \texttt{SampleEnumerator}. Wspomniane wcześniej metody
-kontrolujące odtwarzanie zaimplementowane są one jako wywołania odpowiadających im metod z
-klasy \texttt{SampleEnumerator}. Odtwarzanie domyślnie przebiega w osobnym wątku, prywatnym dla
-obiektu \texttt{Player}. Aby zakończyć pracę maszyny wirtualnej, należy zakończyć uprzednio wątki
-używane przez \texttt{Player}a. Służą do tego metody \texttt{shutdown}. Działają tak, jak
-analogicznie nazwane metody interfejsu \texttt{ExecutorService} z JDK.
+Klasy te wykorzystywane są przez klasę \code{Player}, która udostępnia wysokopoziomowy, wygodny
+interfejs odtwarzania, w postaci przeciążonych metod \code{play}, oraz metod umożliwiających
+kontrolę trwającego odtwarzania: \code{pause}, \code{resume}, \code{stop}. Aby rozpocząć odtwarzanie
+podanego pliku, \code{Player} tworzy przy użyciu klasy \code{Outputs} odpowiednią instancję
+\code{AudioOutput}, a następnie podpina ją do źródła danych -- uzyskanego przez wywołanie
+\code{openSource} obiektu \code{SampleEnumerator}. Wspomniane wcześniej metody kontrolujące
+odtwarzanie zaimplementowane są one jako wywołania odpowiadających im metod z klasy
+\code{SampleEnumerator}. Odtwarzanie domyślnie przebiega w osobnym wątku, prywatnym dla obiektu
+\code{Player}. Aby zakończyć pracę maszyny wirtualnej, należy zakończyć uprzednio wątki używane
+przez \code{Player}a. Służą do tego metody \code{shutdown}. Działają tak, jak analogicznie nazwane
+metody interfejsu \code{ExecutorService} z JDK.
 
-Obiekt klasy \texttt{Player} może odtwarzać kolejno wiele utworów, jeden po drugim, aczkolwiek tylko
+Obiekt klasy \code{Player} może odtwarzać kolejno wiele utworów, jeden po drugim, aczkolwiek tylko
 jeden w danym momencie. Ten tymczasowy stan -- używane obecnie źródło danych
-(\texttt{SampleEnumerator}) oraz ujście dźwięku (\texttt{AudioOutput}) przechowywane są w strukturze
-\texttt{TrackPlayback}. \texttt{Player} deleguje do niej wszelkie operacje związane bezpośrednio z
+(\code{SampleEnumerator}) oraz ujście dźwięku (\code{AudioOutput}) przechowywane są w strukturze
+\code{TrackPlayback}. \code{Player} deleguje do niej wszelkie operacje związane bezpośrednio z
 trwającym w danym momencie odtwarzaniem.
 
 Możliwe jest również, zamiast otwierania pliku i czytania jego zawartości w osobnym wątku, podpięcie
-odtwarzacza pod istniejący obiekt klasy \texttt{SampleEnumerator}. W ten sposób osiągnąć można
+odtwarzacza pod istniejący obiekt klasy \code{SampleEnumerator}. W ten sposób osiągnąć można
 synchronizację pomiędzy odtwarzaniem, a resztą przetwarzania. Uczynić to można za pomocą metody
-\texttt{prepare}. W przeciwieństwie do przeciążonych wersji metod \texttt{play}, nie rozpoczyna ona
+\code{prepare}. W przeciwieństwie do przeciążonych wersji metod \code{play}, nie rozpoczyna ona
 odczytu danych ze źródła we własnym prywatnym wątku, a jedynie podpina odpowiednie ujścia
-(\texttt{Iteratee}). Aby rozpocząć odtwarzanie, trzeba ręcznie uruchomić przekazane jako parametr
-źródło. Pozwala to użyć obiektu \texttt{Player} jako zwykłej jednostki przetwarzania, co
-niekoniecznie jest możliwe w przypadku \texttt{play}, z uwagi na przejęcie przez system odtwarzania
-pełnej kontroli nad źródłem.
+(\code{Iteratee}). Aby rozpocząć odtwarzanie, trzeba ręcznie uruchomić przekazane jako parametr
+źródło. Pozwala to użyć obiektu \code{Player} jako zwykłej jednostki przetwarzania, co niekoniecznie
+jest możliwe w przypadku \code{play}, z uwagi na przejęcie przez system odtwarzania pełnej kontroli
+nad źródłem.
 
 Użytkownik frameworku ma możliwość otrzymywania notyfikacji o zdarzeniach dotyczących procesu
-odtwarzania realizowanego przez konkretny obiekt klasy \texttt{Player}, oraz jego postępu w czasie
-poprzez interfejs \texttt{PlaybackListener}. Kolekcja jego implementacji przechowywana jest w
-obiekcie \texttt{Player}, który wywołuje na nich odpowiednie metody w reakcji na zdarzenia.
+odtwarzania realizowanego przez konkretny obiekt klasy \code{Player}, oraz jego postępu w czasie
+poprzez interfejs \code{PlaybackListener}. Kolekcja jego implementacji przechowywana jest w obiekcie
+\code{Player}, który wywołuje na nich odpowiednie metody w reakcji na zdarzenia.
 
 
 \subsubsection{Implementacja z użyciem \emph{Java Sound API}}
 
 Framework udostępnia na chwilę obecną jedną implementację usługi odtwarzania dźwięku, zbudowaną przy
-użyciu klas z pakietu \texttt{javax.sound.*}. Jest ona stosunkowo prosta, dzięki minimalistycznemu
+użyciu klas z pakietu \code{javax.sound.*}. Jest ona stosunkowo prosta, dzięki minimalistycznemu
 interfejsowi usługi. Na podstawie przekazanych parametrów dźwięku tworzony jest obiekt
-implementujący interfejs \texttt{SourceDataLine}, który następnie należy przygotować do przyjmowania
-dźwięku poprzez wywołanie metody \texttt{open}, a potem można już przesyłać do niego dane dźwiękowe.
+implementujący interfejs \code{SourceDataLine}, który następnie należy przygotować do przyjmowania
+dźwięku poprzez wywołanie metody \code{open}, a potem można już przesyłać do niego dane dźwiękowe.
 \emph{Java Sound API} nie obsługuje danych PCM zapisanych przy pomocy liczb zmiennoprzecinkowych,
 konieczna zatem jest konwersja do jakiegoś wspieranego formatu. Wybór padł na 16-bitowe liczby
 całkowite ze znakiem, z kolejnością \textit{big-endian}.
@@ -121,3 +120,4 @@ opróżnienie bufora danych audio przy posyłaniu ich do odtwarzania jest jedyny
 zapełnienie, a więc i odrysowanie interfejsu, następuje rzadziej. Wielkość bufora jest
 konfigurowalna, domyślnie używana jest empirycznie dobrana, dająca subiektywnie ,,dobre'' efekty.
 \end{NoteLong}
+

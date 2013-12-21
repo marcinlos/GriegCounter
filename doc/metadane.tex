@@ -21,18 +21,19 @@ reprezentujących okładkę albumu, z którego pochodzi utwór. Stąd, kolekcja 
 heterogeniczną mapę. Aby umożliwić przechowywanie danych różnego typu i zapewnić rozszerzalność, na
 typy wartości metadanych nie nakładane są żadne ograniczenia.
 
-Do przechowywania takiego odwzorowania wystarczyłaby mapa: \texttt{Map<String, Object>}. Takie
+Do przechowywania takiego odwzorowania wystarczyłaby mapa: \code{Map<String, Object>}. Takie
 rozwiązanie ma jednak pewne wady:
 
 \begin{itemize}
 
   \item brak kontroli typów -- jakkolwiek w ogólności zapewnienie statycznie pełnego bezpieczeństwa
-typów dla heterogenicznych kontenerów jest ze zrozumiałych względów niemożliwe, w wielu praktycznych
-zastosowaniach operujemy na skończonym zbiorze kluczy, którym odpowiadają znane typy (np. można
-założyć, że metadana opisująca tytuł utworu jest łańcuchem znaków), co znacząco poprawia sytuację
+    typów dla heterogenicznych kontenerów jest ze zrozumiałych względów niemożliwe, w wielu
+    praktycznych zastosowaniach operujemy na skończonym zbiorze kluczy, którym odpowiadają znane
+    typy (np. można założyć, że metadana opisująca tytuł utworu jest łańcuchem znaków), co znacząco
+    poprawia sytuację
 
   \item niewygodny interfejs -- zwracane wartości muszą być rzutowane na odpowiedni typ, nim możliwe
-jest ich użycie.
+    jest ich użycie.
 
 \end{itemize}
 
@@ -50,7 +51,7 @@ opisane są wszystkie występujące na nim elementy.
 \subsubsection{Klucz}
 
 Klucz do heterogenicznej mapy przechowującej metadane \textit{(typ, nazwa)} reprezentowana przez
-klasę \texttt{Key}:
+klasę \code{Key}:
 
 \begin{java}
 public final class Key<T> {
@@ -64,7 +65,7 @@ public final class Key<T> {
 
 
 Klucze odpowiadające pewnym najczęściej spotykanym i używanym metadanym zdefiniowane zostały jako
-statyczne, niezmienne pola w klasie \texttt{AudioFeatures}:
+statyczne, niezmienne pola w klasie \code{AudioFeatures}:
 
 \begin{java}
 public final class AudioFeatures {
@@ -90,28 +91,28 @@ public final class AudioFeatures {
 Klasa reprezentujaca samo odwzorowanie (mapę) składa się z kilku fragmentów. Jednym z założeń było
 umożliwienie dostępu do danych zarówno przy użyciu klucza, jak i samej nazwy (ew. z typem). Aby
 ułatwić korzystanie z mapy, stworzone zostały metody pomocnicze do pobierania i ustawiania wartości
-dla typów podstawowywch. Zawarte są one w interfejsie \texttt{PrimitiveMap}. Najważniejsze, główne
+dla typów podstawowywch. Zawarte są one w interfejsie \code{PrimitiveMap}. Najważniejsze, główne
 metody umożliwiające dostęp i manipulowanie zawartością mapy znajdują się w interfejsie
-\texttt{Properties}. Zapewniają one możliwość pobrania z mapy wartości na podstawie klucza
-(\texttt{Key}), nazwy i typu metadanej (w postaci odpowiedniego obiektu \texttt{Class}), lub samej
+\code{Properties}. Zapewniają one możliwość pobrania z mapy wartości na podstawie klucza
+(\code{Key}), nazwy i typu metadanej (w postaci odpowiedniego obiektu \code{Class}), lub samej
 nazwy, zapis przy użyciu klucza lub nazwy, a także kilka innych, pomocnych metod:
 
 \begin{itemize}
-  \item pobieranie zbioru nazw dostępnych metadanych przez \texttt{keySet()}
-  \item pobieranie par \texttt{(nazwa, wartość)} przez \texttt{entrySet()} 
-  \item konwersja do mapy nazwa $\to$ wartość przez \texttt{asMap()}
-  \item odczytanie ilości dostępnych metadanych przez \texttt{size()}
-  \item sprawdzenie, czy mapa jest pusta przez \texttt{isEmpty()}
-  \item dopisanie do mapy wszystkich par z innej mapy przez \texttt{addAll(Properties)}
+  \item pobieranie zbioru nazw dostępnych metadanych przez \code{keySet()}
+  \item pobieranie par \code{(nazwa, wartość)} przez \code{entrySet()} 
+  \item konwersja do mapy nazwa $\to$ wartość przez \code{asMap()}
+  \item odczytanie ilości dostępnych metadanych przez \code{size()}
+  \item sprawdzenie, czy mapa jest pusta przez \code{isEmpty()}
+  \item dopisanie do mapy wszystkich par z innej mapy przez \code{addAll(Properties)}
 \end{itemize}
 
 Nietrudno zauważyć, że wszystkie te operacje można efektywnie zaimplementować przy pomocy metody
-\texttt{asMap()} i operacji z Javowego interfejsu \texttt{Map} (zakładając, że \texttt{asMap()}
-działa w czasie stałym - np. zwraca mapę używaną wewnętrznie przez konkretną implementację). Stąd,
-kolejno stworzona została abstrakcyjna klasa \texttt{AbstractProperties}, która dostarcza domyślnych
-implementacji wszystkich metod interfejsu \texttt{Properties} prócz \texttt{asMap()}. Konkretną
-implementacją używaną przez framework jest \texttt{PropertyMap}, która rozszerza
-\texttt{AbstractProperties}, i używa wewnętrznie klasy \texttt{HashMap}.
+\code{asMap()} i operacji z Javowego interfejsu \code{Map} (zakładając, że \code{asMap()} działa w
+czasie stałym - np. zwraca mapę używaną wewnętrznie przez konkretną implementację). Stąd, kolejno
+stworzona została abstrakcyjna klasa \code{AbstractProperties}, która dostarcza domyślnych
+implementacji wszystkich metod interfejsu \code{Properties} prócz \code{asMap()}. Konkretną
+implementacją używaną przez framework jest \code{PropertyMap}, która rozszerza
+\code{AbstractProperties}, i używa wewnętrznie klasy \code{HashMap}.
 
 
 \subsection{Interfejs użytkownika frameworku}
@@ -130,15 +131,15 @@ projektowaniu interfejsu przyjęte zostały następujące wymagania:
 \begin{itemize}
 
   \item użytkownik musi mieć możliwość określenia, które metadane są mu potrzebne, by uniknąć
-kosztownych obliczeń w przypadku, gdy nie są one konieczne
+    kosztownych obliczeń w przypadku, gdy nie są one konieczne
 
   \item użytkownik musi mieć możliwość otrzymywania na bieżąco informacji o postępach procesu, np. o
-procencie wykonania, a najlepiej także o kolejno obliczanych metadanych (zamiast czekać do końca
-przetwarzania i dopiero wówczas otrzymać wyniki, można przekazywać mu wyniki inkrementalnie)
+    procencie wykonania, a najlepiej także o kolejno obliczanych metadanych (zamiast czekać do końca
+    przetwarzania i dopiero wówczas otrzymać wyniki, można przekazywać mu wyniki inkrementalnie)
 
   \item (\emph{opcjonalnie}) użytkownik powinien mieć możliwość przekazywania parametrów,
-sterujących przebiegiem procesu ekstrakcji metadanych (np. co zrobić, gdy wymagana metadana nie jest
-dostępna)
+    sterujących przebiegiem procesu ekstrakcji metadanych (np. co zrobić, gdy wymagana metadana nie
+    jest dostępna)
 
 \end{itemize}
 
@@ -147,14 +148,14 @@ przekazywanie parametrów -- nie została wykorzystana w stworzonych parserach f
 diagram pokazuje jego strukturę, oraz najistotniejsze elementy.
 
 \IncludeUML{metadata_interface}
-{Interfejs pobierania metadanych (pewne operacje z \texttt{ExtractionContext} zostały pominięte, dla
+{Interfejs pobierania metadanych (pewne operacje z \code{ExtractionContext} zostały pominięte, dla
 zwiększenia czytelności)}
 
 
 Metoda, za pomocą której użytkownik frameworku może rozpocząć proces ekstrakcji metadanych znajduje
-się w klasie \texttt{AudioFile}. Wydaje się to sensowne rozwiązanie, jako, że obiekt
-\texttt{AudioFile} dysponuje wszystkimi potrzebnymi informacjami -- zna ścieżkę pliku, oraz ma
-dostęp do parsera, który potrafi go zinterpretować.
+się w klasie \code{AudioFile}. Wydaje się to sensowne rozwiązanie, jako, że obiekt \code{AudioFile}
+dysponuje wszystkimi potrzebnymi informacjami -- zna ścieżkę pliku, oraz ma dostęp do parsera, który
+potrafi go zinterpretować.
 
 Wspomniana jako jedno z wymagań komunikacja z użytkownikiem (notyfikowanie go o stanie i postępach
 procesu) zrealizowana jest przy użyciu wzorca \emph{Observer} -- klient dostarcza implementacji
@@ -164,39 +165,40 @@ listenerów:
 
 \begin{itemize}
 
-  \item \texttt{ProgressListener}, który otrzymuje wszelkie informacje o stanie ekstrakcji --
+  \item \code{ProgressListener}, który otrzymuje wszelkie informacje o stanie ekstrakcji --
     rozpoczęciu, zakończeniu, ewentualnych błędach, szacowanym procencie wykonania
 
-  \item \texttt{FeaturesListener}, który otrzymuje informacje o odczytanych metadanych (nazwa i
-wartość)
+  \item \code{FeaturesListener}, który otrzymuje informacje o odczytanych metadanych (nazwa i
+    wartość)
 
 \end{itemize}
 
 \begin{Note}
-Mimo swojej nazwy, metoda \texttt{failed} może zostać wywołana wielokrotnie -- błąd w trakcie
-odczytu metadanych nie musi implikować natychmiastowego zakończenia całego procesu.
+Mimo swojej nazwy, metoda \code{failed} może zostać wywołana wielokrotnie -- błąd w trakcie odczytu
+metadanych nie musi implikować natychmiastowego zakończenia całego procesu.
 \end{Note}
 
 
-Najistotniejszą, choć pasywną, jest klasa \texttt{ExtractionContext}, opisująca precyzyjnie proces
+Najistotniejszą, choć pasywną, jest klasa \code{ExtractionContext}, opisująca precyzyjnie proces
 ekstrakcji. Klasa ta posiada dwa zastosowania:
 
 \begin{itemize}
   \item Umożliwia użytkownikowi konfiguracji odczytu metadanych. Używając jej metod, użytkownik może
-wybrać potrzebne mu metadane, ustawić parametry procesu, zarejestrować swoje listenery, przez które
-otrzymywać będzie informacje na bieżąco. Po udanej ekstrakcji użytkownik może także uzyskać dostęp
-do metadanych bezpośrednio przez obiekt \texttt{ExtractionContext}, bądź też pobrać z niego obiekt
-\texttt{Properties}.
+    wybrać potrzebne mu metadane, ustawić parametry procesu, zarejestrować swoje listenery, przez
+    które otrzymywać będzie informacje na bieżąco. Po udanej ekstrakcji użytkownik może także
+    uzyskać dostęp do metadanych bezpośrednio przez obiekt \code{ExtractionContext}, bądź też pobrać
+    z niego obiekt \code{Properties}.
 
   \item Umożliwia parserom, realizującym sam proces ekstrakcji, komunikowanie użytkownikowi
-istotnych faktów o jej przebiegu, oraz stanowi miejsce do przechowywania odnajdywanych metadanych.
+    istotnych faktów o jej przebiegu, oraz stanowi miejsce do przechowywania odnajdywanych
+    metadanych.
 
 \end{itemize}
 
-Z tego powodu interfejs udostępniany przez \texttt{ExtractionContext} można podzielić dość wyraźnie
-na dwie części: część interesującą użytkownika frameworku, i część interesującą implementatora
-parserów plików audio. Szczegółowa semantyka poszczególnych metod opisana została w ich javadocu,
-w tym dokumencie zostanie zatem pominięta.
+Z tego powodu interfejs udostępniany przez \code{ExtractionContext} można podzielić dość wyraźnie na
+dwie części: część interesującą użytkownika frameworku, i część interesującą implementatora parserów
+plików audio. Szczegółowa semantyka poszczególnych metod opisana została w ich javadocu, w tym
+dokumencie zostanie zatem pominięta.
 
 \IncludeUML{metadata_interface_seq}
 {Interakcje między elementami interfejsu modułu odczytu metadanych}
@@ -213,7 +215,7 @@ metadane z szeregu formatów, w tym ze wszystkich wspieranych bazowo przez frame
 implementację parserów tych rodzajów plików.  Jakkolwiek niektóre wartości (np. całkowita ilość
 próbek wchodzących w skład utworu) są obliczane osobno, większość pracy wykonuje biblioteka
 \emph{JAudioTagger}. Poszczególne parsery używają jej poprzez nakładkę w postaci klasy
-\texttt{JAudioTaggerMetaExtractor}. Oferuje ona prostszy interfejs, oraz tłumaczy pozyskane przez
+\code{JAudioTaggerMetaExtractor}. Oferuje ona prostszy interfejs, oraz tłumaczy pozyskane przez
 \emph{JAudioTagger} metadane na opisany uprzednio wewnętrzny format frameworku.
 
 
@@ -254,28 +256,28 @@ public class JAudioTaggerMetaExtractor {
 \end{java}
 
 
-\texttt{JAudioTaggerMetaExtractor} przyjmuje w konstruktorze ścieżkę pliku dźwiękowego, na jakim ma
-operować, oraz obiekt \texttt{ExtractionContext}, zawierający wszelkie parametry i ,,otoczenie''
-obliczeń. Właściwa ekstrakcja metadanych ma miejsce w metodzie \texttt{run()}, gdzie wczytywany i
+\code{JAudioTaggerMetaExtractor} przyjmuje w konstruktorze ścieżkę pliku dźwiękowego, na jakim ma
+operować, oraz obiekt \code{ExtractionContext}, zawierający wszelkie parametry i ,,otoczenie''
+obliczeń. Właściwa ekstrakcja metadanych ma miejsce w metodzie \code{run()}, gdzie wczytywany i
 interpretowany jest przy użyciu klas biblioteki \emph{JAudioTagger} plik, a zdobyte informacje są
-następnie przyporządkowywane odpowiednim kluczom z \texttt{AudioFeatures}, i przekazywane do
-otrzymanej w konstruktorze instancji \texttt{ExtractionContext}.
+następnie przyporządkowywane odpowiednim kluczom z \code{AudioFeatures}, i przekazywane do
+otrzymanej w konstruktorze instancji \code{ExtractionContext}.
 
-Dla zwiększenia czytelności, \texttt{JAudioTaggerMetaExtractor} udostępnia dwie metody statyczne,
-zamykające w jednym wywołaniu utworzenie obiektu i wywołanie metody \texttt{run()}:
+Dla zwiększenia czytelności, \code{JAudioTaggerMetaExtractor} udostępnia dwie metody statyczne,
+zamykające w jednym wywołaniu utworzenie obiektu i wywołanie metody \code{run()}:
 
 \begin{itemize}
 
-  \item \texttt{process} jedynie tworzy obiekt \texttt{JAudioTaggerMetaExtractor} i wywołuje na nim
-metodę \texttt{run}, wypuszczając na zewnątrz wszelkie ewentualne wyjątki
+  \item \code{process} jedynie tworzy obiekt \code{JAudioTaggerMetaExtractor} i wywołuje na nim
+    metodę \code{run}, wypuszczając na zewnątrz wszelkie ewentualne wyjątki
 
-  \item \texttt{processSignalExceptions} robi to, co \texttt{process}, jednak łapie wszystkie
-wyjątki związane z ekstrakcją metadanych, i przekazuje je do metody \texttt{failure} obiektu
-\texttt{ExtractionContext}, na którym operuje. Nie są one propagowane na zewnątrz metody.
+  \item \code{processSignalExceptions} robi to, co \code{process}, jednak łapie wszystkie wyjątki
+    związane z ekstrakcją metadanych, i przekazuje je do metody \code{failure} obiektu
+    \code{ExtractionContext}, na którym operuje. Nie są one propagowane na zewnątrz metody.
 
 \end{itemize}
 
 Różnica ta staje się istotna, gdy wywołanie jest jedynie częścią procesu pozyskiwania metadanych --
-nawet, jeśli \texttt{JAudioTaggerMetaExtractor} zawiedzie, niektóre inne metadane mogą wciąż zostać
+nawet, jeśli \code{JAudioTaggerMetaExtractor} zawiedzie, niektóre inne metadane mogą wciąż zostać
 odczytane przez inne mechanizmy. 
 
