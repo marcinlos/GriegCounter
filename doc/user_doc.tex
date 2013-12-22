@@ -594,11 +594,10 @@ pipeline.connect(sink, float[][].class).to(Pipeline.ROOT);
 Dołączone w ten sposób węzły są nienazwane. Aby utworzyć węzeł nazwany, jako pierwsze lub ostatnie
 wywołanie w ciągu umieścić należy \code{as(nazwa)}. Nazwa węzła składać może się z małych i wielkch
 liter oraz cyfr, rozdzielonych kropką (\code{.}), slashem (\code{/}), znakiem podkreślenia dolnego
-(\code{\_}), bądź kreską (\code{-}) - np. \code{moj\_wezel.super-a/12}.  Poniższe dwie linijki są
-równoważne:
+(\code{\_}), bądź kreską (\code{-}) - np. \code{moj\_wezel.super-a/12}.  Poniższa linijka dołącza
+węzeł nazwany \code{"foo"} do korzenia drzewa:
 
 \begin{java}
-pipeline.connect(sink, float[][].class).toRoot().as("foo");
 pipeline.as("foo").connect(sink, float[][].class).toRoot();
 \end{java}
 

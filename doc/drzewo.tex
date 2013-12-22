@@ -56,7 +56,6 @@ przetwarzania danych audio.
   zakładać w tym przypadku inspirację pracą Kiselyova.
 \end{Note}
 
-
 Podstawę zastosowanego rozwiązania stanowi struktura drzewiasta, w której moduły odpowiedzialne za
 konkretne przekształcenia strumienia wejściowego danych (nazywane dalej \emph{jednostkami
 przetwarzania}), produkowanego przez moduł wczytywania plików, są liśćmi bądź węzłami wewnętrznymi.
@@ -123,7 +122,6 @@ funkcjonalności operującej bezpośrednio na dołączonych ujściach, co pozwal
 rolę od detali implementacji interfejsu \code{Enumerator}, a także oszczędza powtarzania
 identycznego boilerplate'u dla każdej klasy.
 
-
 \code{Iteratee} to ujście danych, konsument strumienia. Może być przyłączony do źródła danych
 (\code{Enumeratee}). Dane do konsumpcji przyjmuje poprzez metodę \code{step}, przyjmującej kolejne
 fragmenty strumienia. Metoda \code{Step} zwraca wartość wyliczeniową \code{Step}, która pozwala
@@ -137,7 +135,6 @@ puste implementacje metod \code{finished} i \code{failed}, jak również rzuca w
 kolejnych danych. Jest ona mniej przydatna niż \code{AbstractEnumerator}, nie została z tego względu
 przedstawiona na diagramie.
 
-
 \code{Enumeratee} to przekształcenie danych, połączenie źródła i ujścia; element ten otrzymuje na
 wejściu fragmenty pewnego strumienia, konsumuje go, i na jego podstawie produkuje nowy strumień.
 Istotne jest, że nowy strumień nie musi być w żaden sposób powiązany ze starym -- może być innego
@@ -145,13 +142,107 @@ typu, a przekazywanie jego fragmentów nie musi w żaden sposób być zsynchroni
 strumienia wejściowego. 
 
 
-
 \subsection{Tworzenie drzewa}
+
+Podstawowym sposobem tworzenia drzewa przetwarzania jest bezpośrednie użycie metod
+\code{connect}\slash \code{disconnect}. Czasem jednak jest to dość kłopotliwe. Ze względu na brak
+metod umożliwiających nawigację po drzewie, konieczne jest w trakcie jego budowania przechowywanie
+lokalnie referencji do jego elementów, by móc podłączyć do nich kolejne jednostki przetwarzania. W
+przypadku dużych drzew staje się to dość niewygodne. Co więcej, wymusza w praktyce zamknięcie
+procesu tworzenia drzewa w jednej metodzie, co mocno ogranicza architekturę aplikacji korzystających
+z drzewa przetwarzania. Ponadto, drzewo musi być tworzone ,,ręcznie'' -- w obliczu wymienionych
+ograniczeń trudno np. zbudować je na podstawie konfiguracji odczytanej z pliku. 
+
+Powyższe problemy rozwiązane zostały poprzez stworzenie klasy pomocniczej \code{Pipeline}, która
+przechowuje dodatkowe informacje o jednostkach przetwarzania wchodzących w skład tworzonego drzewa
+-- wybrane przy wstawianiu nazwy i typy poszczególnych węzłów. \code{Pipeline} umożliwia dołączanie
+nowych elementów do elementu drzewa na podstawie nazwy jednostki, do której mają zostać podłączone,
+co w szczególności znacząco ułatwia potencjalne tworzenie drzewa na podstawie konfiguracji. Dzięki
+przechowywaniu typów w postaci obiektów \code{Class}, \code{Pipeline} jest w stanie zapewnić w
+czasie wykonania poprawność typów połączeń (np. nie pozwoli połączyć wejścia jednostki przyjmującej
+tablice \code{floatów} z wyjściem jednostki produkującej strumień \code{int}-ów). \code{Pipeline} w
+szczególny sposób traktuje korzeń drzewa -- nie jest on bezpośrednio przechowywany w strukturze,
+natomiast \code{Pipeline} jest \code{Iteratee}. Może więc swobodnie być dołączana do wszelkich
+producentów strumienia. Stanowi więc w pewnym sensie ,,złożoną jednostkę przetwarzania'', o jednym
+wejściu i potencjalnie wielu wyjściach (nie jest jednak \code{Enumerator}-em).
+
+\begin{Note}
+  Możliwe jest również dołączanie węzłów nienazwanych -- wtedy nie są zapamiętywane bezpośrednio, a
+  jedynie dołączane do strumienia produkowanego przez określoną jednostkę przetwarzania. W
+  szczególności nie można z poziomu \code{Pipeline}-a dołączyć do nich innych jednostek.
+\end{Note}
+
+
+\subsubsection{Budowa klasy \code{Pipeline}}
+
+\code{Pipeline} przechowuje wewenętrznie jednostki przetwarzania w mapie indeksowanej ich nazwami. W
+tym celu stworzoan została hierarchia klas reprezentująca różne rodzaje jednostek, wraz z
+niezbędnymi informacjami o typie. Aby umożliwić przechowywanie wszystkich takich struktur w jednej
+mapie, wszystkie implementują jeden pusty interfejs -- \code{Node}. Rozszerzają go interfejsy
+\code{Source}, \code{Sink} i \code{Transform}, które implementują kolejno struktury do
+przechowywania źródeł (\code{Enumerator}), ujść (\code{Iteratee}) i przekształceń
+(\code{Enumeratee}). Są one interfejsami a nie konkretnymi klasami, by umożliwić wprowadzenie
+naturalnego połączenia między typem reprezentującym \code{Enumeratee}, a pozostałymi dwoma --
+interfejs \code{Transform} jest podtypem \code{Sink} i \code{Source}. 
+
+\IncludeUML{pipeline_struct}
+{Hierarchia uzywanych do przechowywania informacji o węzłach drzewa w klasie \code{Pipeline}}
+
+
+\subsubsection{Interfejs}
+
+Interfejs oferowany przez \code{Pipeline} ma postać minimalistycznego DSL-a, zrealizowanego za
+pomocą techniki \textit{fluent interface}. Wywołania mają następującą postać:
+
+\begin{java}
+  pipeline {  .as("nazwa") } .connect(jednostka, t_wej) [ toRoot() | to("nazwa_zrodla") ]
+  pipeline {  .as("nazwa") } .connect(jednostka, t_wej, t_wyj) [ toRoot() | to("nazwa_zrodla") ]
+\end{java}
+
+np. 
+
+\begin{java}
+  pipeline.as("foo").connect(sink, float[][].class).to("bar");
+\end{java}
+
+Jest to prosty język regularny. Zrealizowany jest w prosty sposób: stanom odpowiadają obiekty klas
+wewnętrznych klasy \code{Pipeline}, funkcji przejścia -- ich metody.
+
+\IncludeUML{pipeline_dsl}{Struktura języka}
+
+\code{Named} i \code{Connect} (i sam \code{Pipeline}) to klasy reprezentujące stany. Posiadają
+metody odpowiadające wychodzącym z nich przejściom, które zwracają obiekt reprezentujący stan
+docelowy danego przejścia.
+
+\begin{java}
+public class Named {
+    // ...
+
+    public <S> Connect connect(Iteratee<? super S> sink, Class<S> clazz) { ... }
+
+    public <S, R> Connect connect(Enumeratee<? super S, ? extends R> transform, 
+        Class<S> input, Class<R> output) { ... }
+}
+
+public class Connect {
+    // ...
+
+    public Pipeline<T> toRoot() { ... }
+
+    public Pipeline<T> to(String source) { ... }
+
+}
+\end{java}
+
+\begin{Note}
+  Powyższa konstrukcja łatwo rozszerza się do dowolnego języka regularnego. 
+\end{Note}
 
 
 \subsection{Współpraca z modułem wczytywania danych}
 
 
 \subsection{Gotowe jednostki przetwarzania}
+
 
 
