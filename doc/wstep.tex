@@ -1,0 +1,42 @@
+
+\section{Wstep}
+
+Projekt podzielić można na dwie odrębne, choć związane części. Pierwsza to ogólnego zastosowania
+framework do odczytu, analizy i odtwarzania dźwieku, zaś druga to aplikacja Androidowa stanowiąca
+ilustrację jego możliwości i przykład użycia.
+
+Framework spełnia kilka zadań. Umożliwia wczytywanie plików audio w kilku wspieranych bazowo
+formatach (wav, mp3, ogg) i daje dostęp do zawartych w nich danych w spójnym formacie, niezależnym
+od reprezentacji dźwięku w pliku wejściowym. Pozwala w prosty sposób rozszerzać tę funkcjonalność na
+nowe formaty, poprzez dodanie własnych implementacji odpowiedniego interfejsu. Oferuje elastyczny
+model przetwarzania dźwięku, wzorowany na konstrukcjach zastosowanych w innych tego typu
+bibliotekach.
+
+Framework podzielony jest na kilka współpracujących ze sobą modułów. Ogólną, wysokopoziomową jego
+struktura przedstawiona została na poniższym diagramie.
+
+\IncludeUML{modules}{Struktura frameworka i powiąznaia z używającą go aplikacją}
+
+Moduł wczytywania plików zajmuje się odczytywaniem plików z danymi audio, dekodowaniem ich i
+konwersją otrzymanych w ten sposób danych do spójnego wewnętrznego formatu frameworku. Do jego zadań
+należy zarządzanie podmodułami obsługi konkretnych formatów plików.
+
+Moduł odczytu metadanych służy do pozyskiwania informacji o pliku nie będących bezpośrednio danymi
+audio (tytuł, autora itd). 
+
+Moduł przetwarzania dźwięku udostępnia infrastrukturę pozwalającą w dowolny sposób analizować i
+przekształcać wejściowy strumień danych audio. W jego skład wchodzą interfejsy i klasy pomocnicze
+budujące rdzeń frameworka, a także zestaw gotowych podstawowych przekształceń i obliczeń.
+
+Moduł propagacji danych oferuje możliwość względnie prostego i wygodnego przekazywania danych z
+logicznej części aplikacji do interfejsu użytkownika. Framework udostępnia klasy łączące go z
+modułem przetwarzania, co pozwala stworzyć np. wizualizację transformaty Fouriera przetwarzanego
+sygnału w czasie rzeczywistym.
+
+Moduł odtwarzania dostarcza możliwość odtworzenia danych dźwiękowych, odczytanych z pliku bądź
+przekształconych. Jest rozszerzalny -- jego funkcjonalność zbudowana jest na niewielkim zestawie
+prostych operacji, dzięki czemu dostarczenie implementacji na nową, niewspieraną platformę nie
+wymaga dużego wysiłku.
+
+Powyższe opisy mają na celu jedynie pobieżne ukazanie ogólnej struktury frameworku. Kolejne sekcje
+dokumentacji technicznej opisują szczegółowo implementację poszczególnych modułów.

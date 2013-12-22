@@ -63,7 +63,7 @@ Model&lt;T&gt;
 /getChild(p: Path, type: Class&lt;S&gt;): Model&lt;S&gt;)/
 /getChild(s: String, type: Class&lt;S&gt;): Model&lt;S&gt;)/
 /getChild(p: Path): Model&lt;?&gt;/
-/getChildren(): Map&lt;String, Model&lt;?&gt; &gt;
+/getChildren(): Map&lt;String, Model&lt;?&gt; &gt;/
 
 </panel_attributes>
     <additional_attributes/>
