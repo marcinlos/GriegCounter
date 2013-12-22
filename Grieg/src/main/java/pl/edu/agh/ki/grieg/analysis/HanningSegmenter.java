@@ -11,7 +11,7 @@ import pl.edu.agh.ki.grieg.util.iteratee.State;
  * 
  * @author los
  */
-public class HammingSegmenter extends AbstractEnumeratee<float[][], float[][]> {
+public class HanningSegmenter extends AbstractEnumeratee<float[][], float[][]> {
 
     /** Values of window function for each sample in the chunk */
     private final float[] window;
@@ -35,7 +35,7 @@ public class HammingSegmenter extends AbstractEnumeratee<float[][], float[][]> {
     private int nextIndex = 0;
 
     /**
-     * Creates the HammingSegmenter suitable for processing specified amout of
+     * Creates the HanningSegmenter suitable for processing specified amout of
      * channels, using provided parameters.
      * 
      * @param channels
@@ -45,7 +45,7 @@ public class HammingSegmenter extends AbstractEnumeratee<float[][], float[][]> {
      * @param bufferSize
      *            Size of each chunk
      */
-    public HammingSegmenter(int channels, int hopSize, int bufferSize) {
+    public HanningSegmenter(int channels, int hopSize, int bufferSize) {
         this.bufferSize = bufferSize;
         this.hopSize = hopSize;
         this.channels = channels;

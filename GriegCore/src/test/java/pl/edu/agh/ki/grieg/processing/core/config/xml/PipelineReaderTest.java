@@ -34,7 +34,7 @@ public class PipelineReaderTest extends ReaderTest {
             new PipelineAssemblerNode(
                     "pl.edu.agh.ki.grieg.DefaultPipelineAssembler"),
             new PipelineElementNode("hamming",
-                    "pl.edu.agh.ki.grieg.analysis.HammingSegmenter", "ROOT"),
+                    "pl.edu.agh.ki.grieg.analysis.HanningSegmenter", "ROOT"),
             new PipelineAssemblerNode(
                     "pl.edu.agh.ki.grieg.SuperPipelineAssembler")
     };

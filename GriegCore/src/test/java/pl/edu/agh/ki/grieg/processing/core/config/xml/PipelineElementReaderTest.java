@@ -34,7 +34,7 @@ public class PipelineElementReaderTest extends ReaderTest {
 
     private PipelineElementNode thirdDefinition =
             new PipelineElementNode("hamming",
-                    "pl.edu.agh.ki.grieg.analysis.HammingSegmenter", "ROOT");
+                    "pl.edu.agh.ki.grieg.analysis.HanningSegmenter", "ROOT");
 
     @Mock private Context context;
 

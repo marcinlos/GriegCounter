@@ -2,7 +2,7 @@ package pl.edu.agh.ki.grieg.processing.core;
 
 import pl.edu.agh.ki.grieg.analysis.Multiplexer;
 import pl.edu.agh.ki.grieg.analysis.FFT;
-import pl.edu.agh.ki.grieg.analysis.HammingSegmenter;
+import pl.edu.agh.ki.grieg.analysis.HanningSegmenter;
 import pl.edu.agh.ki.grieg.analysis.Power;
 import pl.edu.agh.ki.grieg.analysis.PowerSpectrum;
 import pl.edu.agh.ki.grieg.analysis.Segmenter;
@@ -61,7 +61,7 @@ public class DefaultPipelineAssembler implements PipelineAssembler {
                 .connect(compressor, float[][].class, Range[].class)
                 .to("segmenter");
 
-        HammingSegmenter hamming = new HammingSegmenter(channels, hopSize, chunkSize);
+        HanningSegmenter hamming = new HanningSegmenter(channels, hopSize, chunkSize);
 
         pipeline.as("hamming")
                 .connect(hamming, float[][].class, float[][].class)

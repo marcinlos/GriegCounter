@@ -686,7 +686,7 @@ przedziale. Jednostka przetwarzania obliczająca moc fali to klasa \code{Power}.
 ciąg próbek, na wyjście przesyła średnią kwadratową próbek z zakresu wejściowego.  Jednostka
 podłączona powinna być bezpośrednio do wejścia (amplitudy fali).
 
-\subsubsection{Okno Hamminga}
+\subsubsection{Okno Hanninga}
 
 Niektóre przekształcenia (np. transformata Fouriera) operuje na sygnale okresowym. Nie sposób tego
 zagwarantować w przypadku fali dźwiękowej -- fragment nie musi być okresowy. W przypadku użycia
@@ -695,7 +695,7 @@ przedziału, a co za tym idzie, wynik jest zaburzony. Aby temu zapobiec, fragmen
 poddawane takim przekształceniom uprzednio mnoży się przez odpowiednio przygotowane tzw.
 \emph{okno}, które gwarantuje, że wartości na początku i końca bufora zbiegają do 0.
 
-Framework oferuje klasę \code{HammingSegmenter}, stosującą do tego celu \emph{okno Hamminga}.
+Framework oferuje klasę \code{HanningSegmenter}, stosującą do tego celu \emph{okno Hanninga}.
 Oprócz modyfikowania wejścia, dzieli je na zachodzące na siebie fragmenty, co pozwala zachować
 płynność przejścia pomiędzy kolejnymi fragmentami. Jej konstruktor przyjmuje ona dwa argumenty:
 wielkość fragmentów, oraz jaki kawałek fragmentu zachodzi na następny.
@@ -703,7 +703,7 @@ wielkość fragmentów, oraz jaki kawałek fragmentu zachodzi na następny.
 \subsubsection{Transformata Fouriera}
 
 Jednostka przetwarzania obliczająca dyskretną transformatą Fouriera (FFT) to klasa \code{FFT}. Na
-wejściu przyjmuje sygnał okresowy (np. sygnał wejściowy przemnożony przez okno Hamminga). Na wyjście
+wejściu przyjmuje sygnał okresowy (np. sygnał wejściowy przemnożony przez okno Hanninga). Na wyjście
 emituje wartości transformaty Fouriera -- część rzeczywistą i zespoloną.
 
 \subsubsection{Spektrum mocy fali}
