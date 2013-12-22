@@ -389,6 +389,27 @@ while (entries.hasMoreElements()) {
 }
 \end{java}
 
+Funkcjonalność obsługi pewnego protokołu URL reprezentuje interfejs \code{URLProtocolHandler},
+posiadający na potrzeby frameworku jedną metodę, pozwalającą zwrócić na podstawie URL katalogu i
+jego nazwy listę ścieżek plików znajdujących się w tym katalogu. Wybór odpowiedniej implementacji
+dokonuje się na podstawie części określającej protokół w adresie URL katalogu, którego zawartość
+jest potrzebna. Realizuje to klasa \code{ProtocolHandlerProvider}.
+
+Framework udostępnia bazowo dwie jego implementacje: \code{FileProtocolHandler} i
+\code{JarProtocolHandler}, obsługujące odpowiednio katalogi na dysku i katalogi wewnątrz plików
+\code{jar}. Możliwe jest dodanie własnej implementacji nowych protokołów; handlery znajdowane są
+przez czytanie plików konfiguracyjnych w katalogu
+\code{pl.agh.edu.ki.grieg/classpath.scanner/handlers} na CLASSPATH-ie. Gdy
+\code{ProtocolHandlerProvider} otrzymuje adres URL, dla którego ma znaleźć stosowny handler, próbuje
+oczytać z tego katalogu plik o nazwie takej, jak protokół tego adresu. Jeśli go znajduje, odczytuje
+z niego nazwę klasy, której posłuży jako handler danego protokołu, tworzy jej obiekt i zwraca go.
+
+\begin{Important}
+  Implementacje interfejsu \code{URLHandlerProvider} powinny posiadać konstruktor bezargumentowy,
+  aby mogły zostać zainstancjonowane przez \code{ProtocolHandlerProvider}-a.
+\end{Important}
+
+
 \subsubsection{Problem z Androidem}
 
 Rozwiązanie opisane w poprzedniej sekcji napotyka pewien problem na platformie \emph{Android}.
