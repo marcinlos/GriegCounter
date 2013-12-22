@@ -241,6 +241,28 @@ public class Connect {
 
 \subsection{Współpraca z modułem wczytywania danych}
 
+Drzewo przetwarzania potrzebuje źródła danych -- elementu, który wygeneruje strumień i przekaże do
+podłączonych elementów. W tym celu potrzebny jest element przejściowy pomiędzy modułem wczytywania
+danych, który potrafi dekodować pliki dźwiękowe i udostępnia ich treść, a pasywnymi jednostkami
+przetwarzania, który strumień należy przekazać. We frameworku rolę tę pełnią implementacje
+interfejsu \code{SampleEnumerator}. Rozszerza on \code{Enumerator<float[][]>} (tj. produkuje
+fragmenty strumienia audio, z dźwiękiem podzielonym na kanały), a oprócz tego posiada metody
+pozwalające asynchroniznie sterować strumieniem (pauza, wznowienie itd).
+
+Framework używa jednej implementacji interfejsu \code{SampleEnumerator} -- klasy
+\code{StreamSampleEnumerator}. Używa ona wewnętrznie obiektu \code{AudioStream} jako źródła danych,
+wczytując dane do bufora o wybieranym przy tworzeniu rozmiarze. Kontrola strumienia zrealizowana
+jest przy pomocy zmiennej warunkowej (\code{Condition} z pakietu \code{java.util.concurrent.*}).
+
+\begin{Note}
+  Użyte zostały blokady sprawiedliwe (\textit{fair}). Użycie blokad bez ustawienia tego parametru
+  skutkowała stosunkowo długimi (do kilku sekund) opóźnieniami reakcji na wywołania metod
+  kontrolujących pracę strumienia.
+\end{Note}
+
+Obiekty \code{SampleEnumerator} utworzyć można przy pomocy metody \code{openSource} z klasy
+\code{AudioFile}.
+
 
 \subsection{Gotowe jednostki przetwarzania}
 
