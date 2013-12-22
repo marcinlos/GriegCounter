@@ -51,5 +51,19 @@ modelu.
 Ścieżki w modelu reprezentuje klasa \code{Path}. Składa się ona z ciągu znaków reprezentującego
 ścieżkę, oraz listy jej \emph{komponentów} -- alfanumerycznych części oddzielonych znakem kropki
 (.), będącymi nazwami kolejnych podmodeli na drodze prowadzącej do tego reprezentowanego przez tę
-ścieżkę. 
+ścieżkę.
+
+\IncludeUML[0.4]{model_usage}
+{Przykład użycia modeli w aplikacji -- dane z drzewa przetwarzania i innych źródeł agregowane są w
+drzewie modelu, z którego korzysta GUI}
+
+Powyższy diagram obrazuje miejsce i rolę opisanego w tej sekcji modułu w aplikacji. Modele mogą
+służyć do przekazywania wartości reprezentujących wyniki przetwarzania, ale ich użycie do tego się
+nie ogranicza. Przykład stanowi użycie drzewa modeli do przekazania GUI informacji o rozszerzeniach
+plików, dla których istnieją zarejestrowane parsery, potrzebnej do poprawnego skonstruowania okna
+wyboru pliku tak, aby domyślnie wyświetlane były jedynie pliki obsługiwanych typów (przykład
+pochodzi z GUI testowego zbudowanego z użyciem Swinga). Podobnie, informacje o postępie procesu
+ekstrakcji metadanych opakowane są w stosowny model, uaktualniany poprzez listenera (mechanizmy
+opisane w sekcji dot. metadanych), który to model używany jest do wyświetlenia i uaktualniania paska
+postępu.
 
