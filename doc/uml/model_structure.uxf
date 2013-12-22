@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>490</x>
+      <y>30</y>
+      <w>210</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>Path
+--
+path: String
+components: List&lt;String&gt;
+--
++append(s: String): Path
++prepend(s: String): Path
++head(): String
++tail(): Path
++isEmpty(): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>530</x>
+      <y>200</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Listener&lt;T&gt;
+--
+/update(value: T)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>20</x>
+      <y>30</y>
+      <w>370</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Model&lt;T&gt;
+--
+/addListener(l: Listener&lt;T&gt;)/
+/removeListener(l: Listener&lt;T&gt;)/
+/addListener(p: Path, l: Listener&lt;T&gt;, c: Class&lt;T&gt;)/
+/removeListener(p: Path, l: Listener&lt;T&gt;)/
+/addListener(s: String, l: Listener&lt;T&gt;, c: Class&lt;T&gt;)/
+/removeListener(s: String, l: Listener&lt;T&gt;)/
+/getData(): T/
+/getData(type: Class&lt;S&gt;): T/
+/getDataType(): Class&lt;T&gt;/
+/update()/
+/update(value: T)/
+/hasChild(p: Path): boolean/
+/hasChild(s: String): boolean/
+/getChild(p: Path, type: Class&lt;S&gt;): Model&lt;S&gt;)/
+/getChild(s: String, type: Class&lt;S&gt;): Model&lt;S&gt;)/
+/getChild(p: Path): Model&lt;?&gt;/
+/getChildren(): Map&lt;String, Model&lt;?&gt; &gt;
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>470</x>
+      <y>290</y>
+      <w>200</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>/AbstractModel&lt;T&gt;/
+--
+data: T
+listeners: Listener&lt;T&gt; [*]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>360</x>
+      <y>300</y>
+      <w>130</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>30;30;110;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>600</x>
+      <y>440</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>SimpleModel&lt;T&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>220</x>
+      <y>440</y>
+      <w>310</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>CompositeModel&lt;T&gt;
+--
+models: Map&lt;String, Model&lt;?&gt; &gt;
+--
++addModel(name: String, m: Model&lt;?&gt;)
++removeModel(name: String)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>450</x>
+      <y>330</y>
+      <w>80</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60;30;30;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>600</x>
+      <y>330</y>
+      <w>80</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;60;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>360</x>
+      <y>60</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>130;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>360</x>
+      <y>200</y>
+      <w>190</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=*</panel_attributes>
+    <additional_attributes>170;30;30;30</additional_attributes>
+  </element>
+</diagram>

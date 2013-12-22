@@ -133,6 +133,7 @@ abstract class AbstractModel<T> implements Model<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void update() {
         for (Listener<? super T> listener : listeners) {
             listener.update(data);
@@ -142,6 +143,7 @@ abstract class AbstractModel<T> implements Model<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void update(T newValue) {
         this.data = newValue;
         update();

@@ -1,0 +1,55 @@
+
+\section{Moduł propagacji danych}
+
+Jakkolwiek kwestia komunikacji z interfejsem użytkownika nie jest ściśle związana z tematyką
+frameworku, jednak jako że jest on tworzony z myślą o aplikacji, konieczne było zastosowanie
+jakiegoś rozwiązania tego problemu. 
+
+Głównym zadaniem projektowym jest wyraźne odseparowanie kodu generującego zdarzenia i dane --
+,,logiki'' systemu, jego wewnętrznych procesów i struktury -- od części zajmującej się wizualizacją
+i interakcją z uzytkownikiem. Istnieje wiele wzorców architektonicznych pozwalających na różne
+sposoby, w mniejszym lub większym stopniu ten cel osiągnąć, na czele z powszechie znanym, jednym z
+najwcześniejszych -- MVC. Rozwiązanie zastosowane we frameworku i aplikacji zbudowanej na jego
+podstawie opiera się bardziej na wariancie MVVM (\textit{Model-View-ViewModel}), znanym choćby z
+technologii .NET-owych (XAML, data-binding), szczególnie komunikacja w stronę logika $\to$ GUI.
+Logika aplikacji udostępnia dane w postaci jednego obiektu -- struktury hierarchicznej,
+przypominającej w pewnym stopniu system plików. Poszczególne dane są adresowane przy pomocy ścieżek.
+Elementy GUI mogą zarejestrować listenery, przez które powiadamiane będą o zmianach obserwowanych
+wartości.
+
+
+\subsection{Implementacja}
+
+\IncludeUML{model_structure}{Klasy składające się na implementację modułu propagacji danych}
+
+Najistotniejszą rolę pełni interfejs \code{Model} i jego implementacje. Zawiera on operacje, które
+podzielić można na kilka grup, względem zakresu odpowiedzialności:
+
+\begin{itemize}
+
+  \item zarządzanie daną -- funkcje \code{getData}, \code{getDataType} i \code{update} pozwalają
+    pobrać\slash zmienić wartość danej reprezentowanej przez model
+
+  \item wyszukiwanie dzieci -- kolejna grupa funkcji pozwala pobierać informacje o modelach leżących
+    niżej w hierarchii
+
+  \item zarządzanie listenerami -- pozwalają dołączać\slash usuwać listenerów zarejestrowanych w tym
+    modelu, bądź w pewnym jego podmodelu, wyspecyfikowanym przez względną ścieżkę
+
+\end{itemize}
+
+Częściową implementację interfejsu \code{Model} stanowi klasa abstrakcjna \code{AbstractModel}.
+Dostarcza ona implementacji wszystkich wymienionych wyżej aspektów poza zarządzaniem dziećmi -- te
+zawarte są w dwóch konkretnych jej podklasach, \code{SimpleModel} i \code{CompositeModel}.
+\code{SimpleModel} to model bez dzieci, natomiast \code{CompositeModel} wspiera tworzenie modeli z
+dowolną ilością dzieci oraz zarządzanie nimi, poprzez metody \code{addModel} i \code{removeModel}.
+
+Zmiany wartości modelu komunikowane są poprzez minimalistyczny interfejs \code{Listener},
+zawierający tylko jedną metodę -- \code{udpate}, wywoływaną z nową wartością przy zmianie wartości
+modelu.
+
+Ścieżki w modelu reprezentuje klasa \code{Path}. Składa się ona z ciągu znaków reprezentującego
+ścieżkę, oraz listy jej \emph{komponentów} -- alfanumerycznych części oddzielonych znakem kropki
+(.), będącymi nazwami kolejnych podmodeli na drodze prowadzącej do tego reprezentowanego przez tę
+ścieżkę. 
+
