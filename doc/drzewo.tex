@@ -266,5 +266,75 @@ Obiekty \code{SampleEnumerator} utworzyć można przy pomocy metody \code{openSo
 
 \subsection{Gotowe jednostki przetwarzania}
 
+W oparciu o opisaną wyżej infrastrukturę, stworzone zostały konkretne jednostki przetwarzania,
+realizujące pewne typowe przekształcenia i proste operacje. Znajdują się one w pakiecie
+\code{pl.edu.agh.ki.grieg.analysis}. Sposób ich użycia opisany jest w dokumentacji użytkownika, tu
+opisana zostanie po krótce ich implementacja.
 
+
+\subsubsection{Podział na segmenty równej długości}
+
+Aby nieregularnej wielkości strumień wejściowy podzielić na równe fragmenty, użyć można klasy
+\code{Segmenter}. W prealokowanej tablicy buforuje on wejście, i przesyła ją na wyjście każdorazowo
+po zapełnieniu.
+
+
+\subsubsection{Multipleksacja kanałów}
+
+Operacja multipleksacji wejścia jest realizowana przez klasę \code{Multiplexer}. Na wejściu
+przyjmuje wielokanałowy strumień audio, na wyjście przekazuje jeden kanał, na podstawie numeru
+podanego przy jego tworzeniu.
+
+
+\subsubsection{Próbkowanie wejścia}
+
+Proste próbkowanie ciągu wartości wejściowych realizuje klasa \code{Sampler}. Wybiera ona co $n$-ty
+element wejściowego strumienia, i przekazje go na wyjście. Implementacja jest bardzo prosta, opiera
+się na zliczaniu elementów na wejściu.
+
+
+\subsubsection{Wyznaczanie zakresu wartości w danym przedziale}
+
+Tę prostą operację realizuje klasa \code{WaveCompressor}. Na wyjściu przyjmuje (wielokanałowy)
+strumień audio, na wyjściu prodkuje listę parę składających się z najmniejszej i największej
+wartości amplitudy dla każdego kanału. Pary reprezentowane są przez klasę \code{Range}.
+
+
+\subsubsection{Moc fali}
+
+Moc całkowita fali liczona jest jako średnia kwadratowa spróbkowanych wartości amplitudy
+przekazanego na wejście fragmentu strumienia audio. Wartość liczona jest dla każdego kanału z
+osobna, i przekazywana w tablicy jako fragment strumienia wyjściowego. Przekształcenie to realizuje
+klasa \code{Power}.
+
+
+\subsubsection{Okno Hanninga}
+
+Jednostka przetwarzania \code{HanningSegmenter} przygotowuje dane wejściowe do przekształceń
+wymagających periodyczności sygnału. Na wejściu przyjmuje strumień audio, dzieli go na równe,
+nachodzące na siebie kawałki, mnoży je przez wartości funkcji definiującej okno Hanninga. Tak
+przygotowane fragmenty przesyłane do podłączonych wyjść, jako fragmenty strumienia wyjściowego.
+
+
+\subsubsection{Transformata Fouriera}
+
+Dyskretną transformatę Fouriera realizuje klasa \code{FFT}. Na wejściu przyjmuje tablicę typu
+elementów typu \code{float}, reprezentującą jeden kanał spróbkowanego sygnał, na wyjściu emituje w
+tablicy dwuwymiarowej część rzeczywistą i urojoną obliczonej transformaty. Do jej wyznaczenia
+wykorzystuje bibliotekę JTransforms
+(\url{https://sites.google.com/site/piotrwendykier/software/jtransforms}), napisaną w całości w
+Javie, co pozwala uniknąć potencjalnych problemów z kodem natywnym na platformie \emph{Android}.
+
+\begin{Note}
+  DFT wymaga periodycznego sygnału wejściowego (równych wartości na brzegach), w przeciwnym wypadku
+  pojawią się artefakty wynikające z nieciągłości w punkcie reprezentowanym przez krańce przedziału.
+  Aby tego uniknąć, można np. wejście jednostki FFT podłączyć do strumienia przetworzonego przez
+  \code{HanningSegmenter}
+\end{Note}
+
+
+\subsubsection{Spektrum mocy fali}
+
+Spektrum mocy fali liczone jest jako kwadrat wartości bezwzględnej wyniku transformaty Fouriera.
+Obliczenie to wykonuje klasa \code{PowerSpectrum}.
 
