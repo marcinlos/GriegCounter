@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pl.edu.agh.ki.grieg.android.demo.DefaultBActivity" >
+            android:name="pl.edu.agh.ki.grieg.android.demo.ResultsActivity" >
         </activity>
     </application>
 

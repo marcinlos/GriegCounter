@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -79,6 +80,10 @@ public class LineChartView extends View implements Listener<List<Point>> {
         }
     }
 
+    /*
+     * not that I see the difference, but apparently creating objects during drawing is bad, use getScreen[X/Y]
+     */
+    @Deprecated
     public Point toScreen(Point p) {
     	float y = 1-p.y;
     	if(!scaleChanged)
@@ -87,12 +92,22 @@ public class LineChartView extends View implements Listener<List<Point>> {
         int screeny = (int) (y * viewHeight);
         return new Point(screenx, screeny);
     }
+    
+    public int getScreenX(Point p) {
+    	return (int) (p.x * viewWidth);
+    }
+    
+    public int getScreenY(Point p){
+    	float y = 1-p.y;
+    	if(!scaleChanged)
+    		y = 0.5f * (1 - p.y);
+    	return (int) (y * viewHeight);
+    }
 
     private void drawLines(Canvas canvas) {
         for (int i = 1; i < data.size(); ++i) {
             Point a = data.get(i - 1), b = data.get(i);
-            Point p = toScreen(a), q = toScreen(b);
-            canvas.drawLine(p.x, p.y, q.x, q.y, paint);
+            canvas.drawLine(getScreenX(a), getScreenY(a), getScreenX(b), getScreenY(b), paint);
         }
     }
 
@@ -100,7 +115,6 @@ public class LineChartView extends View implements Listener<List<Point>> {
     public void update(List<Point> serie) {
         postInvalidate();
     }
-    
     
 
 }
