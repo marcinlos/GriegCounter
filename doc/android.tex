@@ -1,0 +1,39 @@
+\chapter{Aplikacja Androidowa}
+\section{Ogólna budowa aplikacji}
+U podstawy całej aplikacji stoją dwie aktywności Androidowe. \code{GriegMain} jest ekranem głównym aplikacji, jego celem jest pozwolenie użytkownikowi na podstawową konfigurację oraz wybranie pliku muzycznego do analizy. \code{ResultsActivity} To aktywność robocza, w niej zachodzą wszystkie obliczenia, tam też prezentowane są wyniki. Odpowiadające im pliki .xml odpowiadają za wygląd oraz rozmieszczenie elementów. Dla prostoty użytkowania powiązanie pomiędzy aktywnościami a deklaratywnym opisem wyglądu zapewniane jest przez mechanizm Dependency Injection realizowany przez RoboJuice.
+
+\section{Inicjalizacja}
+Przy starcie aplikacji, przed pokazaniem użytkownikowi interfejsu w klasie \code{GriegApplication} inicjalizowane są dwie osobne fabryki drzewa przetwarzania. "Domyślna", realizowana przez \code{DefaultAndroidBootstrap} tworzy drzewo wykorzystujące wszystkie przygotowane przez nas węzły, natomiast \code{SimpleAndroidBootstrap} dołącza jedynie te elementy które nie wymagają wyświetlania swoich wyników w czasie rzeczywistym (wykresy fali, mocy oraz metadane). Obydwie fabryki gotowe są do pobrania z każdego elementu aplikacji
+
+\section{GriegMain}
+Layout tej aktywności składa się z jednego przycisku oraz checkboxa. Checkbox pełni rolę konfiguracji, pozwala użytkownikowi dynamicznie wybrać którą fabrykę chciałby wykorzystać. Naciśnięcie przycisku natomiast otwiera okno dialogowe w którym znajduje się nasza prosta implementacja eksploratora plików pozwalającego odnaleźć plik do analizy na karcie SD urządzenia. Wykorzystuje on manualną kontrolę kanału alfa by uzyskać płynne przejście przez przeźroczystość, wykorzystuje też kilka ikon folderów dostępnych w formacie OpenSource w internecie. Wybranie pliku powoduje przejęcie kontroli przez aplikację: najpierw do \code{SharedPreferences} zapisywane jest obecne ustawienie użytkownika - będzie ono persystentne pomiędzy uruchomieniami, jak również dostępne z poziomu innej aktywności. Tworzony jest również \code{Intent} przechodzący do \code{ResultsActivity} w którym umieszczamy uchwyt do wybranego pliku, po czym zmieniamy aktywność
+
+\section{ResultsActivity}
+Jest to aktywność dziedzicząca po \code{RoboTabActivity}, i składa się z kilku niezależnych od siebie zakładek. Na każdej z nich (poza ostatnią przeznaczoną na metadane) znajduje się jeden lub dwa wykresy wstrzykiwane z widoku z pomocą Guice'a. Inicjalizowane są wszystkie zakładki, po czym usuwane są te które wyświetlać się nie powinny (zależnie od wybranej przez użytkownika opcji). Dalej inicjalizuje się pasek postępu który aktualizowany będzie przez proces przetwarzania wstępnego. Następnie w oparciu o (odpowiednią) fabrykę manualnie tworzymy elementy Modelu by połączyć logikę z widokiem. Na końcu zaś w osobnym procesie uruchamiany jest dwuetapowy proces przetwarzania.
+
+Gdy przetwarzanie wstępne zostanie zakończone (metadane zostają wczytane) pasek postępu znika i rozpoczyna się analiza właściwa której wynikami są rysowane w czasie rzeczywistym z pomocą klas \code{LineChartView} oraz \code{SpectrumView} wykresy.
+
+\section{Wykresy}
+\code{LineChartView} jest klasą rysującą wykresy składające się z dużej ilości pionowych linii pixel po pixelu. Przyjmuje ona w formacie push (dane przychodzą z procesu przetwarzania) kolejne coraz większe kolekcje punktów (każdy przyrost składa się z określonej przez klasę modelu ilości par punktów, bądź dla wykresów danych czasu rzeczywistego po prostu kolejnym kompletem punktów) z zakresu [0,1] (lub [-1,1] w wariancie \code{scaleChanged} dla współrzędnej Y). Ta kolekcja stanowi model który jest rysowany niskopoziomowo piksel po pikselu:
+\begin{java}
+    public int getScreenX(Point p) {
+        return (int) (p.x * viewWidth);
+    }
+   
+    public int getScreenY(Point p){
+        float y = 1-p.y;
+        if(!scaleChanged)
+            y = 0.5f * (1 - p.y);
+        return (int) (y * viewHeight);
+    }
+
+    private void drawLines(Canvas canvas) {
+        for (int i = 1; i < data.size(); ++i) {
+            Point a = data.get(i - 1), b = data.get(i);
+            canvas.drawLine(getScreenX(a), getScreenY(a), getScreenX(b), getScreenY(b), paint);
+        }
+    }
+\end{java}
+Każda linia zbudowana jest z dwóch punktów których współrzędne na bieżąco przeskalowywane są do proporcji ekranu. Każda zmiana modelu danych powoduje ponowne odrysowanie całości wykresu.
+
+\code{SpectrumView} działa na podobnej zasadzie, stworzony został jednak do rysowania wykresu słupkowego. By móc takowy uzyskać wyniki FFT sygnału dźwiękowego muszą najpierw zostać przetworzone przez \code{SpectrumBinsCalculator} który na podstawie minimalnej częstotliwości i liczby słupków zwraca oczekiwaną tablicę wysokości w skali logarytmicznej. Szerokość słupków dobierana jest tak by wypełniały całą dostępną przestrzeń.
