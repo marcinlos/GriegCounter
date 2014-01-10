@@ -57,7 +57,7 @@ public class GriegMain extends RoboActivity implements OnClickListener {
 				prefs.edit().putBoolean(Dictionary.ONLY_OFFLINE.getCaption(), false).commit();
 			}
 			
-			Intent i = new Intent(this, DefaultBActivity.class);
+			Intent i = new Intent(this, ResultsActivity.class);
 			i.putExtra(Dictionary.FILE_CHOSEN.getCaption(),file_chosen);
 	        startActivity(i);
 	        //finish();

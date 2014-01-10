@@ -45,7 +45,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class DefaultBActivity extends RoboTabActivity {
+public class ResultsActivity extends RoboTabActivity {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(GriegMain.class);
@@ -96,7 +96,7 @@ public class DefaultBActivity extends RoboTabActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_default_b);
+		setContentView(R.layout.activity_results);
 		Bundle extras = getIntent().getExtras();
 		file_chosen = (String) extras.get(Dictionary.FILE_CHOSEN.getCaption());
 		SharedPreferences sharedPreferences = getSharedPreferences(
@@ -170,7 +170,6 @@ public class DefaultBActivity extends RoboTabActivity {
 		tabHost.addTab(metadata);
 
 		if (onlyOffline) {
-			logger.error("lol, wtf");
 			tabHost.getTabWidget().getChildTabViewAt(2)
 					.setVisibility(View.GONE);
 			tabHost.getTabWidget().getChildTabViewAt(3)
