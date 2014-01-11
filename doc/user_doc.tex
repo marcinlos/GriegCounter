@@ -1,7 +1,4 @@
-
-\chapter{Dokumentacja użytkownika}
-
-\section{Wprowadzenie}
+\chapter{Wprowadzenie}
 
 \emph{Grieg} to stworzony w języku Java, kompatybilny z platformą \textit{Android} framework
 umożliwiający odczyt i analizę plików dźwiękowych. Powstał w dużej mierze na potrzeby aplikacji do
@@ -11,9 +8,9 @@ użycia w sposób interaktywny, łatwo ,,obserwowalny'' dla kodu zewnętrznego.
 Nazwa pochodzi od Edwarda Griega –- XIX-wiecznego norweskiego kompozytora romantycznego, twórcy
 m.in.  słynnego koncertu fortepianowego \textit{a-moll} oraz suit \textit{Peer Gynt}.
 
-\section{Podstawowe operacje}
+\chapter{Podstawowe operacje}
 
-\subsection{Wczytanie pliku}
+\section{Wczytanie pliku}
 
 Aby wczytać plik, niezbędne jest posiadanie obiektu klasy \code{FileLoader}. Jeden \code{FileLoader}
 służyć może do wczytania dowolnej ilości plików. Wszelki dostęp do pliku dźwiękowego następuje
@@ -61,7 +58,7 @@ obsługiwanych przez konkretny obiekt \code{FileLoader} pobrać można przy uży
 \end{Note}
 
 
-\subsection{Dostęp do metadanych}
+\section{Dostęp do metadanych}
 
 Po wczytaniu pliku możemy uzyskać dostęp do jego metadanych –- różnych informacji o pliku i jego
 zwartości, takich jak czas trwania, tytuł, wykonawca itd. Poszczególne formaty plików różnią się
@@ -88,7 +85,7 @@ Dostępne są dwa tryby pozyskiwania metadanych: \emph{podstawowy} (uproszczony)
 i wygodnie pobrać domyślny zestaw metadanych, oraz \emph{zaawansowany}, dający większą kontrolę nad
 procesem.
 
-\subsubsection{Tryb podstawowy}
+\subsection{Tryb podstawowy}
 
 
 Dostęp do metadanych w trybie podstawowym sprowadza sie do wywołania metody \code{extractFeatures()}
@@ -134,7 +131,7 @@ Po pełny opis interfejsu \code{Properties} odsyłamy do dokumentacji, natomiast
 zaprezentowane operacje powinny umożliwić praktyczne wykorzystanie mechanizmu odczytu metadanych
 przy jego użyciu.
 
-\subsubsection{Tryb zaawansowany}
+\subsection{Tryb zaawansowany}
 
 Może się zdarzyć, że podstawowy sposób pobierania metadanych nie wystarcza do pewnych zastosowań.
 Niektóre metadane mogą być kosztowne do obliczenia, a co za tym idzie nie są obliczane domyślnie (z
@@ -228,7 +225,7 @@ Properties metadata = ctx.getFeatures();
 
 Sposób użycia obiektu \code{Properties} opisany został w punkcie dot. trybu podstawowego.
 
-\subsection{Dostęp do danych}
+\section{Dostęp do danych}
 
 Po wczytaniu pliku audio poza dostępem do metadanych, opisanym w poprzedniej sekcji, potrzebujemy
 także dostępu do samych danych, opisujących dźwięk. Różne formaty plików przechowują dane w różny
@@ -258,7 +255,7 @@ funkcjonalności przetwarzania. Bardziej dogłębne omówienie i porównanie obu
 dokumentacji technicznej frameworku. W tym dokumencie skupimy się natomiast na sposobie ich
 wykorzystania.
 
-\subsubsection{Użycie modelu \emph{pull}}
+\subsection{Użycie modelu \emph{pull}}
 
 W modelu \emph{pull} dostęp do danych odbywa się poprzez obiekt klasy \code{AudioStream}, który
 stworzyć można z otwartego pliku audio (\code{AudioFile}). Służy do tego metoda \code{openStream()}.
@@ -294,7 +291,7 @@ while ((count = stream.readSamples(buffer)) > 0) {
 }
 \end{java}
 
-\subsubsection{Użycie modelu \emph{push}}
+\subsection{Użycie modelu \emph{push}}
 
 \begin{Note}
 Model \emph{push} nieodłącznie powiązany jest z drzewem przetwarzania, opisanym dokładnie w kolejnej
@@ -355,12 +352,12 @@ public interface Controllable {
 }
 \end{java}
 
-\section{Przetwarzanie strumienia danych w modelu \emph{push}}
+\chapter{Przetwarzanie strumienia danych w modelu \emph{push}}
 
 W przeciwieństwie do modelu \emph{pull}, przetwarzanie w modelu \emph{push} wymaga pewnej
 infrastruktury, która umożliwia jego wykorzystanie w możliwie wygodny, naturalny i efektywny sposób.
 
-\subsection{Iteratee, Enumerator, Enumeratee}
+\section{Iteratee, Enumerator, Enumeratee}
 
 Podstawowymi elementami infrastruktury drzewa przetwarzania są jego elementy -- węzły. W zależności
 od pełnionej roli (która przekłada się na pozycję w drzewie), węzły drzewa przetwarzania dzielimy na
@@ -404,7 +401,7 @@ przetwarzania -- np. węzeł odpowiedzialny za obliczanie transformaty Fouriera 
 dane typu \code{float[][]}, produkuje zaś dane typu \code{float[]}.
 
 
-\subsection{Abstrakcyjne klasy pomocnicze}
+\section{Abstrakcyjne klasy pomocnicze}
 
 Jakkolwiek \emph{Grieg} udostępnia pewne gotowe, podstawowe węzły przetwarzania, z których zbudować
 można drzewo przetwarzania, nie zawiera bardziej specjalistycznych, złożonych przekształceń. Poza
@@ -481,7 +478,7 @@ zaniedbane tu możliwości.
 \end{Note}
 
 
-\subsection{Tworzenie drzewa przetwarzania}
+\section{Tworzenie drzewa przetwarzania}
 
 Pojedyncze węzły przetwarzania nie są zazwyczaj szczególnie użyteczne. Aby tworzyć złożone,
 wieloetapowe analizy bez znacznego zwiększania złożoności logiki samych węzłów, a także unikając
@@ -525,7 +522,7 @@ Iteratee<float[][]> sink = new AbstractIteratee<float[][]>() {
 \end{java}
 
 
-\subsection{Tworzenie drzewa z użyciem klasy \code{Pipeline}}
+\section{Tworzenie drzewa z użyciem klasy \code{Pipeline}}
 
 Opisany w poprzedniej sekcji sposób budowania drzewka w wielu wypadkach będzie wystarczający - np.
 gdy potrzebujemy połączyć kilka konkretnych, zdefiniowanych w kodzie węzłów. Sprawa komplikuje się,
@@ -618,7 +615,7 @@ source.connect(pipeline);
 \code{getSource}. W praktyce jest to dość rzadko potrzebna.
 
 
-\subsection{Gotowe jednostki przetwarzania}
+\section{Gotowe jednostki przetwarzania}
 
 Framework udostępnia pewne gotowe jednostki przetwarzania, realizujące proste operacje na strumieniu
 wejściowym (np. podział na fragmenty równej długości), bądź też podstawowe przekształcenia
@@ -628,7 +625,7 @@ przekształcenia mają z reguły mało złożony, atomiczny charakter. Bardziej 
 realizowane winny być poprzez łączenie prostych funkcjonalności.
 
 
-\subsubsection{Podział na segmenty równej długości}
+\subsection{Podział na segmenty równej długości}
 
 Źródło danych nie gwarantuje niczego o ilości próbek w przesyłanych do podłączonych węzłów
 fragmentach sygnału. Czasem wygodnym może być pracowanie na kawałkach o stałym, ustalonym rozmiarze.
@@ -644,7 +641,7 @@ source.connect(segmenter);
 segmenter.connect(sink);
 \end{java}
 
-\subsubsection{Multipleksacja kanałów}
+\subsection{Multipleksacja kanałów}
 
 Niekiedy zachodzi potrzeba wybrania jednego kanału -- np. jednostka obliczająca FFT przyjmuje na
 wejściu pojedynczy kanał (\code{float[]}), nie pełny sygnał wejściowy. W tym celu użyć można klasy
@@ -660,7 +657,7 @@ fft.connect(fftReal);
 fft.connect(fftComplex);
 \end{java}
 
-\subsubsection{Próbkowanie wejścia}
+\subsection{Próbkowanie wejścia}
 
 Jeśli chcemy np. narysować poglądowy wykres amplitudy fali na całej długości utworu, użycie do tego
 wszystkich dostępnych próbek zdecydowanie nie jest najlepszym rozwiązaniem -- przy standardowej
@@ -672,21 +669,21 @@ próbek była bliska rozdzielczości poziomej obszaru wyświetlania.
 Funkcjonalność taką udostępnia klasa \code{Sampler}. Na wejściu przyjmuje fragment sygnału, na
 wyjście wysyła jedną próbkę co ilość próbek określoną w konstruktorze.
 
-\subsubsection{Wyznaczanie zakresu wartości w danym przedziale}
+\subsection{Wyznaczanie zakresu wartości w danym przedziale}
 
 Framework udostępnia jednostkę przetwarzania, która ze spróbkowanego sygnału wejściowego wyznacza
 dla każdego kanału ekstrema amplitudy na podanym przedziale, i przekazuje je na wyjście w postaci
 obiektu \code{Range}, składającego się z dwóch pól typu \code{float} (\code{min} i \code{max}).
 Klasa ją realizująca to \code{WaveCompressor}.
 
-\subsubsection{Moc fali}
+\subsection{Moc fali}
 
 Moc fali na jakimś przedziale określona jest jako średnia kwadratowa amplitud próbek na tym
 przedziale. Jednostka przetwarzania obliczająca moc fali to klasa \code{Power}. Na wejściu przyjmuje
 ciąg próbek, na wyjście przesyła średnią kwadratową próbek z zakresu wejściowego.  Jednostka
 podłączona powinna być bezpośrednio do wejścia (amplitudy fali).
 
-\subsubsection{Okno Hanninga}
+\subsection{Okno Hanninga}
 
 Niektóre przekształcenia (np. transformata Fouriera) operuje na sygnale okresowym. Nie sposób tego
 zagwarantować w przypadku fali dźwiękowej -- fragment nie musi być okresowy. W przypadku użycia
@@ -700,20 +697,20 @@ Oprócz modyfikowania wejścia, dzieli je na zachodzące na siebie fragmenty, co
 płynność przejścia pomiędzy kolejnymi fragmentami. Jej konstruktor przyjmuje ona dwa argumenty:
 wielkość fragmentów, oraz jaki kawałek fragmentu zachodzi na następny.
 
-\subsubsection{Transformata Fouriera}
+\subsection{Transformata Fouriera}
 
 Jednostka przetwarzania obliczająca dyskretną transformatą Fouriera (FFT) to klasa \code{FFT}. Na
 wejściu przyjmuje sygnał okresowy (np. sygnał wejściowy przemnożony przez okno Hanninga). Na wyjście
 emituje wartości transformaty Fouriera -- część rzeczywistą i zespoloną.
 
-\subsubsection{Spektrum mocy fali}
+\subsection{Spektrum mocy fali}
 
 Rozkład mocy fali w dziedzinie częstotliwości obliczyć można jako kwadrat wartości bezwzględnej
 transformaty Fouriera sygnału. Realizuje to klasa \code{PowerSpectrum} -- na wejściu przyjmuje
 obliczoną watość transformaty Fouriera, na wyjście emituje natężenia poszczególnych częstotliwości.
 
 
-\section{Propagacja danych - modele}
+\chapter{Propagacja danych - modele}
 
 Podczas tworzenia aplikacji z interfejsem graficznym często sporym wyzwaniem jest odseparowanie
 samego interfejsu (tradycyjnie: \emph{widoku}), od reprezentowanych przez niego danych
@@ -729,7 +726,7 @@ z modelu wyodrębnić można poddrzewo, i operować na nim w identyczny sposób 
 Dzięki temu element interfejsu może pracować na części danych, która go dotyczy, bez zwracania uwagi
 na pozostałą część modelu.
 
-\subsection{Sposób użycia}
+\section{Sposób użycia}
 
 Framework dostarcza dwie implementacje interfejsu \code{Model}: pełną -- \code{CompositeModel},
 której instancje mogą posiadać dzieci (podmodele), oraz uproszczoną -- \code{SimpleModel}, która nie
@@ -833,12 +830,12 @@ root.addListener(path, percentListener, float.class);
 \end{java}
 
 
-\subsection{Gotowe modele}
+\section{Gotowe modele}
 
 Framework udostępnia kilka gotowych klas dostarczających modele pewnych wartości, oraz klasy
 pomocnicze, ułatwiające stworzenie własnych tego typu klas.
 
-\subsubsection{AbstractChannelModel}
+\subsection{AbstractChannelModel}
 
 Podczas przetwarzania dźwięku niejednokrotnie pojawia się potrzeba stworzenia modelu składającego
 się z analogicznych wartości dla każdego kanału. Klasa \code{AbstractChannelModel} zawiera model
@@ -847,7 +844,7 @@ klasom potomnym jako pola \code{protected} -- \code{leftSerie} i \code{rightSeri
 implementatora pozostaje uaktualnianie danych w \code{leftSerie} i \code{rightSerie}, poprzez
 zwyczajne wywołania \code{update}.
 
-\subsection{IterateeWrapper}
+\section{IterateeWrapper}
 
 Klasa ta pozwala ,,przetłumaczyć'' \code{Iteratee} na model -- kolejne wartości pojawiające się na
 wejściu \code{Iteratee} stają się kolejnymi wartościami danej reprezentowanej przez model. Jeśli
@@ -875,7 +872,7 @@ Listener<float[]> fftDisplay = new Listener<float[]>() {
 model.addListener(fftDisplay);
 \end{java}
 
-\subsection{FeatureExtractionModel}
+\section{FeatureExtractionModel}
 
 Jak zostało wspomniane w sekcji poruszającej kwestię dostępu do metadanych, przypadku dużych plików
 ekstrakcja niektórych metadanych (np. ilości próbek w plikach mp3) może trwać stosunkowo długo. W
@@ -901,7 +898,7 @@ context.addProgressListener(extractionModel);
 szczegóły znaleźć można w javadocu bądź bezpośrednio w kodzie.
 \end{Tip}
 
-\subsection{WaveWindowModel}
+\section{WaveWindowModel}
 
 Jedną z rzeczy, które możemy chcieć wyświetlić w graficznym interfejsie jest obecnie przetwarzany
 fragment fali (stałej wielkości ,,sliding window''). Framework udostępnia gotową klasę dostarczającą
@@ -910,7 +907,7 @@ przeskalowany numer próbki w całym obserwowanym fragmencie (ułatwia wyświetl
 od wielkości obserwowanego fragmentu), zaś $y$ to wartość próbki. Wielkość obserwowanego fragmentu
 (ilość próbek w oknie) jest podawana jako argument konstruktora.
 
-\section{Odtwarzanie}
+\chapter{Odtwarzanie}
 
 \begin{Important}
 Na chwilę obecną odtwarzanie dźwięku jest wspierane wyłącznie na platformach obsługujących JavaSound
@@ -921,7 +918,7 @@ Oprócz odczytu i analizy dźwięku, framework umożliwia także jego odtwarzani
 funkcjonalności możliwy jest na dwóch poziomach: poprzez użycie wysokopoziomowej, wygodnej klasy
 \code{Player}, bądź też bardziej bezpośrednio.
 
-\subsection{Player}
+\section{Player}
 
 Klasa \code{Player} udostępnia metody pozwalające na odtwarzanie dźwięku, oraz podstawową jego
 kontrolę (wstrzymanie/wznowienie). Umożliwia również rejestrację listenerów, którym przekazywana

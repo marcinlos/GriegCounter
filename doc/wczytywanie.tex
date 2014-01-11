@@ -1,12 +1,11 @@
-\chapter{Wczytywanie}
-\section{Moduł wczytywania plików}
+\chapter{Moduł wczytywania plików}
 
 Zanim z plikiem dźwiękowym można zrobić cokolwiek innego, niezbędne jest odczytanie jego zawartości.
 By umożliwić wygodne korzystanie z frameworku, konieczne było dostarczanie abstrakcji ukrywających
 niskopoziomowe detale i różnice pomiędzy poszczególnymi sposobami reprezentacji danych (kodowanie),
 oraz formatami plików (fragmentacja, kompresja itd). 
 
-\subsection{Wewnętrzna reprezentacja danych}
+\section{Wewnętrzna reprezentacja danych}
 
 W obliczu istnienia różnych sposobów cyfrowej reprezentacji dźwięku, wygodnym było zdecydować się na
 wybór jednego, spójnego kodowania. Jakkolwiek wymaga to konwersji, która wprowadza pewien narzut, a
@@ -101,7 +100,7 @@ implementacji parserów. Pozostałe warianty, jakkolwiek prawdopodobnie okazały
 tworzeniu dalszych parserów, zostały pominięte.
 
 
-\subsection{Realizacja wczytywania}
+\section{Realizacja wczytywania}
 
 Spójna reprezentacja danych frameworku pozwala na wyższym poziomie abstrać od formatu pliku, jednak
 istnieć musi także warstwa, która sprowadza wczytane fizycznie dane do owej reprezentacji. Różne
@@ -225,10 +224,10 @@ public class AudioFile {
 \end{java}
 
 
-\subsection{Odnajdywanie implementacji parserów}
+\section{Odnajdywanie implementacji parserów}
 \label{sec:odnajdywanie_implementacji}
 
-\subsubsection{Dlaczego nie \code{ServiceLoader}?}
+\subsection{Dlaczego nie \code{ServiceLoader}?}
 \label{sec:dlaczego_nie_service_loader}
 
 JDK w wersji 1.6 oferuje mechanizm spełniający postawione wymagania -- klasę \code{ServiceLoader},
@@ -286,7 +285,7 @@ unikalne. Stąd, sensowną wydaje się konwencja \code{\textit{nazwa\_pakietu}.c
 \end{Note}
 
 
-\subsubsection{Pliki konfiguracyjne}
+\subsection{Pliki konfiguracyjne}
 
 Pliki konfiguracyjne zawierają dowolną ilość wpisów następującej postaci:
 
@@ -324,7 +323,7 @@ przechowuje w obiekcie klasy \code{DecoderManager}. \code{DecoderManager} przech
 multimapie indeksowanej rozszerzeniami pliku -- każdy parser znajduje się w każdym ze zbiorów
 przyporządkowanym obsługiwanym przez niego rozszerzeniom.
 
-\subsubsection{Przeglądanie CLASSPATH-a}
+\subsection{Przeglądanie CLASSPATH-a}
 \label{sec:skaner_classpath}
 
 Rozwiązanie opiera się na przetwarzaniu plików w określonym katalogu na CLASSPATH-ie. Istnieje
@@ -410,7 +409,7 @@ z niego nazwę klasy, której posłuży jako handler danego protokołu, tworzy j
 \end{Important}
 
 
-\subsubsection{Problem z Androidem}
+\subsection{Problem z Androidem}
 
 Rozwiązanie opisane w poprzedniej sekcji napotyka pewien problem na platformie \emph{Android}.
 Metoda \code{ClassLoader.getResource} nie zwraca URL-i katalogów, jedynie zwyczajnych plików. Aby
@@ -437,11 +436,11 @@ jako, że nie powstała taka potrzeba.
 \end{Note}
 
 
-\subsection{Zaimplementowane parsery}
+\section{Zaimplementowane parsery}
 
 Framework wspiera bezpośrednio 3 formaty plików: WAV, MP3 i Vorbis.
 
-\subsubsection{Parser WAV}
+\subsection{Parser WAV}
 
 Parser formatu WAV i kontenera RIFF, w który zazwyczaj jest opakowany, z uwagi na swoją prostotę
 (brak kompresji i innych przekształceń, dane bezpośrednio w formacie PCM) został napisany
@@ -472,7 +471,7 @@ całkowite)
 {Interakcje między klasami podczas tworzenia obiektu \code{WavStream}}
 
 
-\subsubsection{Parsery MP3 i OGG}
+\subsection{Parsery MP3 i OGG}
 
 Parser formatu MP3 został utworzony w oparciu o bibliotekę
 \emph{JLayer} (\url{http://www.javazoom.net/javalayer/javalayer.html}), zaś parser Vorbis (ogg) z

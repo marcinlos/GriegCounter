@@ -1,19 +1,22 @@
 
 LATEX_FLAGS = -shell-escape -interaction=nonstopmode -file-line-error
 LATEX = pdflatex $(LATEX_FLAGS)
-MAIN = documentation.tex
+
+DOCS = techniczna.pdf uzytkownika.pdf procesowa.pdf przewodnik.pdf
 
 DIAGRAMS = $(wildcard uml/*.uxf)
 UML_PDFS = $(DIAGRAMS:.uxf=.pdf)
 
 TEX_FILES = $(wildcard *.tex)
 
-all: check_umlet documentation.pdf
 
-documentation.pdf: $(TEX_FILES) $(UML_PDFS)
-	$(LATEX) $(MAIN)
-	while ( grep -qs 'Label(s) may have changed' $(MAIN:.tex=.log) ); do \
-		$(LATEX) $(MAIN); done
+
+all: check_umlet $(DOCS)
+
+$(DOCS): %.pdf: %.tex $(TEX_FILES) $(UML_PDFS)
+	$(LATEX) $<
+	while ( grep -qs 'Label(s) may have changed' $(<:.tex=.log) ); do \
+		$(LATEX) $<; done
 
 uml/%.pdf: uml/%.uxf
 	$(UMLET) -action=convert -format=pdf -filename=$<
@@ -26,4 +29,4 @@ ifndef UMLET
 endif
 
 clean:
-	rm -rf *.aux *.out *.log *.pdf uml/*.pdf
+	rm -rf *.aux *.out *.log *.pdf uml/*.pdf *.toc *.pyg

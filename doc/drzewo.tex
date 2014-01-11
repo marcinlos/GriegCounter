@@ -1,5 +1,4 @@
-\chapter{Przetwarzanie}
-\section{Moduł przetwarzania dźwięku}
+\chapter{Moduł przetwarzania dźwięku}
 
 Podstawowym zadaniem frameworku jest przetwarzanie dźwięku, tj. manipulowanie jego wewnętrzną
 reprezentacją, przeprowadzanie na nim różnych operacji, tworzenie w oparciu o niego innych danych,
@@ -8,7 +7,7 @@ obliczeń, który pozwoli wygodnie i efektywnie pracować z udostępnianym przez
 dźwiękiem.
 
 
-\subsection{Kryteria wyboru sposobu przetwarzania}
+\section{Kryteria wyboru sposobu przetwarzania}
 
 W pierwszej kolejności należy zastanowić się, jakie cechy i zachowania są pożądane, oraz jakie
 ograniczenia należy nałożyć na poszukiwane rozwiązanie. Poniższa lista stanowi próbę
@@ -41,7 +40,7 @@ usystematyzowania tych rozważań, i zamknięcia ich rezultatów w klarowne, wer
 \end{itemize}
 
 
-\subsection{Zastosowane rozwiązanie}
+\section{Zastosowane rozwiązanie}
 
 Wybrane rozwiązanie inspirowane jest pracą O. Kiselyova i stworzoną przez niego biblioteką
 \emph{Iteratees}. Stanowią one wynik niezadowolenia z używanego przez bibliotekę standardową języka
@@ -92,7 +91,7 @@ czasie rzeczywistym dźwięki z otoczenia i przekazujący je do analizy.
 \end{Note}
 
 
-\subsection{Implementacja}
+\section{Implementacja}
 
 \IncludeUML{iteratee_struct}{Główne klasy rdzenia modułu przetwarzania}
 
@@ -142,7 +141,7 @@ typu, a przekazywanie jego fragmentów nie musi w żaden sposób być zsynchroni
 strumienia wejściowego. 
 
 
-\subsection{Tworzenie drzewa}
+\section{Tworzenie drzewa}
 
 Podstawowym sposobem tworzenia drzewa przetwarzania jest bezpośrednie użycie metod
 \code{connect}\slash \code{disconnect}. Czasem jednak jest to dość kłopotliwe. Ze względu na brak
@@ -173,7 +172,7 @@ wejściu i potencjalnie wielu wyjściach (nie jest jednak \code{Enumerator}-em).
 \end{Note}
 
 
-\subsubsection{Budowa klasy \code{Pipeline}}
+\subsection{Budowa klasy \code{Pipeline}}
 
 \code{Pipeline} przechowuje wewenętrznie jednostki przetwarzania w mapie indeksowanej ich nazwami. W
 tym celu stworzoan została hierarchia klas reprezentująca różne rodzaje jednostek, wraz z
@@ -189,7 +188,7 @@ interfejs \code{Transform} jest podtypem \code{Sink} i \code{Source}.
 {Hierarchia uzywanych do przechowywania informacji o węzłach drzewa w klasie \code{Pipeline}}
 
 
-\subsubsection{Interfejs}
+\subsection{Interfejs}
 
 Interfejs oferowany przez \code{Pipeline} ma postać minimalistycznego DSL-a, zrealizowanego za
 pomocą techniki \textit{fluent interface}. Wywołania mają następującą postać:
@@ -239,7 +238,7 @@ public class Connect {
 \end{Note}
 
 
-\subsection{Współpraca z modułem wczytywania danych}
+\section{Współpraca z modułem wczytywania danych}
 
 Drzewo przetwarzania potrzebuje źródła danych -- elementu, który wygeneruje strumień i przekaże do
 podłączonych elementów. W tym celu potrzebny jest element przejściowy pomiędzy modułem wczytywania
@@ -264,7 +263,7 @@ Obiekty \code{SampleEnumerator} utworzyć można przy pomocy metody \code{openSo
 \code{AudioFile}.
 
 
-\subsection{Gotowe jednostki przetwarzania}
+\section{Gotowe jednostki przetwarzania}
 
 W oparciu o opisaną wyżej infrastrukturę, stworzone zostały konkretne jednostki przetwarzania,
 realizujące pewne typowe przekształcenia i proste operacje. Znajdują się one w pakiecie
@@ -272,35 +271,35 @@ realizujące pewne typowe przekształcenia i proste operacje. Znajdują się one
 opisana zostanie po krótce ich implementacja.
 
 
-\subsubsection{Podział na segmenty równej długości}
+\subsection{Podział na segmenty równej długości}
 
 Aby nieregularnej wielkości strumień wejściowy podzielić na równe fragmenty, użyć można klasy
 \code{Segmenter}. W prealokowanej tablicy buforuje on wejście, i przesyła ją na wyjście każdorazowo
 po zapełnieniu.
 
 
-\subsubsection{Multipleksacja kanałów}
+\subsection{Multipleksacja kanałów}
 
 Operacja multipleksacji wejścia jest realizowana przez klasę \code{Multiplexer}. Na wejściu
 przyjmuje wielokanałowy strumień audio, na wyjście przekazuje jeden kanał, na podstawie numeru
 podanego przy jego tworzeniu.
 
 
-\subsubsection{Próbkowanie wejścia}
+\subsection{Próbkowanie wejścia}
 
 Proste próbkowanie ciągu wartości wejściowych realizuje klasa \code{Sampler}. Wybiera ona co $n$-ty
 element wejściowego strumienia, i przekazje go na wyjście. Implementacja jest bardzo prosta, opiera
 się na zliczaniu elementów na wejściu.
 
 
-\subsubsection{Wyznaczanie zakresu wartości w danym przedziale}
+\subsection{Wyznaczanie zakresu wartości w danym przedziale}
 
 Tę prostą operację realizuje klasa \code{WaveCompressor}. Na wyjściu przyjmuje (wielokanałowy)
 strumień audio, na wyjściu prodkuje listę parę składających się z najmniejszej i największej
 wartości amplitudy dla każdego kanału. Pary reprezentowane są przez klasę \code{Range}.
 
 
-\subsubsection{Moc fali}
+\subsection{Moc fali}
 
 Moc całkowita fali liczona jest jako średnia kwadratowa spróbkowanych wartości amplitudy
 przekazanego na wejście fragmentu strumienia audio. Wartość liczona jest dla każdego kanału z
@@ -308,7 +307,7 @@ osobna, i przekazywana w tablicy jako fragment strumienia wyjściowego. Przekszt
 klasa \code{Power}.
 
 
-\subsubsection{Okno Hanninga}
+\subsection{Okno Hanninga}
 
 Jednostka przetwarzania \code{HanningSegmenter} przygotowuje dane wejściowe do przekształceń
 wymagających periodyczności sygnału. Na wejściu przyjmuje strumień audio, dzieli go na równe,
@@ -316,7 +315,7 @@ nachodzące na siebie kawałki, mnoży je przez wartości funkcji definiującej 
 przygotowane fragmenty przesyłane do podłączonych wyjść, jako fragmenty strumienia wyjściowego.
 
 
-\subsubsection{Transformata Fouriera}
+\subsection{Transformata Fouriera}
 
 Dyskretną transformatę Fouriera realizuje klasa \code{FFT}. Na wejściu przyjmuje tablicę typu
 elementów typu \code{float}, reprezentującą jeden kanał spróbkowanego sygnał, na wyjściu emituje w
@@ -333,7 +332,7 @@ Javie, co pozwala uniknąć potencjalnych problemów z kodem natywnym na platfor
 \end{Note}
 
 
-\subsubsection{Spektrum mocy fali}
+\subsection{Spektrum mocy fali}
 
 Spektrum mocy fali liczone jest jako kwadrat wartości bezwzględnej wyniku transformaty Fouriera.
 Obliczenie to wykonuje klasa \code{PowerSpectrum}.

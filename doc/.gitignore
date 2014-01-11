@@ -3,4 +3,6 @@
 *.out
 *.pdf
 *.swp
+*.toc
+*.pyg
 .*
