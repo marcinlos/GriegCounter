@@ -126,8 +126,14 @@ Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętno�
 %TODO gdy skoncze procesowa
 \section{Testy jednostkowe i akceptacyjne}
 
-
-%Marcinie, wiem że framework jest testowany ale not sure co dokładnie
+Do testów jednostkowych wykorzystywany był framework JUnit4 oraz Mockito, sporadycznie także
+PowerMock. Nie cały kod został pokryty w pełni testami jednostkowymi; pokrycie wynosi ok. 30\% (do
+jego określenia wykorzystane zostało narzędzie EclEmma). Testowane były głównie te fragmenty,
+których poprawność jest kwestią delikatną i łatwą do naruszenia, m. in. systemy dynamicznego
+ładowania dodatkowej funkcjonalności wraz z parserami konfiguracji, wykorzystywane przez nie klasy
+pomocnicze do skanowania CLASSPATH-a i obsługa refleksji, jak również API modeli i klasy
+odpowiedzialne za konfigurację. Brak testów jednostkowych dla rdzenia systemu spowodowany jest jego
+stabilnością -- po stworzeniu go na samym początku prac implementacyjnych nie był zmieniany.
 
 
 Aplikacja Androidowa, ze względu na korzystanie z zaimplementowanych i przetestowanych już rozwiązań Frameworku poddana została jedynie testom akceptacyjnym - uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików.
