@@ -1,0 +1,47 @@
+\chapter{Cel pracy i wizja produktu}
+
+\section{Wprowadzenie}
+Wiele uwagi dzisiejszego świata poświęcone jest muzyce. Jeden z najbardziej dochodowych filarów przemysłu rozrywkowego, nieodłączny element naszego życia. Pomimo tego narzędzia do analizy muzyki są jednak w zarodku. Na palcach jednej ręki można policzyć aplikacje które są nam w stanie powiedzieć coś o pliku dźwiękowym. Dysponując telefonem z systemem Android praktycznie jedyne co jesteśmy w stanie dowiedzieć się to tytuł piosenki - pod warunkiem że zapłacimy za odpowiednią aplikację, mamy dostęp do internetu a aranżacja jest bliska oryginalnej. Co natomiast z ludźmi którzy chcieliby wiedzieć więcej? Zobaczyć falę dźwiękową, poznać tempo, być może rozpoznać gatunek bez konieczności odsłuchiwania utworu? Tą lukę postanowiliśmy wypełnić
+\section{Cel i wizja}
+Ostatecznym celem naszej pracy było zaprojektowanie mobilnej aplikacji będącej w stanie robić właśnie te rzeczy - wizualizować, wyciągać informacje, analizować, informować o technicznych aspektach muzyki. Wszystko to zaś zamknięte w okowach systemu operacyjnego Android. Podczas pierwszych faz developmentu odkryliśmy jednak dość nieoczekiwany fakt - Android nie implementuje wszystkich bibliotek Javy. W tym tej, która byłaby nam najbardziej potrzebna: java.sound
+
+By temu zaradzić cel naszej pracy został lekko zmieniony. Ze względu na pozbawienie nas podstawowych niskopoziomowych narzędzi dostępu do pliku muzycznego jak i nadziei na wykorzystanie istniejących już bibliotek - postanowiliśmy zaprojektować własną. Tak narodził się Grieg, framework umożliwiający odczyt i analizę plików dźwiękowych. By zaś spełnić wymogi formalne produktu związane z tematem pracy towarzyszy mu przykładowa aplikacja korzystająca z jego możliwości, będąca prezentacją jego możliwości lecz ze względu na ograniczenia czasowe prezentująca jedynie podstawowe gotowe wyniki przetwarzania pliku muzycznego.
+
+\section{Analiza ryzyka}
+Tak postawiony cel niósł ze sobą spore ryzyko
+\emph{Czas} - zakres możliwości produktu stał się bardzo szeroki, wymagający dokładnego projektowania oraz nietrywialnej implementacji wybranych rozwiązań. A deadline był sztywny. \emph{Ryzyko: 9/10}
+\\
+\emph{Stopień skompikowania} - żaden z nas nie miał wcześniej do czynienia z pracą nad plikami dźwiękowymi, projektowaniu frameworków a nawet doświadczenia w pisaniu aplikacji na Androida. Na naszą korzyść działała tutaj jedynie ogromna wiedza programistyczna jednego z członków zespołu \emph{Ryzyko: 8/10}
+\\
+\emph{Praca w zespole} - charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. \emph{Ryzyko: 7/10} 
+ 
+\chapter{Zakres funkcjonalności}
+
+%nasze wymagania funkc, niefunkc
+
+\chapter{Architektura systemu}
+%hmm...
+\chapter{Organizacja pracy}
+Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę Frameworka okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji Frameworku od zera do stanu w którym był on używalny a API przyjęło ostateczną formę.
+
+\section{Struktura zespołu}
+Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętności. Kierownictwo przejął \emph{Marcin Łoś} - to on odpowiada za architekturę frameworku, on też zarządzał projektem od strony programistycznej delegując zadania gdzie uznał to za stosowne. \emph{Michał Torba} jako główną odpowiedzialność przyjął aplikację Androidową oraz dokumentację projektu pełniąc jedynie pomocniczą funkcję w pozostałych aspektach prac.
+\section{Skrót harmonogramu}
+%TODO gdy skoncze procesowa
+\section{Testy jednostkowe i akceptacyjne}
+%Marcinie, wiem że framework jest testowany ale not sure co dokładnie
+Aplikacja Androidowa, ze względu na korzystanie z zaimplementowanych i przetestowanych już rozwiązań Frameworku poddana została jedynie testom akceptacyjnym - uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików.
+\section{Narzędzia}
+Jako repozytorium kodu wykorzystaliśmy popularny Github. Do szybkiego tworzenia bieżącej dokumentacji projektowej korzystaliśmy z systemu Confluence udostępnianego przez Katedrę Informatyki. Specjalne podziękowanie należy się też Google Hangouts, głównej platformy komunikacji wewnątrz zespołu.
+
+Środowiskiem budowy był Eclipse skonfigurowany pod współpracę z Android SDK. Funkcję emulatorów pełniła maszyna wirtualna wbudowana w SDK, Bluestacks będący szybką Windowsową aplikacją emulującą Androida, oraz GenyMotion czyli maszyna wirtualna systemu Android działająca pod VirtualBoxem którą można wykorzystywać dla celów niekomercyjnych do testowania aplikacji.
+
+\chapter{Wyniki projektu}
+\section{Efekty i ocena przydatności}
+W ramach przyjętych założeń uzyskaliśmy zadowalające wyniki. Framework spełnia wszystkie założenia techniczne przed nim postawione, jest stosunkowo prosty w użytkowaniu i stosownie udokumentowany. O ile więc gotowe jednostki przetwarzania nie rzucą na kolana użytkowników budujących aplikację jedynie w oparciu o gotowe komponenty to jest doskonałym punktem wyjścia dla programistów pragnących napisać własne elementy analizy. Aplikacja androidowa nie posiada dużej wartości sama w sobie, natomiast dobrze demonstruje sposób wykorzystania Frameworku dając punkt wyjścia dla kolejnych bardziej dopracowanych wersji.
+
+\section{Ograniczenia i kierunki dalszych prac}
+Największym ograniczeniem jest liczba gotowych komponentów - te gotowe nie wzbudzą zachwytu w entuzjastach analizy plików muzycznych, reprezentują jedynie absolutne podstawy. Również aplikacja Androidowa ostatecznie może wymagać solidnych przeróbek jeśli nie całkowitego przepisania przez ludzi lepiej zaznajomionych z zawiłościami środowiska Androidowego.
+
+\chapter{Bibliografia}
+
