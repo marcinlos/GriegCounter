@@ -1048,31 +1048,78 @@ source.start();
 
 \chapter{Aplikacja Androidowa}
 \section{Budowa}
-Opis powyżej został oczywiście zastosowany w praktyce w naszej aplikacji. Przygotowane mamy dwa \code{Pipeliny} (patrz: \ref{Pipeline}) różniące się wykorzystywanymi jednostkami przetwarzania (patrz: ref{Jednostki}) z których dynamicznie podczas działania aplikacji wybieramy ten który zostanie wykorzystany. Pierwszy z nich, domyślny, wykorzystuje je wszystkie, drugi zaś tylko \code{Segmenter}, \code{Power} i \code{Skipper}. Tworzymy również drzewo modelów (odpowiednie zależnie od wybranego \code{Pipeline}) wykorzystując do tego gotowe modele (patrz: \ref{Modele}). Podczas przetwarzania wyciągamy wszystkie dostępne metadane, oraz rysujemy wykresy w oparciu o dane dostarczane modelom.
-\section{Efekt}
-\includegraphics[width=7cm]{images/first_screen}
 
-To ekran który użytkownik zobaczy od razu po uruchomieniu aplikacji. Dostaje on możliwość zaznaczenia opcji „Omit real-time graphs” oznaczającej wybranie ograniczonego \code{Pipeline} do wykresów które nie muszą być generowane w całości dla kolejnych fragmentów muzyki oraz dostaje możliwość wybrania pliku do analizy.
+Opis powyżej został oczywiście zastosowany w praktyce w naszej aplikacji. Przygotowane mamy dwa
+\code{Pipeliny} (patrz: \ref{Pipeline}) różniące się wykorzystywanymi jednostkami przetwarzania
+(patrz: \ref{Jednostki}) z których dynamicznie podczas działania aplikacji wybieramy ten który
+zostanie wykorzystany. Pierwszy z nich, domyślny, wykorzystuje je wszystkie, drugi zaś tylko
+\code{Segmenter}, \code{Power} i \code{Skipper}. Tworzymy również drzewo modelów (odpowiednie
+zależnie od wybranego \code{Pipeline}) wykorzystując do tego gotowe modele (patrz: \ref{Modele}).
+Podczas przetwarzania wyciągamy wszystkie dostępne metadane, oraz rysujemy wykresy w oparciu o dane
+dostarczane modelom.  
 
-\includegraphics[width=7cm]{images/Pick_file}
-\includegraphics[width=7cm]{images/Processing}
+\section{Efekt} 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/first_screen}
+\end{figure}
 
-Po wybraniu pliku przenosimy się na ekran główny który informuje nas o konieczności poczekania na analizę wstępną.
+To ekran który użytkownik zobaczy od razu po uruchomieniu aplikacji. Dostaje on możliwość
+zaznaczenia opcji „Omit real-time graphs” oznaczającej wybranie ograniczonego \code{Pipeline} do
+wykresów które nie muszą być generowane w całości dla kolejnych fragmentów muzyki oraz dostaje
+możliwość wybrania pliku do analizy.
 
-\includegraphics[width=7cm]{images/offline_wave_incomplete}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/Pick_file}
+  \includegraphics[width=7cm]{images/Processing}
+\end{figure}
 
-Gdy pre-analiza zostaje zakończona mamy dostęp do głównej części aplikacji. Widzimy tutaj wersję „niepełną” (tylko wykresy offline) na które składają się trzy zakładki - Wave (rysująca wykres fali dla dwóch kanałów), Power (rysująca wykres mocy fali dla dwóch kanałów) oraz Meta (zawierająca wczytane metadane). Jak widać wykresy rysowane są na oczach użytkownika z prędkością uzależnioną od mocy obliczeniowej urządzenia jak i długości utworu. Wykres mocy (czyli średniej kwadratowej amplitud próbek) jest analogiczny.
+Po wybraniu pliku przenosimy się na ekran główny który informuje nas o konieczności poczekania na
+analizę wstępną.
 
-\includegraphics[width=7cm]{images/full_metadata}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/offline_wave_incomplete}
+\end{figure}
 
-Tutaj widzimy zakładkę metadanych wyświetlającą wszystkie informacje jakie zostały wyciągnięte (włącznie z tymi które nie zostały uzupełnione przez autora pliku). Plikiem tekstowym była piosenka Boba Marleya „Alright”. Autor został więc odnaleziony poprawnie, tak samo jak i tytuł (choć różny od poprawnego zgadza się z tym który został zapisany w pliku .mp3). Z ważniejszych informacji warto spojrzeć również na rozmiar pliku, przybliżoną liczbę sampli (potrzebną do odpowiedniego skalowania wyświetlania wykresów), czas trwania, Bitrate oraz format.
-Warto też zauważyć że widzimy tutaj pełen zestaw zakładek - poza tymi które już widzieliśmy pojawiły się również „Spectrum” oraz „Wave win” które będą opisane poniżej.
+Gdy pre-analiza zostaje zakończona mamy dostęp do głównej części aplikacji. Widzimy tutaj wersję
+„niepełną” (tylko wykresy offline) na które składają się trzy zakładki - Wave (rysująca wykres fali
+dla dwóch kanałów), Power (rysująca wykres mocy fali dla dwóch kanałów) oraz Meta (zawierająca
+wczytane metadane). Jak widać wykresy rysowane są na oczach użytkownika z prędkością uzależnioną od
+mocy obliczeniowej urządzenia jak i długości utworu. Wykres mocy (czyli średniej kwadratowej
+amplitud próbek) jest analogiczny.
 
-\includegraphics[width=7cm]{images/full_wave_window}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_metadata}
+\end{figure}
 
-Zakładka „Wave win” rysuje, zgodnie z nazwą, okno fali w dwóch wersjach - szerokiej oraz wąskiej. Jest to wykres „online” w sensie potrzeby rysowania go dla każdego momentu utworu. Ze względu na ograniczenia wydajnościowe dzieje się to jednak rzadziej (około jednego obrazu na trzy-pięć sekund).
+Tutaj widzimy zakładkę metadanych wyświetlającą wszystkie informacje jakie zostały wyciągnięte
+(włącznie z tymi które nie zostały uzupełnione przez autora pliku). Plikiem tekstowym była piosenka
+Boba Marleya „Alright”. Autor został więc odnaleziony poprawnie, tak samo jak i tytuł (choć różny od
+poprawnego zgadza się z tym który został zapisany w pliku .mp3). Z ważniejszych informacji warto
+spojrzeć również na rozmiar pliku, przybliżoną liczbę sampli (potrzebną do odpowiedniego skalowania
+wyświetlania wykresów), czas trwania, Bitrate oraz format.  Warto też zauważyć że widzimy tutaj
+pełen zestaw zakładek - poza tymi które już widzieliśmy pojawiły się również „Spectrum” oraz „Wave
+win” które będą opisane poniżej.
 
-\includegraphics[width=7cm]{images/full_spectrum}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_wave_window}
+\end{figure}
 
-Ostatnim z wykresów jest wykres spektrum skonstruowany w znanej wielu ludziom formie „podskakujących prostokątów”. Jest to wykres natężenia poszczególnych częstotliwości w skali logarytmicznej na obydwu współrzędnych. Tak jak okno fali rysowany jest na żywo, w przeciwieństwie jednak do okna robi to efektywnie.
+Zakładka „Wave win” rysuje, zgodnie z nazwą, okno fali w dwóch wersjach - szerokiej oraz wąskiej.
+Jest to wykres „online” w sensie potrzeby rysowania go dla każdego momentu utworu. Ze względu na
+ograniczenia wydajnościowe dzieje się to jednak rzadziej (około jednego obrazu na trzy-pięć sekund).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_spectrum}
+\end{figure}
+
+Ostatnim z wykresów jest wykres spektrum skonstruowany w znanej wielu ludziom formie „podskakujących
+prostokątów”. Jest to wykres natężenia poszczególnych częstotliwości w skali logarytmicznej na
+obydwu współrzędnych. Tak jak okno fali rysowany jest na żywo, w przeciwieństwie jednak do okna robi
+to efektywnie.
 
