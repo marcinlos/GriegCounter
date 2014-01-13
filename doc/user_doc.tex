@@ -1171,6 +1171,7 @@ source.start();
 \end{java}
 
 \chapter{Aplikacja Androidowa}
+
 \section{Budowa}
 
 Opis powyżej został oczywiście zastosowany w praktyce w naszej aplikacji. Przygotowane mamy dwa
@@ -1182,6 +1183,37 @@ zależnie od wybranego \code{Pipeline}) wykorzystując do tego gotowe modele (pa
 Podczas przetwarzania wyciągamy wszystkie dostępne metadane, oraz rysujemy wykresy w oparciu o dane
 dostarczane modelom.  
 
+\section{Przypadki użycia użytkownika końcowego}
+\IncludeUML{n_userMain}{Główne przypadki użycia użytkownika końcowego}
+\IncludeUML{n_userSecond}{Wyniki analizy}
+\subsection{Generowanie raportu analizy}
+\begin{itemize}
+	\item 1 Wybranie trybu pracy - użytkownik wybiera (z pomocą checkboxa), czy interesują go wykresy generowane w 	czasie rzeczywistym czy jedynie wyniki końcowe
+	\item 2 Wczytanie pliku - użytkownik wskazuje plik z muzyką znajdujący się na karcie SD urządzenia
+\end{itemize}
+\subsection{Informacje na które składa się raport}
+\begin{itemize}
+	\item   4. Wykresy
+	\begin{itemize}
+		\item 4.1. Chcę zobaczyć wykres mocy fali!
+		- aplikacja na żywo parsując plik generuje wykresy mocy fali (osobno dla każdego kanału)
+		\item 4.2. Chcę zobaczyć wizualizację fali dźwiękowej!
+		- aplikacja na żywo parsując plik generuje wykresy fali dźwiękowej (osobno dla każdego kanału), lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
+		\item 4.3 Chcę zobaczyć spektrogram!
+		- aplikacja na żywo parsując plik generuje spektrogram, lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
+
+		\item 4.4 Chcę zobaczyć spektrum w danym miejscu muzyki!
+		- aplikacja na żywo parsując plik generuje wykresy spektrum fali, narysowane z częstotliwością w różnych skalach (liniowej, logarytmicznej, zdyskretyzowanej logarytmicznej)
+	\end{itemize}
+	\item	5. Dane tekstowe
+	\begin{itemize}
+		\item 5.1 Chcę poznać podstawowe dane na temat pliku z muzyką!
+		\begin{itemize}
+			\item użytkownik wskazuje plik
+			\item aplikacja, po zakończeniu analizy pokazuje również metadane takie jak długość, rozmiar, autor jeśli został wpisany
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 \section{Efekt} 
 \begin{figure}[H]
   \centering
