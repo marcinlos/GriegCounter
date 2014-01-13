@@ -25,97 +25,34 @@ Projekt składa się z dwóch części: frameworku do obsługi dźwięku, oraz a
 stanowiącej ilustrację jego możliwości i przykład użycia. Framework spełnia kilka zadań, niezbędnych
 do pracy z plikami dźwiękowymi -- odpowiedzialny jest za ich wczytywanie, konwersję różnych formatów
 dźwięku na ten używany wewnętrznie przez framework, oferuje także elastyczny model jego
-przetwarzania oraz umożliwia jego odtwarzanie. W jego skład wchodzi kilka modułów, opisanych krótko
-poniżej.
+przetwarzania oraz umożliwia jego odtwarzanie. W jego skład wchodzi kilka modułów:
 
 \IncludeUML{modules}{Wysokopoziomowa struktura projektu}
-
-\section{Moduł wczytywania plików}
-
-Jednym z zadań frameworku jest wczytywanie plików dźwiękowych i konwersja do formatu
-zmiennoprzecinkowego PCM, wybranego jako wewnętrzny format reprezentacji dźwięku w całym frameworku.
-\emph{Grieg} oferuje bazowo obsługę plików wav, mp3 i vorbis (ogg), jest jednak stosunkowo łatwo
-rozszerzalny. Dzięki mechanizmowi pluginów i dynamicznemu ładowaniu dostępnych implementacji dodanie
-obsługi kolejnego formatu nie wymaga ingerencji w kod źródłowy frameworku, a jedynie dołączenia
-odpowiednich klas i pliku konfiguracyjnego do CLASSPATH-a. 
-
-Do zaimplementowania wczytywania plików mp3 i vorbis wykorzystane zostały odpowiednie biblioteki
-(\code{jlayer} dla mp3, \code{jorbis} dla ogg), natomiast parser plików wav, z uwagi na prostotę
-formatu, został stworzony ręcznie. Mechanizm pluginów został stworzony przy użyciu klas stanowiących
-część JDK.
-
-
-\section{Moduł odczytu metadanych}
-
-Moduł odczytu metadanych pozyskuje wszelkie informacje o utworze i reprezentującym go pliku nie
-stanowiące bezpośrednio danych audio, takie jak tytuł, autor, album, rok wydania, wielkość pliku
-itd. Pozwala użytkownikowi frameworku określić pożądane przez niego metadane, by uniknąć w razie
-możliwości potencjalnie czasochłonnych operacji, jak również pozwala w czasie rzeczywistym
-otrzymywać notyfikacje o przebiegu procesu ekstrakcji. 
-
-Na potrzeby obsługi metadanych stworzony został prosty system ich reprezentacji, oparty na znanym
-idiomie bezpiecznej heterogenicznej kolekcji, dzięki czemu pozyskane metadane są łatwe i wygodne w
-użyciu.
-
-
-\section{Moduł przetwarzania dźwięku}
-
-Moduł przetwarzania dźwięku udostępnia infrastrukturę pozwalającą w dowolny sposób analizować i
-przekształcać wejściowy strumień danych audio. W tym celu wykorzystuje koncept węzłów przetwarzania
--- autonomicznych jednostek, realizujących proste, atomiczne przekształcenia strumienia wejściowego
-i generujących strumień wyjściowy, połączonych ze sobą wejściami/wyjściami w strukturę drzewiastą.
-Rozwiązanie takie zainspirowane jest pracą prof. O. Kiselova o wielopoziomowym, inkrementalnym
-przetwarzaniu danych strumieniowych, jak również podobnymi rozwiązaniami w innych bibliotekach do
-przetwarzania dźwięku, takim jak Beads (\url{www.beasdsproject.net}) czy Minim
-(\url{http://code.compartmental.net/tools/minim/}). Konstrukcja taka okazuje się posiadać pewne
-przydatne cechy, m. in. 
-
 \begin{itemize}
 
-  \item modularność -- jednostki przetwarznaia są odrębne, co zmniejsza sprzężenie i minimalizuje
-    wzajemne interakcje
+\item Moduł wczytywania plików - łatwo rozszerzalny zbudowany na pluginach mechanizm wczytania i konwersji plików dźwiękowych do formatu zmiennoprzecinkowego PCM. Implementacja pozwala na wczytywanie plików .mp3, .wav oraz .ogg.
 
-  \item komponowalnosć -- minimalistyczna funkcjonalność ułatwia reużycie
+\item Moduł odczytu metadanych - moduł pozyskujący informacje o utworze i reprezentującym go pliku nie stanowiące bezpośrednio danych audio takich jak autor czy wielkość pliku.
 
-  \item prosty, efektywny przepływ danych -- sekwencyjne przetwarzanie porcji pliku pozwala uniknąć
-    konieczności przechowywania całości danych w pamięci
+\item Moduł przetwarzania dźwięku - udostępnia infrastrukturę pozwalającą w dowolny sposób analizować i
+przekształcać wejściowy strumień danych audio. W tym celu wykorzystuje koncept węzłów przetwarzania
+-- autonomicznych jednostek, realizujących proste, atomiczne przekształcenia strumienia wejściowego
+i generujących strumień wyjściowy, połączonych ze sobą wejściami/wyjściami w strukturę drzewiastą. Konstrukcja ta posiada pożądane przez nas cechy takie jak modularność, komponowalność oraz przede wszystkim prosty i efektywny przepływ danych. Framework udostępnia też kilkanaście gotowych jednostek przetwarzania, realizujących typowe, niezbyt skomplikowane przekształcenia, np. obliczanie mocy fali czy FFT.
 
-\end{itemize}
-
-Infrastruktura ta domyślnie działa z elementami udostępnianymi przez moduł wczytywania plików,
-jednak możliwe jest podłączenie dowolnego kompatybilnego wejścia -- implementacji stosownego
-interfejsu.
-
-Framework udostępnia kilkanaście gotowych jednostek przetwarzania, realizujących typowe, niezbyt
-skomplikowane przekształcenia, np. obliczanie mocy fali, amplitudy w danym zakresie, przemnażanie
-sygnału przez okno Hanninga, oraz jest obliczanie transformaty Fouriera, zrealizowane przy użyciu
-biblioteki JTransforms.
-
-
-\section{Moduł propagacji danych}
-
-Moduł propagacji danych oferuje możliwość względnie prostego i wygodnego przekazania danych z
-logicznej części aplikacji do interfejsu użytkownika. Celem tej części frameworku do pewnego stopnia
-jest dostarczenie funkcjonalności analogicznej (choć rzecz jasna, uproszczonej) do tej znanej np. z
-platformy .NET MVVM (data-binding), co pozwoliłoby elegancko odseparować warstwę prezentacji (GUI)
-od kodu generującego dane. Cel ten zrealizowany został poprzez wprowadzenie hierarchicznego
-\emph{modelu} danych i wzorca \emph{Observer}. Dzięki użyciu jednorodnych interfejsów i
-implementacji udało się uniknąć prymitywnych rozwiązań \textit{ad-hoc}.  Framework udostępnia klasy
+\item Moduł propagacji danych -  oferuje możliwość względnie prostego i wygodnego przekazania danych z
+logicznej części aplikacji do interfejsu użytkownika. Cel ten zrealizowany został poprzez wprowadzenie hierarchicznego \emph{modelu} danych i wzorca \emph{Observer}. Framework udostępnia klasy
 łączące go z modułem przetwarzania, co pozwala stworzyć np. wizualizację transformaty Fouriera
 przetwarzanego sygnału w czasie rzeczywistym.
 
-
-\section{Moduł odtwarzania}
-
-Moduł odtwarzania dostarcza możliwości odtworzenia danych dźwiękowych, odczytanych z pliku bądź
+\item Moduł odtwarzania - dostarcza możliwości odtworzenia danych dźwiękowych, odczytanych z pliku bądź
 przekształconych. Jest rozszerzalny -- dostępne implementacje stosownych interfejsów są dynamicznie
 ładowane podczas uruchomienia na podstawie zawartości CLASSPATH-a. Jego funkcjonalność zbudowana
 jest na niewielkim zestawie prostych operacji, dzięk czemu dostarczenie implementacji na nową,
-niewspieraną platformę nie wymaga dużego wysiłku. Poza niskopoziomowymi szczegółami
-implementacyjnymi w skład modułu wchodzi również klasa \code{Player}, udostępniająca wysokopoziomowy
-interfejs do kontroli nad procesem odtwarzania. Dostępna jest implementacja oparta o
+niewspieraną platformę nie wymaga dużego wysiłku. Dostępna jest implementacja oparta o
 \textit{JavaSound}.
+\end{itemize}
 
+Całość dopełnia aplikacja Androidowa, której budowa została maksymalnie uproszczona by lepiej spełniał swoje zadanie prezentacji budowy aplikacji w oparciu o Framework bez niepotrzebnych dodatków. Składa się ona z dwóch aktywności - Pierwszej, głównej, na którą składa się między innymi prosta implementacja eksploratora plików, oraz druga oparta na zakładkach przystosowana do wyświetlania danych przetwarzania.
 
 \chapter{Organizacja pracy}
 Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę Frameworka okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji Frameworku od zera do stanu w którym był on używalny a API przyjęło ostateczną formę.
