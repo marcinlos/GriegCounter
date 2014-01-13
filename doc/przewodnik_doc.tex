@@ -16,9 +16,15 @@ Tak postawiony cel niósł ze sobą spore ryzyko
 \emph{Praca w zespole} - charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. \emph{Ryzyko: 7/10} 
  
 \chapter{Zakres funkcjonalności}
-
-%nasze wymagania funkc, niefunkc
-
+\section{Aktorzy}
+Ze wzlgędu na budowę pracy mozemy wyróżnić dwa typy aktorów będących użytkownikami końcowymi. Framework skierowany jest do programistów, będą go chcieli wykorzystać w budowaniu własnych aplikacji, interesować ich będzie kod oraz sposób jego użycia. Aplikacja zaś skierowana jest do użytkownika końcowego, nie posiadającego żadnej wiedzy na temat programowania, który po prostu chce dowiedzieć się kilku rzeczy na temat posiadanego przez niego pliku dźwiękowego.
+\section{Programista}
+\IncludeUML{n_programista}{Główne przypadki użycia programisty}
+\IncludeUML{n_tree}{Przypadki użycia drzewa przetwarzania}
+W skład ekstrakcji danych wchodzą poszczególne konkretne informacje jakie można wyciągnąć z pliku muzycznego, po dalsze rozwinięcie odsyłamy do odpowiedniej części dokumentacji.
+\section{Użytkownik}
+\IncludeUML{n_userMain}{Przypadki użycia użytkownika}
+W skład wyświetlania wyników analizy wchodzą konkretne wykresy uzyskiwane w wyniku przetwarzania pliku, po więcej informacji odsyłamy do odpowiedniej części dokumentacji
 \chapter{Architektura systemu}
 
 Projekt składa się z dwóch części: frameworku do obsługi dźwięku, oraz aplikacji Androidowej,

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>690</x>
+      <y>130</y>
+      <w>100</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Programista - 
+użytkownik 
+frameworka</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Systemborder</type>
+    <coordinates>
+      <x>180</x>
+      <y>30</y>
+      <w>470</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>Ekstrakcja danych</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>220</x>
+      <y>60</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>7. Podział danych 
+na kawałki</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>260</x>
+      <y>110</y>
+      <w>150</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>8. Dostanie danych
+po przejściu prez
+okno Hamminga
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>240</x>
+      <y>200</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>9.Dostanie wyników 
+transformaty Fouriera</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>230</x>
+      <y>290</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>10. Multipleksacja
+kanałów</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>450</x>
+      <y>60</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>11. Próbkowanie 
+wejścia</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>450</x>
+      <y>130</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>12. Wyliczenie 
+zakresu fali</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>450</x>
+      <y>200</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>13. Wyliczenie
+mocy fali</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>460</x>
+      <y>290</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>14. Wyliczenie
+spektrum mocy 
+fali</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>80</x>
+      <y>150</y>
+      <w>100</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Programista - 
+użytkownik 
+frameworka</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>130</x>
+      <y>90</y>
+      <w>140</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;60;120;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>140</x>
+      <y>140</y>
+      <w>130</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;40;110;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>130</x>
+      <y>180</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;30;110;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>130</x>
+      <y>200</y>
+      <w>130</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;30;110;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>560</x>
+      <y>60</y>
+      <w>170</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;30;150;70</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>560</x>
+      <y>130</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;30;140;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>150</y>
+      <w>180</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;60;160;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>170</y>
+      <w>180</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>30;120;160;30</additional_attributes>
+  </element>
+</diagram>
