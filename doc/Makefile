@@ -4,6 +4,7 @@ LATEX = pdflatex $(LATEX_FLAGS)
 BIBTEX = bibtex
 
 DOCS = techniczna.pdf uzytkownika.pdf procesowa.pdf przewodnik.pdf
+BIBS = $(wildcard *.bib)
 
 DIAGRAMS = $(wildcard uml/*.uxf)
 UML_PDFS = $(DIAGRAMS:.uxf=.pdf)
@@ -14,7 +15,7 @@ TEX_FILES = $(wildcard *.tex)
 
 all: check_umlet $(DOCS)
 
-$(DOCS): %.pdf: %.tex $(TEX_FILES) $(UML_PDFS)
+$(DOCS): %.pdf: %.tex $(TEX_FILES) $(UML_PDFS) $(BIBS)
 	$(LATEX) $<
 	if [ -f $*.bib ]; then \
 		$(BIBTEX) $*.aux; \
