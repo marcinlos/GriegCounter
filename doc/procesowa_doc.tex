@@ -1,0 +1,172 @@
+
+\chapter{Wstęp}
+\section{Cele projektu}
+Cel projektu, ze względu na zawirowania które wynikły podczas pierwszej iteracji zmieniały się. Podstawowym celem było stworzenie aplikacji mobilnej na urządzenia wyposażone w system Android która pozwalałaby na badanie w locie różnych właściwości melodii. Funkjonalności jakie przewidywaliśmy zawierały w sobie wszystko pomiędzy analizowaniem liczby BPM (beats per minute) poprzez rozponawanie instrumentów aż po identyfikację gatunku muzycznego. Napotkane problemy jednak zweryfikowały nasz entuzjazm i przeniosły ciężar projektu na inne tory.
+
+Ostatecznie naszym celem stało się stworzenie Frameworku który tworzyłby podwaliny dla budowy aplikacji takich jak nasza. Miał być pozwalać na wczytywanie plików muzycznych różnych formatów (wav, mp3, ogg), być łatwo rozszerzalny, oraz pozwalać na elastyczne przetwarzanie danych. Dodatkowo na jego powstanie powstać miała aplikacja Androidowa prezentująca możliwości frameworku, pełniąca rolę dowodu na to, że nasza idea zadziałała.
+   
+\section{Studium wykonalności i analiza ryzyka}
+Pracę nad projektem zaczęliśmy od poszukiwania gotowych już rozwiązań czy bibliotek które mogłyby nam pomóc w realizacji zadania. Biblioteki takie jak Beads \cite{Beads} czy Minim \cite{Minim} budziły duże nadzieje. Duże nadzieje pokładaliśmy w możliwości szybiego wciągnięcia obcych funkcjonalności do naszej aplikacji i tylko rozwinięciu jej.
+
+W drugim podejściu byliśmy już ostrożniejsi w kontekście założeń. Wciąż jednak czekało na nas wiele problemów:
+\emph{Czas} - zakres możliwości produktu (frameworku) stał się bardzo szeroki, wymagający dokładnego projektowania oraz nietrywialnej implementacji wybranych rozwiązań. Trzeba było również pamiętać że pierwszą iterację należało wykonać jeszcze raz całkowicie od początku. Deadline pozostawał nie do ruszenia. \emph{Ryzyko: 9/10}
+\\
+\emph{Stopień skompikowania} - żaden z nas nie miał wcześniej do czynienia z pracą nad plikami dźwiękowymi, projektowaniu frameworków a nawet doświadczenia w pisaniu aplikacji na Androida. Na naszą korzyść działała tutaj jedynie ogromna wiedza programistyczna jednego z członków zespołu \emph{Ryzyko: 8/10}
+\\
+\emph{Praca w zespole} - charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. \emph{Ryzyko: 7/10} 
+\emph{Wypadki losowe} - przez rok wiele może się zmienić. Środek projektu wyznaczany był przez czas wakacji, okres częstych kontuzji i urazów. Istniało niebezpieczeństwo rozbicia ekipy ze względu na przyziemne nie zaliczenie innego aspektu studiów. Niebanalny mógł być wpływ psychologiczny praktyk wakacyjnych zastępujących czas wypoczynku. \emph{Ryzyko: 3/10} 
+
+\chapter{Przyjęta metodyka pracy}
+Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę Frameworka okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji Frameworku od zera do stanu w którym był on używalny a API przyjęło ostateczną formę.
+\section{Role i podział prac w zespole}
+Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętności. Kierownictwo przejął \emph{Marcin Łoś} - to on odpowiada za architekturę frameworku, on też zarządzał projektem od strony programistycznej delegując zadania gdzie uznał to za stosowne. \emph{Michał Torba} jako główną odpowiedzialność przyjął aplikację Androidową oraz dokumentację projektu pełniąc jedynie pomocniczą funkcję w pozostałych aspektach prac.
+\section{Komunikacja w zespole}
+Plusem ułatwiającym komunikację w zespole był fakt, że jesteśmy dość dobrymi przyjaciółmi. To ułatwiało organizację. W czasie prac nie doszło do większych spięc na poziomie interpersonalnym, problemy rozwiązywane były na poziomie kulturalnego dyskursu. Dwiema głównymi platformami komunikacji były Google Hangouts używany do dyskusji wszelakich gdy akurat nie mogliśmy się zobaczyć na żywo, oraz opisy commitów. Drugorzędną rolę odgrywała dokumentacja powstająca na Confluence nadająca punkty zaczepienia. Duża część prac, szczególnie w końcowych fazach projektu, odbywała się zaś w sprintach związanych ze spotkaniami na żywo na kilkugodzinnych sesjach wspólnego implementowania.
+\section{Komunikacja z klientem i managerem}
+W tej płaszczyźnie nie obyło się bez pewnych zgrzytów. Rozpoczęcie projektu odbyło się dosyć gładko, wizja tego co należy zrobić na początek była prosta i zrozumiała. Później napotkaliśmy na pewne zgrzyty związane z organizacją, dwa spotkania były przekładane na inne terminy ze względu na problemy komunikacyjne. Kryzys nastąpił podczas wakacji, gdy na czas implementacji rdzenia Frameworku postęp prac nie był konsultowany. Ostatnie fazy projektu zaowocowały jednak zwiększoną współpracą i doprowadziły nas do szczęśliwego końca.
+\section{Wykorzystane narzędzie do zarządzania projektem}
+%Umm... narzędzie do zarządzania projektem... zdaje się że nie mieliśmy czegoś takiego.
+\section{Problemy napotkane w trakcie realizacji projektu}
+\label{problem}
+W czasie realizacji projektu wystąpiło kilka pomniejszych problemów czy zgrzytów do których były nawiązania już wyżej, praktycznie wszystkie były jednak nieistotne w porównaniu z głównym napotkanym problemem:
+
+Android nie implementuje java.sound
+
+Jako programistów nieobeznanych z systemem Android było to nielada zaskoczenie. Miało również poważne konsekwencje. Wszystkie biblioteki z których pomocy planowaliśmy korzystać korzystały z tego pakietu jako integralnej części logiki. Bez niego pozbawieni zostaliśmy możliwości wczytania pliku w sposób nadający się do analizy. Straciliśmy czas na tworzenie planów i rozpoczęcie implementacji na sposób który nie mógł zadziałać.
+
+To ten problem zdefiniował nowy kształt projektu, nowy cel, nowy produkt będący jego wynikiem. Punkt definiujący całość.
+
+\chapter{Weryfikacja wyników projektu}
+
+\section{Testy jednostkowe}
+Zastosowane zostały wewnątrz Frameworku. Do testów jednostkowych wykorzystywany był framework JUnit4 oraz Mockito, sporadycznie także
+PowerMock. Nie cały kod został pokryty w pełni testami jednostkowymi; pokrycie wynosi ok. 30\% (do
+jego określenia wykorzystane zostało narzędzie EclEmma). Testowane były głównie te fragmenty,
+których poprawność jest kwestią delikatną i łatwą do naruszenia, m. in. systemy dynamicznego
+ładowania dodatkowej funkcjonalności wraz z parserami konfiguracji, wykorzystywane przez nie klasy
+pomocnicze do skanowania CLASSPATH-a i obsługa refleksji, jak również API modeli i klasy
+odpowiedzialne za konfigurację. Brak testów jednostkowych dla rdzenia systemu spowodowany jest jego
+stabilnością -- po stworzeniu go na samym początku prac implementacyjnych nie był zmieniany.
+
+\section{Testy akceptacyjne}
+Aplikacja Androidowa uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików muzycznych. Prezentowana była klientowi w ostatecznej formie i została zaakceptowana jako spełniająca jego wymagania.
+
+\chapter{Przebieg prac}
+
+\section{Iteracja -1}
+Nazywana w czasie gdy ją wykonywaliśmy Iteracją 0. Była to pierwsza faza projektu, w której badaliśmy dostępne biblioteki i rozważaliśmy ostateczną funkcjonalność aplikacji do analizy. Trwała bardzo krótko, i zostawiła po sobie zaledwie zarys oraz pomysł. Poniżej notatki na temat znalezionych bibliotek:
+
+\begin{Note}
+Istnieje kilka bibliotek które zwróciły naszą uwagę:
+\begin{itemize}
+    \item Beads - http://www.beadsproject.net/ - głównie przeznaczona do generowania włąsnego audio, pozwala jednak na wczytanie plików zewnętrznych (wav only). Wbudowany FFT i inne.
+    \item MusicG - http://code.google.com/p/musicg/ - biblioteka z wysokim stopniem prawdopodobieństwa działająca na Androidzie (zaznaczone funkcjonalności które tam nie zadziałają). Proste i łatwe w użyciu, dokumentacja jednak szczątkowa, trudne do wykorzystania w naszych celach
+    \item Manual:Minim - http://code.compartmental.net/tools/minim/manual-minim/ - bazująca na JavaSound API biblioteka do tworzenia, analizy i przetwarzania dźwięku. Obsługuje bezpośrednio kilka podstawowych formatów: WAV, AIFF, AU, SND, MP3, pozwala na odczyt metadanych (np. tagi ID3), zawiera implementację FFT. Posiada również funkcjonalność wykrywania beatów, opartą na wykrywaniu gwałtownych skoków amplitudy.
+\end{itemize}
+
+Wybór jednej z nich jest jednak poważną sprawą, i zostanie dokonany już po rozpoczęciu implementacji.
+
+Istnieje też Echo Nest - http://developer.echonest.com/. Posiada zamkniętą architekturę serwerów (dostępne jedynie w formie binarek), jednak szeroki zakres zaawansowanych funkcji do analizy muzyki (włącznie z identyfikowaniem utworów po footprincie) nie pozwala go ignorować. Najprawdopodobniej do użytku jako black box jeśli sami nie dokończymy jakiejś funkcjonalności którą oni implementują (szczególnie jeśli chodzi o identyfikację) - co oznacza że jest do zostawienia na dalsze iteracje.
+\end{Note}
+
+\section{Iteracja 0}
+Iteracja podczas której wszystko się zawaliło. Początkową implementację rozpoczęliśmy w środowisku znanym - czysta java - co opóźnioło rozpoznanie głównego problemu.
+
+\begin{Note}
+Plany:
+\begin{itemize}
+    \item Stworzenie aplikacji w Androidzie z graficznym interfejsem używającej wybranej biblioteki audio
+    \item Wczytywanie utworu do analizy w formacie .wav (bądź innymi wspieranymi bezpośrednio przez bibliotekę
+    \item Wynikiem powinny być spektrum (w formie wykresu), wykres fali dźwiękowej oraz mocy zależnie od czasu.
+\end{itemize}
+
+Implementacja:
+
+Rozpoczęcie implementacji, na początku w izolacji pomiędzy interfacem androidowym oraz logiką działania przebiegało pomyślnie. Wybrana przez nas biblioteka Beads sprawdzała się w środowisku javowym, uzyskaliśmy działającą implementację przewidywanej funkcjonalności na tę iterację, dysponujemy również działającym androidowym interfejsem gotowym do podłączenia pod javową logikę. Będąc przekonani, że wszystko pójdzie już gładko przystąpiliśmy do integracji tych dwóch elementów.
+
+Problemy:
+
+Okazało się, że w iteracji 0 podczas zapoznawania się z dostępnymi bibliotekami i ich używalnością na Androidzie przeoczyliśmy drobny detal. Większość tych bibliotek (wszystkie których użycie poważnie rozważaliśmy, w tym Beads na który się zdecydowaliśmy) wykorzystuje JavaSound. Android natomiast wbrew naszym oczekiwaniom i milczącym założeniom tego nie obsługuje.
+\end{Note}
+
+To był moment opisany już w sekcji problemów(patrz: \ref{problem}). Po nim nastąpił swoisty restart prac
+\section{Iteracja 1}
+\begin{Note}
+
+Cel:
+
+    Zaprojektowanie prawdziwej architektury systemu
+
+Architektura:
+
+Projektowaniu architektury przyświecały następujące założenia:
+\begin{itemize}
+
+    \item Potrzebujemy w miarę efektywnego broadcastowania dużych ilości danych
+    \item Chcemy uniknąć wielokrotnego przeliczania tych samych rzeczy, jednocześnie wiemy że wiele analiz może mieć wspólne cechy i etapy przetwarzania, stąd potrzebujemy sposobu na eleganckie współdzielenie wyników.
+    \item Pseudoasynchroniczność w formie rozdzielenia w czasie wejścia i wyjścia - istnienie różnych formatów dźwięku powoduje, że a priori nie wiemy ile danych należy przeczytać przed stworzeniem wyniku
+    \item Elastyczny format wejścia - chcąć zczytywać dane z mikrofonu niezbędny jest model typu push (będący bardziej ogólnym i wygodnym dla architektury całości systemu), jednocześnie jako wejście akceptujemy też pliki które w swej naturze są raczej pasywne
+\end{itemize}
+
+Ze względu na postawione przed nią wymagania architektura systemu nie była prostą sprawą. Ostatecznie nasze rozwiązanie problemu zostało zainspirowane pracą http://okmij.org/ftp/Haskell/Iteratee/describe.pdf Olega Kiselyova, które dzięki swojej konstrukcji spełniało nasze założenia.
+
+Wiemy że wiele węzłów przetwarzania będzie potrzebowało do działania tych samych danych wejściowych (muzyki) - idea niezmienności danych zaczerpnięta z programowania funkcyjnego pozwala zaś na eleganckie i bezpieczne dzielenie tego zasobu. Forma modelu, będąca pipelinem w strukturze drzewiastej pozwoli dowolnie łączyć ze sobą wejścia i wyjścia różnych etapów przetwarzania, pozwalając na stosowanie uniwersalnych klocków (takich jak okno Hamminga) by uzyskać dowolną złożoność. Fakt, że dane będą pushowane w dół drzewa sprawia, że każdy indywidualny węzeł ma pełną kontrolę nad wyjściem. Model pull do czytania wejściowych plików z muzyką można w umiarkowanie prosty sposób zasymulować tworząc klasę-przejściówkę.
+
+Każdy węzeł (będący "Enumeratee" w konwencji nazw Kiselyowa) akceptuje wejście o określonym typie danych, i (gdy zdecyduje, że ma dość danych i może je przetworzyć) produkuje wyjście jakiegoś (dowolnego) typu. Można je łączyć w dowolnych, niecyklicznych konfiguracjach uzyskując również w naturalny sposób wiele wyjść do konsumpcji przez GUI.
+
+Wynikiem prac jest pierwsza wersja API systemu wraz z wstępnymi interfejsami dla parserów plików
+
+\end{Note}
+\section{Iteracja 2}
+\begin{Note}
+Cel:
+	Implementacja rdzenia Frameworka
+
+Implementacja
+
+Rdzeń systemu to bardzo ogólne pojęcie, i celowo - na tą iterację składają się dziesiątki różnego rodzaju klas i funkcjonalności, między innymi:
+\begin{itemize}
+    \item obsługa dynamicznej konfiguracji parserów -  każdy parser opisany będzie własnym plikiem konfiguracyjnym. Architektura androida dyskwalifikuje jednak standardową metodę dołączenia takiego parsera w formie jar który zawierałby w sobie plik konfiguracyjny o standardowej nazwie, ze względu na jego tendencję do zbijania wszystkiego w jeden wspólny dex. Ominięcie tego nie tracąc jednocześnie pluginowej addytywności (czyli dodanie nowego parsera bez potrzeby edycji istniejącego kodu, w tym istniejącej konfiguracji) wymagała napisania własnego skanera classpatha.
+    \item sposób sparsowania tych plików konfiguracyjnych - odczytujemy z nich główną klasę parsera oraz deklarowane rozszerzenia które jest w stanie odczytać.
+    \item klasy z których zbudowany będzie Pipeline
+\end{itemize}
+
+Sam Pipeline - to nasz type-safe Wrapper opakowujący drzewo przetwarzania. Samo drzewo zaś składa się z jednego korzenia (Enumeratora - aktywne źródło danych) rozgałęziającego się na wiele węzłów (będących albo Enumeratee - węzeł posiadający pasywne wejście oraz aktywne wyjście - oraz Iteratee - liście posiadające jedynie wejście). Jego elementy są identyfikowane po (unikalnych globalnie) nazwach. Wykorzystuje również class-tokeny by zachować type-safety przy definiowaniu typów wejścia oraz wyjścia. Podpinanie nowych elementów definiowane jest deklaratywnie z myślą o jak najłatwiejszym podpinanie całej konfiguracji drzewa za pomocą plików xml w przyszłości, zgodne jest też z zasadami Fluent API.
+
+Droga przez którą przechodzi plik wygląda następująco:
+\begin{itemize}
+    \item Tworzony jest Processor (klasa reprezentująca cały proces dla jednego źródła danych)
+    \item Wczytujemy plik
+    \item Wybierany jest parser (na podstawie rozszerzenia)
+    \item Wstępna analiza - listenery są odpytywane (signalBeforePreAnalysis) o cechy które powinny zdobyć przed analizą właściwą (umieszczają je w kontekście), takie jak długość utworu, Processor wyciąga te informacje (preAnalysis) i zwraca je również za pomocą kontekstu (signalAfterPreAnalysis)
+    \item Rozpoczyna się analiza właściwa (wchodzimy do Pipelina), i tam też się kończy.
+\end{itemize}
+Implementacja parserów to również spory kawałek roboty. Dla ujednolicenia wszystkie parsowane pliki transformowane są do formatu PCM, i w takiej formie będą dalej przetwarzane. Parser mp3 na szczęście udało się zrobić przy wykorzystaniu gotowej biblioteki JLayer (omijającej JavaSound).
+\end{Note}
+
+\section{Iteracja 3}
+
+\begin{Note}
+CeL:
+\begin{itemize}
+\item implementacja jednostek przetwarzania
+\item implementacja aplikacji Androidowej w oparciu o framework
+\end{itemize}
+
+Wynik:
+Zaimplementowane zostały wszystkie węzły przetwarzania gotowe w ostatecznej wersji frameworku (do zobaczenia w dokumentacji technicznej).  W tym momencie stan frameworku zostaje zawieszony do czasu zakończenia pozostałej części pracy inżynierskiej.
+
+Wynikowa aplikacja Androidowa dostaje swoją pierwszą implementację. Nie jest w żaden sposób dopieszczona pod względem estetycznym, preprocessing po prostu zawiesza kontrolę nad aplikacją, użytkownik nie ma żadnej możliwości wyboru a kończenie jej wymaga zabijania aplikacji z poziomu ustawień Androida - natomiast wszystkie wykresy rysują się tak jak powinny co spełnia postawiony przed nią cel.
+\end{Note}
+\section{Iteracja 4}
+\begin{Note}
+Ostatnia iteracja. Cel:
+\begin{itemize}
+\item Dopracować aplikację androidową - poprawić wygląd, dodać możliwość wyboru nie pokazywania wykresów czasu rzeczywistego, wyczyścić kod
+\item opracować dokumentację projektową
+\end{itemize}
+
+Wyniki:
+Kod aplikacji androidowej przeszedł solidny refactor doprowadzający go do stanu używalności. Dodana została opcja wyboru innego Pipeline jak i zmiany w GUI z tym związane. Wygląd aplikacji mógłby zostać zapewne poprawiony przez ludzi posiadających zmysł estetyczny oraz talent do organizacji niewielkich przestrzeni, jest jednak zadowalający.
+By rozwiązać autoreferencję uznamy jedynie, że istnienie tego dokumentu jest dowodem na spełnienie drugiego celu tej iteracji jak i ostatniego celu całego projektu
+\end{Note}
