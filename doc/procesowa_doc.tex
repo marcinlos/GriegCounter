@@ -4,26 +4,20 @@
 
 \chapter{Wstęp}
 \section{Cele projektu}
-Cel projektu, ze względu na zawirowania które wynikły podczas pierwszej iteracji zmieniały się.
-Podstawowym celem było stworzenie aplikacji mobilnej na urządzenia wyposażone w system Android która
+Podstawowym celem jest stworzenie aplikacji mobilnej na urządzenia wyposażone w system Android która
 pozwalałaby na badanie w locie różnych właściwości melodii. Funkcjonalności jakie przewidywaliśmy zawierały w sobie wszystko pomiędzy analizowaniem liczby BPM (beats per minute) poprzez rozponawanie instrumentów aż po identyfikację gatunku muzycznego. Napotkane problemy jednak zweryfikowały nasz entuzjazm i przeniosły ciężar projektu na inne tory.
 
-Ostatecznie naszym celem stało się stworzenie Frameworku który tworzyłby podwaliny dla budowy aplikacji takich jak nasza. Miał być pozwalać na wczytywanie plików muzycznych różnych formatów (wav, mp3, ogg), być łatwo rozszerzalny, oraz pozwalać na elastyczne przetwarzanie danych. Dodatkowo na jego powstanie powstać miała aplikacja Androidowa prezentująca możliwości frameworku, pełniąca rolę dowodu na to, że nasza idea zadziałała.
+Ostatecznie ze względu na niemożność użycia żadnej gotowej biblioteki naszym celem, oprócz samej aplikacji, stało się stworzenie Frameworku który tworzyłby podwaliny dla budowy aplikacji takich jak nasza. Miał pozwalać na wczytywanie plików muzycznych różnych formatów (wav, mp3, ogg), być łatwo rozszerzalny, oraz pozwalać na elastyczne przetwarzanie danych.
    
 \section{Studium wykonalności i analiza ryzyka}
-Pracę nad projektem zaczęliśmy od poszukiwania gotowych już rozwiązań czy bibliotek które mogłyby nam pomóc w realizacji zadania. Biblioteki takie jak Beads \cite{Beads} czy Minim \cite{Minim} budziły duże nadzieje. Duże nadzieje pokładaliśmy w możliwości szybiego wciągnięcia obcych funkcjonalności do naszej aplikacji i tylko rozwinięciu jej.
 
-W drugim podejściu byliśmy już ostrożniejsi w kontekście założeń. Wciąż jednak czekało na nas wiele problemów:
+\noindent\emph{Nieznajomość systemu Android} -- W chwili rozpoczęcia projektu żaden z nas nie posiadał żadnego doświadczenia z programowniem na systemy mobilne, w szczególności na system Android. Nie znaliśmy dobrych praktyk, specyfiki i ograniczeń platformy. By temu przeciwdziałać równolegle jako projekt z innego przedmiotu pracowaliśmy również nad aplikacją androidową, w ramach tego projektu zakładaliśmy częste prototypowanie we wczesnych fazach by wyeliminować podstawowe problemy· \emph{Ryzyko: 8/10}
 
-\noindent\emph{Czas} -- zakres możliwości produktu (frameworku) stał się bardzo szeroki, wymagający dokładnego projektowania oraz nietrywialnej implementacji wybranych rozwiązań. Trzeba było również pamiętać że pierwszą iterację należało wykonać jeszcze raz całkowicie od początku. Deadline pozostawał nie do ruszenia. \emph{Ryzyko: 9/10}
+\noindent\emph{Gotowe biblioteki} -- Żaden z nas nie miał doświadczenia w pracy nad plikami dźwiękowymi. Musieliśmy liczyć na to, że będą istniały gotowe biblioteki które obsłużą najniższy poziom i zapewnią podstawową funkcjonalność z którą moglibyśmy się zapoznać i na jej podstawie kontynuowć. W tym celu przeprowadziliśmy iterację 0 której celem było zbadanie istniejących już rozwiązań pod kątem użyteczności dla naszej aplikacji. \emph{Ryzyko: 7/10}
 
-\noindent\emph{Stopień skompikowania} -- żaden z nas nie miał wcześniej do czynienia z pracą nad plikami
-dźwiękowymi, projektowaniu frameworków a nawet doświadczenia w pisaniu aplikacji na Androida. Na
-naszą korzyść działała tutaj jedynie ogromna wiedza programistyczna jednego z członków zespołu. \emph{Ryzyko: 8/10}
+\noindent\emph{Brak wiedzy dziedzinowej} - Muzyka do tej pory interesowała nas głównie w charakterze odbiorców. Nie dysponowaliśmy wiedzą specjalistyczną o sposobie reprezentacji plików dźwiękowych, czy istniejących już sposobach analizy. By temu przeciwdziałać planowaliśmy przyjrzeć się uważnie gotowym implementacjom w isniejących już rozwiązaniach, oraz dokładnie badać każdą propozycję klienta na temat funkcjonalności by określić poziom skomplikowania przed przystąpieniem do implementacji.
 
-\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. \emph{Ryzyko: 7/10} 
-
-\noindent\emph{Wypadki losowe} -- przez rok wiele może się zmienić. Środek projektu wyznaczany był przez czas wakacji, okres częstych kontuzji i urazów. Istniało niebezpieczeństwo rozbicia ekipy ze względu na przyziemnenie zaliczenie innego aspektu studiów. Niebanalny mógł być wpływ psychologiczny praktyk wakacyjnych zastępujących czas wypoczynku. \emph{Ryzyko: 3/10} 
+\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. By temu przeciwdziałać narzuciliśmy sobie sztywną hierarchię, i kładliśmy nacisk na komunikację wewnątrz zespołu na temat wszystkiego związanego z projektem. \emph{Ryzyko: 7/10} 
 
 \chapter{Przyjęta metodyka pracy}
 
@@ -79,7 +73,7 @@ Aplikacja Androidowa uruchamiana była na kilku różnych emulatorach reprezentu
 
 \chapter{Przebieg prac}
 
-\section{Iteracja -1}
+\section{Iteracja 0}
 Nazywana w czasie gdy ją wykonywaliśmy Iteracją 0. Była to pierwsza faza projektu, w której badaliśmy dostępne biblioteki i rozważaliśmy ostateczną funkcjonalność aplikacji do analizy. Trwała bardzo krótko, i zostawiła po sobie zaledwie zarys oraz pomysł. Poniżej notatki na temat znalezionych bibliotek:
 
 \begin{Note}
@@ -102,7 +96,7 @@ oni implementują (szczególnie jeśli chodzi o identyfikację) -- co oznacza ż
 
 \end{Note}
 
-\section{Iteracja 0}
+\section{Iteracja 1}
 Iteracja podczas której wszystko się zawaliło. Początkową implementację rozpoczęliśmy w środowisku
 znanym -- czysta Java -- co opóźniło rozpoznanie głównego problemu.
 
@@ -127,7 +121,8 @@ Okazało się, że w iteracji 0 podczas zapoznawania się z dostępnymi bibliote
 \end{Note}
 
 To był moment opisany już w sekcji problemów(patrz: \ref{problem}). Po nim nastąpił swoisty restart prac
-\section{Iteracja 1}
+
+\section{Iteracja 2}
 \begin{Note}
 
 \Header{Cel:}
@@ -158,7 +153,7 @@ Wynikiem prac jest pierwsza wersja API systemu wraz z wstępnymi interfejsami dl
 
 \end{Note}
 
-\section{Iteracja 2}
+\section{Iteracja 3}
 
 \begin{Note}
 
@@ -194,7 +189,7 @@ Implementacja parserów to również spory kawałek roboty. Dla ujednolicenia ws
 
 \end{Note}
 
-\section{Iteracja 3}
+\section{Iteracja 4}
 
 \begin{Note}
 
@@ -215,7 +210,7 @@ ustawień Androida -- natomiast wszystkie wykresy rysują się tak jak powinny c
 
 \end{Note}
 
-\section{Iteracja 4}
+\section{Iteracja 5}
 
 \begin{Note}
 
