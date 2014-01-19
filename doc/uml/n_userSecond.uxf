@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="12.1">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
   <zoom_level>8</zoom_level>
   <element>
     <type>com.umlet.element.custom.Systemborder</type>
@@ -40,7 +39,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>240</x>
       <y>136</y>
-      <w>112</w>
+      <w>136</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>4.1Wykres mocy fali

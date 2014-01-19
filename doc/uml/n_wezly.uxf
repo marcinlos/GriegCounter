@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="12.1">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
   <zoom_level>10</zoom_level>
   <element>
     <type>com.umlet.element.Actor</type>
@@ -30,7 +29,7 @@ frameworka</panel_attributes>
     <coordinates>
       <x>220</x>
       <y>60</y>
-      <w>120</w>
+      <w>150</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>7. Podział danych 
@@ -42,7 +41,7 @@ na kawałki</panel_attributes>
     <coordinates>
       <x>260</x>
       <y>110</y>
-      <w>150</w>
+      <w>170</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>8. Dostanie danych
@@ -56,10 +55,10 @@ okno Hamminga
     <coordinates>
       <x>240</x>
       <y>200</y>
-      <w>150</w>
+      <w>190</w>
       <h>60</h>
     </coordinates>
-    <panel_attributes>9.Dostanie wyników 
+    <panel_attributes>9.Dostanie wynikow 
 transformaty Fouriera</panel_attributes>
     <additional_attributes/>
   </element>
@@ -80,10 +79,10 @@ kanałów</panel_attributes>
     <coordinates>
       <x>450</x>
       <y>60</y>
-      <w>120</w>
+      <w>140</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>11. Próbkowanie 
+    <panel_attributes>11. Probkowanie 
 wejścia</panel_attributes>
     <additional_attributes/>
   </element>
@@ -116,7 +115,7 @@ mocy fali</panel_attributes>
     <coordinates>
       <x>460</x>
       <y>290</y>
-      <w>120</w>
+      <w>140</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>14. Wyliczenie
