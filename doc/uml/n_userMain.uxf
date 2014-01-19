@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="12.1">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
   <zoom_level>8</zoom_level>
   <element>
     <type>com.umlet.element.Actor</type>
@@ -18,7 +17,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>232</x>
       <y>152</y>
-      <w>128</w>
+      <w>152</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>1.Wybranie trybu pracy</panel_attributes>
@@ -29,7 +28,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>232</x>
       <y>200</y>
-      <w>96</w>
+      <w>136</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>2.Wczytanie pliku</panel_attributes>
@@ -88,7 +87,7 @@ końcowy</panel_attributes>
       <h>48</h>
     </coordinates>
     <panel_attributes>--
-Wyświetlanie wyników
+Wyswietlanie wynikow
 analizy</panel_attributes>
     <additional_attributes/>
   </element>
