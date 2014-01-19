@@ -1,4 +1,109 @@
-\chapter{Wprowadzenie}
+\chapter{Aplikacja Androidowa}
+
+\section{Budowa}
+
+Z punktu widzenia programisty niskopoziomowa budowa aplikacji czyli logika przetwarzania jest w całości implementowana przez framework. Sama aplikacja musi jedynie odpowiednio się do nich odwoływać: Przygotowane mamy dwa \code{Pipeliny} (patrz: \ref{Pipeline}) różniące się wykorzystywanymi jednostkami przetwarzania (patrz: \ref{Jednostki}) z których dynamicznie podczas działania aplikacji wybieramy ten który zostanie wykorzystany. Pierwszy z nich, domyślny, wykorzystuje je wszystkie, drugi zaś tylko \code{Segmenter}, \code{Power} i \code{Skipper}. Tworzymy również drzewo modelów (odpowiednie
+zależnie od wybranego \code{Pipeline}) wykorzystując do tego gotowe modele (patrz: \ref{Modele}).
+Podczas przetwarzania wyciągamy wszystkie dostępne metadane, oraz rysujemy wykresy w oparciu o dane
+dostarczane modelom.  
+
+\section{Przypadki użycia użytkownika końcowego}
+\IncludeUML{n_userMain}{Główne przypadki użycia użytkownika końcowego}
+\IncludeUML{n_userSecond}{Wyniki analizy}
+\subsection{Generowanie raportu analizy}
+\begin{itemize}
+	\item 1 Wybranie trybu pracy - użytkownik wybiera (z pomocą checkboxa), czy interesują go wykresy generowane w 	czasie rzeczywistym czy jedynie wyniki końcowe
+	\item 2 Wczytanie pliku - użytkownik wskazuje plik z muzyką znajdujący się na karcie SD urządzenia
+\end{itemize}
+\subsection{Informacje na które składa się raport}
+\begin{itemize}
+	\item   4. Wykresy
+	\begin{itemize}
+		\item 4.1. Chcę zobaczyć wykres mocy fali!
+		- aplikacja na żywo parsując plik generuje wykresy mocy fali (osobno dla każdego kanału)
+		\item 4.2. Chcę zobaczyć wizualizację fali dźwiękowej!
+		- aplikacja na żywo parsując plik generuje wykresy fali dźwiękowej (osobno dla każdego kanału), lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
+		\item 4.3 Chcę zobaczyć spektrogram!
+		- aplikacja na żywo parsując plik generuje spektrogram, lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
+
+		\item 4.4 Chcę zobaczyć spektrum w danym miejscu muzyki!
+		- aplikacja na żywo parsując plik generuje wykresy spektrum fali, narysowane z częstotliwością w różnych skalach (liniowej, logarytmicznej, zdyskretyzowanej logarytmicznej)
+	\end{itemize}
+	\item	5. Dane tekstowe
+	\begin{itemize}
+		\item 5.1 Chcę poznać podstawowe dane na temat pliku z muzyką!
+		\begin{itemize}
+			\item użytkownik wskazuje plik
+			\item aplikacja, po zakończeniu analizy pokazuje również metadane takie jak długość, rozmiar, autor jeśli został wpisany
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+\section{Efekt} 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/first_screen}
+\end{figure}
+
+To ekran który użytkownik zobaczy od razu po uruchomieniu aplikacji. Dostaje on możliwość
+zaznaczenia opcji „Omit real-time graphs” oznaczającej wybranie ograniczonego \code{Pipeline} do
+wykresów które nie muszą być generowane w całości dla kolejnych fragmentów muzyki oraz dostaje
+możliwość wybrania pliku do analizy.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/Pick_file}
+  \includegraphics[width=7cm]{images/Processing}
+\end{figure}
+
+Po wybraniu pliku przenosimy się na ekran główny który informuje nas o konieczności poczekania na
+analizę wstępną.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/offline_wave_incomplete}
+\end{figure}
+
+Gdy pre-analiza zostaje zakończona mamy dostęp do głównej części aplikacji. Widzimy tutaj wersję
+„niepełną” (tylko wykresy offline) na które składają się trzy zakładki - Wave (rysująca wykres fali
+dla dwóch kanałów), Power (rysująca wykres mocy fali dla dwóch kanałów) oraz Meta (zawierająca
+wczytane metadane). Jak widać wykresy rysowane są na oczach użytkownika z prędkością uzależnioną od
+mocy obliczeniowej urządzenia jak i długości utworu. Wykres mocy (czyli średniej kwadratowej
+amplitud próbek) jest analogiczny.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_metadata}
+\end{figure}
+
+Tutaj widzimy zakładkę metadanych wyświetlającą wszystkie informacje jakie zostały wyciągnięte
+(włącznie z tymi które nie zostały uzupełnione przez autora pliku). Plikiem tekstowym była piosenka
+Boba Marleya „Alright”. Autor został więc odnaleziony poprawnie, tak samo jak i tytuł (choć różny od
+poprawnego zgadza się z tym który został zapisany w pliku .mp3). Z ważniejszych informacji warto
+spojrzeć również na rozmiar pliku, przybliżoną liczbę sampli (potrzebną do odpowiedniego skalowania
+wyświetlania wykresów), czas trwania, Bitrate oraz format.  Warto też zauważyć że widzimy tutaj
+pełen zestaw zakładek - poza tymi które już widzieliśmy pojawiły się również „Spectrum” oraz „Wave
+win” które będą opisane poniżej.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_wave_window}
+\end{figure}
+
+Zakładka „Wave win” rysuje, zgodnie z nazwą, okno fali w dwóch wersjach - szerokiej oraz wąskiej.
+Jest to wykres „online” w sensie potrzeby rysowania go dla każdego momentu utworu. Ze względu na
+ograniczenia wydajnościowe dzieje się to jednak rzadziej (około jednego obrazu na trzy-pięć sekund).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=7cm]{images/full_spectrum}
+\end{figure}
+
+Ostatnim z wykresów jest wykres spektrum skonstruowany w znanej wielu ludziom formie „podskakujących
+prostokątów”. Jest to wykres natężenia poszczególnych częstotliwości w skali logarytmicznej na
+obydwu współrzędnych. Tak jak okno fali rysowany jest na żywo, w przeciwieństwie jednak do okna robi
+to efektywnie.
+
+\chapter{Wprowadzenie do Frameworku}
 
 \emph{Grieg} to stworzony w języku Java, kompatybilny z platformą \textit{Android} framework
 umożliwiający odczyt i analizę plików dźwiękowych. Powstał w dużej mierze na potrzeby aplikacji do
@@ -1169,113 +1274,4 @@ Teraz można już uruchomić źródło danych.
 \begin{java}
 source.start();
 \end{java}
-
-\chapter{Aplikacja Androidowa}
-
-\section{Budowa}
-
-Opis powyżej został oczywiście zastosowany w praktyce w naszej aplikacji. Przygotowane mamy dwa
-\code{Pipeliny} (patrz: \ref{Pipeline}) różniące się wykorzystywanymi jednostkami przetwarzania
-(patrz: \ref{Jednostki}) z których dynamicznie podczas działania aplikacji wybieramy ten który
-zostanie wykorzystany. Pierwszy z nich, domyślny, wykorzystuje je wszystkie, drugi zaś tylko
-\code{Segmenter}, \code{Power} i \code{Skipper}. Tworzymy również drzewo modelów (odpowiednie
-zależnie od wybranego \code{Pipeline}) wykorzystując do tego gotowe modele (patrz: \ref{Modele}).
-Podczas przetwarzania wyciągamy wszystkie dostępne metadane, oraz rysujemy wykresy w oparciu o dane
-dostarczane modelom.  
-
-\section{Przypadki użycia użytkownika końcowego}
-\IncludeUML{n_userMain}{Główne przypadki użycia użytkownika końcowego}
-\IncludeUML{n_userSecond}{Wyniki analizy}
-\subsection{Generowanie raportu analizy}
-\begin{itemize}
-	\item 1 Wybranie trybu pracy - użytkownik wybiera (z pomocą checkboxa), czy interesują go wykresy generowane w 	czasie rzeczywistym czy jedynie wyniki końcowe
-	\item 2 Wczytanie pliku - użytkownik wskazuje plik z muzyką znajdujący się na karcie SD urządzenia
-\end{itemize}
-\subsection{Informacje na które składa się raport}
-\begin{itemize}
-	\item   4. Wykresy
-	\begin{itemize}
-		\item 4.1. Chcę zobaczyć wykres mocy fali!
-		- aplikacja na żywo parsując plik generuje wykresy mocy fali (osobno dla każdego kanału)
-		\item 4.2. Chcę zobaczyć wizualizację fali dźwiękowej!
-		- aplikacja na żywo parsując plik generuje wykresy fali dźwiękowej (osobno dla każdego kanału), lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
-		\item 4.3 Chcę zobaczyć spektrogram!
-		- aplikacja na żywo parsując plik generuje spektrogram, lub w przypadku opcji „bez wyników w czasie rzeczywistym” od razu pokazuje te wykresy w raporcie końcowym
-
-		\item 4.4 Chcę zobaczyć spektrum w danym miejscu muzyki!
-		- aplikacja na żywo parsując plik generuje wykresy spektrum fali, narysowane z częstotliwością w różnych skalach (liniowej, logarytmicznej, zdyskretyzowanej logarytmicznej)
-	\end{itemize}
-	\item	5. Dane tekstowe
-	\begin{itemize}
-		\item 5.1 Chcę poznać podstawowe dane na temat pliku z muzyką!
-		\begin{itemize}
-			\item użytkownik wskazuje plik
-			\item aplikacja, po zakończeniu analizy pokazuje również metadane takie jak długość, rozmiar, autor jeśli został wpisany
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
-\section{Efekt} 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/first_screen}
-\end{figure}
-
-To ekran który użytkownik zobaczy od razu po uruchomieniu aplikacji. Dostaje on możliwość
-zaznaczenia opcji „Omit real-time graphs” oznaczającej wybranie ograniczonego \code{Pipeline} do
-wykresów które nie muszą być generowane w całości dla kolejnych fragmentów muzyki oraz dostaje
-możliwość wybrania pliku do analizy.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/Pick_file}
-  \includegraphics[width=7cm]{images/Processing}
-\end{figure}
-
-Po wybraniu pliku przenosimy się na ekran główny który informuje nas o konieczności poczekania na
-analizę wstępną.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/offline_wave_incomplete}
-\end{figure}
-
-Gdy pre-analiza zostaje zakończona mamy dostęp do głównej części aplikacji. Widzimy tutaj wersję
-„niepełną” (tylko wykresy offline) na które składają się trzy zakładki - Wave (rysująca wykres fali
-dla dwóch kanałów), Power (rysująca wykres mocy fali dla dwóch kanałów) oraz Meta (zawierająca
-wczytane metadane). Jak widać wykresy rysowane są na oczach użytkownika z prędkością uzależnioną od
-mocy obliczeniowej urządzenia jak i długości utworu. Wykres mocy (czyli średniej kwadratowej
-amplitud próbek) jest analogiczny.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/full_metadata}
-\end{figure}
-
-Tutaj widzimy zakładkę metadanych wyświetlającą wszystkie informacje jakie zostały wyciągnięte
-(włącznie z tymi które nie zostały uzupełnione przez autora pliku). Plikiem tekstowym była piosenka
-Boba Marleya „Alright”. Autor został więc odnaleziony poprawnie, tak samo jak i tytuł (choć różny od
-poprawnego zgadza się z tym który został zapisany w pliku .mp3). Z ważniejszych informacji warto
-spojrzeć również na rozmiar pliku, przybliżoną liczbę sampli (potrzebną do odpowiedniego skalowania
-wyświetlania wykresów), czas trwania, Bitrate oraz format.  Warto też zauważyć że widzimy tutaj
-pełen zestaw zakładek - poza tymi które już widzieliśmy pojawiły się również „Spectrum” oraz „Wave
-win” które będą opisane poniżej.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/full_wave_window}
-\end{figure}
-
-Zakładka „Wave win” rysuje, zgodnie z nazwą, okno fali w dwóch wersjach - szerokiej oraz wąskiej.
-Jest to wykres „online” w sensie potrzeby rysowania go dla każdego momentu utworu. Ze względu na
-ograniczenia wydajnościowe dzieje się to jednak rzadziej (około jednego obrazu na trzy-pięć sekund).
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=7cm]{images/full_spectrum}
-\end{figure}
-
-Ostatnim z wykresów jest wykres spektrum skonstruowany w znanej wielu ludziom formie „podskakujących
-prostokątów”. Jest to wykres natężenia poszczególnych częstotliwości w skali logarytmicznej na
-obydwu współrzędnych. Tak jak okno fali rysowany jest na żywo, w przeciwieństwie jednak do okna robi
-to efektywnie.
 

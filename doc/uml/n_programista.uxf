@@ -34,7 +34,7 @@ frameworka</panel_attributes>
       <w>120</w>
       <h>60</h>
     </coordinates>
-    <panel_attributes>2. Dostęp do 
+    <panel_attributes>2. Dostep do 
 danych</panel_attributes>
     <additional_attributes/>
   </element>
@@ -92,7 +92,6 @@ danych</panel_attributes>
     </coordinates>
     <panel_attributes>6. Odtwarzanie</panel_attributes>
     <additional_attributes/>
-  </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>

@@ -31,8 +31,7 @@ Frameworku od zera do stanu w którym był on używalny, a API przyjęło ostate
 \section{Role i podział prac w zespole}
 
 Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętności. Kierownictwo przejął
-\emph{Marcin Łoś} -- to on odpowiada za architekturę frameworku, on też zarządzał projektem od
-strony programistycznej delegując zadania gdzie uznał to za stosowne. \emph{Michał Torba} jako
+\emph{Marcin Łoś} -- jako bardziej doświadczony programista to on odpowiada za architekturę frameworku, on też zarządzał projektem delegując zadania gdzie uznał to za stosowne. Jego pomysły są podstawą budowy każdego modułu. \emph{Michał Torba} jako
 główną odpowiedzialność przyjął aplikację Androidową oraz dokumentację projektu pełniąc jedynie
 pomocniczą funkcję w pozostałych aspektach prac.
 
@@ -54,7 +53,7 @@ Android nie implementuje \code{javax.sound}.
 
 Jako programistów nieobeznanych z systemem Android było to nielada zaskoczenie. Miało również poważne konsekwencje. Wszystkie biblioteki z których pomocy planowaliśmy korzystać korzystały z tego pakietu jako integralnej części logiki. Bez niego pozbawieni zostaliśmy możliwości wczytania pliku w sposób nadający się do analizy. Straciliśmy czas na tworzenie planów i rozpoczęcie implementacji na sposób który nie mógł zadziałać.
 
-To ten problem zdefiniował nowy kształt projektu, nowy cel, nowy produkt będący jego wynikiem. Punkt definiujący całość.
+Rozwiązaniem go była restrukturyzacja (i znaczące rozszerzenie) projektu, czyli rozdzielenie prac na aplikację oraz Grieg, czyli framwork zapewniający nasz własny backend do analizy muzyki bez którego istnienie aplikacji byłoby niemożliwe.
 
 \chapter{Weryfikacja wyników projektu}
 
@@ -72,6 +71,22 @@ stabilnością -- po stworzeniu go na samym początku prac implementacyjnych nie
 Aplikacja Androidowa uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików muzycznych. Prezentowana była klientowi w ostatecznej formie i została zaakceptowana jako spełniająca jego wymagania.
 
 \chapter{Przebieg prac}
+
+\section{Harmonogram}
+
+\begin{center}
+    \begin{tabular}{| l | l | p{9cm} |}
+    \hline
+    Data rozpoczęcia & Data zakończenia & Opis \\ \hline
+    Maj 2013 & Czerwiec 2013 & Iteracja 0 - wstępna analiza, poszukiwanie gotowych rozwiązań, rozważania na temat ostatecznej funkcjonalności. \\ \hline
+    Czerwiec 2013 & Lipiec 2013 & Iteracja 1 - rozpoczęcie implementacji. Równoległa implementacja funkcjonalności (pierwsze analizowane rzeczy) w środowisku czysto Javowym w oparciu o bibliotekę \emph{Beads}. Napotkanie na problem z java.sound na Androidzie co zatrzymało dotychczasowe prace. \\ \hline
+    Lipiec 2013 & Lipiec 2013 & Iteracja 2 - Kolejna faza projektowania - niezbędna ze względu na poszerzony zakres projektu. Tutaj powstały główne idee oraz szkic API frameworku.  \\ \hline
+    Lipiec 2013 & Październik 2013 & Iteracja 3 - Implementacja rdzenia systemu. \\ \hline
+    Październik 2013 & Listopad 2013 & Iteracja 4 - Zakończenie prac nad frameworkiem (dodanie gotowych jednostek przetwarzania), stworzenie aplikacji Androidowej z wykorzystaniem Frameworku. \\ \hline
+    Listopad 2013 & Styczeń 2014 & Iteracja 5 - Dopracowanie aplikacji oraz opracowanie dokumentacji projektowej. \\ \hline
+    \end{tabular}
+\end{center}
+
 
 \section{Iteracja 0}
 Nazywana w czasie gdy ją wykonywaliśmy Iteracją 0. Była to pierwsza faza projektu, w której badaliśmy dostępne biblioteki i rozważaliśmy ostateczną funkcjonalność aplikacji do analizy. Trwała bardzo krótko, i zostawiła po sobie zaledwie zarys oraz pomysł. Poniżej notatki na temat znalezionych bibliotek:
@@ -97,7 +112,7 @@ oni implementują (szczególnie jeśli chodzi o identyfikację) -- co oznacza ż
 \end{Note}
 
 \section{Iteracja 1}
-Iteracja podczas której wszystko się zawaliło. Początkową implementację rozpoczęliśmy w środowisku
+Iteracja podczas której wszystko się stało się bardziej skomplikowane. Początkową implementację rozpoczęliśmy w środowisku
 znanym -- czysta Java -- co opóźniło rozpoznanie głównego problemu.
 
 \begin{Note}
@@ -127,7 +142,7 @@ To był moment opisany już w sekcji problemów(patrz: \ref{problem}). Po nim na
 
 \Header{Cel:}
 
-Zaprojektowanie prawdziwej architektury systemu
+Zaprojektowanie nowej wersji architektury systemu z uwzględnieniem rozdzielenia na Framework i aplikację
 
 \Header{Architektura:}
 
