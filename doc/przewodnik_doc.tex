@@ -5,34 +5,36 @@ Wiele uwagi dzisiejszego świata poświęcone jest muzyce. Jeden z najbardziej d
 \section{Cel i wizja}
 Celem naszej pracy było zaprojektowanie i zaimplementowanie mobilnej aplikacji będącej w stanie robić właśnie te rzeczy - wizualizować, wyciągać informacje, analizować, informować o technicznych aspektach muzyki. Wszystko to zaś zamknięte w ramach systemu operacyjnego Android. Podczas pierwszych faz developmentu odkryliśmy jednak dość nieoczekiwany fakt - Android nie implementuje wszystkich bibliotek Javy. W tym tej, która byłaby nam najbardziej potrzebna: java.sound
 
-By temu zaradzić cel naszej musiał zostać rozszerzony. Ze względu na pozbawienie nas podstawowych niskopoziomowych narzędzi dostępu do pliku muzycznego jak i nadziei na wykorzystanie istniejących już bibliotek - postanowiliśmy zaprojektować własną. Tak narodził się Grieg, framework umożliwiający odczyt i analizę plików dźwiękowych. W jego ramach zamknięta zostałaby logika analizy, aplikacja zaś swój cel spełniałaby poprzez odpowiednie użycie oraz prezentację logiki zawartej wewnątrz Frameworku.
+By temu zaradzić cel naszej musiał zostać rozszerzony. Ze względu na pozbawienie nas podstawowych niskopoziomowych narzędzi dostępu do pliku muzycznego jak i nadziei na wykorzystanie istniejących już bibliotek - postanowiliśmy zaprojektować własną. Tak narodził się Grieg, framework umożliwiający odczyt i analizę plików dźwiękowych. W jego ramach zamknięta zostałaby logika analizy, aplikacja zaś swój cel spełniałaby poprzez odpowiednie użycie oraz prezentację logiki zawartej wewnątrz frameworku.
 
 \section{Analiza ryzyka}
 
-\noindent\emph{Nieznajomość systemu Android} -- W chwili rozpoczęcia projektu żaden z nas nie posiadał żadnego doświadczenia z programowniem na systemy mobilne, w szczególności na system Android. Nie znaliśmy dobrych praktyk, specyfiki i ograniczeń platformy. By temu przeciwdziałać równolegle jako projekt z innego przedmiotu pracowaliśmy również nad aplikacją androidową, w ramach tego projektu zakładaliśmy częste prototypowanie we wczesnych fazach by wyeliminować podstawowe problemy· \emph{Ryzyko: 8/10}
+\noindent\emph{Nieznajomość systemu Android} -- W chwili rozpoczęcia projektu żaden z nas nie posiadał żadnego doświadczenia z programowniem na systemy mobilne, w szczególności na system Android. Nie znaliśmy dobrych praktyk, specyfiki i ograniczeń platformy. W konsekwencji istniało duże ryzyko błędnej oceny trudności w projektowaniu i implementacji zadań związanych z tą platformą. By temu przeciwdziałać równolegle jako projekt z innego przedmiotu pracowaliśmy również nad aplikacją androidową, w ramach tego projektu zakładaliśmy częste prototypowanie we wczesnych fazach by wyeliminować podstawowe problemy·
 
-\noindent\emph{Gotowe biblioteki} -- Żaden z nas nie miał doświadczenia w pracy nad plikami dźwiękowymi. Musieliśmy liczyć na to, że będą istniały gotowe biblioteki które obsłużą najniższy poziom i zapewnią podstawową funkcjonalność z którą moglibyśmy się zapoznać i na jej podstawie kontynuowć. W tym celu przeprowadziliśmy iterację 0 której celem było zbadanie istniejących już rozwiązań pod kątem użyteczności dla naszej aplikacji. \emph{Ryzyko: 7/10}
+\noindent\emph{Gotowe biblioteki} -- Żaden z nas nie miał doświadczenia w pracy nad plikami dźwiękowymi. Elementem koniecznym więc wydawało się istnienie gotowej biblioteki obsługującej niskopoziomową logikę taką jak wczytywanie pliku czy stworzenie pipelinu przetwarzania. Istniało jednak ryzyko, że takich nie znajdziemy - ponieważ nie istnieją lub ponieważ wymagania sprawią że z jakiegoś powodu nie będą aplikowalne w naszym projekcie. W tym celu przeprowadziliśmy iterację 0 której celem było zbadanie istniejących już rozwiązań pod kątem użyteczności dla naszej aplikacji.
 
-\noindent\emph{Brak wiedzy dziedzinowej} - Muzyka do tej pory interesowała nas głównie w charakterze odbiorców. Nie dysponowaliśmy wiedzą specjalistyczną o sposobie reprezentacji plików dźwiękowych, czy istniejących już sposobach analizy. By temu przeciwdziałać planowaliśmy przyjrzeć się uważnie gotowym implementacjom w isniejących już rozwiązaniach, oraz dokładnie badać każdą propozycję klienta na temat funkcjonalności by określić poziom skomplikowania przed przystąpieniem do implementacji.
+\noindent\emph{Brak wiedzy dziedzinowej} - Muzyka do tej pory interesowała nas głównie w charakterze odbiorców. Nie dysponowaliśmy wiedzą specjalistyczną o sposobie reprezentacji plików dźwiękowych, czy istniejących już sposobach analizy. Wiązało się z tym ryzyko problemów komunikacyjnych z klientem, trudność w zrozumieniu oraz ocenie wykonalności jego wymagań. By temu przeciwdziałać planowaliśmy przyjrzeć się uważnie gotowym implementacjom w isniejących już rozwiązaniach, oraz dokładnie badać każdą propozycję klienta na temat funkcjonalności by określić poziom skomplikowania przed przystąpieniem do implementacji.
 
-\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. By temu przeciwdziałać narzuciliśmy sobie sztywną hierarchię, i kładliśmy nacisk na komunikację wewnątrz zespołu na temat wszystkiego związanego z projektem. \emph{Ryzyko: 7/10} 
+\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Zaistnieć mogły problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. By temu przeciwdziałać narzuciliśmy sobie sztywną hierarchię, i kładliśmy nacisk na komunikację wewnątrz zespołu na temat wszystkiego związanego z projektem.
  
 \chapter{Zakres funkcjonalności}
 \section{Aktorzy}
 Jako że wynikiem całego projektu będą de facto dwa osobne produkty, wyróżnić możemy dwóch różnych aktorów będących użytkownikami końcowymi. Framework skierowany jest do programistów, będą go chcieli wykorzystać w budowaniu własnych aplikacji, interesować ich będzie kod oraz sposób jego użycia. Aplikacja zaś skierowana jest do użytkownika końcowego, nie posiadającego żadnej wiedzy na temat programowania, który po prostu chce dowiedzieć się kilku rzeczy na temat posiadanego przez niego pliku dźwiękowego.
+\section{Użytkownik}
+\IncludeUML{n_userMain}{Przypadki użycia użytkownika}
+Wybranie trybu pracy odnosi się do możliwości przeprowadzenia pełnej analizy lub wybrania tylko fragmentu nie zawierającego wykresów generowanych w czasie rzeczywistym (jak spektrum czy okno fali).
+W skład wyświetlania wyników analizy wchodzą konkretne wykresy (fala, okno fali, moc, spektrum) oraz metadane uzyskiwane w wyniku przetwarzania pliku.
+
+Po szczegóły odsyłamy do dokumentu wymagań funkcjonalnych.
+
 \section{Programista}
 \IncludeUML{n_programista}{Główne przypadki użycia programisty}
 Dostęp do danych oznacza wczytanie i udostępnienie programiście surowych danych pliku dźwiękowego w odpowiednim formacie (PCM).
 \IncludeUML{n_tree}{Przypadki użycia drzewa przetwarzania}
 W skład ekstrakcji danych wchodzą poszczególne konkretne informacje jakie można wyciągnąć z pliku muzycznego (np. moc czy spektrum fali). Odłączanie jednostek mówi o możliwości dynamicznego odłączania od drzewa przetwarzania niepotrzebnych już elementów. Propagacja wyników zaś mówi o potrzebie istnienia mechanizmu, który pozwoliłby na przetwarzanie modularne, gdzie następne elementy opierają się na wynikach poprzednich.
 
-Po szczegóły odsyłamy do dokumentacji użytkownika.
-\section{Użytkownik}
-\IncludeUML{n_userMain}{Przypadki użycia użytkownika}
-Wybranie trybu pracy odnosi się do możliwości przeprowadzenia analizy całościowej, czy część bez wykresów generowanych w czasied rzeczywistym.
-W skład wyświetlania wyników analizy wchodzą konkretne wykresy uzyskiwane w wyniku przetwarzania pliku.
+Po szczegóły odsyłamy do dokumentu wymagań funkcjonalnych.
 
-Po szczegóły odsyłamy do dokumentacji użytkownika.
 
 \chapter{Architektura systemu}
 
@@ -67,10 +69,10 @@ niewspieraną platformę nie wymaga dużego wysiłku. Dostępna jest implementac
 \textit{JavaSound}.
 \end{itemize}
 
-Całość dopełnia aplikacja Androidowa, której budowa została maksymalnie uproszczona by lepiej spełniał swoje zadanie prezentacji budowy aplikacji w oparciu o Framework bez niepotrzebnych dodatków. Składa się ona z dwóch aktywności - Pierwszej, głównej, na którą składa się między innymi prosta implementacja eksploratora plików, oraz druga oparta na zakładkach przystosowana do wyświetlania danych przetwarzania.
+Całość dopełnia aplikacja Androidowa, której budowa została maksymalnie uproszczona by lepiej spełniał swoje zadanie prezentacji budowy aplikacji w oparciu o Framework bez niepotrzebnych dodatków. Składa się ona z dwóch aktywności -- Pierwszej, głównej, na którą składa się między innymi prosta implementacja eksploratora plików, oraz druga oparta na zakładkach przystosowana do wyświetlania danych przetwarzania.
 
 \chapter{Organizacja pracy}
-Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę Frameworka okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji Frameworku od zera do stanu w którym był on używalny a API przyjęło ostateczną formę.
+Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę frameworka okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji frameworku od zera do stanu w którym był on używalny a API przyjęło ostateczną formę.
 
 \section{Struktura zespołu}
 Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętności. Kierownictwo przejął \emph{Marcin Łoś} - to on odpowiada za architekturę frameworku, on też zarządzał projektem od strony programistycznej delegując zadania gdzie uznał to za stosowne. \emph{Michał Torba} jako główną odpowiedzialność przyjął aplikację Androidową oraz dokumentację projektu pełniąc jedynie pomocniczą funkcję w pozostałych aspektach prac.
@@ -83,7 +85,7 @@ Nasz zespół pracował w ścisłej hierarchii związanej z poziomem umiejętno�
     Czerwiec 2013 & Lipiec 2013 & Iteracja 1 - rozpoczęcie implementacji. Napotkanie na problem z java.sound na Androidzie. \\ \hline
     Lipiec 2013 & Lipiec 2013 & Iteracja 2 - Kolejna faza projektowania. Tutaj powstały główne idee oraz szkic API frameworku.  \\ \hline
     Lipiec 2013 & Październik 2013 & Iteracja 3 - Implementacja rdzenia systemu. \\ \hline
-    Październik 2013 & Listopad 2013 & Iteracja 4 - Zakończenie prac nad frameworkiem (dodanie gotowych jednostek przetwarzania), stworzenie aplikacji Androidowej z wykorzystaniem Frameworku. \\ \hline
+    Październik 2013 & Listopad 2013 & Iteracja 4 - Zakończenie prac nad frameworkiem (dodanie gotowych jednostek przetwarzania), stworzenie aplikacji Androidowej z wykorzystaniem frameworku. \\ \hline
     Listopad 2013 & Styczeń 2014 & Iteracja 5 - Dopracowanie aplikacji oraz opracowanie dokumentacji projektowej. \\ \hline
     \end{tabular}
 \end{center}
@@ -99,7 +101,7 @@ odpowiedzialne za konfigurację. Brak testów jednostkowych dla rdzenia systemu 
 stabilnością -- po stworzeniu go na samym początku prac implementacyjnych nie był zmieniany.
 
 
-Aplikacja Androidowa, ze względu na korzystanie z zaimplementowanych i przetestowanych już rozwiązań Frameworku poddana została jedynie testom akceptacyjnym - uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików.
+Aplikacja Androidowa, ze względu na korzystanie z zaimplementowanych i przetestowanych już rozwiązań frameworku poddana została jedynie testom akceptacyjnym - uruchamiana była na kilku różnych emulatorach reprezentujących różne urządzenia oparte o system Android, oraz wykorzystana do przeanalizowania różnych plików.
 \section{Narzędzia}
 Jako repozytorium kodu wykorzystaliśmy popularny Github. Do szybkiego tworzenia bieżącej dokumentacji projektowej korzystaliśmy z systemu Confluence udostępnianego przez Katedrę Informatyki. Specjalne podziękowanie należy się też Google Hangouts, głównej platformy komunikacji wewnątrz zespołu.
 
@@ -107,12 +109,12 @@ Jako repozytorium kodu wykorzystaliśmy popularny Github. Do szybkiego tworzenia
 
 \chapter{Wyniki projektu}
 \section{Efekty i ocena przydatności}
-W ramach przyjętych założeń uzyskaliśmy zadowalające wyniki. Framework spełnia wszystkie założenia techniczne przed nim postawione, jest w pełni zgodny z systemem Android, jest stosunkowo prosty w użytkowaniu i stosownie udokumentowany. O ile gotowe jednostki przetwarzania mogą okazać się niewystarczające dla programistów pragnących w oparciu tylko o nie zbudować komercyjną aplikację, to framework jest doskonałym punktem wyjścia dla programistów pragnących napisać własne elementy analizy. Aplikacja androidowa dobrze demonstruje sposób wykorzystania Frameworku dając punkt wyjścia dla przyszłych bardziej złożonych implementacji.
+W ramach przyjętych założeń uzyskaliśmy zadowalające wyniki. Framework spełnia wszystkie założenia techniczne przed nim postawione, jest w pełni zgodny z systemem Android, jest stosunkowo prosty w użytkowaniu i stosownie udokumentowany. O ile gotowe jednostki przetwarzania mogą okazać się niewystarczające dla programistów pragnących w oparciu tylko o nie zbudować komercyjną aplikację, to framework jest doskonałym punktem wyjścia dla programistów pragnących napisać własne elementy analizy. Aplikacja androidowa dobrze demonstruje sposób wykorzystania frameworku dając punkt wyjścia dla przyszłych bardziej złożonych implementacji.
 
 \section{Ograniczenia i kierunki dalszych prac}
 Największym ograniczeniem jest liczba gotowych komponentów - te gotowe nie wzbudzą zachwytu w entuzjastach analizy plików muzycznych, reprezentują jedynie absolutne podstawy. Napisanie kolejnych, analizujących bardziej zaawansowane koncepty takie jak bitrate czy barwę dźwięku wydaje się oczywistym następnym krokiem.
 
-Również aplikacja Androidowa ostatecznie może wymagać solidnych przeróbek jeśli nie całkowitego przepisania przez programistów lepiej zaznajomionych z zawiłościami środowiska Androidowego.
+Wraz z rozszerzeniem framworka rozwijać musi się też aplikacja, znajdując sposób (a przynajmniej miejsce) na zwizualizowanie nowych uzyskiwanych informacji.
 
 \nocite{*}
 \bibliography{przewodnik}

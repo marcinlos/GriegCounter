@@ -8,8 +8,8 @@
       <w>80</w>
       <h>96</h>
     </coordinates>
-    <panel_attributes>Użytkownik
-końcowy</panel_attributes>
+    <panel_attributes>Uzytkownik
+koncowy</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -17,7 +17,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>232</x>
       <y>152</y>
-      <w>152</w>
+      <w>160</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>1.Wybranie trybu pracy</panel_attributes>
@@ -83,7 +83,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>224</x>
       <y>264</y>
-      <w>128</w>
+      <w>144</w>
       <h>48</h>
     </coordinates>
     <panel_attributes>--

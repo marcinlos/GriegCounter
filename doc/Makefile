@@ -3,7 +3,7 @@ LATEX_FLAGS = -shell-escape -interaction=nonstopmode -file-line-error
 LATEX = pdflatex $(LATEX_FLAGS)
 BIBTEX = bibtex
 
-DOCS = techniczna.pdf uzytkownika.pdf procesowa.pdf przewodnik.pdf
+DOCS = techniczna.pdf uzytkownika.pdf procesowa.pdf przewodnik.pdf wymagania.pdf
 BIBS = $(wildcard *.bib)
 
 DIAGRAMS = $(wildcard uml/*.uxf)

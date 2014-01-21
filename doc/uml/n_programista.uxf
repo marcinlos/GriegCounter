@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="12.1">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
   <help_text>Use case 1</help_text>
   <zoom_level>10</zoom_level>
   <element>
@@ -22,7 +21,7 @@
       <h>140</h>
     </coordinates>
     <panel_attributes>Programista - 
-użytkownik 
+uzytkownik 
 frameworka</panel_attributes>
     <additional_attributes/>
   </element>

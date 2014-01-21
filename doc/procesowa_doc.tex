@@ -7,26 +7,26 @@
 Podstawowym celem jest stworzenie aplikacji mobilnej na urządzenia wyposażone w system Android która
 pozwalałaby na badanie w locie różnych właściwości melodii. Funkcjonalności jakie przewidywaliśmy zawierały w sobie wszystko pomiędzy analizowaniem liczby BPM (beats per minute) poprzez rozponawanie instrumentów aż po identyfikację gatunku muzycznego. Napotkane problemy jednak zweryfikowały nasz entuzjazm i przeniosły ciężar projektu na inne tory.
 
-Ostatecznie ze względu na niemożność użycia żadnej gotowej biblioteki naszym celem, oprócz samej aplikacji, stało się stworzenie Frameworku który tworzyłby podwaliny dla budowy aplikacji takich jak nasza. Miał pozwalać na wczytywanie plików muzycznych różnych formatów (wav, mp3, ogg), być łatwo rozszerzalny, oraz pozwalać na elastyczne przetwarzanie danych.
+Ostatecznie ze względu na niemożność użycia żadnej gotowej biblioteki naszym celem, oprócz samej aplikacji, stało się stworzenie frameworku który tworzyłby podwaliny dla budowy aplikacji takich jak nasza. Miał pozwalać na wczytywanie plików muzycznych różnych formatów (wav, mp3, ogg), być łatwo rozszerzalny, oraz pozwalać na elastyczne przetwarzanie danych.
    
 \section{Studium wykonalności i analiza ryzyka}
 
-\noindent\emph{Nieznajomość systemu Android} -- W chwili rozpoczęcia projektu żaden z nas nie posiadał żadnego doświadczenia z programowniem na systemy mobilne, w szczególności na system Android. Nie znaliśmy dobrych praktyk, specyfiki i ograniczeń platformy. By temu przeciwdziałać równolegle jako projekt z innego przedmiotu pracowaliśmy również nad aplikacją androidową, w ramach tego projektu zakładaliśmy częste prototypowanie we wczesnych fazach by wyeliminować podstawowe problemy· \emph{Ryzyko: 8/10}
+\noindent\emph{Nieznajomość systemu Android} -- W chwili rozpoczęcia projektu żaden z nas nie posiadał żadnego doświadczenia z programowniem na systemy mobilne, w szczególności na system Android. Nie znaliśmy dobrych praktyk, specyfiki i ograniczeń platformy. W konsekwencji istniało duże ryzyko błędnej oceny trudności w projektowaniu i implementacji zadań związanych z tą platformą. By temu przeciwdziałać równolegle jako projekt z innego przedmiotu pracowaliśmy również nad aplikacją androidową, w ramach tego projektu zakładaliśmy częste prototypowanie we wczesnych fazach by wyeliminować podstawowe problemy·
 
-\noindent\emph{Gotowe biblioteki} -- Żaden z nas nie miał doświadczenia w pracy nad plikami dźwiękowymi. Musieliśmy liczyć na to, że będą istniały gotowe biblioteki które obsłużą najniższy poziom i zapewnią podstawową funkcjonalność z którą moglibyśmy się zapoznać i na jej podstawie kontynuowć. W tym celu przeprowadziliśmy iterację 0 której celem było zbadanie istniejących już rozwiązań pod kątem użyteczności dla naszej aplikacji. \emph{Ryzyko: 7/10}
+\noindent\emph{Gotowe biblioteki} -- Żaden z nas nie miał doświadczenia w pracy nad plikami dźwiękowymi. Elementem koniecznym więc wydawało się istnienie gotowej biblioteki obsługującej niskopoziomową logikę taką jak wczytywanie pliku czy stworzenie pipelinu przetwarzania. Istniało jednak ryzyko, że takich nie znajdziemy - ponieważ nie istnieją lub ponieważ wymagania sprawią że z jakiegoś powodu nie będą aplikowalne w naszym projekcie. W tym celu przeprowadziliśmy iterację 0 której celem było zbadanie istniejących już rozwiązań pod kątem użyteczności dla naszej aplikacji.
 
-\noindent\emph{Brak wiedzy dziedzinowej} - Muzyka do tej pory interesowała nas głównie w charakterze odbiorców. Nie dysponowaliśmy wiedzą specjalistyczną o sposobie reprezentacji plików dźwiękowych, czy istniejących już sposobach analizy. By temu przeciwdziałać planowaliśmy przyjrzeć się uważnie gotowym implementacjom w isniejących już rozwiązaniach, oraz dokładnie badać każdą propozycję klienta na temat funkcjonalności by określić poziom skomplikowania przed przystąpieniem do implementacji.
+\noindent\emph{Brak wiedzy dziedzinowej} - Muzyka do tej pory interesowała nas głównie w charakterze odbiorców. Nie dysponowaliśmy wiedzą specjalistyczną o sposobie reprezentacji plików dźwiękowych, czy istniejących już sposobach analizy. Wiązało się z tym ryzyko problemów komunikacyjnych z klientem, trudność w zrozumieniu oraz ocenie wykonalności jego wymagań. By temu przeciwdziałać planowaliśmy przyjrzeć się uważnie gotowym implementacjom w isniejących już rozwiązaniach, oraz dokładnie badać każdą propozycję klienta na temat funkcjonalności by określić poziom skomplikowania przed przystąpieniem do implementacji.
 
-\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. By temu przeciwdziałać narzuciliśmy sobie sztywną hierarchię, i kładliśmy nacisk na komunikację wewnątrz zespołu na temat wszystkiego związanego z projektem. \emph{Ryzyko: 7/10} 
+\noindent\emph{Praca w zespole} -- charakter członków zespołu mógł okazać się niekompatybilny. Zaistnieć mogły problemy z podziałem pracy i delegacją obowiązków, niepewny zakres odpowiedzialności, problemy związane z zarządzaniem czasem. By temu przeciwdziałać narzuciliśmy sobie sztywną hierarchię, i kładliśmy nacisk na komunikację wewnątrz zespołu na temat wszystkiego związanego z projektem.
 
 \chapter{Przyjęta metodyka pracy}
 
 Planem na organizację pracy początkowo była idea iteracji, przyrostowego modelu którego każdy cykl
 kończy się gotowym do zaprezentowania klientowi produktem. Po przerzuceniu ciężaru prac na budowę
-Frameworku okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną
+frameworku okazało się to jednak w dużej mierze niemożliwe ze względu na jego zawiłą i powiązaną
 nawzajem budowę uniemożliwiającą działanie na wynikach cząstkowych. Stąd też jedna z iteracji
 zdecydowanie góruje długością nad pozostałymi ponieważ składa się na nią całość implementacji
-Frameworku od zera do stanu w którym był on używalny, a API przyjęło ostateczną formę.
+frameworku od zera do stanu w którym był on używalny, a API przyjęło ostateczną formę.
 
 \section{Role i podział prac w zespole}
 
@@ -39,7 +39,7 @@ pomocniczą funkcję w pozostałych aspektach prac.
 Plusem ułatwiającym komunikację w zespole był fakt, że jesteśmy dość dobrymi przyjaciółmi. To ułatwiało organizację. W czasie prac nie doszło do większych spięc na poziomie interpersonalnym, problemy rozwiązywane były na poziomie kulturalnego dyskursu. Dwiema głównymi platformami komunikacji były Google Hangouts używany do dyskusji wszelakich gdy akurat nie mogliśmy się zobaczyć na żywo, oraz opisy commitów. Drugorzędną rolę odgrywała dokumentacja powstająca na Confluence nadająca punkty zaczepienia. Duża część prac, szczególnie w końcowych fazach projektu, odbywała się zaś w sprintach związanych ze spotkaniami na żywo na kilkugodzinnych sesjach wspólnego implementowania.
 
 \section{Komunikacja z klientem i managerem}
-W tej płaszczyźnie nie obyło się bez pewnych zgrzytów. Rozpoczęcie projektu odbyło się dosyć gładko, wizja tego co należy zrobić na początek była prosta i zrozumiała. Później napotkaliśmy na pewne zgrzyty związane z organizacją, dwa spotkania były przekładane na inne terminy ze względu na problemy komunikacyjne. Kryzys nastąpił podczas wakacji, gdy na czas implementacji rdzenia Frameworku postęp prac nie był konsultowany. Ostatnie fazy projektu zaowocowały jednak zwiększoną współpracą i doprowadziły nas do szczęśliwego końca.
+W tej płaszczyźnie nie obyło się bez pewnych zgrzytów. Rozpoczęcie projektu odbyło się dosyć gładko, wizja tego co należy zrobić na początek była prosta i zrozumiała. Później napotkaliśmy na pewne zgrzyty związane z organizacją, dwa spotkania były przekładane na inne terminy ze względu na problemy komunikacyjne. Kryzys nastąpił podczas wakacji, gdy na czas implementacji rdzenia frameworku postęp prac nie był konsultowany. Ostatnie fazy projektu zaowocowały jednak zwiększoną współpracą i doprowadziły nas do szczęśliwego końca.
 
 \section{Wykorzystane narzędzie do zarządzania projektem}
 Jako repozytorium kodu wykorzystaliśmy popularny Github. Do szybkiego tworzenia bieżącej dokumentacji projektowej korzystaliśmy z systemu Confluence udostępnianego przez Katedrę Informatyki. Specjalne podziękowanie należy się też Google Hangouts, głównej platformy komunikacji wewnątrz zespołu. Poza tym jednak nie używaliśmy żadnych specjalizowanych narzędzi zarządzania projektem.
@@ -58,7 +58,7 @@ Rozwiązaniem go była restrukturyzacja (i znaczące rozszerzenie) projektu, czy
 \chapter{Weryfikacja wyników projektu}
 
 \section{Testy jednostkowe}
-Zastosowane zostały wewnątrz Frameworku. Do testów jednostkowych wykorzystywany był framework JUnit4 oraz Mockito, sporadycznie także
+Zastosowane zostały wewnątrz frameworku. Do testów jednostkowych wykorzystywany był framework JUnit4 oraz Mockito, sporadycznie także
 PowerMock. Nie cały kod został pokryty w pełni testami jednostkowymi; pokrycie wynosi ok. 30\% (do
 jego określenia wykorzystane zostało narzędzie EclEmma). Testowane były głównie te fragmenty,
 których poprawność jest kwestią delikatną i łatwą do naruszenia, m. in. systemy dynamicznego
@@ -82,7 +82,7 @@ Aplikacja Androidowa uruchamiana była na kilku różnych emulatorach reprezentu
     Czerwiec 2013 & Lipiec 2013 & Iteracja 1 - rozpoczęcie implementacji. Równoległa implementacja funkcjonalności (pierwsze analizowane rzeczy) w środowisku czysto Javowym w oparciu o bibliotekę \emph{Beads}. Napotkanie na problem z java.sound na Androidzie co zatrzymało dotychczasowe prace. \\ \hline
     Lipiec 2013 & Lipiec 2013 & Iteracja 2 - Kolejna faza projektowania - niezbędna ze względu na poszerzony zakres projektu. Tutaj powstały główne idee oraz szkic API frameworku.  \\ \hline
     Lipiec 2013 & Październik 2013 & Iteracja 3 - Implementacja rdzenia systemu. \\ \hline
-    Październik 2013 & Listopad 2013 & Iteracja 4 - Zakończenie prac nad frameworkiem (dodanie gotowych jednostek przetwarzania), stworzenie aplikacji Androidowej z wykorzystaniem Frameworku. \\ \hline
+    Październik 2013 & Listopad 2013 & Iteracja 4 - Zakończenie prac nad frameworkiem (dodanie gotowych jednostek przetwarzania), stworzenie aplikacji Androidowej z wykorzystaniem frameworku. \\ \hline
     Listopad 2013 & Styczeń 2014 & Iteracja 5 - Dopracowanie aplikacji oraz opracowanie dokumentacji projektowej. \\ \hline
     \end{tabular}
 \end{center}
@@ -142,7 +142,7 @@ To był moment opisany już w sekcji problemów(patrz: \ref{problem}). Po nim na
 
 \Header{Cel:}
 
-Zaprojektowanie nowej wersji architektury systemu z uwzględnieniem rozdzielenia na Framework i aplikację
+Zaprojektowanie nowej wersji architektury systemu z uwzględnieniem rozdzielenia na framework i aplikację
 
 \Header{Architektura:}
 
@@ -173,7 +173,7 @@ Wynikiem prac jest pierwsza wersja API systemu wraz z wstępnymi interfejsami dl
 \begin{Note}
 
 \Header{Cel:}
-	Implementacja rdzenia Frameworka
+	Implementacja rdzenia frameworka
 
 \Header{Implementacja:}
 

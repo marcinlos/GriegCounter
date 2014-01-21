@@ -19,8 +19,8 @@
       <w>80</w>
       <h>96</h>
     </coordinates>
-    <panel_attributes>Użytkownik
-końcowy</panel_attributes>
+    <panel_attributes>Uzytkownik
+koncowy</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -62,7 +62,7 @@ końcowy</panel_attributes>
     <coordinates>
       <x>368</x>
       <y>224</y>
-      <w>96</w>
+      <w>112</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>4.3 Spektrogram</panel_attributes>
